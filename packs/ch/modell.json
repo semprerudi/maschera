@@ -1,0 +1,27 @@
+{
+  "name": "ch-v63b",
+  "quelle": "https://huggingface.co/semprerudi/maschera-ch-v63b/resolve/main/{datei}",
+  "bytes": 1264786777,
+  "dateien": {
+    "config.json": {
+      "bytes": 6121,
+      "sha256": "db6931a69039d2b5ba907babed6160d6989d643e76e18f9f499ac9927e506f49"
+    },
+    "model.safetensors": {
+      "bytes": 1230415196,
+      "sha256": "63c7749ca6fcb5990f7689572c937bc46cf32dc80891ff72a413c5dcb760b93f"
+    },
+    "tokenizer.json": {
+      "bytes": 34363286,
+      "sha256": "f34b44a6dc8a0eef651bfa10e8325057530152606a69d9c3b6ae02efb1558f0a"
+    },
+    "tokenizer_config.json": {
+      "bytes": 574,
+      "sha256": "14b147f2a4f939d9b12ab36e9633917040dd948fa78ce283b03402e4cf2c9cba"
+    },
+    "pack.json": {
+      "bytes": 1600,
+      "sha256": "d6ead8a319483d36daaa19a325e7874a0714758153f3a120e8c878b41a3962aa"
+    }
+  }
+}

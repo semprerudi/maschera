@@ -1,0 +1,47 @@
+#!/bin/sh
+# Startskript der AppImage.
+#
+# ⚠️ `$APPDIR` setzt die AppImage-Laufzeit auf den Einhaengepunkt — der ist
+# bei jedem Start ein anderer. Deshalb wird hier NICHTS absolut angenommen;
+# alles haengt an `$HERE`.
+set -e
+HERE="$(dirname "$(readlink -f "$0")")"
+
+export PYTHONPATH="$HERE/usr/lib/python:$HERE/usr/lib/maschera:$HERE/usr/lib/maschera/tools"
+export PYTHONDONTWRITEBYTECODE=1
+# ⚠️ Kein Nachladen von aussen. Die Modelldateien liegen mit; ohne diese
+# beiden Zeilen versucht `transformers` bei jedem Start, den Hub zu
+# fragen — und das waere ein Netzzugriff, den dieses Werkzeug nicht macht.
+export HF_HUB_OFFLINE=1
+export TRANSFORMERS_OFFLINE=1
+
+# ⚠️ Die Wahl der Qt-Anbindung nicht dem Zufall ueberlassen. `qtpy` nimmt
+# das erste, was es findet; liegen zwei da, entscheidet die Reihenfolge im
+# Verzeichnis. Hier liegt nur PyQt6 — die Zeile haelt das fest, falls das
+# je nicht mehr stimmt.
+export QT_API=pyqt6
+# ⚠️ Wayland zuerst, X11 als Rueckfall. Ohne das faellt Qt auf manchen
+# Sitzungen auf XWayland zurueck und das Fenster ist unscharf.
+if [ -n "$WAYLAND_DISPLAY" ]; then
+    export QT_QPA_PLATFORM="${QT_QPA_PLATFORM:-wayland;xcb}"
+fi
+
+MODELL="$HERE/usr/lib/maschera/runs/ch-v63b"
+# ⚠️ Kein fester Port hier. `fenster.py` liest ihn aus den
+# gespeicherten Einstellungen und fragt bei Konflikt nach. Ein Wert an
+# dieser Stelle waere ein zehnter Verwalter fuer eine Zahl, die genau
+# einen haben soll — `core/einstellungen.VORGABE_PORT`.
+#
+# `MASCHERA_PORT` gibt es weiterhin, aber nur als ausdrueckliche
+# Uebersteuerung fuer diesen einen Start.
+
+# EIN EIGENES FENSTER, kein Browser. `app/fenster.py` traegt den Dienst in
+# einem Faden und das Fenster im Hauptprogramm; Adresse und Port kommen aus
+# den Einstellungen (Vorgabe 127.0.0.1:4141). Schliesst der Anwender das
+# Fenster, endet der Dienst mit.
+#
+# Der Umweg ueber den Browser bleibt erreichbar — `--im-browser` —, aber er
+# ist nicht die Vorgabe und faellt nicht still ein.
+exec "$HERE/usr/python/bin/python3" \
+    "$HERE/usr/lib/maschera/app/fenster.py" --model "$MODELL" \
+    ${MASCHERA_PORT:+--port "$MASCHERA_PORT"} "$@"

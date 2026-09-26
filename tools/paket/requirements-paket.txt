@@ -1,0 +1,58 @@
+# Laufzeit des AUSGELIEFERTEN Pakets — Docker und AppImage.
+#
+# Warum diese Datei neben `requirements.txt` steht: `requirements.txt`
+# beschreibt den schlanken ONNX-Weg. Im Paket laeuft dagegen torch — derselbe
+# Laeufer, mit dem gemessen wird. Am Golddokument-Testset (280 Goldspannen):
+#
+#     Laeufer                     Lecks   Micro-F1   Uebermask
+#     torch      runs/ch-v63b         6      0.739          94
+#     ONNX int8  release/ch-v63b     13      0.711         109
+#
+# Zwei Laeufer mit eigener Fensterung, eigenen Sondertoken und eigener
+# Abschneidung koennen sich unterschiedlich verhalten, und jeder solche
+# Unterschied kostet Lecks. `build_release.py --verify` misst den Abstand
+# zwischen beiden.
+#
+# Das kostet Groesse: rund 2.5 GB statt 1.1 GB. Bewusst entschieden —
+# wichtiger ist, dass das Modell moeglichst alles findet.
+#
+# `requirements.txt` bleibt gueltig — fuer den ONNX-Weg (`--onnx`).
+
+flask>=3.0            # der Kern, app/serve.py
+
+# gunicorn: der Flask-Entwicklungsserver ist fuer den Betrieb im Netz
+# nicht gedacht. Reines Python, MIT, rund 1 MB.
+#
+# EIN Arbeiter mit Faeden, nicht mehrere Prozesse: die Kette traegt eine
+# Sperre um sich selbst, und zwei Prozesse haetten jeder ihre eigene. Siehe
+# `app/wsgi.py`.
+gunicorn>=21.2        # der Server im Betrieb, nicht der Entwicklungsserver
+pyyaml>=6.0           # taxonomy.yaml, patterns.yaml, eigene Regeln
+tokenizers>=0.15      # wird von transformers ohnehin gezogen
+pymupdf>=1.24         # PDF-Text. Ohne sie laufen txt, md, eml und mbox weiter
+# Outlook `.msg` ist OLE2, nicht MIME. Eine einzelne Python-Datei, BSD,
+# ohne eigene Abhaengigkeiten.
+olefile>=0.46         # Outlook .msg. Ohne sie laufen alle anderen weiter
+
+# NUR die CPU-Fassung — und die Zeile unten erzwingt das NICHT.
+#
+# Das voreingestellte `torch` von PyPI bringt die CUDA-Bibliotheken mit,
+# ueber 2 GB allein dafuer, und weder im Container noch in der AppImage ist
+# eine GPU.
+#
+# `--extra-index-url` ERGAENZT PyPI, es ersetzt es nicht. `--index-url`
+# ginge nicht: es loeste PyPI fuer die ganze Datei ab, und auf dem
+# PyTorch-Index gibt es kein `flask`.
+#
+# Dass heute die CPU-Raeder kommen, liegt an der Sortierung: `2.14.0+cpu`
+# sortiert HOEHER als `2.14.0`, weil die lokale Fassung angehaengt ist. Das
+# ist die Reihenfolge der Versionen und keine Zusage — veroeffentlicht PyPI
+# je eine hoehere Grundfassung, kippt es still.
+#
+# DESHALB WIRD ES GEPRUEFT UND NICHT GEHOFFT. `Dockerfile` und
+# `appimage_bauen.fish` brechen ab, wenn in `torch.__version__` kein `+cpu`
+# steht; `tests/test_fenster.py` haelt fest, dass beide das tun. Auf einer
+# Maschine MIT Grafikkarte fiele der Fehlgriff sonst nicht auf.
+torch>=2.0
+transformers>=4.40
+--extra-index-url https://download.pytorch.org/whl/cpu

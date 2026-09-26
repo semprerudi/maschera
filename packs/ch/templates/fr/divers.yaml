@@ -1,0 +1,71 @@
+# Modèles FR — office des poursuites, état civil, support informatique
+templates:
+
+  - id: fr_extrait_poursuites
+    doc_type: office_poursuites
+    text: |
+      {ORG}, de {CITY}
+      Extrait du registre des poursuites
+
+      Concernant: {@person}, né le {DATE}, originaire de {PLACE_OF_ORIGIN}
+      Domicile: {@address}
+      Numéro AVS: {AHVN13}
+
+      Créance ouverte: {AMOUNT}, créancier {ORG}
+      Poursuite n° {CASE_ID}
+
+      {~amount}. Délivré le {DATE}.
+
+  - id: fr_acte_naissance
+    doc_type: etat_civil
+    text: |
+      {ORG}, de {CITY}
+      Acte de naissance
+
+      Nom: {FULLNAME}
+      Prénoms: {GIVENNAME}
+      Date de naissance: {DATE}
+      Lieu d'origine: {PLACE_OF_ORIGIN}
+      Sexe: {SEX}
+      Nationalité: {NATIONALITY}
+      Pays de naissance: {COUNTRY}
+
+      Parents: {@person} et {@person}
+      Inscription {CASE_ID}
+
+      Délivré le {DATE}. Il est perçu {~amount}.
+
+  - id: fr_ticket_support
+    doc_type: it_support
+    text: |
+      Ticket {CASE_ID} — {ORG}, de {CITY}
+
+      Annonce par: {@person}, {@contact}
+      Application: {URL}
+      Poste client: {IPADDRESS}
+
+      Lors de l'enregistrement du dossier de {@person}, numéro AVS {AHVN13},
+      un message d'erreur apparaît.
+
+      Nom d'utilisateur {USERNAME}
+
+      Extrait de la capture d'écran:
+      {~trace}
+      {~technical}
+
+      Survenu le {DATE} à {TIME}. Réponse souhaitée {~deadline}.
+
+  - id: fr_contrat_bail
+    doc_type: immobilier
+    text: |
+      Contrat de bail
+
+      Bailleur: {ORG}, IDE {UID}, {@address}
+      Locataire: {@person}, {@contact}
+
+      Objet: appartement à {@address}
+      EGID {EGID}, EWID {EWID}
+      Loyer mensuel: {AMOUNT}, charges comprises
+      Garantie: {AMOUNT} sur {IBAN}
+
+      Début du bail: {DATE}. Résiliation {~deadline}. {~legal}.

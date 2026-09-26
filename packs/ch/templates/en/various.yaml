@@ -1,0 +1,69 @@
+# Templates EN — support, tenancy, school, banking
+templates:
+
+  - id: en_support_ticket
+    doc_type: it_support
+    text: |
+      Ticket {CASE_ID} — Residents' Office {CITY}
+
+      Reported by: {@person}, {@contact}
+      Application: {URL}
+      Client host: {IPADDRESS}
+
+      Saving the record for {@person}, social security number {AHVN13},
+      raises an error. Record ID {PATIENT_ID}.
+
+      Affected profile: /home/{USERNAME}/.config
+
+      From the screenshot:
+      {~trace}
+      {~technical}
+
+      Occurred on {DATE} at {TIME}. Response requested {~deadline}.
+
+  - id: en_tenancy
+    doc_type: real_estate
+    text: |
+      Tenancy Agreement
+
+      Landlord: {ORG}, company ID {UID}, {@address}
+      Tenant: {@person}, {@contact}
+      Date of birth: {DATE}, place of origin {PLACE_OF_ORIGIN}
+
+      Property: {@address}, EGID {EGID}, EWID {EWID}
+      Monthly rent: {AMOUNT}
+      Deposit: {AMOUNT} to {IBAN}
+
+      Start date {DATE}. Notice period {~deadline}. {~legal}.
+
+  - id: en_school_report
+    doc_type: education
+    text: |
+      {ORG}, {@address}
+
+      Confirmation of Enrolment
+
+      Pupil: {@person}, born on {DATE}
+      Address: {@address}
+      Nationality: {NATIONALITY}, residence status: {RESIDENCE_STATUS}
+      Country of birth: {COUNTRY}
+      Guardian: {@person}, {@contact}
+
+      Enrolled since {DATE}. Fee: {AMOUNT}. {~amount}.
+      Registration number {CASE_ID}. {~number}.
+
+  - id: en_bank_statement
+    doc_type: banking
+    text: |
+      {ORG}
+      Account statement as at {DATE}
+
+      Registered to: {@person}
+      {@address}
+      Account: {IBAN}
+      Card: {CREDITCARD}
+
+      Closing balance: {AMOUNT}
+      Reference {QR_REFERENCE}
+
+      Questions: {@contact}. {~number}.

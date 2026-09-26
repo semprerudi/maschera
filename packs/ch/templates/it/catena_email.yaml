@@ -1,0 +1,170 @@
+# Erzeugt mit tools/generate_templates.py und von Hand nachgebessert.
+# Jede Vorlage hat die Wachen bestanden — vor dem Training trotzdem lesen:
+# die Wachen pruefen die Form, nicht den Sinn.
+#
+# Empfaengerzeilen tragen `{EMAIL}` und nicht `{@contact}`: eine
+# Telefonnummer in einer Empfaengerzeile schreibt kein Mailprogramm, und ein
+# unmoegliches Umfeld ist eines, das das Modell nie antreffen wird.
+#
+# ⚠️ Verwaltungsgebrauch, nicht die amtliche Fassung. Gegenlesen.
+
+templates:
+- id: it_email_chain_formal
+  doc_type: catena di e-mail inoltrate
+  text: "Oggetto: I: Gestione sinistro / Polizza {INSURANCE_POLICY} / {ORG}\nDa: {GIVENNAME} {FULLNAME}\
+    \ <{EMAIL}>\nData: {DATE} ore {TIME}\nA: {EMAIL}\n\nGentile collega,\n\nti inoltro la comunicazione\
+    \ ricevuta in merito al caso {CASE_ID}.\nSi prega di verificare se {~legal} sia già stata applicata.\n\
+    Resto in attesa di un tuo riscontro entro {~deadline}.\n\nCordiali saluti,\n{GIVENNAME} {FULLNAME}\n\
+    \n---------- Messaggio inoltrato ----------\nDa: {FULLNAME} {GIVENNAME} <{EMAIL}>\nData: {DATE}\n\
+    Oggetto: Gestione sinistro / Polizza {INSURANCE_POLICY} / {ORG}\n\nBuongiorno,\nvolevo sapere a che\
+    \ punto è la mia richiesta di rimborso, pratica {~number}."
+- id: it_email_chain_internal
+  doc_type: catena di e-mail inoltrate
+  text: "Oggetto: R: Revisione budget / Trimestre 3 / {ORG}\nDa: {FULLNAME} {GIVENNAME} <{EMAIL}>\nData:\
+    \ {DATE}\nA: {GIVENNAME} {FULLNAME} <{EMAIL}>\n\nCiao,\nho controllato i documenti per la pratica\
+    \ {CASE_ID}.\nHanno segnalato che {~amount} deve essere ricalcolato.\nIl riferimento interno è {~trace}.\
+    \ Puoi procedere con l'approvazione?\n\nGrazie,\n{GIVENNAME}\n\n---------- Messaggio inoltrato ----------\n\
+    Da: {EMAIL}\nData: {DATE}\nOggetto: Revisione budget / Trimestre 3 / {ORG}\n\nSi prega di inviare\
+    \ i dati aggiornati per l'analisi finale."
+- id: it_email_chain_support
+  doc_type: catena di e-mail inoltrate
+  text: 'Oggetto: I: Problema tecnico / Accesso portale / {ORG}
+
+    Da: {GIVENNAME} {FULLNAME} <{EMAIL}>
+
+    Data: {DATE}
+
+    A: {EMAIL}
+
+
+    Buongiorno,
+
+    vi inoltro la richiesta di assistenza inviata da {FULLNAME} {GIVENNAME}.
+
+    Il riferimento del ticket è il numero {CASE_ID}.
+
+    Si noti che {~technical} non è ancora stato risolto.
+
+
+    Saluti,
+
+    {GIVENNAME}
+
+
+    ---------- Messaggio inoltrato ----------
+
+    Da: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Data: {DATE}
+
+    Oggetto: Problema tecnico / Accesso portale / {ORG}
+
+
+    Non riesco più ad accedere alla mia area personale, versione {~number}.'
+- id: it_email_chain_legal
+  doc_type: catena di e-mail inoltrate
+  text: 'Oggetto: R: Notifica legale / Procedura amministrativa / {ORG}
+
+    Da: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Data: {DATE}
+
+    A: {EMAIL}
+
+
+    In riferimento alla pratica {CASE_ID}, vi informo che {~legal} è stata completata.
+
+    Allego la copia della notifica inviata a {GIVENNAME} {FULLNAME}.
+
+    Il termine è fissato {~deadline}.
+
+    Potete confermarmi l''avvenuta ricezione via {EMAIL}?
+
+
+    Distinti saluti,
+
+    {FULLNAME}
+
+
+    ---------- Messaggio inoltrato ----------
+
+    Da: {EMAIL}
+
+    Data: {DATE}
+
+    Oggetto: Notifica legale / Procedura amministrativa / {ORG}
+
+
+    Si richiede l''invio immediato della documentazione mancante.'
+- id: it_email_chain_hr
+  doc_type: catena di e-mail inoltrate
+  text: 'Oggetto: I: Candidatura / Posizione Senior Analyst / {ORG}
+
+    Da: {GIVENNAME} {FULLNAME} <{EMAIL}>
+
+    Data: {DATE}
+
+    A: {EMAIL}
+
+
+    Ciao,
+
+    ti inoltro il profilo di {FULLNAME} {GIVENNAME} per la posizione aperta.
+
+    Il codice della pratica è {CASE_ID}, registrato sotto {~number}.
+
+    Nel frattempo, {~deadline} è stata spostata a venerdì prossimo.
+
+
+    Fammi sapere se vuoi fissare un colloquio.
+
+    Un saluto,
+
+    {GIVENNAME}
+
+
+    ---------- Messaggio inoltrato ----------
+
+    Da: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Data: {DATE}
+
+    Oggetto: Candidatura / Posizione Senior Analyst / {ORG}
+
+
+    Spett.le {ORG}, invio in allegato il mio CV.'
+- id: it_email_chain_finance
+  doc_type: catena di e-mail inoltrate
+  text: 'Oggetto: R: Fattura non pagata / Sollecito pagamento / {ORG}
+
+    Da: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Data: {DATE}
+
+    A: {GIVENNAME} {FULLNAME} <{EMAIL}>
+
+
+    Gentile cliente,
+
+    per quanto riguarda il caso {CASE_ID}, abbiamo verificato che {~amount} risulta ancora aperto.
+
+    Vi preghiamo di regolare la posizione entro {~deadline}.
+
+    Potete inviare la ricevuta a {EMAIL}? Riferimento {~number}.
+
+
+    Cordialmente,
+
+    {GIVENNAME}
+
+
+    ---------- Messaggio inoltrato ----------
+
+    Da: {EMAIL}
+
+    Data: {DATE}
+
+    Oggetto: Fattura non pagata / Sollecito pagamento / {ORG}
+
+
+    Si segnala il mancato versamento della quota trimestrale.'

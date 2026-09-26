@@ -1,0 +1,145 @@
+# Erzeugt mit tools/generate_templates.py und von Hand nachgebessert.
+# Jede Vorlage hat die Wachen bestanden — vor dem Training trotzdem lesen:
+# die Wachen pruefen die Form, nicht den Sinn.
+#
+# Stellennamen stehen in {ORG}-Slots, nicht als Literal: literale Namen
+# lassen die ORG-Precision einbrechen, weil das Modell den Namen lernt statt
+# die Stelle.
+#
+# ⚠️ Verwaltungsgebrauch, nicht die amtliche Fassung. Gegenlesen.
+
+templates:
+- id: fr_email_chain_01
+  doc_type: chaîne de courriels transférés
+  text: 'Objet: TR: Demande d''accès / {ORG} / Dossier {CASE_ID}
+
+
+    Bonjour {GIVENNAME},
+
+
+    Je vous transfère le message ci-dessous concernant le dossier {CASE_ID}.
+
+    Le client, {FULLNAME}, souhaite obtenir un accès rapide aux archives.
+
+    Base légale : {~legal}. Pourriez-vous vérifier si le dossier est complet ?
+
+
+    Cordialement,
+
+    {GIVENNAME} {FULLNAME}
+
+
+    --- Message transféré ---
+
+    De: {FULLNAME} <{EMAIL}>
+
+    Date: {DATE} à {TIME}
+
+    À: {ORG}
+
+    Objet: Demande d''accès, référence {~number}'
+- id: fr_email_chain_02
+  doc_type: chaîne de courriels transférés
+  text: 'Objet: RE: Mise à jour dossier / RH / {ORG}
+
+
+    Bonjour,
+
+
+    Comme convenu avec {FULLNAME} {GIVENNAME}, je vous confirme la réception des documents.
+
+    Veuillez noter que le numéro de référence pour cette procédure est {CASE_ID}.
+
+    Le suivi figure sous {~trace}.
+
+    Vous pouvez contacter l''interlocuteur principal à l''adresse suivante : {EMAIL}.
+
+
+    Je reste à votre disposition pour tout complément d''information.
+
+
+    Meilleures salutations,
+
+    {GIVENNAME}'
+- id: fr_email_chain_03
+  doc_type: chaîne de courriels transférés
+  text: 'Objet: TR: Litige commercial / Facturation / {ORG}
+
+
+    À l''attention de {FULLNAME},
+
+
+    Veuillez trouver ci-dessous la correspondance avec le département financier.
+
+    Le dossier portant le numéro {CASE_ID} nécessite une intervention {~deadline},
+
+    car {~amount} est toujours en suspens.
+
+    L''adresse de contact pour le suivi direct est {EMAIL}.
+
+
+    Merci d''avance pour votre retour rapide,
+
+    {GIVENNAME}'
+- id: fr_email_chain_04
+  doc_type: chaîne de courriels transférés
+  text: 'Objet: RE: Coordination projet / Logistique / {ORG}
+
+
+    Salut {GIVENNAME},
+
+
+    Je reviens vers toi suite au mail de {FULLNAME} envoyé ce matin.
+
+    Concernant le cas {CASE_ID}, tout semble en ordre pour le transport.
+
+    Le journal indique {~technical}. On peut joindre l''équipe via {EMAIL}.
+
+
+    On se rappelle demain pour finaliser le planning ?
+
+
+    À bientôt,
+
+    {FULLNAME} {GIVENNAME}'
+- id: fr_email_chain_05
+  doc_type: chaîne de courriels transférés
+  text: 'Objet: TR: Demande d''assistance / Support IT / {ORG}
+
+
+    Bonjour,
+
+
+    Je vous transmets le ticket ouvert par {FULLNAME} ({EMAIL}).
+
+    Le problème concerne l''identifiant de cas {CASE_ID}, qui semble bloqué.
+
+    Le message du serveur est {~technical}, formulaire {~number}.
+
+    Merci de répondre directement à {GIVENNAME} pour résoudre ce point technique.
+
+
+    Cordialement,
+
+    {ORG}'
+- id: fr_email_chain_06
+  doc_type: chaîne de courriels transférés
+  text: 'Objet: RE: Confirmation de rendez-vous / Secrétariat / {ORG}
+
+
+    Madame, Monsieur,
+
+
+    Nous faisons suite à l''échange entre {FULLNAME} et notre service.
+
+    Le dossier {CASE_ID} a été mis à jour dans le système informatique, voir {~trace}.
+
+    Pour toute question supplémentaire, merci d''écrire à {EMAIL}.
+
+
+    Dans l''attente de vous rencontrer,
+
+
+    Salutations distinguées,
+
+    {GIVENNAME} {FULLNAME}'

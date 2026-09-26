@@ -1,0 +1,33 @@
+# Templates EN — expat and corporate correspondence
+templates:
+
+  - id: en_residence_confirmation
+    doc_type: residents_office
+    text: |
+      {ORG}, {CITY}
+      Decision dated {DATE}
+
+      Dear Mr {FULLNAME}
+
+      This confirms that {@person}, place of origin {PLACE_OF_ORIGIN}, has been
+      registered since {DATE} at: {@address}
+
+      Social security number: {AHVN13}
+      Case: {CASE_ID}
+
+      {~legal}. Appeal possible {~deadline}.
+
+  - id: en_employment
+    doc_type: employer
+    text: |
+      Employment Agreement
+
+      Between {ORG}, company ID {UID}, {@address},
+      and {@person}, residing at {@address},
+      social security number {AHVN13}.
+
+      Start date: {DATE}
+      Annual salary: {AMOUNT}
+      Payment to: {IBAN}
+
+      Notice period {~deadline}. {~legal}.

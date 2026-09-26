@@ -1,0 +1,145 @@
+# Erzeugt mit tools/generate_templates.py und von Hand nachgebessert.
+# Jede Vorlage hat die Wachen bestanden — vor dem Training trotzdem lesen:
+# die Wachen pruefen die Form, nicht den Sinn.
+
+templates:
+- id: de_behoerde_verfuegung_01
+  doc_type: Behördenbrief mit Verfügung
+  text: '{ORG}
+
+    {STREET} {BUILDINGNUM}
+
+    {@plz_ort}
+
+
+    An
+
+    {GIVENNAME} {FULLNAME}
+
+    {STREET} {BUILDINGNUM}
+
+    {@plz_ort}
+
+
+    Datum: {DATE}
+
+    Aktenzeichen: {CASE_ID}
+
+
+    Sehr geehrter Herr {FULLNAME},
+
+
+    wir beziehen uns auf Ihr Gesuch vom {DATE}. Nach eingehender Prüfung der Unterlagen entscheiden wir
+    wie folgt:
+
+    Die beantragte Bewilligung wird hiermit erteilt. Hierbei ist zu beachten, dass {~legal} in Kraft tritt.
+
+
+    Rechtsmittelbelehrung:
+
+    Gegen diese Verfügung kann innerhalb von 30 Tagen schriftlich Einsprache erhoben werden.
+
+
+    Freundliche Grüsse
+
+
+    {ORG}
+
+    {FULLNAME}
+
+    Abteilungsleiter'
+- id: de_behoerde_verfuegung_02
+  doc_type: Behördenbrief mit Verfügung
+  text: "{ORG}\n\nEinschreiben\n{FULLNAME} {GIVENNAME}\n{STREET} {BUILDINGNUM}\n{@plz_ort}\n\nBetreff:\
+    \ Verfügung betreffend Baugesuch {CASE_ID}\n\nGeschätzte Frau {FULLNAME},\n\nIm Rahmen des Verwaltungsverfahrens\
+    \ wurde festgestellt, dass die eingereichten Pläne nicht den Vorgaben entsprechen. \nDaher entscheiden\
+    \ wir:\nDas Gesuch wird in der vorliegenden Form abgewiesen.\nWir weisen darauf hin, dass {~technical}\
+    \ eine Anpassung erfordert.\n\nEine Kopie dieses Bescheids wurde dem Archiv übermittelt.\n\nMit freundlichen\
+    \ Grüssen\n\n{ORG}\n{FULLNAME}\nSachbearbeiter"
+- id: de_behoerde_verfuegung_03
+  doc_type: Behördenbrief mit Verfügung
+  text: '{ORG}
+
+    {STREET} {BUILDINGNUM}
+
+    {@plz_ort}
+
+
+    {GIVENNAME} {FULLNAME}
+
+    {STREET} {BUILDINGNUM}
+
+    {@plz_ort}
+
+
+    Unser Zeichen: {CASE_ID}
+
+
+    Sehr geehrte Damen und Herren,
+
+
+    hiermit teilen wir Ihnen die Entscheidung der Behörde bezüglich der eingereichten Unterlagen mit.
+
+    Nachdem {~legal} geprüft wurde, gelangen wir zu folgendem Schluss:
+
+    Die Forderung wird vollumfänglich anerkannt.
+
+
+    Bitte überweisen Sie den Betrag auf das angegebene Konto.
+
+
+    Im Auftrag
+
+    {ORG}
+
+    {FULLNAME}
+
+    Juristischer Dienst'
+- id: de_behoerde_verfuegung_04
+  doc_type: Behördenbrief mit Verfügung
+  text: "Verfügung\nAktenzeichen: {CASE_ID}\n\n{ORG}\n{STREET} {BUILDINGNUM}\n{@plz_ort}\n\nEmpfänger:\n\
+    {FULLNAME} {GIVENNAME}\n{STREET} {BUILDINGNUM}\n{@plz_ort}\n\nSehr geehrter Herr {FULLNAME},\n\nwir\
+    \ nehmen Bezug auf das Gespräch vom {DATE}. \nEs wurde entschieden, dass die Frist zur Einreichung\
+    \ der Dokumente verlängert wird.\nWir stellen fest, dass {~deadline} einzuhalten ist.\nDie neue Frist\
+    \ endet am {DATE}.\n\nBei Fragen stehen wir Ihnen gerne zur Verfügung.\n\nMit freundlichen Grüssen\n\
+    \n{ORG}\n{FULLNAME}\nAmtschef"
+- id: de_behoerde_verfuegung_06
+  doc_type: Behördenbrief mit Verfügung
+  text: '{ORG}
+
+    {STREET} {BUILDINGNUM}
+
+    {@plz_ort}
+
+
+    {FULLNAME} {GIVENNAME}
+
+    {STREET} {BUILDINGNUM}
+
+    {@plz_ort}
+
+
+    Betreff: Entscheid im Verfahren {CASE_ID}
+
+
+    Sehr geehrte Damen und Herren,
+
+
+    wir informieren Sie hiermit über den Abschluss des Verwaltungsverfahrens.
+
+    Es wurde entschieden, dass die beantragte Ausnahmebewilligung widerrufen wird.
+
+    In diesem Zusammenhang ist zu erwähnen, dass {~place} nicht mehr als Sitz gilt.
+
+
+    Wir bitten um Kenntnisnahme dieser Verfügung.
+
+
+    Mit vorzüglicher Hochachtung
+
+
+    {ORG}
+
+    {FULLNAME}
+
+    Staatssekretär'

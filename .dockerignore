@@ -1,0 +1,62 @@
+# Was NICHT in den Bau-Kontext geht.
+#
+# ⚠️ Der Kontext ist der Projektstamm, und darin koennen viele Gigabyte
+# `runs/` und Datensaetze liegen. Ohne diese Datei schickt `docker build`
+# alles an den Daemon, bevor die erste Zeile des Dockerfile laeuft.
+#
+# ⚠️ Diese Datei ist zugleich eine SPERRE. Sie steht zwischen den
+# Personendaten und einem Abbild, das auf eine andere Maschine reist —
+# dieselbe Rolle, die `.gitignore` fuer das Repository hat. Wer hier etwas
+# streicht, muss wissen, was dann mitfaehrt.
+
+# Modelle und Trainingsdaten
+#
+# EINE Ausnahme: das Arbeitsmodell. Im Paket laeuft der Torch-Weg
+# (`tools/paket/requirements-paket.txt`), dafuer muss `runs/ch-v63b` in den
+# Kontext — NUR dieses eine Verzeichnis.
+runs/*
+!runs/ch-v63b/
+runs/ch-v63b/checkpoint-*
+*.jsonl
+
+# Was die Laufzeit nicht liest: Erzeugung synthetischer Trainingsdaten,
+# Messung, Dokumentation. Die Liste steht in `tools/paket/draussen.txt`.
+packs/*/nomenclatures/
+packs/*/templates/
+packs/*/macros.yaml
+packs/*/generators/
+packs/*/eval/
+packs/*/pack.yaml
+packs/*/mcp/
+core/injector.py
+
+# Golddokumente liegen ausserhalb des Baums. Die Zeilen bleiben als
+# Sperre stehen, falls je welche im Baum liegen.
+packs/*/eval/real/
+packs/*/eval/markup/
+
+# Arbeitsnotizen der Entwicklung. Sie duerfen so wenig in ein Abbild wie
+# ins Repository.
+HANDOVER.md
+UEBERGABE.md
+BETRIEB.md
+GIT.md
+CLAUDE.md
+SITZUNG.md
+VERBOTEN_INTERN.txt
+.claude/
+
+# Entwicklung
+dist/
+release/
+.git/
+.gitignore
+tests/
+site/
+.github/
+beispiele/
+docs/
+train.py
+requirements-dev.txt
+**/__pycache__/
+*.pyc

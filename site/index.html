@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MASCHERA — Personendaten maskieren, auf deinem Gerät</title>
+<meta name="description" content="MASCHERA maskiert Personendaten in Schweizer Dokumenten — auf deinem Gerät, im Betrieb ohne Netzwerkverbindung.">
+<link rel="icon" href="bilder/maske-icon.png" type="image/png">
+<link rel="stylesheet" href="stil.css">
+</head>
+<body>
+
+<header class="kopf">
+  <div class="kopf-inhalt">
+    <a class="marke" href="#oben">
+      <img src="bilder/maske-icon.png" alt="">
+      <span class="wortmarke">MAS<span class="ch">CH</span>ERA</span>
+    </a>
+    <nav class="kopf-navi" aria-label="Seitenabschnitte">
+      <a href="#merkmale" data-i18n="nav.merkmale">Merkmale</a>
+      <a href="#ablauf" data-i18n="nav.ablauf">Ablauf</a>
+      <a href="#pruefen" data-i18n="nav.pruefen">Kontrolle</a>
+      <a href="#herunterladen" data-i18n="nav.download">Herunterladen</a>
+    </nav>
+    <div class="sprachen" role="group" aria-label="Sprache / Language">
+      <button type="button" data-sprache="de" aria-pressed="true" lang="de">de</button>
+      <button type="button" data-sprache="fr" aria-pressed="false" lang="fr">fr</button>
+      <button type="button" data-sprache="it" aria-pressed="false" lang="it">it</button>
+      <button type="button" data-sprache="en" aria-pressed="false" lang="en">en</button>
+    </div>
+  </div>
+</header>
+
+<main id="oben">
+
+<!-- 1 · Kopf ─────────────────────────────────────────────────────────── -->
+<section class="bereich" style="padding-top:var(--s16)">
+  <p class="kicker" data-i18n="hero.kicker">Freie Software · Open Source · läuft ohne Netz</p>
+  <h1 data-i18n="hero.titel">MASCHERA maskiert Personendaten in Schweizer Dokumenten — auf deinem Gerät, im Betrieb ohne Netzwerkverbindung.</h1>
+  <p class="fuehrung" data-i18n="hero.lead">Du hast ein Schreiben, einen Mailverlauf oder ein PDF und willst ein KI-Werkzeug darüber fragen — aber die Namen, AHV-Nummern und Adressen sollen nicht mit.</p>
+  <p style="display:flex;gap:var(--s4);flex-wrap:wrap;margin-top:var(--s8)">
+    <a class="knopf" href="#herunterladen" data-i18n="hero.knopf1">Herunterladen</a>
+    <a class="knopf zweit" href="#ablauf" data-i18n="hero.knopf2">Wie es funktioniert</a>
+  </p>
+
+  <!-- 2 · Vorher / Nachher -->
+  <div class="beispiel" style="margin-top:var(--s16)">
+    <div>
+      <h3 data-i18n="bsp.vorher">Vorher</h3>
+      <div class="zeile">Sehr geehrte Frau Brülhart</div>
+      <div class="zeile">AHV 756.1234.5678.97</div>
+      <div class="zeile">Lindenstrasse 12, 3011 Bern</div>
+    </div>
+    <div>
+      <h3 data-i18n="bsp.nachher">Nachher</h3>
+      <div class="zeile">Sehr geehrte Frau <mark class="platz p-name">[FULLNAME_1]</mark></div>
+      <div class="zeile">AHV <mark class="platz p-ahv">[AHVN13_1]</mark></div>
+      <div class="zeile"><mark class="platz p-street">[STREET_1]</mark> <mark class="platz p-num">[BUILDINGNUM_1]</mark>, <mark class="platz p-zip">[ZIPCODE_1]</mark> <mark class="platz p-city">[CITY_1]</mark></div>
+    </div>
+  </div>
+  <p class="klein leise" style="margin-top:var(--s4);max-width:70ch" data-i18n="bsp.unten">Den maskierten Text gibst du dem Dienst deiner Wahl. Die Antwort fügst du zurück ein, und MASCHERA setzt die echten Werte wieder ein.</p>
+</section>
+
+<!-- 3 · Schirmbild ───────────────────────────────────────────────────── -->
+<section class="bereich" style="border-top:0;padding-top:0">
+  <figure class="rahmen" style="margin:0">
+    <i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i>
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="bilder/dunkel/hero.png">
+      <img class="schirm" src="bilder/hell/hero.png" alt="" data-i18n-attr="alt:bild.gross">
+    </picture>
+  </figure>
+</section>
+
+<!-- 4 · Vier Schlüsselmerkmale ───────────────────────────────────────── -->
+<section class="bereich" id="merkmale">
+  <p class="kicker" data-i18n="merkmale.kicker">Vier Merkmale</p>
+  <h2 data-i18n="merkmale.titel">Was das Werkzeug ausmacht</h2>
+  <div class="raster-4" style="margin-top:var(--s12)">
+    <div class="merkmal">
+      <span class="nr">01</span>
+      <h3 data-i18n="m1.titel">Es läuft auf deinem Gerät</h3>
+      <p data-i18n-html="m1.text">Die ganze Erkennung läuft lokal. Im Betrieb wird <strong>nichts</strong> nachgeladen und <strong>nichts</strong> gesendet — keine Schriften, keine Symbole, keine Statistik. Einen Endpunkt, der Text verschickt, gibt es nicht und wird es nicht geben; der Weg nach draussen führt immer über deine Zwischenablage.</p>
+    </div>
+    <div class="merkmal">
+      <span class="nr">02</span>
+      <h3 data-i18n="m2.titel">Es schreibt nichts auf</h3>
+      <p data-i18n="m2.text">Gespeichert werden nur deine eigenen Einstellungen — Regeln, Vorlagen, Vorlieben —, und auch die nur auf ausdrücklichen Befehl. Kein Dokumentinhalt, kein Wörterbuch, kein Protokoll.</p>
+    </div>
+    <div class="merkmal">
+      <span class="nr">03</span>
+      <h3 data-i18n="m3.titel">Umkehrbar, und das ist der Sinn</h3>
+      <p data-i18n-html="m3.text">Du maskierst, fragst, und fügst die Antwort zurück ein: MASCHERA setzt die echten Werte wieder ein. Deshalb heisst es <strong>Pseudonymisierung</strong> und nicht Anonymisierung — solange das Wörterbuch existiert, ist der Vorgang umkehrbar, und die Daten bleiben nach revDSG Personendaten.</p>
+    </div>
+    <div class="merkmal">
+      <span class="nr">04</span>
+      <h3 data-i18n="m4.titel">Für Schweizer Dokumente gebaut</h3>
+      <p data-i18n-html="m4.text">AHV-Nummer, UID, IBAN, QR-Referenz, Gebäude- und Wohnungsidentifikator, Ausweiskategorie, Kontrollschild, ZSR-Nummer — mit den Prüfsummen, die dazugehören. <strong>45 Merkmalsarten</strong> insgesamt. Vier Sprachen: Deutsch, Französisch, Italienisch und Englisch.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · Ablauf ───────────────────────────────────────────────────────── -->
+<section class="bereich" id="ablauf">
+  <p class="kicker" data-i18n="ablauf.kicker">Der Ablauf</p>
+  <h2 data-i18n="ablauf.titel">Fünf Schritte</h2>
+  <div class="raster-5" style="margin-top:var(--s12)">
+    <div class="schritt">
+      <span class="nr">1</span>
+      <h3 data-i18n="s1.titel">Dokument öffnen bzw. reinziehen oder Text einfügen</h3>
+      <p data-i18n="s1.text">Gelesen werden .pdf, .docx, .eml, .msg (Outlook), .mbox, .txt, .md, .csv, .json.</p>
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="bilder/dunkel/schritt1.png">
+        <img class="schirm" src="bilder/hell/schritt1.png" alt="">
+      </picture>
+    </div>
+    <div class="schritt">
+      <span class="nr">2</span>
+      <h3 data-i18n="s2.titel">Maskieren</h3>
+      <p data-i18n="s2.text">Jede Fundstelle wird farbig angezeigt, mit ihrer Herkunft — Prüfsumme, Muster oder Modell.</p>
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="bilder/dunkel/schritt2.png">
+        <img class="schirm" src="bilder/hell/schritt2.png" alt="">
+      </picture>
+    </div>
+    <div class="schritt">
+      <span class="nr">3</span>
+      <h3 data-i18n="s3.titel">Prüfen</h3>
+      <p data-i18n="s3.text">Du siehst, was ersetzt wurde, bevor der Text irgendwohin geht.</p>
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="bilder/dunkel/schritt3.png">
+        <img class="schirm" src="bilder/hell/schritt3.png" alt="">
+      </picture>
+    </div>
+    <div class="schritt">
+      <span class="nr">4</span>
+      <h3 data-i18n="s4.titel">Kopieren und einfügen</h3>
+      <p data-i18n="s4.text">Beim Dienst deiner Wahl, von Hand. Das Werkzeug schickt nichts selbst.</p>
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="bilder/dunkel/schritt4.png">
+        <img class="schirm" src="bilder/hell/schritt4.png" alt="">
+      </picture>
+    </div>
+    <div class="schritt">
+      <span class="nr">5</span>
+      <h3 data-i18n="s5.titel">Antwort zurück einfügen</h3>
+      <p data-i18n="s5.text">Die echten Werte kommen wieder herein.</p>
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="bilder/dunkel/schritt5.png">
+        <img class="schirm" src="bilder/hell/schritt5.png" alt="">
+      </picture>
+    </div>
+  </div>
+
+  <div class="hinweis" style="margin-top:var(--s12);max-width:72ch">
+    <p data-i18n-html="ablauf.leer"><strong>Ein leerer Befund ist keine Entwarnung.</strong> Ein gescanntes PDF ohne Textebene ergibt einen Fehler mit Begründung, nicht «keine Personendaten gefunden». Ein Werkzeug, das dort Entwarnung gibt, ist gefährlicher als eines, das gar nichts sagt.</p>
+  </div>
+
+  <!-- 6 · Drei Stufen -->
+  <div class="stufen" style="margin-top:var(--s8)">
+    <h3 class="stufen-titel" data-i18n="stufen.titel">Drei Stufen — es ist nicht bloss «eine KI»</h3>
+    <table style="margin-top:var(--s6)">
+      <thead>
+        <tr><th data-i18n="stufen.th1">Stufe</th><th data-i18n="stufen.th2">Was sie tut</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="stufe" data-i18n="stufen.1t">1 · Prüfsummen</td><td data-i18n="stufen.1b">AHV-Nummer, UID, IBAN, QR-Referenz, Kreditkarte, GLN. Gültige Prüfsumme → maskieren, auch wenn das Modell schweigt. Ungültige → verwerfen, auch wenn es anschlägt.</td></tr>
+        <tr><td class="stufe" data-i18n="stufen.2t">2 · Muster mit Kontextanker</td><td data-i18n-html="stufen.2b">Telefonnummer, Postleitzahl, Kontrollschild, Ausweiskategorie, Fallnummer und weitere — viersprachige Ankerwörter, kein Vorrang vor dem Modell. Dazu kommen deine eigenen Regeln: Wörter und Muster, die du selbst festlegst. Sie laufen wie die eingebauten Muster. Beispiele sind interne Fall-Nr. oder interne Dossier-Nr. etc.</td></tr>
+        <tr><td class="stufe" data-i18n="stufen.3t">3 · Sprachmodell</td><td data-i18n="stufen.3b">Namen, Adressen, Berufe, Organisationen, Daten — alles, was kein Muster hat.</td></tr>
+      </tbody>
+    </table>
+    <p class="klein leise" style="margin-top:var(--s6)" data-i18n-html="stufen.modell">Das Modell ist <strong>1,2 GB</strong> gross und wurde auf <strong>synthetischen</strong> Daten trainiert — es hat nie ein echtes Dokument gesehen. <a href="#verweise">Technische Angaben zum Modell</a>.</p>
+  </div>
+</section>
+
+<!-- 7 · Du prüfst nach ───────────────────────────────────────────────── -->
+<section class="bereich" id="pruefen">
+  <p class="kicker" data-i18n="pruefen.kicker">Der wichtigste Abschnitt</p>
+  <div class="raster-2">
+    <blockquote class="verantwortung">
+      <p data-i18n="pruefen.satz">MASCHERA nimmt dir die Arbeit ab, nicht die Verantwortung.</p>
+      <p data-i18n="pruefen.text">Kein Werkzeug findet jedes Personendatum. Sieh den maskierten Text an, bevor du ihn weitergibst — dafür zeigt MASCHERA jede Fundstelle farbig und mit ihrer Herkunft.</p>
+    </blockquote>
+    <div>
+      <h3 data-i18n="herkunft.titel">Was «Herkunft» heisst</h3>
+      <p data-i18n="herkunft.text">Jede Fundstelle zeigt, woher sie stammt: aus einer geprüften Nummer, aus einem Muster mit Kontext, oder aus dem Sprachmodell. Eine AHV-Nummer mit gültiger Prüfsumme ist sicher richtig erkannt, eine Modellvermutung verdient den zweiten Blick.</p>
+      <figure class="rahmen" style="margin:var(--s6) 0 0">
+        <i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i>
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="bilder/dunkel/herkunft.png">
+          <img class="schirm" src="bilder/hell/herkunft.png" alt="" data-i18n-attr="alt:bild.herkunft">
+        </picture>
+      </figure>
+    </div>
+  </div>
+
+  <h3 style="margin-top:var(--s16)" data-i18n="moegl.titel">Was du tun kannst, wenn etwas fehlt</h3>
+  <p class="leise" style="max-width:66ch" data-i18n="moegl.lead">Fünf Möglichkeiten, alle in der Anwendung vorhanden.</p>
+  <table style="margin-top:var(--s6)">
+    <tbody>
+      <tr><td class="moegl" data-i18n="mo1t">Von Hand nachbessern</td><td data-i18n-html="mo1b">Der maskierte Text ist bearbeitbar. Platzhalter wie <code>[FULLNAME_1]</code> bleiben stehen — sie werden am Ende zurückgewandelt.</td></tr>
+      <tr><td class="moegl" data-i18n="mo2t">Eigene Regeln</td><td data-i18n="mo2b">Eigene Wörter und Muster, die zusätzlich maskiert werden. Ein Projektname, ein internes Kürzel, ein Spitzname.</td></tr>
+      <tr><td class="moegl" data-i18n="mo3t">Klartext-Typen</td><td data-i18n="mo3b">Einzelne Merkmalsarten dauerhaft im Klartext lassen — erkannt, aber nicht ersetzt. Wer Ortschaften stehenlassen will, stellt das einmal ein.</td></tr>
+      <tr><td class="moegl" data-i18n="mo4t">Zurückwandeln</td><td data-i18n="mo4b">Die Antwort des Dienstes einfügen, und die echten Werte kommen wieder herein.</td></tr>
+      <tr><td class="moegl" data-i18n="mo5t">Endgültig anonymisieren</td><td data-i18n-html="mo5b">Ohne Wörterbuch maskieren. Dann ist der Vorgang <strong>nicht mehr umkehrbar</strong> — und die Anwendung sagt das vorher.</td></tr>
+    </tbody>
+  </table>
+  <p class="klein leise" style="margin-top:var(--s4)" data-i18n-html="moegl.beides"><strong>MASCHERA kann beides:</strong> umkehrbar für die Arbeit mit einem KI-Dienst, unumkehrbar für einen Text, der so aus dem Haus geht.</p>
+</section>
+
+<!-- 8 · Herunterladen ────────────────────────────────────────────────── -->
+<section class="bereich" id="herunterladen">
+  <p class="kicker" data-i18n="dl.kicker">Herunterladen</p>
+  <h2 data-i18n="dl.titel">Welche Datei nehme ich?</h2>
+  <p class="fuehrung" data-i18n="dl.lead">Kein Anmeldeformular, keine E-Mail-Abfrage, kein Newsletter. Die Datei liegt da, man lädt sie herunter, fertig.</p>
+
+  <div class="pakete" style="margin-top:var(--s12)">
+    <div class="paket">
+      <h3>Linux</h3>
+      <p class="zeug" data-i18n="dl.linux">AppImage: eine einzige ausführbare Datei, das Modell fährt mit. Herunterladen, ausführbar machen, fertig.</p>
+      <div class="knopfstapel">
+        <a class="knopf" href="https://github.com/semprerudi/maschera/releases/latest/download/MASCHERA-latest-x86_64.AppImage" data-datei="appimage">AppImage<span class="groesse">1,7 GB</span></a>
+        <a class="knopf zweit" href="https://github.com/semprerudi/maschera/releases/latest/download/MASCHERA-latest-x86_64.flatpak" data-datei="flatpak">Flatpak<span class="groesse">0,3 GB</span></a>
+      </div>
+    </div>
+
+    <div class="paket">
+      <h3>macOS</h3>
+      <p class="zeug" data-i18n="dl.mac">Gibt es noch nicht. Es wird daran gearbeitet — bis dahin gibt es keine Datei für macOS.</p>
+      <span class="marke-arbeit" data-i18n="dl.arbeit">In Arbeit</span>
+      <a class="knopf" aria-disabled="true" href="#" data-i18n="dl.nochnicht">Noch nicht verfügbar</a>
+    </div>
+
+    <div class="paket">
+      <h3>Windows</h3>
+      <p class="zeug" data-i18n="dl.win">Installer für Windows 11, 64 Bit. Installiert ohne Administratorrechte, das Modell fährt mit. Beim ersten Start warnt Windows, weil der Installer nicht signiert ist: «Weitere Informationen» → «Trotzdem ausführen».</p>
+      <div class="knopfstapel">
+        <a class="knopf" href="https://github.com/semprerudi/maschera/releases/latest/download/MASCHERA-latest-x64-setup.exe" data-datei="windows">Windows<span class="groesse">1,4 GB</span></a>
+      </div>
+    </div>
+
+    <div class="paket">
+      <h3 data-i18n="dl.serverTitel">Server</h3>
+      <p class="zeug" data-i18n="dl.server">Docker, für den Betrieb als Dienst — die Oberfläche öffnet sich im Browser. Das Modell fährt mit. Der Server speichert nichts bei sich: kein Dokument, kein Wörterbuch, kein Protokoll — nach der Antwort ist alles wieder vergessen.</p>
+      <a class="knopf zweit" href="https://github.com/semprerudi/maschera">Docker</a>
+    </div>
+  </div>
+
+  <div class="raster-2" style="margin-top:var(--s12)">
+    <div class="hinweis">
+      <h3 data-i18n="dl.modellTitel">Der Hinweis zum Modell</h3>
+      <p data-i18n-html="dl.modell">Das Modell ist 1,2 GB gross. Die AppImage trägt es mit. Die schlanken Pakete holen es <strong>einmal beim ersten Start</strong> — aus einer benannten Quelle, mit Prüfsumme, und erst nachdem du zugestimmt hast. Wer gerade kein WLAN hat, lehnt ab und holt es ein andermal. Danach ist beides gleich offline.</p>
+    </div>
+    <div>
+      <h3 data-i18n="dl.archTitel">AppImage oder Flatpak?</h3>
+      <p data-i18n="dl.arch1">AppImage ist eine einzige Datei: herunterladen, ausführbar machen, starten — nichts wird installiert. Flatpak fügt sich in die Paketverwaltung ein und aktualisiert sich mit ihr.</p>
+      <p data-i18n-html="dl.arch2">Beide bringen ihre eigenen Bibliotheken mit und sind damit unabhängig von der Ausgabe deiner Verteilung. Auf Arch-Systemen läuft Flatpak bestens; ein eigenes Arch-Paket gibt es darum nicht.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 · Verweise ─────────────────────────────────────────────────────── -->
+<section class="bereich" id="verweise">
+  <p class="kicker" data-i18n="verweise.kicker">Wo alles andere steht</p>
+  <h2 data-i18n="verweise.titel">Das Technische wird dort gepflegt</h2>
+  <p class="fuehrung" data-i18n="verweise.lead">Wie gut das Modell misst, wie es trainiert wurde, wie das Programm gebaut ist — das steht dort und wird dort aktuell gehalten.</p>
+  <div class="raster-3" style="margin-top:var(--s8)">
+    <a class="verweis" href="https://github.com/semprerudi/maschera">
+      <h3 data-i18n="v1t">Quellcode und Fassungen</h3>
+      <p data-i18n="v1b">Wie es gebaut ist, welche Programmfassung mit welchem Modell arbeitet, alle Prüfungen.</p>
+    </a>
+    <a class="verweis" href="https://huggingface.co/semprerudi/maschera-ch-v63b">
+      <h3 data-i18n="v2t">Das Modell</h3>
+      <p data-i18n="v2b">Wie gut das Modell ist, wie es trainiert wurde, welche Merkmalsarten es kennt.</p>
+    </a>
+    <a class="verweis" href="https://github.com/semprerudi/maschera/issues">
+      <h3 data-i18n="v3t">Fehler melden</h3>
+      <p data-i18n="v3b">Was nicht erkannt wurde, was falsch ersetzt wurde, was fehlt.</p>
+    </a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="bereich zeilen">
+    <p data-i18n-html="fuss.name"><em>maschera</em> ist italienisch für Maske — und trägt die Landeskennung CH in der Mitte.</p>
+    <p>
+      <span data-i18n="fuss.lizenz">Quellcode MIT · Pakete AGPL-3.0</span> ·
+      <a href="#impressum" data-i18n="fuss.impressum">Impressum</a>
+    </p>
+    <p id="impressum">
+      <strong data-i18n="fuss.impressum">Impressum</strong> ·
+      <span data-i18n="impressum.verantwortlich">Verantwortlich:</span>
+      Rodolfo Semprevivo ·
+      <a href="https://github.com/semprerudi/maschera/issues" data-i18n="impressum.kontakt">Kontakt über GitHub-Issues</a>
+    </p>
+  </div>
+</footer>
+
+<script src="sprachen.js"></script>
+</body>
+</html>

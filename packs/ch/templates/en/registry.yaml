@@ -1,0 +1,89 @@
+# EN templates — residence, civil status, mail threads
+#
+# Englisch ist keine Amtssprache; die Identifikatoren bleiben schweizerisch
+# (SPEC §6). Diese Vorlagen decken die Faelle ab, in denen ein Schweizer
+# Dokument auf Englisch ausgestellt wird: Bescheinigungen fuer Arbeitgeber und
+# Botschaften, Bankkorrespondenz, Geschaeftsmail — und damit auch
+# `MARITALSTATUS`, `RELIGION`, `VOTING_RIGHTS`, `PERMIT_TYPE`, `NATIONALITY`
+# und `SEX` in englischem Umfeld.
+
+templates:
+
+  - id: en_residence_certificate
+    doc_type: residence
+    text: |
+      {ORG}, {CITY}
+      Certificate of Residence
+
+      Surname: {FULLNAME}
+      First names: {GIVENNAME}
+      Date of birth: {DATE}
+      Place of birth: {CITY}
+      Sex: {SEX}
+      Marital status: {MARITALSTATUS}
+      Place of origin: {PLACE_OF_ORIGIN}
+      Nationality: {NATIONALITY}
+      Religious affiliation: {RELIGION}
+      Residence status: {RESIDENCE_STATUS}
+      Address: {@address}
+      Social security number: {AHVN13}
+
+      Issued on {DATE} in {CITY}. A fee of {~amount} applies.
+
+  - id: en_employment_confirmation
+    doc_type: employment
+    text: |
+      {ORG}
+      Confirmation of Employment
+
+      This is to confirm that {@person}, holding {PERMIT_TYPE} valid
+      until {DATE}, has been employed since {DATE}.
+
+      Nationality: {NATIONALITY}
+      Marital status: {MARITALSTATUS}
+      Address: {@address}
+      Social security number: {AHVN13}
+      Personnel file: {CASE_ID}
+
+      Salary is paid to {IBAN}. Not included is {~amount}.
+      Contact: {@contact}
+
+  - id: en_bank_correspondence
+    doc_type: banking
+    text: |
+      {ORG}
+
+      Dear {GIVENNAME} {FULLNAME}
+
+      We confirm the update of your client record.
+
+      Account holder: {@person}
+      Residential address: {@address}
+      Nationality: {NATIONALITY}
+      Residence status: {RESIDENCE_STATUS}
+      Account: {IBAN}
+      Reference: {CASE_ID}
+
+      Please report any change {~deadline}. Reference {~number}.
+
+  - id: en_mail_thread
+    doc_type: email
+    text: |
+      From: {GIVENNAME} {FULLNAME} <{EMAIL}>
+      Sent: {DATE} {TIME}
+      To: {GIVENNAME} {FULLNAME} <{EMAIL}>
+      Subject: RE: case {CASE_ID}
+
+      Hi {GIVENNAME}
+
+      Thanks for the update. The record of {@person}, residing at
+      {@address}, has been completed. Social security number {AHVN13}
+      is now correct in the register.
+
+      Kind regards
+      {GIVENNAME} {FULLNAME}
+      {ORG}
+      {@address}
+      phone {PHONE}
+      {EMAIL}
+      {URL}

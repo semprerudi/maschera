@@ -1,0 +1,91 @@
+# Vorlagen IT — Mailkoepfe, Verlaeufe, Signaturbloecke
+#
+# Siehe de/mailkopf.yaml.
+#
+# ⚠️ Verwaltungsgebrauch, nicht die amtliche Fassung des Katalogs.
+#    Gegenlesen.
+
+templates:
+
+  - id: it_intestazione_inoltro
+    doc_type: mailverlauf
+    text: |
+      Da: {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Inviato: {DATE} {TIME}
+      A: {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Cc: {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Oggetto: I: pratica {CASE_ID}
+
+      Buongiorno
+
+      Inoltro la richiesta. Riguarda {@person}, {AHVN13},
+      registrato con {PATIENT_ID}.
+
+      Modulo {~number}, {~legal}.
+
+      Cordiali saluti
+      {GIVENNAME} {FULLNAME}
+      {ORG}, {CITY}
+      {PHONE}
+
+  - id: it_intestazione_scambio
+    doc_type: mailverlauf
+    text: |
+      Da: {FULLNAME} {GIVENNAME}
+      Inviato: {DATE} {TIME}
+      A: {FULLNAME} {GIVENNAME}
+      Oggetto: R: accesso {URL}
+
+      Grazie della risposta. Il nome utente è {USERNAME},
+      la richiesta proveniva da {IPADDRESS}.
+
+      Risposta del server: {~technical}
+
+      Si prega di trattare {~deadline}.
+
+      -----Messaggio originale-----
+      Da: {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Inviato: {DATE} {TIME}
+      A: {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Oggetto: accesso {URL}
+
+      Buongiorno {FULLNAME}
+
+      Dal {DATE} l'accesso non è più possibile.
+
+  - id: it_blocco_firma
+    doc_type: signaturblock
+    text: |
+      Oggetto: domanda sulla pratica {CASE_ID}
+
+      Buongiorno
+
+      L'informazione riguarda {@person}, attinente di {PLACE_OF_ORIGIN},
+      domiciliato {@address}. Base legale: {~legal}, {~place}.
+
+      Cordiali saluti
+
+      {FULLNAME} {GIVENNAME}
+      Settore registri
+      {ORG}, {CITY}
+      {@address}
+      Telefono {PHONE} | {EMAIL}
+
+  - id: it_modulo_cognome_nome
+    doc_type: formular
+    text: |
+      Richiesta di account utente — modulo {CASE_ID}
+
+      Cognome, nome: {@person_feld}
+      Data di nascita: {DATE}
+      Numero AVS: {AHVN13}
+      Luogo di attinenza: {PLACE_OF_ORIGIN}
+      Indirizzo: {@address}
+      Nome utente: {USERNAME}
+      Indirizzo di posta elettronica: {EMAIL}
+
+      Versione del modulo {~number}, maschera di immissione {~technical}.
+
+      Autorità competente: {ORG}, {CITY}
+      Trattamento: {FULLNAME} {GIVENNAME}
+      Registrato il {DATE} alle {TIME}.

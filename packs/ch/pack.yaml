@@ -1,0 +1,54 @@
+# =============================================================================
+# MASCHERA — Country Pack CH — Manifest
+# =============================================================================
+
+name: ch
+version: 0.3.0
+title: Schweiz — DE / FR / IT / EN
+languages: [de, fr, it, en]
+
+legal_basis:
+  - RHG (SR 431.02) Art. 6
+  - revDSG (SR 235.1)
+
+# USERNAME steht als letzter Tag (Position 45) — angehaengt, nicht
+# eingefuegt, wie der Labelvertrag es verlangt.
+
+# Bewusst NICHT im Geltungsbereich: der medizinische Cluster (Diagnose,
+# Behandlung, Medikation, ICD-10, CHOP, Koerpermasse). Er haette nichts
+# maskiert, aber zwei ungeklaerte Lizenzen und 12 Labelplaetze gekostet.
+# Falls Arztberichte je ein Anwendungsfall werden: anhaengen, nicht
+# einfuegen (SPEC §3).
+note: >-
+  Das Verfahren ist eine Pseudonymisierung, keine Anonymisierung. Solange das
+  Wörterbuch existiert, bleiben die Daten nach revDSG Personendaten.
+
+# Backbone: mmBERT-base. `small` bleibt die Sparoption, nur nach Messung:
+#
+#   Variante   nicht-Emb   Embedding    Total
+#   base            110M        197M     307M
+#   small            42M         98M     140M
+backbone: jhu-clsp/mmBERT-base
+backbone_alternative: jhu-clsp/mmBERT-small   # nur nach Messung
+
+# -----------------------------------------------------------------------------
+# Labelvertrag (SPEC §12, Falle 2)
+# Wandert als `pack: ch@<version>` + Hash in jeden Checkpoint-Ordner und wird
+# beim Laden geprüft. Ohne diese Prüfung lädt man irgendwann ein Modell mit
+# falschem Mapping und bekommt plausibel aussehenden Unsinn.
+# -----------------------------------------------------------------------------
+label_contract:
+  tag_count: 45
+  label_count: 91
+  sha256: b7a96dc99b05c6150302fc11943e0a357c7078b593e7382b4b06390245cceeee
+  frozen: false         # -> true beim ersten ernsthaften Training (Stufe 1)
+  frozen_since: null
+
+components:
+  taxonomy: taxonomy.yaml
+  patterns: patterns.yaml       # Schritt 3
+  macros: macros.yaml           # Schritt 5
+  validators: validators/       # Schritt 2
+  generators: generators/       # Schritt 4
+  nomenclatures: nomenclatures/ # Schritt 4
+  templates: templates/         # Schritt 5

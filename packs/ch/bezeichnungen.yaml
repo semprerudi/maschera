@@ -1,0 +1,293 @@
+# =============================================================================
+# MASCHERA — Country Pack CH — Bezeichnungen der Tags
+# =============================================================================
+# Was ein Tag in den vier Sprachen heisst. Fuer die Legende, den Tag-Filter
+# und das Kontextmenue der Oberflaeche.
+#
+# ⚠️ DIESE DATEI IST KEIN VERTRAG.
+# Sie darf jederzeit geaendert werden — sie beruehrt weder die Reihenfolge der
+# BIO-Labels noch den Labelvertrag. Die Quelle der Wahrheit fuer WELCHE Tags
+# es gibt, bleibt `taxonomy.yaml`. Hier steht nur, wie sie heissen.
+#
+# ⚠️ FEHLT EIN TAG IN EINER SPRACHE, ist das ein Fehler und kein
+# Standardwert: `check_taxonomy.py` und `tests/test_api.py` pruefen es. Ein
+# Tag ohne Bezeichnung waere in der Oberflaeche ein leerer Menueeintrag —
+# und der faellt erst dort auf, wo er stoert.
+#
+# GRUNDSATZ FUER DIE UEBERSETZUNGEN
+# =================================
+# Verwaltungsbegriffe haben in der Schweiz in jeder Amtssprache **einen**
+# richtigen Ausdruck, und der steht in den Erlassen und in den eCH-Standards
+# — er wird nicht gewaehlt. `Heimatort` ist *lieu d'origine* und *luogo di
+# attinenza*, nicht *ville natale*. Wo es einen amtlichen Ausdruck gibt, steht
+# er hier; wo es keinen gibt, steht der gelaeufige — und die Zeile traegt ein
+# `# ?`.
+#
+# ⚠️ MIT `# ?` MARKIERTE ZEILEN SIND UNGEPRUEFT. Sie stehen hier, damit die
+# Oberflaeche laeuft, nicht weil sie sicher richtig sind. Wer Zugang zu
+# TERMDAT hat, entscheidet sie — und streicht die Markierung dabei.
+#
+# Englisch ist die vierte Sprache des Modells, aber keine Amtssprache. Die
+# englischen Bezeichnungen sind Arbeitsbegriffe des Bundes, wo es sie gibt
+# (EGID, UID, FSO), sonst beschreibend.
+# =============================================================================
+
+sprachen: [de, fr, it, en]
+
+bezeichnungen:
+
+  # --- Person --------------------------------------------------------------
+
+  FULLNAME:
+    de: Nachname, ganzer Name
+    fr: Nom, nom complet
+    it: Cognome, nome completo
+    en: Surname, full name
+  GIVENNAME:
+    de: Vorname
+    fr: Prénom
+    it: Nome
+    en: First name
+  AGE:
+    de: Alter
+    fr: Âge
+    it: Età
+    en: Age
+  SEX:
+    de: Geschlecht
+    fr: Sexe
+    it: Sesso
+    en: Sex
+  MARITALSTATUS:
+    de: Zivilstand
+    fr: État civil
+    it: Stato civile
+    en: Marital status
+
+  # --- Herkunft und Zugehoerigkeit -----------------------------------------
+
+  NATIONALITY:
+    de: Staatsangehörigkeit
+    fr: Nationalité
+    it: Cittadinanza
+    en: Nationality
+  RELIGION:
+    de: Konfession
+    fr: Confession
+    it: Confessione
+    en: Religious denomination
+  PLACE_OF_ORIGIN:
+    de: Heimatort
+    fr: Lieu d'origine
+    it: Luogo di attinenza
+    en: Place of origin
+  RESIDENCE_STATUS:
+    de: Niederlassung, Aufenthalt
+    fr: Établissement, séjour
+    it: Domicilio, dimora
+    en: Settlement, residence
+  PERMIT_TYPE:
+    de: Ausweis B, C, L, G, F, N, S
+    fr: Permis B, C, L, G, F, N, S
+    it: Permesso B, C, L, G, F, N, S
+    en: Permit B, C, L, G, F, N, S
+  VOTING_RIGHTS:
+    de: Stimmrecht
+    fr: Droit de vote
+    it: Diritto di voto
+    en: Voting rights
+  COUNTRY:
+    de: Land
+    fr: Pays
+    it: Paese
+    en: Country
+
+  # --- Anschrift und Ort ---------------------------------------------------
+
+  STREET:
+    de: Strasse
+    fr: Rue
+    it: Via
+    en: Street
+  BUILDINGNUM:
+    de: Hausnummer
+    fr: Numéro de maison
+    it: Numero civico
+    en: House number
+  ZIPCODE:
+    de: Postleitzahl
+    fr: Numéro postal d'acheminement
+    it: Numero postale di avviamento
+    en: Postal code
+  CITY:
+    de: Ort
+    fr: Localité
+    it: Località
+    en: Town, locality
+  CANTON:
+    de: Kantonskürzel
+    fr: Sigle du canton
+    it: Sigla del Cantone
+    en: Canton abbreviation
+
+  # --- Erreichbarkeit ------------------------------------------------------
+
+  EMAIL:
+    de: Mailadresse
+    fr: Adresse électronique
+    it: Indirizzo e-mail
+    en: Email address
+  PHONE:
+    de: Telefon
+    fr: Téléphone
+    it: Telefono
+    en: Telephone
+  URL:
+    de: Webadresse
+    fr: Adresse web
+    it: Indirizzo web
+    en: Web address
+  IPADDRESS:
+    de: IP-Adresse
+    fr: Adresse IP
+    it: Indirizzo IP
+    en: IP address
+  USERNAME:
+    de: Anmeldename
+    fr: Nom d'utilisateur
+    it: Nome utente
+    en: Username
+
+  # --- Amtliche Nummern ----------------------------------------------------
+
+  AHVN13:
+    de: AHV-Nummer
+    fr: Numéro AVS
+    it: Numero AVS
+    en: OASI number                        # ? «AHV number» ist gebraeuchlicher
+  UID:
+    de: Unternehmens-Identifikationsnummer
+    fr: Numéro d'identification des entreprises (IDE)
+    it: Numero d'identificazione delle imprese (IDI)
+    en: Business identification number (UID)
+  IDDOC:
+    de: Pass- oder ID-Nummer
+    fr: Numéro de passeport ou de carte d'identité
+    it: Numero del passaporto o della carta d'identità
+    en: Passport or ID card number
+  MUNICIPALITY_ID:
+    de: BFS-Gemeindenummer
+    fr: Numéro OFS de la commune
+    it: Numero UST del Comune
+    en: FSO municipality number
+  EGID:
+    de: Gebäudeidentifikator
+    fr: Identificateur fédéral de bâtiment (EGID)
+    it: Identificatore federale degli edifici (EGID)
+    en: Federal building identifier (EGID)
+  EWID:
+    de: Wohnungsidentifikator
+    fr: Identificateur fédéral de logement (EWID)
+    it: Identificatore federale delle abitazioni (EWID)
+    en: Federal dwelling identifier (EWID)
+  PLATE:
+    de: Kontrollschild
+    fr: Plaque de contrôle
+    it: Targa di controllo
+    en: Vehicle registration plate
+  PARCEL:
+    de: Parzelle, Grundstück
+    # Nach dem dreisprachigen Gesetzestext: ZGB 655: Grundstueck = immeuble =
+    # fondo (Oberbegriff), Liegenschaft = bien-fonds = bene immobile
+    # (abgegrenzte Bodenflaeche).
+    fr: Parcelle, bien-fonds               # bien-fonds = parcelle (GBV Art. 2 lit. a);
+                                           # immeuble waere woertlicher, meint aber
+                                           # umgangssprachlich das Mietshaus
+    it: Particella, fondo                  # Oberbegriff, der in Tessiner Dokumenten
+                                           # den Einzelfall traegt — `fondo` steht
+                                           # als Anker in patterns.yaml
+    en: Parcel, land
+
+  # --- Finanzen ------------------------------------------------------------
+
+  IBAN:
+    de: Kontonummer
+    fr: Numéro de compte
+    it: Numero di conto
+    en: Account number
+  CREDITCARD:
+    de: Kreditkarte
+    fr: Carte de crédit
+    it: Carta di credito
+    en: Credit card
+  QR_REFERENCE:
+    de: QR-Referenz
+    fr: Référence QR
+    it: Riferimento QR
+    en: QR reference
+  AMOUNT:
+    de: Betrag
+    fr: Montant
+    it: Importo
+    en: Amount
+
+  # --- Gesundheit und Versicherung -----------------------------------------
+
+  INSURANCE_CARD:
+    de: Versichertenkarte
+    fr: Carte d'assuré
+    it: Tessera d'assicurato
+    en: Insurance card
+  PATIENT_ID:
+    de: Patientennummer
+    fr: Numéro de patient
+    it: Numero del paziente
+    en: Patient number
+  SOCIAL_INSURANCE:
+    de: Sozialversicherung, IV-Fall
+    fr: Assurance sociale, cas AI
+    it: Assicurazione sociale, caso AI
+    en: Social insurance, DI case          # ? DI = disability insurance
+  INSURANCE_POLICY:
+    de: Policennummer
+    fr: Numéro de police
+    it: Numero di polizza
+    en: Policy number
+  HEALTHCARE_ORG:
+    de: Klinik, Praxis
+    fr: Clinique, cabinet médical
+    it: Clinica, studio medico
+    en: Clinic, medical practice
+  ZSR_RCC:
+    de: Zahlstellenregister
+    fr: Registre des codes-créanciers (RCC)
+    it: Registro dei codici creditori (RCC)
+    en: Biller register (ZSR/RCC)          # ? kein amtlicher englischer Ausdruck
+  GLN:
+    de: Medizinalperson
+    fr: Professionnel de la santé (GLN)
+    it: Operatore sanitario (GLN)
+    en: Healthcare professional (GLN)
+
+  # --- Verfahren, Zeit, Organisation ---------------------------------------
+
+  CASE_ID:
+    de: Dossier-, Geschäftsnummer
+    fr: Numéro de dossier, d'affaire
+    it: Numero d'incarto, di pratica       # ?
+    en: Case, file number
+  DATE:
+    de: Datum
+    fr: Date
+    it: Data
+    en: Date
+  TIME:
+    de: Uhrzeit
+    fr: Heure
+    it: Ora
+    en: Time
+  ORG:
+    de: Firma, Behörde, Verein
+    fr: Entreprise, autorité, association
+    it: Impresa, autorità, associazione
+    en: Company, authority, association

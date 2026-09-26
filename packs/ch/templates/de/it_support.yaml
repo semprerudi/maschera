@@ -1,0 +1,97 @@
+# Vorlagen DE — IT-Support gegenueber Aemtern
+#
+# Der schwierigste Dokumenttyp: Technik steht direkt neben Personendaten.
+# Fehlermeldungen zitieren Datensatzinhalte, Pfade enthalten Benutzernamen,
+# Bildschirmfotos werden als Text eingefuegt. Und vieles SIEHT aus wie ein
+# Identifikator, ohne einer zu sein — dafuer die Decoys {~technical} und
+# {~trace}.
+
+templates:
+
+  - id: de_ticket_fehlermeldung
+    doc_type: it_support
+    text: |
+      Ticket {CASE_ID} — {ORG}, {CITY}
+
+      Meldende Person: {@person}
+      Kontakt: {@contact}
+      Betroffene Anwendung: {URL}
+      Client: {IPADDRESS}
+
+      Beschreibung:
+      Beim Speichern des Datensatzes von {@person}, AHV-Nummer {AHVN13},
+      erscheint eine Fehlermeldung. Der Datensatz ist unter {PATIENT_ID}
+      abgelegt.
+
+      Fehlertext aus dem Bildschirmfoto:
+      {~trace}
+      Betroffenes Profil: /home/{USERNAME}/.config
+      {~technical}
+
+      Aufgetreten am {DATE} um {TIME}. Protokolliert: {~technical}.
+
+  - id: de_ticket_zugriff
+    doc_type: it_support
+    text: |
+      Supportanfrage {CASE_ID}
+
+      Amt: {ORG}, {@address}
+      Ansprechperson: {@person}, {@contact}
+
+      Anliegen: Die Mitarbeiterin {@person} kann sich seit {DATE} nicht mehr
+      anmelden. Benutzername {USERNAME}, Adresse {EMAIL}, Zugriff ab {IPADDRESS}.
+
+      Serverantwort: {~technical}
+      Portal: {URL}
+
+      Bitte um Rueckmeldung {~deadline}.
+
+  - id: de_ticket_datenkorrektur
+    doc_type: it_support
+    text: |
+      Ticket {CASE_ID} — Datenkorrektur
+
+      Auftraggeber: {ORG}
+      Gemeldet von {@person}, {@contact}, am {DATE}
+
+      Im Register ist {@person}, geboren am {DATE}, von {PLACE_OF_ORIGIN},
+      mit falschem Wohnsitz erfasst. Hinterlegt ist {@address},
+      korrekt waere {@address}.
+
+      Datensatz-Nr. {PATIENT_ID}, Gebaeude EGID {EGID}, Wohnung EWID {EWID}.
+
+      Auszug aus dem Protokoll:
+      {~trace}
+
+      {~legal}. Bearbeitung {~deadline}.
+
+  - id: de_ticket_schnittstelle
+    doc_type: it_support
+    text: |
+      Stoerungsmeldung {CASE_ID}
+
+      System: {URL}, Endpunkt {IPADDRESS}
+      Meldende Stelle: {ORG}, {@contact}
+
+      Seit {DATE}, {TIME} werden Uebermittlungen abgewiesen. Betroffen sind
+      unter anderem die Datensaetze {AHVN13} und {AHVN13}.
+
+      Log:
+      {~trace}
+      Anmeldename {USERNAME}, {~technical}, {~technical}
+
+      Wir bitten um Analyse {~deadline}. Rueckfragen an {@person}, {PHONE}.
+
+  - id: de_ticket_kurz
+    doc_type: it_support
+    text: |
+      Von: {EMAIL}
+      An: {EMAIL}
+      Betreff: {CASE_ID}
+
+      Hallo
+
+      {@person} meldet, dass der Ausdruck fuer {@person}, {AHVN13}, leer
+      bleibt. Rechner {IPADDRESS}, Version {~technical}.
+
+      Gruss, {GIVENNAME}

@@ -1,0 +1,156 @@
+# Erzeugt mit tools/generate_templates.py und von Hand nachgebessert.
+# Jede Vorlage hat die Wachen bestanden — vor dem Training trotzdem lesen:
+# die Wachen pruefen die Form, nicht den Sinn.
+
+templates:
+- id: it_admin_decision_01
+  doc_type: lettera amministrativa con decisione e blocco firma
+  text: '{ORG}
+
+    {STREET} {BUILDINGNUM}
+
+    {@plz_ort}
+
+
+    Egregio signor {GIVENNAME} {FULLNAME},
+
+
+    Riferimento: pratica n. {CASE_ID}
+
+
+    Con la presente le comunichiamo che, in merito a {~legal}, l''amministrazione ha deciso di approvare
+    integralmente la sua richiesta.
+
+    Il documento ufficiale di conferma verrà trasmesso separatamente tramite il portale ePortal.
+
+
+    Distinti saluti,
+
+    per {ORG}
+
+    (firma)
+
+    {GIVENNAME} {FULLNAME}'
+- id: it_admin_decision_02
+  doc_type: lettera amministrativa con decisione e blocco firma
+  text: 'Spett.le {FULLNAME} {GIVENNAME}
+
+    {STREET} {BUILDINGNUM}
+
+    {@plz_ort}
+
+
+    Gentile signora {GIVENNAME} {FULLNAME},
+
+
+    Oggetto: Decisione amministrativa relativa al dossier {CASE_ID}
+
+
+    Facendo seguito alla sua istanza, la informiamo che l''analisi di {~technical} ha portato a un esito
+    negativo.
+
+    La decisione è stata presa in conformità con le direttive vigenti presso {ORG}.
+
+
+    In fede,
+
+    Il Responsabile di {ORG}
+
+    (firma)'
+- id: it_admin_decision_03
+  doc_type: lettera amministrativa con decisione e blocco firma
+  text: '{ORG}
+
+
+    Gentili signore, egregi signori,
+
+
+    In riferimento alla pratica n. {CASE_ID}, l''autorità competente ha deliberato quanto segue per l''immobile
+    sito in {STREET} {BUILDINGNUM}, {@plz_ort}.
+
+    Si precisa che {~amount} non influisce sulla presente decisione finale.
+
+    La notifica è considerata valida a partire dalla data di ricezione della stessa.
+
+
+    Cordiali saluti,
+
+    {FULLNAME} {GIVENNAME}
+
+    Funzionario incaricato di {ORG}'
+- id: it_admin_decision_04
+  doc_type: lettera amministrativa con decisione e blocco firma
+  text: 'Dossier: {CASE_ID}
+
+    Interessato: {FULLNAME} {GIVENNAME}
+
+
+    Egregio signor {GIVENNAME} {FULLNAME},
+
+
+    Le confermiamo che i suoi dati di contatto registrati presso {ORG} risultano essere:
+
+    {STREET} {BUILDINGNUM}, {@plz_ort}.
+
+
+    Relativamente a {~legal}, la decisione presa in data odierna è definitiva e non più impugnabile.
+
+    Le invitiamo a consultare i dettagli su EasyGov.
+
+
+    Saluti,
+
+    Ufficio Legale di {ORG}
+
+    (firma)'
+- id: it_admin_decision_05
+  doc_type: lettera amministrativa con decisione e blocco firma
+  text: '{ORG}
+
+    {STREET} {BUILDINGNUM}
+
+    {@plz_ort}
+
+
+    Gentile signora {GIVENNAME} {FULLNAME},
+
+
+    Oggetto: Esito della domanda n. {CASE_ID}
+
+
+    La informiamo che, dopo l''analisi di {~technical}, la sua richiesta è stata accolta parzialmente.
+
+    Le ricordiamo l''obbligo di aggiornare i propri dati anagrafici tramite il sistema ePortal.
+
+
+    Cordialmente,
+
+    Il Direttore di {ORG}
+
+    {FULLNAME} {GIVENNAME}'
+- id: it_admin_decision_06
+  doc_type: lettera amministrativa con decisione e blocco firma
+  text: 'Destinatario:
+
+    {FULLNAME} {GIVENNAME}
+
+    {STREET} {BUILDINGNUM}
+
+    {@plz_ort}
+
+
+    Gentili signore, egregi signori,
+
+
+    Con riferimento alla pratica n. {CASE_ID}, vi comunichiamo la decisione dell''autorità di {ORG}.
+
+    Si è accertato che {~number} non soddisfa i criteri minimi richiesti per l''erogazione del beneficio.
+
+    La presente vale come notifica ufficiale della decisione amministrativa.
+
+
+    Distinti saluti,
+
+    Servizio Amministrativo {ORG}
+
+    (firma)'

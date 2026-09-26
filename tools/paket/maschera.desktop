@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=MASCHERA
+Comment=Lokale Maskierung für Schweizer Dokumente
+Exec=AppRun
+Icon=maschera
+Categories=Office;Utility;
+Terminal=false

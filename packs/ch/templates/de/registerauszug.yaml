@@ -1,0 +1,119 @@
+# Erzeugt mit tools/generate_templates.py.
+# Jede Vorlage hat die Wachen bestanden — VOR dem Training
+# trotzdem lesen. Die Wachen pruefen die Form, nicht den Sinn.
+
+templates:
+- id: de_register_cert_01
+  doc_type: Registerauszug
+  text: '{ORG}
+
+
+    Wohnsitzbestätigung
+
+
+    Name: {FULLNAME}
+
+    Vorname: {GIVENNAME}
+
+    Geburtsdatum: {DATE}
+
+    Nationalität: {NATIONALITY}
+
+    Heimatort: {PLACE_OF_ORIGIN}
+
+    AHV-Nummer: {AHVN13}
+
+    Zivilstand: {MARITALSTATUS}
+
+
+    {~place} wird hiermit offiziell bestätigt.
+
+
+    Beglaubigungsvermerk:
+
+    Dieses Dokument wurde am {DATE} durch die zuständige Behörde beglaubigt und mit dem Dienstsiegel versehen.'
+- id: de_register_cert_03
+  doc_type: Registerauszug
+  text: '{ORG} - Abteilung Personenwesen
+
+
+    Bescheinigung über den Zivilstand und die Herkunft
+
+
+    Person: {FULLNAME}
+
+    Vorname: {GIVENNAME}
+
+    AHV-Nr: {AHVN13}
+
+    Nationalität: {NATIONALITY}
+
+    Heimatort: {PLACE_OF_ORIGIN}
+
+    Zivilstand: {MARITALSTATUS}
+
+
+    Wir bestätigen, dass die oben genannte Person im Register eingetragen ist. {~legal} wurde geprüft.
+
+
+    Beglaubigungsvermerk:
+
+    Ausgestellt in der Gemeinde am {DATE}. Unterschrift und Stempel der Verwaltung.'
+- id: de_register_cert_04
+  doc_type: Bescheinigung Gemeinde
+  text: '{ORG}
+
+
+    Identitätsnachweis für Drittstellen
+
+
+    Name: {FULLNAME}
+
+    Vorname: {GIVENNAME}
+
+    Nationalität: {NATIONALITY}
+
+    Bürgerort: {PLACE_OF_ORIGIN}
+
+    AHV-Nummer: {AHVN13}
+
+    Zivilstand: {MARITALSTATUS}
+
+    Datum der Erfassung: {DATE}
+
+
+    {~trace} dient der Verifizierung dieses Auszugs.
+
+
+    Beglaubigungsvermerk:
+
+    Hiermit beglaubigt die Gemeinde die Richtigkeit der oben aufgeführten Daten per {DATE}.'
+- id: de_register_cert_06
+  doc_type: Bescheinigung Gemeinde
+  text: '{ORG}
+
+
+    Amtliche Bescheinigung
+
+
+    Name: {FULLNAME}
+
+    Vorname: {GIVENNAME}
+
+    AHV-Nr.: {AHVN13}
+
+    Nationalität: {NATIONALITY}
+
+    Bürgerort: {PLACE_OF_ORIGIN}
+
+    Zivilstand: {MARITALSTATUS}
+
+    Ausstellungsdatum: {DATE}
+
+
+    Hinsichtlich der Gebühren wurde {~amount} erhoben.
+
+
+    Beglaubigungsvermerk:
+
+    Beglaubigt und unterzeichnet durch den zuständigen Beamten am {DATE}.'

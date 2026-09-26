@@ -1,0 +1,31 @@
+# Was NICHT ins ausgelieferte Paket gehoert — die EINE Quelle.
+#
+# Alles hier gehoert zur Werkstatt: synthetische Trainingsdaten erzeugen,
+# messen, dokumentieren. Es bleibt im Quellcode auf Git, der Anwender
+# bekommt es nicht. Gemessen am 25.9.2026: die App liest keine dieser
+# Dateien, und ein Baum ohne sie maskiert Zeichen fuer Zeichen gleich.
+#
+# Ein Pfad je Zeile, relativ zum Paketstamm; `*` steht fuer ein Pack.
+#
+# Wer liest:
+#   tools/paket/windows_bauen.py      liest diese Datei
+#   tools/paket/appimage_bauen.fish   von Hand
+#   .dockerignore                     von Hand
+#   tools/paket/PKGBUILD              von Hand
+#   tools/paket/ch.maschera.Maschera.yml  von Hand
+# `tests/test_fenster.py` Punkt 12 verlangt jeden Eintrag an jeder Stelle.
+
+# Namen und Orte fuer die Trainingsdaten (67 MB)
+packs/*/nomenclatures
+# Lueckentexte, aus denen Trainingsdokumente werden
+packs/*/templates
+# Kopplungen fuer die Lueckentexte ({@address} …)
+packs/*/macros.yaml
+# Erfundene Kennnummern mit gueltiger Pruefziffer
+packs/*/generators
+# Messdokumente
+packs/*/eval
+# Manifest — Dokumentation, von keiner Zeile Code gelesen
+packs/*/pack.yaml
+# Fuellt Lueckentexte zu Trainingsbeispielen
+core/injector.py

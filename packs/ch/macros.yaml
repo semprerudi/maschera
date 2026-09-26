@@ -1,0 +1,112 @@
+# =============================================================================
+# MASCHERA — Country Pack CH — Makros
+# =============================================================================
+# Ein Makro ist eine gekoppelte Slotgruppe: mehrere Tags, die im Dokument als
+# Einheit auftreten und deshalb gemeinsam gezogen werden müssen.
+#
+# Das löst zwei Probleme:
+#
+# 1. **Kohärenz.** Zieht man STREET, ZIPCODE und CITY unabhängig, entsteht
+#    "Marktgasse 12, 1204 Bern" — PLZ und Ort passen nicht zusammen. Das Modell
+#    lernt dann, dass sie nichts miteinander zu tun haben, und der ZIPCODE-
+#    Recognizer verliert seinen wichtigsten Kontext.
+#
+# 2. **Das Adressleck.** Die Dokument-Propagation verfolgt STREET weiter,
+#    BUILDINGNUM bewusst nicht — "12" würde jede 12 im Dokument einsammeln.
+#    Übrig bliebe "[STREET_1] 12". Als Makro gezogen, gehören Strasse und
+#    Hausnummer zur selben Gruppe und werden zusammen propagiert.
+#
+# Felder:
+#   parts      Reihenfolge der Slots im erzeugten Text
+#   separator  was zwischen den Teilen steht; `literal` ist unmaskierter Text
+#   coupled    true = die Teile bilden eine Propagationsgruppe
+#   variants   alternative Schreibweisen, zufällig gewählt — reale Dokumente
+#              schreiben Adressen nicht immer gleich
+# =============================================================================
+
+schema_version: 1
+
+macros:
+
+  address:
+    coupled: true
+    variants:
+      - parts: [STREET, " ", BUILDINGNUM, ", ", ZIPCODE, " ", CITY]
+      - parts: [STREET, " ", BUILDINGNUM, "\n", ZIPCODE, " ", CITY]
+      - parts: [STREET, " ", BUILDINGNUM]
+      - parts: [ZIPCODE, " ", CITY]
+
+  # PLZ und Ort GEKOPPELT, ohne die Strassenzeile — fuer den zweizeiligen
+  # Briefkopf, in dem Strasse und Ort auf getrennten Zeilen stehen.
+  #
+  # Zwei getrennte Slots `{ZIPCODE} {CITY}` ziehen zwei getrennte Werte und
+  # erzeugen «9000 Lindau». Ein Modell, das das oft genug sieht, lernt, dass
+  # Postleitzahl und Ort nichts miteinander zu tun haben. Die Kohaerenz
+  # garantiert allein `coupled: true`.
+  plz_ort:
+    coupled: true
+    variants:
+      - parts: [ZIPCODE, " ", CITY]
+
+  # Reihenfolge ist hier keine Stilfrage, sondern der Unterschied zwischen
+  # «das Modell erkennt Namen» und «das Modell zaehlt Woerter».
+  #
+  # Stehen Namen in allen Vorlagen in derselben Reihenfolge, lernt das Modell
+  # eine Positionsregel: erstes Wort GIVENNAME, zweites FULLNAME — und liegt
+  # ueberall falsch, wo ein Register «Nachname Vorname» schreibt. Die
+  # Nomenklaturen geben die Unterscheidung her (getrennte Listen fuer Nach-
+  # und Vornamen); genutzt wird sie erst, wenn die Stellung nicht mehr
+  # traegt. Deshalb steht die Register-Reihenfolge bewusst mit hoeherem
+  # Gewicht — als Gegenlast gegen eine Abkuerzung, nicht als Abbild der
+  # Haeufigkeit in echten Dokumenten.
+  person:
+    coupled: true
+    variants:
+      - parts: [GIVENNAME, " ", FULLNAME]
+        weight: 4
+      # Outlook-Kopfzeilen, Registerauszuege, Aktenrubren, Namenslisten.
+      - parts: [FULLNAME, " ", GIVENNAME]
+        weight: 4
+      - parts: [FULLNAME]
+        weight: 2
+      - parts: [GIVENNAME, " ", FULLNAME, ", geboren am ", DATE]
+        lang: de
+        weight: 2
+      - parts: [GIVENNAME, " ", FULLNAME, ", né le ", DATE]
+        lang: fr
+        weight: 2
+      - parts: [GIVENNAME, " ", FULLNAME, ", nato il ", DATE]
+        lang: it
+        weight: 2
+      - parts: [GIVENNAME, " ", FULLNAME, ", born on ", DATE]
+        lang: en
+        weight: 2
+
+  # Formularfeld «Name, Vorname». Bewusst NICHT als Variante von @person:
+  # in Fliesstext erzeugt «Bolli, Marco, wohnhaft …» eine Kommakette, die
+  # kein Dokument so schreibt — dieselbe Ueberlegung wie beim Etikett vor
+  # {~amount}. Nur dort einsetzen, wo ein Feldname davorsteht.
+  person_feld:
+    coupled: true
+    variants:
+      - parts: [FULLNAME, ", ", GIVENNAME]
+
+  origin:
+    coupled: true
+    variants:
+      - parts: [PLACE_OF_ORIGIN]
+
+  # Kontaktblock: kommt in Verwaltungsbriefen als Einheit vor
+  contact:
+    coupled: false
+    variants:
+      - parts: ["Telefon ", PHONE, ", ", EMAIL]
+        lang: de
+      - parts: ["téléphone ", PHONE, ", ", EMAIL]
+        lang: fr
+      - parts: ["telefono ", PHONE, ", ", EMAIL]
+        lang: it
+      - parts: ["phone ", PHONE, ", ", EMAIL]
+        lang: en
+      - parts: [PHONE]
+      - parts: [EMAIL]

@@ -1,0 +1,271 @@
+# Erzeugt mit tools/generate_templates.py.
+# Jede Vorlage hat die Wachen bestanden — VOR dem Training
+# trotzdem lesen. Die Wachen pruefen die Form, nicht den Sinn.
+
+templates:
+- id: en_email_thread_business_01
+  doc_type: email thread
+  text: 'From: {GIVENNAME} {FULLNAME} <{EMAIL}>
+
+    Sent: {DATE}, {TIME}
+
+    To: {FULLNAME} <{EMAIL}>
+
+    Subject: Quarterly Review for {ORG}
+
+
+    Dear {GIVENNAME},
+
+
+    Thank you for the detailed report. I believe that {~legal} needs to be addressed before we present
+    this to the board of {ORG}. Let me know when you are free for a brief call.
+
+
+    Best regards,
+
+    {FULLNAME}
+
+
+    -----Original Message-----
+
+    From: {FULLNAME} <{EMAIL}>
+
+    Sent: {DATE}, {TIME}
+
+    To: {GIVENNAME} {FULLNAME} <{EMAIL}>
+
+    Subject: Quarterly Review for {ORG}
+
+
+    Hi {GIVENNAME},
+
+
+    Please find attached the draft review for the project at {ORG}. I have included all the necessary
+    metrics.
+
+
+    Regards,
+
+    {FULLNAME}'
+- id: en_email_thread_hr_02
+  doc_type: email thread
+  text: 'From: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Sent: {DATE}, {TIME}
+
+    To: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Cc: HR Department {ORG} <{EMAIL}>
+
+    Subject: Onboarding Process
+
+
+    Hello {GIVENNAME},
+
+
+    I have reviewed the candidate''s file. Please ensure that {~deadline} is monitored closely so we can
+    finalize the contract for {ORG} by next week.
+
+
+    Sincerely,
+
+    {FULLNAME}
+
+
+    -----Original Message-----
+
+    From: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Sent: {DATE}, {TIME}
+
+    To: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Subject: Onboarding Process
+
+
+    Dear {GIVENNAME},
+
+
+    The new employee from {ORG} has submitted all required documents. I am forwarding them for your final
+    approval.
+
+
+    Kind regards,
+
+    {FULLNAME}'
+- id: en_email_thread_support_03
+  doc_type: email thread
+  text: 'From: Support Team {ORG} <{EMAIL}>
+
+    Sent: {DATE}, {TIME}
+
+    To: {GIVENNAME} {FULLNAME} <{EMAIL}>
+
+    Subject: Re: Ticket #{~number}
+
+
+    Hi {GIVENNAME},
+
+
+    our technicians found that {~technical} was the root cause of the lag in ePortal. This has now been
+    resolved for all users at {ORG}.
+
+
+    Best regards,
+
+    {FULLNAME}
+
+
+    -----Original Message-----
+
+    From: {GIVENNAME} {FULLNAME} <{EMAIL}>
+
+    Sent: {DATE}, {TIME}
+
+    To: Support Team {ORG} <{EMAIL}>
+
+    Subject: Ticket #{~number}
+
+
+    Dear Support,
+
+
+    I am experiencing significant delays when accessing the database of {ORG}. Could you please investigate
+    this issue?
+
+
+    Thanks,
+
+    {FULLNAME}'
+- id: en_email_thread_legal_04
+  doc_type: email thread
+  text: 'From: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Sent: {DATE}, {TIME}
+
+    To: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Subject: Case File - {ORG}
+
+
+    Dear Colleague,
+
+
+    Regarding the matter of {ORG}, I have noticed that {~legal} is not fully compliant with current regulations.
+    We should discuss a strategy for the appeal.
+
+
+    Best regards,
+
+    {FULLNAME}
+
+
+    -----Original Message-----
+
+    From: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Sent: {DATE}, {TIME}
+
+    To: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Subject: Case File - {ORG}
+
+
+    Dear {GIVENNAME},
+
+
+    Please find the summary of the case involving {ORG} attached to this email. Let me know your initial
+    thoughts.
+
+
+    Regards,
+
+    {FULLNAME}'
+- id: en_email_thread_admin_05
+  doc_type: email thread
+  text: 'From: {GIVENNAME} {FULLNAME} <{EMAIL}>
+
+    Sent: {DATE}, {TIME}
+
+    To: Registry Office {ORG} <{EMAIL}>
+
+    Subject: Application via EasyGov
+
+
+    Hello,
+
+
+    I am writing to check the status of my submission. I suspect that {~trace} might be missing from the
+    digital folder for {ORG}.
+
+
+    Thank you,
+
+    {FULLNAME}
+
+
+    -----Original Message-----
+
+    From: Registry Office {ORG} <{EMAIL}>
+
+    Sent: {DATE}, {TIME}
+
+    To: {GIVENNAME} {FULLNAME} <{EMAIL}>
+
+    Subject: Application via EasyGov
+
+
+    Dear {GIVENNAME},
+
+
+    We have received your application through EasyGov. Our team at {ORG} will review the documents and
+    get back to you shortly.
+
+
+    Regards,
+
+    {FULLNAME}'
+- id: en_email_thread_insurance_06
+  doc_type: email thread
+  text: 'From: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Sent: {DATE}, {TIME}
+
+    To: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Subject: Policy Adjustment - {ORG}
+
+
+    Dear {GIVENNAME},
+
+
+    I have updated your records as requested. Please be aware that {~amount} has been credited to your
+    account for the current period at {ORG}.
+
+
+    Kind regards,
+
+    {FULLNAME}
+
+
+    -----Original Message-----
+
+    From: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Sent: {DATE}, {TIME}
+
+    To: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Subject: Policy Adjustment - {ORG}
+
+
+    Hello,
+
+
+    I would like to request a change in my coverage options for the policy I hold with {ORG}. Could you
+    send me the updated forms?
+
+
+    Regards,
+
+    {FULLNAME}'

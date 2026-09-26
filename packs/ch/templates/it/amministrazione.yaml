@@ -1,0 +1,33 @@
+# Modelli IT — corrispondenza amministrativa
+templates:
+
+  - id: it_attestato_domicilio
+    doc_type: controllo_abitanti
+    text: |
+      {ORG}, di {CITY}
+      Decisione del {DATE}
+
+      Egregio signor {FULLNAME}
+
+      Si attesta che {@person}, attinente di {PLACE_OF_ORIGIN}, è domiciliato
+      dal {DATE} presso: {@address}
+
+      Numero AVS: {AHVN13}
+      Incarto: {CASE_ID}
+
+      {~legal}. Ricorso possibile {~deadline}.
+
+  - id: it_assicurazione
+    doc_type: assicurazione
+    text: |
+      {ORG}
+      Polizza {INSURANCE_POLICY}
+
+      Assicurato: {@person}
+      {@address}
+      Numero AVS: {AHVN13}
+
+      Importo fatturato: {AMOUNT}
+      Riferimento: {QR_REFERENCE}
+
+      {~amount}. Contatto: {@contact}

@@ -1,0 +1,33 @@
+# Entwicklermaschine. NICHT die Laufzeit der Anwendung — die steht in
+# `requirements.txt` und bleibt absichtlich kurz.
+#
+# Hier steht, was Training, Ausfuhr und Pruefungen zusaetzlich brauchen —
+# etwa `onnxscript` fuer `tools/build_release.py`. Eine Abhaengigkeit, die
+# nirgends angemeldet ist, faellt erst auf, wenn jemand den Befehl von Hand
+# aufruft.
+#
+#     pip install -r requirements.txt -r requirements-dev.txt
+
+-r requirements.txt
+
+# --- Training ---------------------------------------------------------
+torch>=2.1                # nur fuer `--model` gegen einen Trainingsordner
+transformers>=4.40        # Trainer, AutoModelForTokenClassification
+
+# --- Ausfuhr nach ONNX (tools/build_release.py) -----------------------
+onnx>=1.16                # Modellformat
+onnxscript>=0.1           # `torch.onnx.export` braucht es ab torch 2.6
+
+# --- Auswertung -------------------------------------------------------
+pyyaml>=6.0               # steht auch in der Laufzeit, hier fuer Werkzeuge
+
+# --- Pruefungen -------------------------------------------------------
+# `tests/test_schriften.py` Punkt 5 liest die Schriften. Ohne `fonttools`
+# bleibt er aus und sagt es; ohne `brotli` scheitert er an JEDER Datei,
+# weil alle `.woff2` sind.
+fonttools>=4.40
+brotli>=1.0               # WOFF2 entpacken
+
+# --- Bildschirmfotos der Projektseite (tools/schirmbilder.py) ---------
+# Danach einmal: python3 -m playwright install chromium
+playwright>=1.40

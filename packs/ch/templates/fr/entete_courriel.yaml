@@ -1,0 +1,93 @@
+# Vorlagen FR — Mailkoepfe, Verlaeufe, Signaturbloecke
+#
+# Siehe de/mailkopf.yaml. Das franzoesische Outlook schreibt «De :» mit
+# geschuetztem Abstand vor dem Doppelpunkt; der Name steht ebenso in
+# Register-Reihenfolge.
+#
+# ⚠️ Verwaltungsgebrauch, nicht die amtliche Fassung des Katalogs.
+#    Gegenlesen.
+
+templates:
+
+  - id: fr_entete_transfert
+    doc_type: mailverlauf
+    text: |
+      De : {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Envoyé : {DATE} {TIME}
+      À : {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Cc : {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Objet : TR: dossier {CASE_ID}
+
+      Bonjour
+
+      Je transmets la demande. Elle concerne {@person}, {AHVN13},
+      enregistré sous {PATIENT_ID}.
+
+      Formulaire {~number}, {~legal}.
+
+      Meilleures salutations
+      {GIVENNAME} {FULLNAME}
+      {ORG}, {CITY}
+      {PHONE}
+
+  - id: fr_entete_fil
+    doc_type: mailverlauf
+    text: |
+      De : {FULLNAME} {GIVENNAME}
+      Envoyé : {DATE} {TIME}
+      À : {FULLNAME} {GIVENNAME}
+      Objet : RE: accès {URL}
+
+      Merci de votre réponse. Le nom d'utilisateur est {USERNAME},
+      la requête provenait de {IPADDRESS}.
+
+      Réponse du serveur : {~technical}
+
+      Merci de traiter {~deadline}.
+
+      -----Message d'origine-----
+      De : {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Envoyé : {DATE} {TIME}
+      À : {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Objet : accès {URL}
+
+      Bonjour {FULLNAME}
+
+      Depuis le {DATE}, la connexion échoue.
+
+  - id: fr_bloc_signature
+    doc_type: signaturblock
+    text: |
+      Objet : question relative au dossier {CASE_ID}
+
+      Bonjour
+
+      Le renseignement concerne {@person}, originaire de {PLACE_OF_ORIGIN},
+      domicilié {@address}. Base légale : {~legal}, {~place}.
+
+      Meilleures salutations
+
+      {FULLNAME} {GIVENNAME}
+      Secteur registres
+      {ORG}, {CITY}
+      {@address}
+      Téléphone {PHONE} | {EMAIL}
+
+  - id: fr_formulaire_nom_prenom
+    doc_type: formular
+    text: |
+      Demande de compte utilisateur — formulaire {CASE_ID}
+
+      Nom, prénom : {@person_feld}
+      Date de naissance : {DATE}
+      Numéro AVS : {AHVN13}
+      Lieu d'origine : {PLACE_OF_ORIGIN}
+      Adresse : {@address}
+      Nom d'utilisateur : {USERNAME}
+      Adresse électronique : {EMAIL}
+
+      Version du formulaire {~number}, masque de saisie {~technical}.
+
+      Autorité compétente : {ORG}, {CITY}
+      Traitement : {FULLNAME} {GIVENNAME}
+      Saisi le {DATE} à {TIME}.

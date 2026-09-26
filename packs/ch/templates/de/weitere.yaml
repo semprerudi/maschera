@@ -1,0 +1,71 @@
+# Vorlagen DE — restliche Dokumenttypen, decken die verbleibenden Tags ab
+templates:
+
+  - id: de_einbuergerung
+    doc_type: einbuergerung
+    text: |
+      Gemeinde {CITY}, BFS-Nr. {MUNICIPALITY_ID}
+      Einbürgerungsgesuch, Dossier {CASE_ID}
+
+      Gesuchsteller: {@person}
+      Geschlecht: {SEX}, Alter: {AGE}
+      Staatsangehörigkeit: {NATIONALITY}
+      Geburtsland: {COUNTRY}
+      Konfession: {RELIGION}
+      Ausweis: {IDDOC}, {PERMIT_TYPE}
+      Wohnsitz: {@address}
+      AHV-Nummer: {AHVN13}
+
+      Der Gesuchsteller ist {VOTING_RIGHTS}.
+      Massgebend ist {~amount}. Zu bezahlen: {AMOUNT}.
+
+      {~legal}. Einsprache {~deadline}.
+
+  - id: de_versicherungsausweis
+    doc_type: versicherung
+    text: |
+      {ORG}
+
+      Versicherte Person: {@person}, {SEX}, {AGE} Jahre
+      {@address}
+      AHV-Nummer: {AHVN13}
+      Versichertenkarte: {INSURANCE_CARD}
+      Police: {INSURANCE_POLICY}
+      {SOCIAL_INSURANCE}
+
+      Leistungserbringer: {HEALTHCARE_ORG}
+      GLN der Medizinalperson: {GLN}, ZSR-Nr. {ZSR_RCC}
+      Patientennummer: {PATIENT_ID}
+
+      Rechnungsbetrag {AMOUNT}. Nicht darin enthalten ist {~amount}.
+      Online: {URL}
+
+  - id: de_strassenverkehr
+    doc_type: strassenverkehrsamt
+    text: |
+      {ORG}, Kanton {CANTON}
+
+      Halter: {@person}
+      {@address}
+      Geburtsdatum: {DATE}
+      Ausweisnummer: {IDDOC}
+
+      Kontrollschild: {PLATE}
+      Gebühr: {AMOUNT}, Zahlung mit Karte {CREDITCARD}
+      Referenz {QR_REFERENCE}
+
+      {~number}. Frist {~deadline}.
+
+  - id: de_it_zugang
+    doc_type: it_betrieb
+    text: |
+      Zugangsbestätigung
+
+      Benutzer: {@person}
+      E-Mail: {EMAIL}
+      Zugewiesene Adresse: {IPADDRESS}
+      Portal: {URL}
+      Telefon: {PHONE}
+
+      Konto aktiv ab {DATE}, {TIME}.
+      {~number}. Passwortwechsel {~deadline}.

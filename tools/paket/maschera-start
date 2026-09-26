@@ -1,0 +1,4 @@
+#!/bin/sh
+# Der Starter im Flatpak. ⚠️ `exec`, damit `core/prozess.py` den Namen
+# des richtigen Prozesses setzt und nicht den einer Huelle davor.
+exec python3 /app/lib/maschera/app/fenster.py "$@"

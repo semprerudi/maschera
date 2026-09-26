@@ -1,0 +1,456 @@
+# =============================================================================
+# MASCHERA — Country Pack CH — Taxonomie
+# =============================================================================
+# Diese Datei ist die EINZIGE Quelle der Wahrheit für:
+#   - welche Tags existieren
+#   - in welcher Reihenfolge die BIO-Labels indexiert werden
+#   - ob ein Tag maskiert oder nur getaggt wird
+#   - welches Fehlerbudget und damit welche Entscheidungsschwelle gilt
+#
+# VERTRAG (SPEC §12, Falle 1):
+#   Die Reihenfolge der Einträge in `tags:` ist der BIO-Indexvertrag.
+#   Ab dem ersten ernsthaften Training gilt:
+#     - neue Tags werden ANGEHÄNGT, nie eingefügt
+#     - bestehende Tags werden nie umsortiert, nie umbenannt, nie gelöscht
+#     - Ausserbetriebnahme erfolgt über `deprecated: true`, der Index bleibt belegt
+#   Verstoss = alte Checkpoints mappen still auf falsche Labels.
+#
+# Felder je Tag:
+#   tag         Bezeichner, SCREAMING_SNAKE, stabil
+#   stage       1 = Prüfsummen-Override | 2 = Regex mit Kontextanker | 3 = neuronal
+#   action      mask     = wird durch Platzhalter ersetzt
+#               tag_only = wird erkannt, bleibt aber im Klartext stehen
+#   budget      R = recall-first | A = ausgewogen | P = precision-first
+#               null bei Stufe 1 (die Prüfsumme entscheidet, nicht die Schwelle)
+#   bspd        besonders schützenswerte Personendaten, revDSG Art. 5 Bst. c
+#   override    checksum = gültige Prüfsumme maskiert auch ohne Modelltreffer,
+#                          ungültige verwirft auch bei Modelltreffer
+#   note        Kurzbegründung / Prüfverfahren
+# =============================================================================
+
+schema_version: 1
+pack: ch
+
+# Ableitung Budget -> Entscheidungsschwelle (SPEC §4).
+# Reine Daten, ohne Neutraining aenderbar.
+thresholds:
+  # Vorgabe ueber das Fehlerbudget. Drei Regler fuer 39 Tags — das ist
+  # Absicht: es zwingt dazu, ueber Schutzklassen nachzudenken statt ueber
+  # Einzelzahlen.
+  #
+  # 39, nicht 45: die sechs Stufe-1-Tags — AHVN13, UID, IBAN, QR_REFERENCE,
+  # CREDITCARD, GLN — tragen `budget: null`. Dort entscheidet die
+  # Pruefsumme, nicht ein Vertrauenswert.
+  R: 0.30
+  A: 0.50
+  P: 0.70
+
+  # AUSNAHMEN JE TAG — nur mit Messung, festgehalten hier neben dem Wert.
+  ORG: 0.40
+  # ORG: 0.40, gemessen an den Golddokumenten (280 Goldspannen):
+  #
+  #     Schwelle  0.10  0.20  0.30  0.40  0.50  0.60  0.70  0.80  0.90
+  #     Lecks      6     6     6     6     7    10    10    13    15
+  #     Uebermask 96    96    96    94    90    86    82    77    70
+  #
+  # 0.70 (Budget P) kostet vier Lecks gegen 0.40 und spart dafuer zwoelf
+  # Uebermaskierungen. Das ist der falsche Tausch — «ein unterdruecktes
+  # Datum ist teurer als eines zuviel». 0.40 statt 0.10 bis 0.30, weil die
+  # vier Stufen gleich viele Lecks haben und 0.40 davon die wenigste
+  # Uebermaskierung hat.
+  #
+  # Vorbehalt: die Schwelle ist auf demselben Testset gewaehlt, auf dem sie
+  # gemessen wird. Dafuer spricht, dass die Kurve monoton und glatt
+  # verlaeuft; ein unabhaengig gemessener Wert ist sie trotzdem nicht.
+  #
+  # Offen ist die fachliche Frage, ob Firmennamen Budget P verdienen — das
+  # am wenigsten schuetzende — waehrend sie die groesste Leckquelle sind.
+  # Solange sie offen ist, haelt die Ausnahme den Schaden auf.
+
+tags:
+
+  # ---------------------------------------------------------------------------
+  # Stufe 1 — Prüfsummen-Override (6)
+  # Die Mathematik schlägt das Modell, in beide Richtungen.
+  # ---------------------------------------------------------------------------
+
+  - tag: AHVN13
+    stage: 1
+    action: mask
+    placeholder: AHVN13
+    budget: null
+    bspd: false
+    override: checksum
+    note: EAN-13, Präfix 756, 13-stellig
+
+  - tag: UID
+    stage: 1
+    action: mask
+    placeholder: UID
+    budget: null
+    bspd: false
+    override: checksum
+    note: Modulo-11, Präfix CHE, Gewichte 5,4,3,2,7,6,5,4
+
+  - tag: IBAN
+    stage: 1
+    action: mask
+    placeholder: IBAN
+    budget: null
+    bspd: false
+    override: checksum
+    note: Modulo-97 nach ISO 13616, CH/LI = 21 Zeichen
+
+  - tag: QR_REFERENCE
+    stage: 1
+    action: mask
+    placeholder: QR_REFERENCE
+    budget: null
+    bspd: false
+    override: checksum
+    note: Modulo-10 rekursiv, 27-stellig
+
+  - tag: CREDITCARD
+    stage: 1
+    action: mask
+    placeholder: CREDITCARD
+    budget: null
+    bspd: false
+    override: checksum
+    note: Luhn, 12-19 Ziffern
+
+  - tag: GLN
+    stage: 1
+    action: mask
+    placeholder: GLN
+    budget: null
+    bspd: false
+    override: checksum
+    note: EAN-13 ohne 756-Prüfung, Medizinalperson
+
+  # ---------------------------------------------------------------------------
+  # Stufe 2 — Regex mit Kontextanker, kein Override (17)
+  # ---------------------------------------------------------------------------
+
+  - tag: EGID
+    stage: 2
+    action: mask
+    placeholder: EGID
+    budget: R
+    bspd: false
+    note: Kontextwort zwingend, viersprachig
+
+  - tag: EWID
+    stage: 2
+    action: mask
+    placeholder: EWID
+    budget: R
+    bspd: false
+    note: Kontextwort zwingend, nie ohne EGID
+
+  - tag: MUNICIPALITY_ID
+    stage: 2
+    action: mask
+    placeholder: MUNICIPALITY_ID
+    budget: R
+    bspd: false
+    note: BFS-Gemeindenummer, Kontextwort zwingend
+
+  - tag: INSURANCE_CARD
+    stage: 2
+    action: mask
+    placeholder: INSURANCE_CARD
+    budget: R
+    bspd: true
+    note: >-
+      Versichertenkarte, 80756 + 15 Ziffern. OFFENER PUNKT 1: Prüfmechanismus
+      nicht verifiziert, deshalb Stufe 2 statt Stufe 1. Bei Verifikation nach
+      Stufe 1 verschieben — der BIO-Index bleibt davon unberührt.
+
+  - tag: PHONE
+    stage: 2
+    action: mask
+    placeholder: PHONE
+    budget: A
+    bspd: false
+    note: +41 / 0xx
+
+  - tag: PLATE
+    stage: 2
+    action: mask
+    placeholder: PLATE
+    budget: A
+    bspd: false
+    note: Kantonskürzel + 1-6 Ziffern
+
+  - tag: ZIPCODE
+    stage: 2
+    action: mask
+    placeholder: ZIPCODE
+    budget: P
+    bspd: false
+    note: 1000-9699, Ortsname muss folgen
+
+  - tag: AMOUNT
+    stage: 2
+    action: mask
+    placeholder: AMOUNT
+    budget: P
+    bspd: false
+    note: CHF / Fr. / franc / franchi
+
+  - tag: PERMIT_TYPE
+    stage: 2
+    action: mask
+    placeholder: PERMIT_TYPE
+    budget: R
+    bspd: false
+    note: Ausweis B/C/Ci/L/G/F/N/S
+
+  - tag: IDDOC
+    stage: 2
+    action: mask
+    placeholder: IDDOC
+    budget: R
+    bspd: false
+    note: Pass-/ID-Nummer, Buchstabe + 7 Ziffern
+
+  - tag: ZSR_RCC
+    stage: 2
+    action: mask
+    placeholder: ZSR_RCC
+    budget: R
+    bspd: false
+    note: Zahlstellenregister santésuisse
+
+  - tag: PATIENT_ID
+    stage: 2
+    action: mask
+    placeholder: PATIENT_ID
+    budget: R
+    bspd: true
+    note: Kontextwort zwingend
+
+  - tag: CASE_ID
+    stage: 2
+    action: mask
+    placeholder: CASE_ID
+    budget: A
+    bspd: false
+    note: Dossier- / Geschäftsnummer
+
+  - tag: PARCEL
+    stage: 2
+    action: mask
+    placeholder: PARCEL
+    budget: A
+    bspd: false
+    note: Parzelle / Grundstück
+
+  - tag: URL
+    stage: 2
+    action: mask
+    placeholder: URL
+    budget: P
+    bspd: false
+    note: Standardmuster
+
+  - tag: IPADDRESS
+    stage: 2
+    action: mask
+    placeholder: IPADDRESS
+    budget: P
+    bspd: false
+    note: Standardmuster, v4 und v6
+
+  - tag: EMAIL
+    stage: 2
+    action: mask
+    placeholder: EMAIL
+    budget: R
+    bspd: false
+    note: Standardmuster
+
+  # ---------------------------------------------------------------------------
+  # Stufe 3 — rein neuronal (22)
+  # ---------------------------------------------------------------------------
+
+  - tag: FULLNAME
+    stage: 3
+    action: mask
+    placeholder: FULLNAME
+    budget: R
+    bspd: false
+    note: zentraler Identifikator, Dokument-Propagation setzt hier an
+
+  - tag: GIVENNAME
+    stage: 3
+    action: mask
+    placeholder: GIVENNAME
+    budget: R
+    bspd: false
+
+  - tag: DATE
+    stage: 3
+    action: mask
+    placeholder: DATE
+    budget: R
+    bspd: false
+    note: vier Formatvarianten
+
+  - tag: TIME
+    stage: 3
+    action: mask
+    placeholder: TIME
+    budget: R
+    bspd: false
+
+  - tag: STREET
+    stage: 3
+    action: mask
+    placeholder: STREET
+    budget: R
+    bspd: false
+
+  - tag: BUILDINGNUM
+    stage: 3
+    action: mask
+    placeholder: BUILDINGNUM
+    budget: R
+    bspd: false
+
+  - tag: CITY
+    stage: 3
+    action: mask
+    placeholder: CITY
+    budget: A
+    bspd: false
+    note: eine Stadt identifiziert nicht, eine Kleinstgemeinde schon — bewusster Kompromiss
+
+  - tag: COUNTRY
+    stage: 3
+    action: mask
+    placeholder: COUNTRY
+    budget: P
+    bspd: false
+
+  - tag: AGE
+    stage: 3
+    action: mask
+    placeholder: AGE
+    budget: A
+    bspd: false
+    note: Quasi-Identifikator
+
+  - tag: SEX
+    stage: 3
+    action: mask
+    placeholder: SEX
+    budget: A
+    bspd: false
+    note: Quasi-Identifikator
+
+  - tag: MARITALSTATUS
+    stage: 3
+    action: mask
+    placeholder: MARITALSTATUS
+    budget: A
+    bspd: false
+
+  - tag: RELIGION
+    stage: 3
+    action: mask
+    placeholder: RELIGION
+    budget: R
+    bspd: true
+    note: RHG Art. 6 Bst. l
+
+  - tag: NATIONALITY
+    stage: 3
+    action: mask
+    placeholder: NATIONALITY
+    budget: R
+    bspd: true
+    note: Ethnie-Rückschluss
+
+  - tag: SOCIAL_INSURANCE
+    stage: 3
+    action: mask
+    placeholder: SOCIAL_INSURANCE
+    budget: R
+    bspd: true
+    note: IV-Fall, Kassennummer
+
+  - tag: INSURANCE_POLICY
+    stage: 3
+    action: mask
+    placeholder: INSURANCE_POLICY
+    budget: R
+    bspd: true
+
+  - tag: RESIDENCE_STATUS
+    stage: 3
+    action: mask
+    placeholder: RESIDENCE_STATUS
+    budget: A
+    bspd: false
+    note: Niederlassung / Aufenthalt
+
+  - tag: VOTING_RIGHTS
+    stage: 3
+    action: mask
+    placeholder: VOTING_RIGHTS
+    budget: A
+    bspd: false
+
+  - tag: PLACE_OF_ORIGIN
+    stage: 3
+    action: mask
+    placeholder: PLACE_OF_ORIGIN
+    budget: R
+    bspd: false
+    note: >-
+      mask, nicht tag_only. Der Heimatort verrät zwar nichts über den
+      Wohnort, aber: das Schweizer
+      Ortschaftenverzeichnis hängt Kantonskürzel an, um gleichnamige Orte zu
+      unterscheiden ("Reute AR", "Benken SG"). Wohnorte sehen damit exakt aus
+      wie Heimatorte, und die Fehlerrichtung war asymmetrisch — ein als
+      Heimatort gelesener Wohnort blieb im Klartext, umgekehrt ging nur
+      Kontext verloren. Solange ein nicht maskierendes Tag einem maskierenden
+      zum Verwechseln ähnlich sieht, lecken Fehler in eine Richtung. Das ist
+      nicht wegtrainierbar, weil die Formen an der Oberfläche identisch sind.
+
+  - tag: CANTON
+    stage: 3
+    action: tag_only
+    budget: P
+    bspd: false
+    note: trägt Kontext, identifiziert nicht
+
+  - tag: ORG
+    stage: 3
+    action: mask
+    placeholder: ORG
+    budget: P
+    bspd: false
+
+  - tag: HEALTHCARE_ORG
+    stage: 3
+    action: mask
+    placeholder: HEALTHCARE_ORG
+    budget: R
+    bspd: true
+    note: Spezialklinik verrät mehr als die Diagnose
+
+  # Aus dem IT-Support-Anwendungsfall: in Dateipfaden (/home/mmueller/),
+  # Kontonamen, Protokollzeilen und Fehlermeldungen stehen Benutzernamen, und
+  # die identifizieren eine Person ebenso wie ein Nachname. Budget R, weil ein
+  # uebersehener Benutzername in einem Ticket direkt zur Person fuehrt.
+  # Als letzter Eintrag ANGEHAENGT, wie der Vertrag es verlangt.
+  - tag: USERNAME
+    stage: 3
+    action: mask
+    placeholder: USERNAME
+    budget: R
+    bspd: false
+    note: Kontoname, Pfadbestandteil, Anmeldename

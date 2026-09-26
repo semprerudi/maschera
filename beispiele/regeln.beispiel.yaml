@@ -1,0 +1,47 @@
+# Eigene Regeln — Beispiel
+#
+# Kopieren nach ~/.config/maschera/regeln.yaml und anpassen.
+#
+# Wozu das gut ist: Jede Stelle hat Bezeichner, die sonst niemand kennt —
+# Fallnummern eines Fachverfahrens, Kuerzel einer Abteilung, Projektnamen.
+# Sie gehoeren NICHT in den Labelvertrag: Der beschreibt, was das Modell
+# vorhersagt, und das Modell soll allen dienen. Ein Tag, das nur in einem
+# einzigen Haus vorkommt, haette dort nichts verloren.
+#
+# Deshalb der Praefix `X_`: Diese Tags entstehen erst beim Laden der Regeln
+# und koennen konstruktionsbedingt nie ins Training gelangen.
+#
+# WARNUNG: Die Regeln sind Teil dessen, was gemessen wird. Wer sie aendert,
+# aendert das Ergebnis — und eine Auswertung auf einer Maschine ohne diese
+# Datei misst eine andere Kette.
+
+version: 1
+regeln:
+  # `art: etikett` — der Wert steht hinter einem Etikett. Das Etikett ist der
+  # Anker; ohne es greift die Regel nicht. Das ist Absicht: Eine blosse
+  # Ziffernfolge ist noch kein Personendatum.
+  - id: dossier
+    bezeichnung: Dossiernummer
+    platzhalter: Dossier
+    art: etikett
+    etiketten: ["Dossier-Nr.", "Dossier Nr.", "Dossiernummer", "Dossier"]
+    wertform: ziffern_gruppiert
+    min: 6
+    max: 16
+
+  - id: fallnummer
+    bezeichnung: Fallnummer
+    platzhalter: Fall
+    art: etikett
+    etiketten: ["Fall-Nr.", "Fall Nr.", "Fallnummer"]
+    wertform: ziffern
+    min: 3
+    max: 8
+
+  # `art: wortliste` — feste Woerter, ohne Etikett. Fuer Bezeichner, die fuer
+  # sich allein stehen und in keiner Nomenklatur vorkommen.
+  - id: projekte
+    bezeichnung: interne Projektnamen
+    platzhalter: Projekt
+    art: wortliste
+    woerter: ["Seerose", "Kirschbaum", "Nordwind"]

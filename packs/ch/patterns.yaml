@@ -1,0 +1,658 @@
+# =============================================================================
+# MASCHERA — Country Pack CH — Muster
+# =============================================================================
+# Stufe 1: Muster findet Kandidaten, die PRÜFSUMME entscheidet.
+# Stufe 2: Muster findet Kandidaten, der ANKER entscheidet. Kein Override.
+#
+# Felder:
+#   pattern       Regex auf den Wert. Die Fundstelle IST die Entitätsspanne,
+#                 Trennzeichen inklusive.
+#   validator     Name aus validators/checksums.py VALIDATORS
+#   anchor        Kontextwörter. required: Treffer ohne Anker wird verworfen.
+#   anchor_window Zeichen vor (bzw. nach) der Fundstelle, in denen gesucht wird
+#   anchor_after  Anker darf auch NACH dem Wert stehen (z.B. "4000 Franken")
+#   anchor_not    Negativanker. Trifft einer, wird verworfen.
+#   flags         i = ignorecase
+#
+# Anker sind viersprachig in EINER Liste. Ein Deutschschweizer Dossier zitiert
+# französische Formulare — Sprachtrennung würde genau diese Fälle verlieren.
+# =============================================================================
+
+schema_version: 1
+
+patterns:
+
+  # ---------------------------------------------------------------------------
+  # Stufe 1 — Prüfsumme entscheidet
+  # ---------------------------------------------------------------------------
+
+  AHVN13:
+    stage: 1
+    pattern: '756[.\s]?\d{4}[.\s]?\d{4}[.\s]?\d{2}(?!\d)'
+    validator: AHVN13
+
+  UID:
+    stage: 1
+    pattern: 'CHE[-\s]?\d{3}[.\s]?\d{3}[.\s]?\d{3}(?:\s?(?:MWST|TVA|IVA|HR))?'
+    validator: UID
+
+  # IBAN wird NICHT per Regex erkannt, sondern in core/detectors.py.
+  # Grund: feste Laenge je Land (ISO 13616). Ein Muster mit Spannweite
+  # hoert zu frueh auf (Rest bleibt im Klartext) oder frisst Nachbartext.
+
+  QR_REFERENCE:
+    stage: 1
+    pattern: '(?<!\d)\d{2}(?:[\s]?\d{5}){5}(?!\d)'
+    validator: QR_REFERENCE
+
+  # GLN und CREDITCARD: Prüfsumme allein ist KEIN Beweis. Eine zufällige
+  # 13-stellige Zahl besteht EAN-13 mit rund 10 % Wahrscheinlichkeit, Luhn
+  # ebenso. Beide brauchen zusätzlich einen Anker bzw. eine echte Kartenkennung.
+
+  GLN:
+    stage: 1
+    pattern: '(?<!\d)\d{13}(?!\d)'
+    validator: GLN
+    anchor_window: 60
+    anchor:
+      required: true
+      words:
+        - GLN
+        - Global Location Number
+        - Medizinalperson
+        - MedReg
+        - numéro GLN
+        - numero GLN
+
+  CREDITCARD:
+    stage: 1
+    # Nur echte Kartenkennungen: Visa 4, Mastercard 51-55 und 2221-2720,
+    # Amex 34/37, Diners 36, Discover 6011.
+    pattern: '(?<![\d-])(?:4\d{3}|5[1-5]\d{2}|2[2-7]\d{2}|3[47]\d{2}|36\d{2}|6011)[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{2,4}(?![\d-])'
+    validator: CREDITCARD
+
+  # ---------------------------------------------------------------------------
+  # Stufe 2 — Anker entscheidet, kein Override
+  # ---------------------------------------------------------------------------
+
+  EGID:
+    stage: 2
+    pattern: '(?<!\d)\d{3,9}(?!\d)'
+    # Etikett steht bei diesen Feldern immer inline — sonst greift
+    # "BFS-Nr. 351" auf ein EGID-Etikett zwei Zeilen darueber zu.
+    anchor_same_line: true
+    anchor_window: 45
+    anchor:
+      required: true
+      words:
+        - EGID
+        - Gebäudeidentifikator
+        - Gebaeudeidentifikator
+        - eidg. Gebäudenummer
+        - identificateur fédéral de bâtiment
+        - identificateur de bâtiment
+        - identificatore federale dell'edificio
+        - identificatore dell'edificio
+        - federal building identifier
+        - building identifier
+
+  EWID:
+    stage: 2
+    pattern: '(?<!\d)\d{1,3}(?!\d)'
+    # Etikett steht bei diesen Feldern immer inline — sonst greift
+    # "BFS-Nr. 351" auf ein EGID-Etikett zwei Zeilen darueber zu.
+    anchor_same_line: true
+    anchor_window: 40
+    anchor:
+      required: true
+      words:
+        - EWID
+        - Wohnungsidentifikator
+        - eidg. Wohnungsnummer
+        - identificateur de logement
+        - identificatore di abitazione
+        - dwelling identifier
+
+  MUNICIPALITY_ID:
+    stage: 2
+    pattern: '(?<!\d)\d{1,4}(?!\d)'
+    # Etikett steht bei diesen Feldern immer inline — sonst greift
+    # "BFS-Nr. 351" auf ein EGID-Etikett zwei Zeilen darueber zu.
+    anchor_same_line: true
+    anchor_window: 45
+    anchor:
+      required: true
+      words:
+        - BFS-Nr
+        - BFS-Nummer
+        - BFS Nr
+        - Gemeindenummer
+        - Gemeinde-Nr
+        - numéro OFS
+        - no OFS
+        - numero UST
+        - FSO number
+        - municipality number
+
+  INSURANCE_CARD:
+    stage: 2
+    pattern: '(?<!\d)80756\d{15}(?!\d)'
+
+  PHONE:
+    stage: 2
+    pattern: '(?:\+41|0041|0)[\s./-]?\(?\d{2}\)?[\s./-]?\d{3}[\s./-]?\d{2}[\s./-]?\d{2}(?!\d)'
+
+  PLATE:
+    stage: 2
+    pattern: '(?<![A-Z])(?:AG|AI|AR|BE|BL|BS|FR|GE|GL|GR|JU|LU|NE|NW|OW|SG|SH|SO|SZ|TG|TI|UR|VD|VS|ZG|ZH)[\s·-]?\d{1,6}(?!\d)'
+
+  ZIPCODE:
+    stage: 2
+    # Ortsname muss folgen — das ist die Precision-Garantie (Budget P).
+    # Ortsname muss auf DERSELBEN Zeile folgen (\s wuerde Jahreszahlen am
+    # Absatzende einsammeln) und darf kein Waehrungswort sein ("4000 Franken").
+    # Zweites Zeichen muss ein KLEINBUCHSTABE sein — kein Mindestwortlaenge.
+    # Zwei Fehler auf einmal behoben:
+    #   "4096 MB." wurde als PLZ erkannt (Speicherangabe im IT-Ticket):
+    #     der Satzpunkt zaehlte als drittes Zeichen. Ebenso "5432 TCP".
+    #   "2300 La Chaux-de-Fonds" wurde NICHT erkannt: "La" hat nur zwei
+    #     Zeichen und fiel durch die Mindestlaenge.
+    # Schweizer Ortsnamen haben ausnahmslos einen Kleinbuchstaben an
+    # zweiter Stelle (Bern, La Chaux-de-Fonds, St. Gallen, Zürich);
+    # Einheiten- und Protokollkuerzel wie MB, GB, TCP, MHz nie.
+    pattern: "(?<!\\d)(?:[1-8]\\d{3}|9[0-5]\\d{2}|96[0-8]\\d|969[0-9])(?=[ \\t]+(?!Franken|Fr\\.|CHF|francs?|franchi)[A-ZÄÖÜ][a-zäöüàéèêîôûç])"
+
+  AMOUNT:
+    stage: 2
+    # Drei Fallen, alle fuehren zu TEILmaskierung:
+    #   1. "1250 franchi" -> nur "250 franc" maskiert, wenn der Zifferblock
+    #      eine Tausendertrennung verlangt.
+    #   2. "francs?" trifft ohne Wortgrenze mitten in "franchi" und frisst sich
+    #      in das naechste Wort hinein.
+    #   3. "CHF 4,000" (englische Tausendertrennung) -> nur "CHF 4,00". Komma
+    #      ist je nach Sprache Tausender- ODER Dezimaltrenner; deshalb Komma in
+    #      die Tausenderklasse UND (?!\d) hinter die Rappen.
+    # Eine halb maskierte Zahl ist schlimmer als eine unmaskierte: sie sieht
+    # unter dem Platzhalter erledigt aus.
+    pattern: "(?:CHF|SFr\\.|Fr\\.)\\s?(?:\\d{1,3}(?:['’\\s,]\\d{3})+|\\d+)(?:[.,]\\d{2}(?!\\d)|[.,]--)?|(?:\\d{1,3}(?:['’\\s,]\\d{3})+|\\d+)(?:[.,]\\d{2}(?!\\d))?\\s?(?:Franken|franchi|francs|franc)(?![A-Za-zÀ-ÿ])"
+    anchor_window: 45
+    # Verwaltungstexte wimmeln von Beträgen, die keine Personendaten sind.
+    # Diese Negativanker sind das Gegenstück zu den ~threshold-Decoys.
+    anchor_not:
+      - Freibetrag
+      - Höchstbetrag
+      - Mindestbetrag
+      - Grundbedarf
+      - Ansatz
+      - Pauschale
+      - Gebühr
+      - Tarif
+      - franchise
+      - franchigia
+      - émolument
+      - emolument
+      - emolumento
+      - tassa
+      - forfait
+      - Beitragsansatz
+      - montant maximal
+      - montant minimal
+      - importo massimo
+      - importo minimo
+      # Englisch fehlte ganz — auffaellig geworden am Decoy
+      # "the tax-free allowance of CHF 4,000".
+      - allowance
+      - tax-free
+      - fee
+      - flat rate
+      - maximum amount
+      - minimum amount
+      - deductible
+
+  PERMIT_TYPE:
+    stage: 2
+    pattern: '(?:Ausweis|Bewilligung|permis|permesso|permit)\s+(?:Ci|[BCLGFNS])(?![\w])'
+    flags: i
+
+  IDDOC:
+    stage: 2
+    pattern: '(?<![A-Z0-9])[A-Z]\d{7}(?![A-Z0-9])'
+    anchor_window: 50
+    anchor:
+      required: false
+      words:
+        - Pass
+        - Passnummer
+        - Reisepass
+        - Identitätskarte
+        - Ausweisnummer
+        - passeport
+        - carte d'identité
+        - passaporto
+        - carta d'identità
+        - passport
+        - ID card
+
+  ZSR_RCC:
+    stage: 2
+    pattern: '(?<![A-Z0-9])[A-Z]\d{6}(?![A-Z0-9])'
+    anchor_window: 50
+    anchor:
+      required: true
+      words:
+        - ZSR
+        - ZSR-Nr
+        - Zahlstellenregister
+        - RCC
+        - registre des codes-créanciers
+        - registro dei codici creditori
+        - santésuisse
+
+  PATIENT_ID:
+    stage: 2
+    pattern: '[A-Z0-9][A-Z0-9./-]{3,19}'
+    anchor_window: 40
+    anchor:
+      required: true
+      words:
+        - Patientennummer
+        - Patienten-Nr
+        - Patienten-ID
+        - Fallnummer
+        - numéro de patient
+        - numéro du patient
+        - numero paziente
+        - patient number
+        - patient ID
+
+  CASE_ID:
+    stage: 2
+    pattern: '[A-Z]{2,6}[-/][0-9]{2,4}[-/][0-9]{2,6}|[0-9]{4}[-/][0-9]{3,6}'
+    anchor_window: 40
+    anchor:
+      required: false
+      words:
+        - Dossier
+        - Geschäftsnummer
+        - Geschäfts-Nr
+        - Aktenzeichen
+        - Referenz
+        - numéro de dossier
+        - numero d'incarto
+        - case number
+        - file number
+
+  PARCEL:
+    stage: 2
+    pattern: '(?<!\d)\d{1,5}(?:[.-]\d{1,3})?(?!\d)'
+    # Etikett steht bei diesen Feldern immer inline — sonst greift
+    # "BFS-Nr. 351" auf ein EGID-Etikett zwei Zeilen darueber zu.
+    anchor_same_line: true
+    anchor_window: 40
+    anchor:
+      required: true
+      words:
+        - Parzelle
+        - Parzellen-Nr
+        - Grundstück
+        - Grundstücks-Nr
+        - Liegenschaft
+        - parcelle
+        - bien-fonds
+        - particella
+        - fondo
+        - parcel
+        - plot
+
+  # Heimatort in der ueblichen Schreibweise "Hautemorges VD". Das Kantonskuerzel
+  # ist der Anker — ohne ihn waere "Rue", "Sur", "Mon" oder "Au" ein Praeposition
+  # und "Zug" ein Fahrzeug. Der Kanton allein macht daraus einen Ortsbezug.
+  # Fuellt PLACE_OF_ORIGIN, das tag_only ist: der Heimatort bleibt lesbar, wird
+  # aber erkannt, damit CITY ihn nicht mitmaskiert.
+  PLACE_OF_ORIGIN:
+    stage: 2
+    # Schraegstrich gehoert in die Zeichenklasse: 46 Heimatorte sind zweisprachig
+    # geschrieben (Biel/Bienne, Vaz/Obervaz, Brienz/Brinzauls).
+    pattern: "[A-ZÄÖÜÀÉÈ][\\wäöüàéèêîôûç.'’/-]+(?:[ -](?:[A-ZÄÖÜÀÉÈ][\\wäöüàéèêîôûç.'’/-]*|(?:de|di|du|da|dal|des|dei|degli|della|dello|la|le|les|el|am|im|an|auf|bei|ob|vor|unter|ausser|sur|sous|sopra|sotto|en|aux|au|à|in|et|ed|e)(?=[ -]))){0,4}(?:\\s\\([^()]*(?:\\([^()]*\\)[^()]*)*\\))?\\s(?:AG|AI|AR|BE|BL|BS|FR|GE|GL|GR|JU|LU|NE|NW|OW|SG|SH|SO|SZ|TG|TI|UR|VD|VS|ZG|ZH)(?![A-Za-z])"
+    anchor_window: 60
+    anchor_after: true
+    # Der Anker muss NAHE stehen. "AG" ist Aargau und zugleich die haeufigste
+    # Rechtsform der Schweiz: ohne Abstandsgrenze wurde "Glaeubiger Alpin
+    # Treuhand AG" zum Heimatort. Mit Grenze greift "von Baden AG" weiterhin,
+    # ein Firmenname mitten im Satz nicht mehr.
+    anchor_max_distance: 4
+    anchor:
+      required: true
+      words:
+        - Heimatort
+        - heimatberechtigt
+        - Bürgerort
+        - Buergerort
+        - Bürgerrecht
+        - von
+        - lieu d'origine
+        - originaire de
+        - droit de cité
+        - luogo di origine
+        - attinente
+        - place of origin
+        # Auch die AMTLICHEN Etiketten aus dem Merkmalskatalog — «Luogo di
+        # attinenza: Zug ZG» braucht einen Anker in jeder Sprache.
+        - luogo di attinenza
+        - Heimatorte
+        - lieu d'origine
+        - lieux d'origine
+        - luoghi di attinenza
+        - places of origin
+
+  # DATE ist in der Taxonomie Stufe 3 (neuronal). Dieser Erkenner ERSETZT das
+  # Modell nicht, er faengt dessen Zerstueckelung ab: ein Modell kann
+  # "12.06.2025" in mehrere Spannen zerlegen und dazwischen Zeichen im
+  # Klartext stehen lassen -> "[DATE_1]0[DATE_2]". Ein Datum ist
+  # deterministisch erkennbar; das dem Modell allein zu ueberlassen ist
+  # unnoetiges Risiko.
+  #
+  # RUECKBLICKE VOR DEM DATUM: «Bundesgesetz vom 19. Juni 1992» ist kein
+  # Personendatum. Es zu maskieren waere Uebermaskierung, kein Leck — der Text
+  # wird schlechter lesbar, aber es geht nichts hinaus.
+  #
+  # Warum nicht `anchor_not`: `anchor_not` sucht als Teilzeichenkette in einem
+  # Fenster von 40 Zeichen in BEIDE Richtungen. Ein Negativanker «Gesetz» oder
+  # «DSG» unterdrueckte dann auch das ECHTE Datum in
+  #
+  #     «Gemaess DSG hat Frau Mueller am 14.03.2026 Auskunft verlangt»
+  #
+  # Damit taeuschte man Uebermaskierung gegen ein Leck. Ein Datum zu
+  # unterdruecken ist immer teurer, als eines zuviel zu maskieren.
+  #
+  # Deshalb Rueckblicke fester Laenge: sie greifen NUR, wenn das Gesetzeswort
+  # unmittelbar davorsteht. «Ihr Schreiben vom 14. Maerz 2026» und «Der
+  # Vertrag vom 01.02.2024» tragen dasselbe «vom» — und bleiben maskiert.
+  #
+  # Preis: im Franzoesischen und Italienischen steht zwischen Gesetzeswort
+  # und Datum der Gesetzesname («loi sur la protection des donnees du 25
+  # septembre 2020»). Dort greift der Rueckblick nicht. Der engere Schnitt
+  # macht nichts kaputt; ein breiterer haette Geburtsdaten gefaehrdet.
+  DATE:
+    stage: 2
+    flags: i
+    pattern: "(?<!gesetz vom )(?<!gesetzes vom )(?<!verordnung vom )(?<!verordnungen vom )(?<!beschluss vom )(?<!abkommen vom )(?<!reglement vom )(?<!richtlinie vom )(?<!weisung vom )(?<!kreisschreiben vom )(?<!loi du )(?<!loi fédérale du )(?<!ordonnance du )(?<!arrêté du )(?<!règlement du )(?<!directive du )(?<!convention du )(?<!legge del )(?<!legge federale del )(?<!ordinanza del )(?<!decreto del )(?<!regolamento del )(?<!direttiva del )(?<!convenzione del )(?<!act of )(?<!regulation of )(?<!directive of )(?<![\\d.])(?:[0-3]?\\d[./-][0-1]?\\d[./-](?:\\d{4}|\\d{2})|\\d{4}-[0-1]\\d-[0-3]\\d|[0-3]?\\d\\.?\\s(?:Januar|Februar|März|Maerz|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember|janvier|février|fevrier|mars|avril|mai|juin|juillet|août|aout|septembre|octobre|novembre|décembre|decembre|gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|dicembre|January|February|March|May|June|July|August|September|October|November|December)\\s\\d{4})(?!\\d)(?!\\.\\d)"
+
+  # USERNAME ist in der Taxonomie Stufe 3 (neuronal). Dieses Muster ersetzt das
+  # Modell nicht, es faengt die DETERMINISTISCHEN Formen ab: Dateipfade und
+  # Etikettfelder. In Support-Tickets stehen die haeufiger als der Name selbst,
+  # und ein uebersehener Benutzername fuehrt direkt zum Mitarbeitenden.
+  USERNAME:
+    stage: 2
+    # Mindestens vier Zeichen: sonst wird in "/home/ist/da" das Wegstueck
+    # "ist" zum Benutzernamen.
+    pattern: "(?<=/home/)[a-z][a-z0-9._-]{3,30}|(?<=\\\\Users\\\\)[A-Za-z][A-Za-z0-9._-]{3,30}|(?<![A-Za-z0-9])[A-Z]{2,6}\\\\[a-z][a-z0-9._-]{3,30}"
+    flags: ""
+
+  # Zweites Muster fuer dasselbe Tag — der Schluessel muss eindeutig sein,
+  # `tag:` setzt das tatsaechliche Label.
+  USERNAME_ETIKETT:
+    tag: USERNAME
+    stage: 2
+    # Der Wert muss an einem ECHTEN Wortanfang stehen: davor Zeilenanfang,
+    # Leerraum, Doppelpunkt oder Gleichzeichen — nichts anderes.
+    #
+    # In `ORA-01017: invalid username/password` greift sonst der Anker
+    # "username" und macht "password" zum Benutzernamen. Ein Etikettfeld hat
+    # den Wert nie hinter einem Schraegstrich — dort steht ein Wortpaar.
+    #
+    # Ein Lookbehind nur gegen / und \ genuegt nicht: er verschiebt den
+    # Treffer bloss um ein Zeichen, aus "password" wird "assword" — eine
+    # TEILmaskierung, also die schlimmere Fehlerklasse. Pfadformen
+    # (`/home/mmueller`) deckt das erste Muster ab, nicht dieses.
+    pattern: "(?<![^\\s:=])[A-Za-z][A-Za-z0-9._-]{3,30}"
+    anchor_window: 30
+    anchor_same_line: true
+    # Nur das unmittelbar folgende Wort. Sonst wird in "Login mmueller seit
+    # gestern" auch "seit" und "gestern" zum Benutzernamen.
+    anchor_max_distance: 3
+    anchor:
+      required: true
+      words:
+        # Nur ETIKETTEN, keine gewoehnlichen Substantive.
+        #
+        # Draussen sind "Benutzer", "User", "utilisateur", "utente" — sonst macht
+        # "Der Benutzer meldet einen Fehler" das Wort "meldet" zum Benutzernamen.
+        # Ebenso "Konto" und "account": "Account statement", "Account holder",
+        # "Konto aktiv ab" lieferten sonst "statement", "holder", "aktiv".
+        # Zusammengesetzte Formen wie "Benutzerkonto" und "Kontoname" bleiben —
+        # die stehen nie als Subjekt im Satz.
+        - Benutzername
+        - Benutzerkonto
+        - Anmeldename
+        - Kontoname
+        - Login
+        - Username
+        - User-ID
+        - Userid
+        - nom d'utilisateur
+        - identifiant
+        - nome utente
+
+  EMAIL:
+    stage: 2
+    pattern: "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+
+  URL:
+    stage: 2
+    # Nachgestellte Satzzeichen ausschliessen: "https://x.ch/a/b," verschluckte
+    # das Komma und die Spanne passte nicht mehr zur Wahrheit.
+    pattern: 'https?://[^\s<>"]*[^\s<>",.;:!?)]|www\.[A-Za-z0-9.-]+\.[A-Za-z]{2,}(?:/[^\s<>"]*[^\s<>",.;:!?)])?'
+
+  IPADDRESS:
+    stage: 2
+    # Ein gueltiger IPv6 hat ACHT Gruppen oder enthaelt `::`. Alles dazwischen
+    # gibt es nicht. Ein lockereres Muster (3 bis 8 Gruppen aus Hexziffern)
+    # traefe jede Uhrzeit: `08:12:00` besteht aus lauter gueltigen Hexziffern,
+    # und in Support-Tickets stehen Zeitstempel in jeder zweiten Zeile.
+    #
+    # Bekannte Luecke: IPv4-in-IPv6 (`::ffff:192.0.2.1`) wird in zwei Spannen
+    # zerlegt, der Doppelpunkt dazwischen bleibt im Klartext. Beide Teile
+    # werden maskiert, es geht also kein Personendatum durch. Ein Muster, das
+    # den Fall sauber abdeckt, waere unlesbar — und der Fall kommt in
+    # Schweizer Verwaltungsdokumenten praktisch nicht vor.
+    pattern: '(?<![\d.])(?:(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(?![\d.])|(?<![:\w])(?:[A-Fa-f0-9]{1,4}:){7}[A-Fa-f0-9]{1,4}(?![:\w])|(?<![:\w])(?=[A-Fa-f0-9:]*[A-Fa-f0-9])(?:[A-Fa-f0-9]{1,4}(?::[A-Fa-f0-9]{1,4})*)?::(?:[A-Fa-f0-9]{1,4}(?::[A-Fa-f0-9]{1,4})*)?(?![:\w])'
+
+  # -------------------------------------------------------------------------
+  # Behoerdennamen. `ORG` speist sich aus Zefix — dem HANDELSregister.
+  # Schweizer Behoerden stehen dort nicht, und ohne Muster blieben Namen wie
+  # `Bundesamt für Statistik`, `Ufficio dello stato civile`, `Repubblica e
+  # Cantone Ticino` oder `Zivilstandsamt` im Klartext.
+  #
+  # Behoerdennamen sind regelmaessig gebaut, anders als Firmennamen. Deshalb
+  # ein Muster statt einer Liste: wirkt sofort, ohne Neutraining, und deckt
+  # auch Stellen ab, die es beim Training noch nicht gab.
+  #
+  # `tag: ORG`, kein eigenes Tag — der Labelvertrag bleibt bei 45.
+  # -------------------------------------------------------------------------
+  # Regeln, die das Muster einhaelt:
+  #
+  # 1. `[ \t]+` statt `\s+`: ein Behoerdenname steht immer auf einer Zeile.
+  #    Ueber Zeilenumbrueche hinweg verschluckte er die naechste Zeile.
+  #
+  # 2. Die italienische und franzoesische Fortsetzung nimmt nur KLEIN
+  #    geschriebene Woerter auf. Sonst frisst «Controllo abitanti di Bern»
+  #    den Ortsnamen mit — und `Bern` ist eine eigene `CITY`-Spanne.
+  #    `dello stato civile`, `della popolazione`, `de la population` sind
+  #    klein, Ortsnamen sind es nie.
+  #
+  # 2a. Genau EIN grossgeschriebenes Wort darf mit, wenn davor ein
+  #     bestimmter Artikel steht: «Dipartimento delle Istituzioni» ist ein
+  #     Name, «Controllo abitanti di Bern» ist Amt plus Ort. `delle/della/
+  #     dello` traegt einen Namensteil, `di/da` fuehrt zum Ortsnamen.
+  #
+  # 3. `-verwaltung` ist als Suffix zu generisch («Geschäftsverwaltung»,
+  #    «Vermögensverwaltung» sind Sachbegriffe) — dafuer eine feste Liste.
+  #    `-amt`, `-behörde` und `-dienste` bleiben als Suffix: ein Wort auf
+  #    `-amt` ist in der Verwaltungssprache praktisch immer eine Stelle.
+  #
+  # 4. Italienisch auch OHNE Artikel: «Sezione popolazione» und «Ufficio
+  #    stato civile» stehen so in echten Signaturen. Mindestlaenge 4 fuer
+  #    das Folgewort haelt Fuellwoerter draussen.
+  #
+  # 4a. «Settore giuridico e vigilanza» — das einbuchstabige `e` faellt
+  #     durch jede Mindestlaenge. Eigene Alternative dafuer.
+  ORG_FIRMA:
+    tag: ORG
+    stage: 2
+    # Firmennamen MIT Bindeglied — «Strub & Partner GmbH», «Meier und
+    # Partner AG». Das Modell bricht gern am kaufmaennischen Und ab, und
+    # dahinter faengt nichts wieder an:
+    #
+    #     ORG  "Strub & Partner GmbH -> '&PartnerGmbH' offen"
+    #
+    # WARUM DAS BINDEGLIED AN FESTER STELLE STEHT
+    #
+    # Beliebig viele grossgeschriebene Woerter vor der Rechtsform ergaeben:
+    #
+    #     'Glaeubiger Limmat Bau GmbH'   statt   'Limmat Bau GmbH'
+    #     'Zwischen Alpin Treuhand AG'   statt   'Alpin Treuhand AG'
+    #
+    # Im Deutschen ist jedes vorangehende Substantiv grossgeschrieben;
+    # «Glaeubiger» laesst sich von «Strub» nicht unterscheiden. Ein Muster, das
+    # systematisch ueber den Wert hinausgreift, erzeugt Teiltreffer.
+    #
+    # Das `&` an fester Stelle loest es: der Ausdruck KANN nicht bei einem
+    # vorangehenden Substantiv beginnen, weil dort kein Bindeglied folgt.
+    #
+    # Preis: Firmennamen OHNE Bindeglied («Smart Service AG») haben kein Muster
+    # und haengen am Modell. Der engere Schnitt loest den gemessenen Fall
+    # vollstaendig und ohne Rueckschritt.
+    pattern: '\b[A-ZÄÖÜÀ-Þ][\w.''’-]*(?:[ \t]*[&+][ \t]*|[ \t]+(?:und|and|et|e)[ \t]+)[A-ZÄÖÜÀ-Þ][\w.''’-]*(?:[ \t]+[A-ZÄÖÜÀ-Þ][\w.''’-]*){0,2}[ \t]+(?:AG|SA|SpA|GmbH|Sàrl|Sarl|Sagl|Ltd|LLC|Inc|KlG|KmG|Genossenschaft|Stiftung|Verein|Anstalt|Holding|Treuhand)\b'
+
+  ORG_BEHOERDE_BUND:
+    tag: ORG
+    stage: 2
+    # Kopf + Bindewort + Sachgebiet, hoechstens vier Woerter Fortsetzung.
+    # Ohne Deckel frisst «Bundesamt für Statistik Sektion Bevölkerung» alles.
+    #
+    # Die Fortsetzung ist nach SPRACHE getrennt. Vier BELIEBIGE Woerter
+    # griffen in den Satz hinein, sobald der Name nicht am Zeilenende steht:
+    #   «Bundesamt für Statistik hat die Unterlagen»
+    #   «Federal Statistical Office has approved the»
+    #   «Office fédéral de la statistique ne peut»
+    #
+    # DE und EN brauchen keine kleingeschriebene Fortsetzung: das Sachgebiet
+    # einer Behoerde ist dort grossgeschrieben («Statistik», «Statistical»).
+    # Nur Grossschreibung plus die Bindewoerter.
+    #
+    # FR und IT brauchen sie («de la statistique», «della sanità pubblica»).
+    # Dort haelt eine Mindestlaenge von 5 die Funktionswoerter draussen:
+    # `ne`, `non`, `ha`, `peut`, `est` fallen durch — `statistique`,
+    # `publique`, `migrazione` nicht. Kein sauberer Schnitt, aber ein
+    # messbarer.
+    #
+    # `\t` und `\b` stehen EINFACH escaped: in einfachen YAML-Anfuehrungszeichen
+    # bleibt der Backslash stehen, `\\b` waere ein literales Backslash-b und die
+    # Wortgrenze wirkungslos.
+    pattern: '(?:(?:Bundesamt|Staatssekretariat|Bundesanwaltschaft|Eidgenössisches[ \t]+Departement|Federal[ \t]+Office|Federal[ \t]+Department)(?:[ \t]+(?:für|fuer|for|of|des|and|und)\b)?(?:[ \t]+(?:[A-ZÄÖÜÀ-Þ][A-Za-zÄÖÜÀ-Þäöüà-ÿ''’-]+|(?:für|fuer|for|of|des|and|und)\b)){1,4}|(?:Office[ \t]+fédéral|Secrétariat[ \t]+d.État|Département[ \t]+fédéral|Ufficio[ \t]+federale|Segreteria[ \t]+di[ \t]+Stato|Dipartimento[ \t]+federale)(?:[ \t]+(?:di|de|del|della|dello|delle|degli|dei|des|du|aux|au|à|per|et|e)\b)?(?:[ \t]+(?:[A-ZÄÖÜÀ-Þ][A-Za-zÄÖÜÀ-Þäöüà-ÿ''’-]+|(?:la|le|les|aux|au|du|des|de|di|del|della|dello|delle|degli|dei|et|e|per|à)\b|(?:l[''’])?(?:approvvigionamento|approvisionnement|communications|intellectuelle|pianificazione|assicurazioni|communication|comunicazione|comunicazioni|constructions|contributions|contribuzioni|développement|environnement|cooperazione|informatique|statistiques|agricoltura|agriculture|alimentaire|aménagement|coopération|costruzioni|informatica|innovazione|istituzioni|medicamenti|mensuration|misurazione|médicaments|popolazione|statistique|topographie|veterinario|vétérinaire|abitazioni|alimentare|assurances|educazione|formazione|frontières|habitation|innovation|logistique|metrologia|migrations|migrazione|métrologie|patrimoine|patrimonio|population|protection|protezione|statistica|territoire|territorio|topografia|transports|étrangères|armamenti|aviazione|commercio|formation|giustizia|gestion|gestione|contrôle|controllo|surveillance|financière|financier|technique|administrative|administratif|juridique|finanziaria|finanziario|tecnica|tecnico|amministrativa|amministrativo|giuridica|giuridico|vigilanza|intérieur|logistica|migration|numérique|paesaggio|personale|personnel|proprietà|propriété|publiques|recherche|sanitaire|sanitario|sicurezza|trasporti|éducation|affaires|ambiente|armement|aviation|cadastre|commerce|digitale|economia|esercito|finances|gioventù|jeunesse|logement|pubblica|publique|registre|registro|sociales|sviluppo|sécurité|économie|catasto|confini|cultura|culture|douanes|défense|energia|finanze|foreste|interni|justice|paysage|polizia|ricerca|sociale|sociali|travail|égalité|énergie|affari|civile|difesa|dogana|dogane|douane|emploi|esteri|forêts|lavoro|natura|nature|police|routes|sanità|strade|acque|armée|santé|sport|eaux))){1,4})'
+
+  ORG_BEHOERDE_AMT:
+    tag: ORG
+    stage: 2
+    # Zusammensetzungen auf -amt, -dienste, -behörde, -verwaltung, plus die
+    # franzoesischen und italienischen Entsprechungen.
+    #
+    # **Der Ortsname dahinter gehoert NICHT in die Spanne.** Erster Versuch
+    # nahm ihn mit, weil «Zivilstandsamt Bern» den Ort mitnennt
+    # — und verschluckte damit 92 `CITY`- und 46 `ORG`-Goldspannen im
+    # Dauertest aus dem Trainingslauf. Der Ort wird ohnehin als `CITY`
+    # erkannt und maskiert; ihn zusaetzlich einzusammeln schuetzt nichts und
+    # bricht die Zusammenfuehrung.
+    #
+    # `(?<!Ges)` haelt «Gesamt» draussen; ohne das waere jedes «Gesamtkosten»
+    # eine Behoerde. Mindestlaenge haelt «Beamte» und «Samt» draussen.
+    pattern: '(?<!Ges)\b[A-ZÄÖÜ][a-zäöüß-]{5,}(?:amt|behörde|behoerde|dienste)\b|\b(?:Gemeinde|Stadt|Kantons|Bundes|Steuer|Finanz|Zivilstands)verwaltung\b|\b(?:Einwohnergemeinde|Einwohnerdienste|Gemeindeverwaltung|Staatskanzlei|Regionalgericht|Bezirksgericht|Kreisbüro|Sozialdienst)\b|\bAmt[ \t]+für[ \t]+[A-ZÄÖÜ][a-zäöüß]{3,}|\b[A-ZÄÖÜ][a-zäöüß]{2,}-[ \t]*und[ \t]+[A-ZÄÖÜ][a-zäöüß]{3,}(?:behörde|amt|dienste)\b|(?:Ufficio|Sezione|Dipartimento|Servizio|Registro|Controllo|Settore)[ \t]+(?:(?:dello|della|delle|degli|dei|del)[ \t]+[A-ZÄÖÜÀ-Þa-zàéèìòù''’-]{2,}|(?:di|d''|[a-zàéèìòù''’-]{4,}))(?:[ \t]+(?:dello|della|delle|degli|dei|del|di|e|approvvigionamento|pianificazione|assicurazioni|comunicazione|comunicazioni|contribuzioni|cooperazione|agricoltura|costruzioni|informatica|innovazione|istituzioni|medicamenti|misurazione|popolazione|veterinario|abitazioni|alimentare|educazione|formazione|metrologia|migrazione|patrimonio|protezione|statistica|territorio|topografia|armamenti|aviazione|commercio|giustizia|gestion|gestione|contrôle|controllo|surveillance|financière|financier|technique|administrative|administratif|juridique|finanziaria|finanziario|tecnica|tecnico|amministrativa|amministrativo|giuridica|giuridico|vigilanza|logistica|paesaggio|personale|proprietà|sanitario|sicurezza|trasporti|ambiente|digitale|economia|esercito|gioventù|pubblica|registro|sviluppo|catasto|confini|cultura|energia|finanze|foreste|interni|polizia|ricerca|sociale|sociali|affari|civile|difesa|dogana|dogane|esteri|lavoro|natura|sanità|strade|acque|sport)){0,2}(?<![ \t]di)(?<![ \t]da)(?:[ \t]+e[ \t]+[a-zàéèìòù''’-]{2,})?|\b(?:Civil Registry Office|Debt Enforcement Office|Land Registry|Residents.? Registration|Tax Administration|Federal Chancellery)\b|(?:Amministrazione|Servizio|Ufficio)[ \t]+(?:comunale|sociale|cantonale)\b|(?:Service|Office|Registre)[ \t]+(?:social|communal|foncier)\b|(?:Office|Service|Contrôle|Registre|Administration|Chancellerie|Autorité)[ \t]+(?:de|des|du|d''|foncier|communale|cantonale)(?:[ \t]+[a-zàéèêôûç''’-]{2,}){0,3}(?<![ \t]de)(?<![ \t]du)(?<![ \t]à)(?:[ \t]+et[ \t]+(?:[a-zàéèêôûç''’-]{2,}[ \t]+){0,2}[a-zàéèêôûç''’-]{2,})?'
+
+  ORG_BEHOERDE_KANTON:
+    tag: ORG
+    stage: 2
+    # «Repubblica e Cantone Ticino», «République et Canton de Vaud».
+    # NICHT `\bKanton \w+` allein — «im Kanton Bern wohnhaft» ist Kontext,
+    # kein Organisationsname. Deshalb nur die amtlichen Doppelformen.
+    pattern: '(?:Repubblica[ \t]+e[ \t]+Cantone|République[ \t]+et[ \t]+Canton(?:[ \t]+de)?|Republik[ \t]+und[ \t]+Kanton|Staat[ \t]+und[ \t]+Kanton)[ \t]+(?:St\.[ \t]+Gallen|[A-ZÄÖÜÀ-Þ][A-Za-zäöüà-ÿ''’/-]{2,}(?:[ \t]+[A-ZÄÖÜÀ-Þ][A-Za-zäöüà-ÿ''’/-]{2,})?)'
+
+  ORG_BEHOERDE_DEPARTEMENT:
+    tag: ORG
+    stage: 2
+    # `Bildungs- und Kulturdepartement BKD`. Die Bindestrich-Verkuerzung
+    # («Bildungs- und Kultur…») ist die uebliche Schweizer Form und bricht
+    # jedes Muster, das nur ein zusammengesetztes Wort erwartet. Das
+    # nachgestellte Kuerzel (EFD, BKD, VBS) gehoert in die Spanne.
+    pattern: '(?:Eidgenössisches[ \t]+)?[A-ZÄÖÜ][A-Za-zäöüß]{2,}(?:-\s*und[ \t]+[A-ZÄÖÜ]?[A-Za-zäöüß]{2,})?departement\b(?:[ \t]+[A-ZÄÖÜ]{2,6}\b)?'
+
+  MARITALSTATUS_KATALOG:
+    tag: MARITALSTATUS
+    stage: 2
+    # Auspraegungen aus dem Amtlichen Katalog der Merkmale (BFS), verankert am
+    # Merkmalsnamen. Ohne Anker traefe «ledig» auch in «lediglich» — deshalb
+    # `anchor_required`. Ein- und Zweibuchstabenwerte («m», «w», «f») sind
+    # bewusst NICHT im Muster: sie kommen ueberall vor.
+    pattern: '(?i)(?:lié\ par\ un\ partenariat\ enregistré|in\ eingetragener\ Partnerschaft|in\ unione\ domestica\ registrata|in\ a\ registered\ partnership|aufgelöste\ Partnerschaft|unione\ domestica\ sciolta|separato\ giudizialmente|dissolved\ partnership|séparé\ judiciairement|gerichtlich\ getrennt|freiwillig\ getrennt|partenariat\ dissous|unverheiratet|non\ coniugato|verheiratet|célibataire|non\ mariée|geschieden|divorziata|divorziato|non\ marié|verwitwet|coniugato|coniugata|divorced|divorcée|divorcé|widowed|married|nubile|celibe|mariée|vedova|single|vedovo|marié|ledig|veuve|veuf)'
+    anchor:
+      required: true
+      words: ['Zivilstand', 'état civil', 'etat civil', 'stato civile', 'marital status', 'Personenstand']
+    anchor_same_line: true
+    anchor_max_distance: 3
+
+  RELIGION_KATALOG:
+    tag: RELIGION
+    stage: 2
+    # Auspraegungen aus dem Amtlichen Katalog der Merkmale (BFS), verankert am
+    # Merkmalsnamen. Ohne Anker traefe «ledig» auch in «lediglich» — deshalb
+    # `anchor_required`. Ein- und Zweibuchstabenwerte («m», «w», «f») sind
+    # bewusst NICHT im Muster: sie kommen ueberall vor.
+    pattern: '(?i)(?:Evangelisch\-Reformierte\ Kirche|jüdische\ Glaubensgemeinschaft|sans\ appartenance\ religieuse|Chiesa\ evangelica\ riformata|Église\ évangélique\ réformée|Römisch\-katholische\ Kirche|israelitische\ Gemeinschaft|Église\ catholique\ romaine|no\ religious\ affiliation|Christkatholische\ Kirche|Chiesa\ cattolica\ romana|evangelisch\-reformiert|catholique\ chrétienne|comunità\ israelitica|communauté\ israélite|évangélique\ réformée|evangelica\ riformata|Protestant\ Reformed|cattolica\ cristiana|catholique\ romaine|Christian\ Catholic|römisch\-katholisch|senza\ confessione|christkatholisch|cattolica\ romana|Jewish\ community|sans\ confession|ohne\ Konfession|Roman\ Catholic|protestantisch|konfessionslos|altkatholisch|protestante)'
+    anchor:
+      required: true
+      words: ['Konfession', 'Konfessionszugehörigkeit', 'Religion', 'confession', 'appartenance religieuse', 'confessione', 'religione', 'religious affiliation']
+    anchor_same_line: true
+    anchor_max_distance: 3
+
+  SEX_KATALOG:
+    tag: SEX
+    stage: 2
+    # Auspraegungen aus dem Amtlichen Katalog der Merkmale (BFS), verankert am
+    # Merkmalsnamen. Ohne Anker traefe «ledig» auch in «lediglich» — deshalb
+    # `anchor_required`. Ein- und Zweibuchstabenwerte («m», «w», «f») sind
+    # bewusst NICHT im Muster: sie kommen ueberall vor.
+    pattern: '(?i)(?:femminile|masculin|männlich|weiblich|maschile|féminin|female|male)'
+    anchor:
+      required: true
+      words: ['Geschlecht', 'sexe', 'sesso', 'sex', 'gender']
+    anchor_same_line: true
+    anchor_max_distance: 3
+
+  RESIDENCE_STATUS_KATALOG:
+    tag: RESIDENCE_STATUS
+    stage: 2
+    # Auspraegungen aus dem Amtlichen Katalog der Merkmale (BFS), verankert am
+    # Merkmalsnamen. Ohne Anker traefe «ledig» auch in «lediglich» — deshalb
+    # `anchor_required`. Ein- und Zweibuchstabenwerte («m», «w», «f») sind
+    # bewusst NICHT im Muster: sie kommen ueberall vor.
+    pattern: '(?i)(?:domicilio\ principale|résidence\ secondaire|residenza\ principale|résidence\ principale|domicilio\ secondario|domicile\ secondaire|permanent\ residence|temporary\ residence|secondary\ residence|domicile\ principal|Wochenaufenthalt|niedergelassen|main\ residence|Niederlassung|Hauptwohnsitz|établissement|Nebenwohnsitz|Aufenthalt|domicilio|séjour|dimora)'
+    anchor:
+      required: true
+      words: ['Meldeverhältnis', 'Meldeverhaeltnis', 'Wohnsitzart', "rapport d'annonce", 'type de domicile', 'rapporto di notifica', 'tipo di domicilio']
+    anchor_same_line: true
+    anchor_max_distance: 3
+
+  SEX_KURZ:
+    tag: SEX
+    stage: 2
+    # Formulare schreiben «Geschlecht: w», nicht «Geschlecht: weiblich».
+    # Ein- und Zweibuchstabenwerte sind trotzdem sicher durch die ENGE Bindung:
+    # Etikett zwingend, gleiche Zeile, Hoechstabstand 1 — also unmittelbar
+    # hinter dem Etikett. «Die Wohnung ist 80 m gross» oder «Anhang f»
+    # schlagen damit nicht an.
+    pattern: '(?<![A-Za-zÄÖÜäöü])[mwfdMWFD](?![A-Za-zÄÖÜäöü])'
+    anchor:
+      required: true
+      words: ['Geschlecht', 'sexe', 'sesso', 'sex', 'gender']
+    anchor_same_line: true
+    anchor_max_distance: 2

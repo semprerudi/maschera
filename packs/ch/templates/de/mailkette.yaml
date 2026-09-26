@@ -1,0 +1,168 @@
+# Erzeugt mit tools/generate_templates.py und von Hand nachgebessert.
+# Jede Vorlage hat die Wachen bestanden — vor dem Training trotzdem lesen:
+# die Wachen pruefen die Form, nicht den Sinn.
+#
+# Zweck dieser Familie: Firmennamen in BETREFFZEILEN, zwischen
+# Fortsetzungspraefixen und Schraegstrichen. Was in der Vorlagenbank nicht
+# vorkommt, hat das Modell keinen Anlass zu lernen:
+#
+#   Betreff: WG: AW II: Pendenz Brumstar New Generation / Anbindung
+#            Smart Service AG / Praezisierung der Schnittstellen-Anfrage
+
+templates:
+- id: de_email_chain_corp
+  doc_type: weitergeleitete Mailkette
+  text: 'Von: {FULLNAME} <{EMAIL}>
+
+    Betreff: WG: Vertragserneuerung / {ORG} / Revision {DATE}
+
+
+    Hallo {GIVENNAME},
+
+
+    bitte schau dir die untenstehende Korrespondenz an. Es geht um die Aktennummer {CASE_ID}.
+
+    Massgebend ist {~legal}. Es ist wichtig, dass wir hier {~deadline} reagieren.
+
+
+    Beste Grüsse,
+
+    {FULLNAME}
+
+
+    --- Weitergeleitete Nachricht ---
+
+    Von: {GIVENNAME} {FULLNAME}
+
+    Gesendet: {DATE}
+
+    An: {ORG}
+
+    Betreff: Anfrage zur Revision
+
+
+    Sehr geehrte Damen und Herren,
+
+    hiermit reiche ich die Unterlagen ein. Vorgang {~number}. {@contact}'
+- id: de_email_chain_support
+  doc_type: weitergeleitete Mailkette
+  text: 'Von: {FULLNAME} <{EMAIL}>
+
+    Betreff: AW: Ticket-Status / {ORG} / Priorität Hoch
+
+
+    Liebe/r {GIVENNAME},
+
+
+    wir haben eine Rückmeldung zur Case ID {CASE_ID} erhalten. Betroffen ist {@person}.
+
+    Die Meldung lautet {~technical}. Könntest du das bitte im System prüfen?
+
+
+    Gruss,
+
+    {FULLNAME}
+
+
+    --- Originalnachricht ---
+
+    Von: {FULLNAME} {GIVENNAME}
+
+    Datum: {DATE}
+
+    Betreff: Ticket-Status / {ORG}
+
+
+    Ich warte noch auf die Bestätigung der Fehlerbehebung. Der Eintrag steht unter {~trace}.
+
+    Bitte kontaktieren Sie mich unter {EMAIL}.'
+- id: de_email_chain_hr
+  doc_type: weitergeleitete Mailkette
+  text: 'Von: {FULLNAME} <{EMAIL}>
+
+    Betreff: WG: Personalakte / {ORG} / Mutationen
+
+
+    Geschätzte/r {GIVENNAME},
+
+
+    anbei die Unterlagen für die Person {@person_feld}. Die Referenz ist {CASE_ID}.
+
+    Formularstand {~number}. Bitte aktualisiere das entsprechende Profil.
+
+
+    Freundliche Grüsse,
+
+    {FULLNAME}
+
+
+    --- Weitergeleitet ---
+
+    Von: {GIVENNAME} {FULLNAME}
+
+    Betreff: Mutationen / {ORG}
+
+
+    Ich beziehe mich auf unser Gespräch von letzter Woche, siehe {~legal}.
+
+    Meine aktuelle Adresse ist {@address}.'
+- id: de_email_chain_insurance
+  doc_type: weitergeleitete Mailkette
+  text: 'Von: {FULLNAME} <{EMAIL}>
+
+    Betreff: WG: Schadensfall / {ORG} / Police-Nr {INSURANCE_POLICY}
+
+
+    Guten Tag {GIVENNAME},
+
+
+    anbei die Mail von {@person}. Es geht um den Fall {CASE_ID}.
+
+    Bitte prüfen, ob {~amount} übernommen werden kann, Frist {~deadline}.
+
+
+    Beste Grüsse,
+
+    {FULLNAME}
+
+
+    --- Weitergeleitete Nachricht ---
+
+    Von: {GIVENNAME} {FULLNAME}
+
+    Betreff: Schadensmeldung / {ORG}
+
+
+    Anbei sende ich Ihnen die Belege zum Unfall, erfasst unter {~number}.
+
+    Meine Mailadresse ist {EMAIL}.'
+- id: de_email_chain_admin
+  doc_type: weitergeleitete Mailkette
+  text: 'Von: {FULLNAME} <{EMAIL}>
+
+    Betreff: AW: Projekt-Update / {ORG} / Meilenstein 2
+
+
+    Hoi {GIVENNAME},
+
+
+    hast du die Unterlagen zu Dossier {CASE_ID} bereits erhalten?
+
+    Ich habe {@person} heute Morgen schon informiert. Stand: {~trace}.
+
+
+    Gruss,
+
+    {FULLNAME}
+
+
+    --- Originalnachricht ---
+
+    Von: {FULLNAME} {GIVENNAME}
+
+    Betreff: Projekt-Update / {ORG}
+
+
+    Die Dokumentation ist nun vollständig abgeschlossen, Version {~number}.
+
+    Kontaktieren Sie mich bitte via {EMAIL}.'

@@ -1,0 +1,82 @@
+# MASCHERA als Dienst auf dem eigenen Rechner.
+#
+#     docker compose -f tools/paket/compose.yaml up -d
+#
+# DIE WICHTIGSTE ZEILE IST `127.0.0.1:4141:4141`.
+#
+# Ohne das `127.0.0.1:` davor veroeffentlicht Docker den Port auf ALLEN
+# Schnittstellen des Wirts — und zwar an der Firewall vorbei, weil Docker
+# seine Regeln in `DOCKER` einhaengt und nicht in `INPUT`. Eine ufw- oder
+# firewalld-Regel, die den Port sperrt, wirkt dann NICHT. Das ist der
+# haeufigste Weg, einen Dienst versehentlich ins Netz zu stellen, und er
+# sieht in der Konfiguration nach nichts aus.
+#
+# Der Dienst bindet IM Container auf 0.0.0.0 — das muss er. Der Schutz
+# sitzt hier, eine Ebene hoeher.
+#
+# Wer MASCHERA im Netz anbieten will, stellt einen Reverse Proxy MIT
+# Anmeldung davor und setzt `MASCHERA_WIRT` auf dessen Namen.
+
+services:
+  maschera:
+    # ⚠️ Die Fassung kommt aus `tools/paket/.env`, die `bauen.fish`
+    # schreibt — `docker compose` liest sie von selbst aus dem
+    # Verzeichnis der Compose-Datei. Eine feste Nummer hier waere ein
+    # zweiter Verwalter fuer etwas, das in `app/serve.py` steht.
+    #
+    # Fehlt die `.env`, faellt es auf `beta` zurueck und der Start
+    # scheitert mit «image not found» — sichtbar, nicht still auf einem
+    # alten Abbild.
+    image: maschera:${MASCHERA_FASSUNG:-beta}
+    container_name: maschera
+    restart: unless-stopped
+
+    # ⚠️ NUR auf den Wirt selbst. Der Proxy davor holt es sich von dort.
+    ports:
+      - "127.0.0.1:4141:4141"
+
+    # Der Name hinter einem Reverse Proxy, aus `tools/paket/.env`. Leer
+    # heisst: nur die lokalen Namen (127.0.0.1, localhost).
+    environment:
+      MASCHERA_WIRT: "${MASCHERA_WIRT:-}"
+
+    # Die Einstellungen des Anwenders — Regeln, Vorlagen, Vorlieben.
+    # Ohne dieses Volumen sind sie nach jedem Neustart weg, und das
+    # waere ein stiller Verlust: die Oberflaeche wuerde weiter anbieten,
+    # sie zu sichern.
+    volumes:
+      - maschera-config:/home/maschera/.config/maschera
+
+    # ⚠️ Das Dateisystem bleibt schreibgeschuetzt. Der Grundsatz «nichts
+    # wird geschrieben» ist damit nicht mehr nur eine Zusage im Code,
+    # sondern eine Eigenschaft des Betriebs. `/tmp` braucht es trotzdem:
+    # `pymupdf` und `mailbox` brauchen einen Pfad, und `/api/lesen` legt
+    # die hochgeladene Datei fuer die Dauer des Lesens dorthin.
+    read_only: true
+    tmpfs:
+      - /tmp:size=256m,mode=1777
+
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+    # Ein Dokument zur Zeit — die Kette traegt eine Sperre um sich selbst.
+    # Mehr Kerne beschleunigen den einzelnen Lauf ueber onnxruntime.
+    deploy:
+      resources:
+        limits:
+          memory: 3g
+
+    # ⚠️ Kein Protokoll mit Inhalt. Flask schreibt Zugriffszeilen mit
+    # Pfad und Status, KEINE Koerper — der Text eines Dokuments steht
+    # also nicht darin. Die Begrenzung ist trotzdem gesetzt, damit ein
+    # Dauerbetrieb die Platte nicht fuellt.
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  maschera-config:

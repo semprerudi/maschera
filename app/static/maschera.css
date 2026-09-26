@@ -1,0 +1,2836 @@
+/* MASCHERA — Gestaltung.
+ *
+ * Die Marken (`--color-*`, `--font-*`, `--space-*`, `--radius-*`,
+ * `--shadow-*`) und die Bausteinklassen stammen aus dem Gestaltungsentwurf.
+ *
+ * NICHTS WIRD VON AUSSEN GELADEN. Die Schriften liegen unter `schriften/`.
+ * Ein Werkzeug, das zusagt, dass der Text das Geraet nicht verlaesst, darf
+ * beim Oeffnen keine Verbindung nach aussen aufbauen — schon der Abruf
+ * verriete einer fremden Stelle, dass und wann jemand MASCHERA benutzt.
+ * `tests/test_app.py` prueft das an jeder Datei.
+ *
+ * SCHRIFT — Barlow und Barlow Condensed, SIL Open Font License 1.1,
+ * Lizenztext unter `schriften/OFL.txt`.
+ *
+ * Vietnamesisch fehlt absichtlich. In den Schweizer Personenregistern gilt
+ * ein amtlicher Zeichensatz: ISO 8859-1 + Latin Extended-A. Die Teilmengen
+ * `latin` und `latin-ext` decken ihn ab. Was Barlow darin fehlt, steht in
+ * `tests/test_schriften.py`.
+ */
+
+@font-face {
+  font-family: "Barlow";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("schriften/Barlow-400-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Barlow";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("schriften/Barlow-400-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Barlow";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("schriften/Barlow-500-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Barlow";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("schriften/Barlow-500-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Barlow";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("schriften/Barlow-700-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Barlow";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("schriften/Barlow-700-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("schriften/BarlowCondensed-400-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("schriften/BarlowCondensed-400-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("schriften/BarlowCondensed-600-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("schriften/BarlowCondensed-600-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* --- Aus dem Gestaltungsentwurf ---------------------------------------- */
+
+:root {
+  /* Alle Groessen haengen an `--skala`; deshalb stehen sie in `rem`.
+   *
+   * `--textgroesse` und `--textschrift` gelten nur fuer den Dokumenttext —
+   * er darf gross und serif sein, ohne dass die Leiste mitwaechst.
+   *
+   * Nicht betroffen: die Wortmarke MASCHERA und die Bereichstitel. Sie tragen
+   * `--font-heading` fest. Ein Werkzeug, dessen Name die Schrift wechselt,
+   * sieht nach einem anderen Programm aus.
+   */
+  --skala: 1;
+  --textgroesse: 0.84rem;
+  --textschrift: var(--font-body);
+  --ui-schrift: var(--font-body);
+  /* Die schmale Auszeichnungsschrift der Bedienelemente folgt der Wahl
+     ebenfalls — sonst stuenden Knopfbeschriftung und Knopfinhalt in zwei
+     verschiedenen Schriften. */
+  --ui-heading: var(--font-heading);
+  --color-bg: #f2f2f3;
+  --color-surface: #e9e9ea;
+  --color-text: #1d1f20;
+  --color-accent: #5980a6;
+  --color-divider: color-mix(in srgb, var(--color-text) 16%, transparent);
+
+  /* Tonal ramps — generated in OKLCH on one shared lightness scale, so the
+     same step of any role matches the others in visual value. */
+  --color-neutral-100: #f5f5f8;
+  --color-neutral-200: #e7e7ea;
+  --color-neutral-300: #d4d4d7;
+  --color-neutral-400: #b7b7ba;
+  --color-neutral-500: #98989b;
+  --color-neutral-600: #7a7a7d;
+  --color-neutral-700: #5d5d60;
+  --color-neutral-800: #424244;
+  --color-neutral-900: #2b2b2d;
+
+  --color-accent-100: #eef6ff;
+  --color-accent-600: #597ea3;
+  --color-accent-700: #416180;
+  --color-accent-800: #2c455d;
+
+  --color-accent-2-100: #eef6ff;
+  --color-accent-2-800: #314457;
+
+  --font-heading: "Barlow Condensed", system-ui, sans-serif;
+  --font-heading-weight: 600;
+  --font-body: "Barlow", system-ui, sans-serif;
+
+  --space-1: 0.2125rem;
+  --space-2: 0.425rem;
+  --space-3: 0.6375rem;
+  --space-4: 0.85rem;
+  --radius-md: 4px;
+  --radius-lg: 7px;
+
+  /* Elevation — derived from the ground: soft ink-tinted shadows on a
+     light theme, a hairline edge + ambient darkness on a dark one. */
+  --shadow-sm: 0 1px 2px color-mix(in srgb, #2b2b2d 14%, transparent);
+  --shadow-md: 0 3px 10px color-mix(in srgb, #2b2b2d 16%, transparent);
+  --shadow-lg: 0 12px 32px color-mix(in srgb, #2b2b2d 22%, transparent);
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--ui-schrift);
+}
+h1, h2, h3, h4 { font-family: var(--ui-heading); font-weight: var(--font-heading-weight); }
+
+.blueprint {
+  position: relative;
+  border: 1px solid var(--color-divider);
+  border-radius: 0;
+}
+/* The overlay image treatments (halftone, duotone) clip their overlay
+   (overflow:hidden); a blueprint wrapper draws its registration marks
+   outside the box, so when both classes share a wrapper the frame must
+   win. */
+.blueprint.halftone, .blueprint.plate, .blueprint.duotone { overflow: visible; }
+.blueprint > .corner {
+  position: absolute; width: 0.6875rem; height: 0.6875rem;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+.blueprint > .corner::before, .blueprint > .corner::after {
+  content: ""; position: absolute; background: currentColor;
+}
+.blueprint > .corner::before { left: 0.3125rem; top: 0; width: 1px; height: 100%; }
+.blueprint > .corner::after  { top: 0.3125rem; left: 0; width: 100%; height: 1px; }
+.blueprint > .corner.tl { top: -0.375rem; left: -0.375rem; }
+.blueprint > .corner.tr { top: -0.375rem; right: -0.375rem; }
+.blueprint > .corner.bl { bottom: -0.375rem; left: -0.375rem; }
+.blueprint > .corner.br { bottom: -0.375rem; right: -0.375rem; }
+
+.duotone{position:relative;overflow:hidden}
+.duotone::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:var(--color-accent);mix-blend-mode:color}
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * Components — built with the tokens above. Plain CSS on plain HTML:
+ * no JavaScript, no build step.
+ * ══════════════════════════════════════════════════════════════════════
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+/* Hier haengt alles dran. `rem` misst an dieser Zahl, und alle Hoehen,
+ * Abstaende und Schriftgroessen stehen in `rem` — also skaliert dieser eine
+ * Wert die ganze Oberflaeche. `100%` statt `16px`, damit eine im Browser
+ * eingestellte groessere Grundschrift erhalten bleibt.
+ */
+html { font-size: calc(100% * var(--skala)); }
+body { margin: 0; font-size: 0.9375rem; line-height: 1.55; font-weight: 400; }
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--ui-heading); font-weight: var(--font-heading-weight);
+  line-height: 1.12; letter-spacing: -0.015em; margin: 0 0 var(--space-2);
+}
+h1 { font-size: 2.625rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5625rem; }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1rem; }
+h6 { font-size: 0.8125rem; }
+h6 { letter-spacing: 0.08em; text-transform: uppercase; }
+p { margin: 0 0 var(--space-3); }
+a { color: var(--color-accent); text-underline-offset: 3px; }
+img { display: block; max-width: 100%; }
+figure { margin: 0; }
+figcaption {
+  font-size: 0.6875rem; margin-top: var(--space-1);
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+.text-muted { color: color-mix(in srgb, var(--color-text) 55%, transparent); }
+/* ══ DIE ZWEI TRAGENDEN FARBEN ═══════════════════════════════════════
+ * Gruen heisst «bleibt auf dem Geraet», Rot heisst «geht hinaus». Das ist
+ * keine Dekoration, sondern die Aussage der Oberflaeche.
+ *
+ * Jede Farbe steht genau einmal, als Marke; das Blatt benutzt nur die
+ * Marken. Sonst waere der Dunkelmodus eine Suchen-und-Ersetzen-Aktion.
+ * `tests/test_oberflaeche.js` Punkt 72 haelt fest, dass keine Farbe als
+ * Literal zurueckkommt.
+ */
+:root {
+  /* Gruen — «bleibt auf dem Geraet» */
+  --gr-flaeche:  #2f6b46;   /* FLAECHE gruener Knoepfe und Balken */
+  --gr-flaeche2: #24523a;   /* die tiefere Flaeche — Einpflegen, Laufbalken */
+  --gr-schrift:  #24523a;   /* SCHRIFT in Gruen — Titel, Plaketten, Hinweise */
+  --gr-kante:    #24523a;   /* Kante gruener Flaechen */
+  --gr-tief:                #255239;   /* Rollover des Hauptknopfs */
+  --gr-dunkel2:             #1c422e;   /* Kante des dunklen Knopfs */
+  --gr-hell:                #4f9d69;   /* aktiver Rahmen, Fokus */
+  --gr-matt:                #8fbfa0;   /* Pruefsummenrand, matte Zeichen */
+  --gr-aus:                 #9ab5a5;   /* deaktivierter Hauptknopf */
+  --gr-aus-kante:           #8aa895;   /* dessen Kante */
+  --gr-grund:               #eef5ef;   /* helle gruene Flaeche */
+  --gr-grund2:              #dff0e5;   /* helle gruene Flaeche, Kante */
+  --gr-grund3:              #f4faf6;   /* hellste gruene Flaeche */
+
+  /* Rot — «geht hinaus» */
+  --bx-schrift:      #8c2f22;   /* SCHRIFT in Rot — Titel, Knopfschrift */
+  --bx-flaeche:      #8c2f22;   /* FLAECHE des Sendeknopfs und der Tints */
+  --bx-kante-stark:  #8c2f22;   /* die kraeftige rote Kante */
+  --bx-dunkel:              #75291d;   /* Kante des Sendeknopfs */
+  --bx-tief:                #6b2119;   /* Rollover des Sendeknopfs */
+  --bx-dunkel2:             #7c2d22;
+  --bx-matt:                #a35a4c;   /* Informationstext, Platzhalter */
+  --bx-matt2:               #b07a70;
+  --bx-matt3:               #c98a7e;
+  --bx-aus:                 #c8968d;   /* deaktivierte Schrift */
+  --bx-kante:               #d8a49b;   /* Fensterrahmen, Knopfrahmen */
+  --bx-kante-hell:          #e0aca5;
+  --bx-kante2:              #e5c3bc;   /* Rahmen von Deaktiviertem */
+  --bx-grund:               #fdeceb;   /* helle rote Flaeche */
+  --bx-grund2:              #fbe9e7;
+  --bx-grund3:              #fdf3f1;
+  --bx-grund4:              #fbf2f0;
+  --bx-grund5:              #fbeeec;
+  --bx-aus-schrift:  #c9a49e;   /* Schrift auf dem deaktivierten Sendeknopf */
+  --bx-aus-flaeche:         #c9a49e;   /* deaktivierter Sendeknopf */
+  --bx-aus-kante:           #b8918a;   /* dessen Kante */
+  --bx-loeschen:            #c4483a;   /* der Leeren-Knopf im Feld */
+  --bx-loeschen-kante:      #a63a2e;
+  --bx-senden-aus:          #e8cbc6;   /* deaktivierter Sendeknopf in der roten Spalte */
+  --bx-senden-aus-kante:    #ddb4ad;   /* dessen Kante — UND die des Pfeils daneben */
+
+  /* Einzelne */
+  /* Der Ton, aus dem Schleier und Schatten gemischt werden — als Marke, auch
+   * wenn er als `rgba(…)` nach einer Zahlenreihe aussieht.
+   */
+  --schatten-grund:         #1d1f20;
+  --manuell:                #5c3a92;   /* von Hand gesetzt — Rand und Plakette */
+  --muster:                 #a3bdd1;   /* Rand einer Musterfundstelle */
+
+  /* Zwei Bedeutungen, zwei Marken: die PAPIERFLAECHE eines Feldes oder
+   * Menues und die SCHRIFT auf einer farbigen Flaeche. Im Hellen haben sie
+   * denselben Wert; im Dunkelmodus laufen sie auseinander — das Papier wird
+   * dunkel, die Schrift bleibt hell.
+   */
+  --papier:    #fff;   /* Flaeche von Feldern, Menues, Dialogen */
+  --auf-farbe: #fff;   /* Schrift und Zeichen auf farbiger Flaeche */
+}
+
+/* ══ DIE PLATZHALTERFARBEN ═══════════════════════════════════════════
+ * Neun Gruppen, elf Tags mit eigener Farbe, vier Rueckfallfarben — jede ein
+ * Dreiklang aus FLAECHE, RAND und SCHRIFT.
+ *
+ * Die Tabellen in `maschera.js` (`GROUP_PALETTE`, `TYPE_COLORS`,
+ * `TYPE_FALLBACK`) entscheiden, WELCHE Palette ein Tag bekommt — das ist
+ * Logik. Was hier steht, ist die Farbe selbst, und nur so laesst sie sich
+ * im Dunkelmodus umstellen.
+ *
+ * Bei rund einem Platzhalter je 80 Zeichen wird zu grell eingefaerbter Text
+ * unlesbar. Deshalb helle Flaeche, Farbe nur in Rand und Schrift — im
+ * Dunkeln dasselbe Prinzip, nur andersherum.
+ */
+:root {
+  --ph-gruppe-person-fl: #f3ecfb;  --ph-gruppe-person-ra: #c6a8e6;  --ph-gruppe-person-sc: #5c3a92;
+  --ph-gruppe-origin-fl: #eef2fb;  --ph-gruppe-origin-ra: #a9b9e0;  --ph-gruppe-origin-sc: #33447f;
+  --ph-gruppe-address-fl: #f6f2e4;  --ph-gruppe-address-ra: #cfc292;  --ph-gruppe-address-sc: #6d6127;
+  --ph-gruppe-contact-fl: #f4f6e2;  --ph-gruppe-contact-ra: #c9d38d;  --ph-gruppe-contact-sc: #5c6720;
+  --ph-gruppe-official-fl: #e6f7f4;  --ph-gruppe-official-ra: #96d3c8;  --ph-gruppe-official-sc: #1f5f56;
+  --ph-gruppe-finance-fl: #eaf4ee;  --ph-gruppe-finance-ra: #9dc9ac;  --ph-gruppe-finance-sc: #2c5f3c;
+  --ph-gruppe-health-fl: #fdedee;  --ph-gruppe-health-ra: #e5a6ab;  --ph-gruppe-health-sc: #8e2f38;
+  --ph-gruppe-process-fl: #f5f3e6;  --ph-gruppe-process-ra: #ccc596;  --ph-gruppe-process-sc: #67602a;
+  --ph-gruppe-plain-fl: #f1f1f2;  --ph-gruppe-plain-ra: #c2c4c6;  --ph-gruppe-plain-sc: #5a5d60;
+  --ph-tag-fullname-fl: #f3ecfb;  --ph-tag-fullname-ra: #c6a8e6;  --ph-tag-fullname-sc: #5c3a92;
+  --ph-tag-city-fl: #f8ecf8;  --ph-tag-city-ra: #dda8dd;  --ph-tag-city-sc: #84357f;
+  --ph-tag-street-fl: #f6f2e4;  --ph-tag-street-ra: #cfc292;  --ph-tag-street-sc: #6d6127;
+  --ph-tag-date-fl: #faf3e0;  --ph-tag-date-ra: #dcc689;  --ph-tag-date-sc: #7a5f12;
+  --ph-tag-email-fl: #f4f6e2;  --ph-tag-email-ra: #c9d38d;  --ph-tag-email-sc: #5c6720;
+  --ph-tag-phone-fl: #fdedee;  --ph-tag-phone-ra: #e5a6ab;  --ph-tag-phone-sc: #8e2f38;
+  --ph-tag-org-fl: #f5f3e6;  --ph-tag-org-ra: #ccc596;  --ph-tag-org-sc: #67602a;
+  --ph-tag-case_id-fl: #eceffa;  --ph-tag-case_id-ra: #a9b5e6;  --ph-tag-case_id-sc: #33417f;
+  --ph-tag-ahvn13-fl: #e6f7f4;  --ph-tag-ahvn13-ra: #96d3c8;  --ph-tag-ahvn13-sc: #1f5f56;
+  --ph-rest-1-fl: #eef4f8;  --ph-rest-1-ra: #a3bdd1;  --ph-rest-1-sc: #2f5771;
+  --ph-rest-2-fl: #f5eef1;  --ph-rest-2-ra: #d3aab8;  --ph-rest-2-sc: #7a3149;
+  --ph-rest-3-fl: #eef5ee;  --ph-rest-3-ra: #a8cba8;  --ph-rest-3-sc: #2f5f34;
+  --ph-rest-4-fl: #f6f1e8;  --ph-rest-4-ra: #cfb894;  --ph-rest-4-sc: #6b4f26;
+}
+
+/* == DER DUNKELMODUS =================================================
+ * Drei Stufen, «automatisch» ist die Vorgabe. Der Wert steht in
+ * `~/.config/maschera/`, das Attribut am `<html>`:
+ *
+ *   kein Attribut       automatisch — `prefers-color-scheme` entscheidet
+ *   data-thema=hell     ausdruecklich hell, auch nachts
+ *   data-thema=dunkel   ausdruecklich dunkel, auch am Tag
+ *
+ * «automatisch» ist NICHT dasselbe wie «hell»: wer ausdruecklich hell
+ * waehlt, bekommt hell, auch wenn das System umschaltet.
+ *
+ * ZWEI SELEKTOREN, EINE LISTE. Die Werte stehen genau einmal und werden
+ * zweimal eingehaengt: fuer die Systemwahl und fuer die ausdrueckliche.
+ * `test_oberflaeche` Punkt 73 haelt fest, dass beide dieselben Marken
+ * tragen.
+ *
+ * `:root:not([data-thema="hell"])` und nicht blosses `:root` in der
+ * Medienabfrage: sonst schluege das System die ausdrueckliche Wahl «hell».
+ *
+ * Gruen und Rot sind angehoben und NICHT entsaettigt — es soll dieselbe
+ * Farbe sein, nicht eine blassere. Der Rollover des Hauptknopfs geht hier
+ * nach HELL: auf dunklem Grund heisst «dunkler» ausgeschaltet.
+ *
+ * Die Platzhalterwerte sind aus den hellen GERECHNET: Farbton bleibt,
+ * Helligkeit kippt, Saettigung gedeckelt.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-thema="hell"]) {
+    --color-bg: #1a1917;
+    --color-surface: #232220;
+    --color-text: #ece9e3;
+    --papier: #2b2a27;
+    --auf-farbe: #f4f2ee;
+    --color-neutral-100: #1f1e1c;
+    --color-neutral-200: #2a2926;
+    --color-neutral-300: #343330;
+    --color-neutral-400: #423f3b;
+    --color-neutral-500: #5b5852;
+    --color-neutral-600: #7d7972;
+    --color-neutral-700: #a5a29b;
+    --color-neutral-800: #c9c5be;
+    --color-neutral-900: #ece9e3;
+    --gr-tief: #43895c;
+    --gr-dunkel2: #4e9a6c;
+    --gr-hell: #5fb37f;
+    --gr-matt: #5f9f78;
+    --gr-aus: #385644;
+    --gr-aus-kante: #456450;
+    --gr-grund: #1d2a22;
+    --gr-grund2: #24382c;
+    --gr-grund3: #1a241e;
+    --bx-dunkel: #8a2e21;
+    --bx-tief: #b23f2e;
+    --bx-dunkel2: #7c2d22;
+    --bx-matt: #ba7869;
+    --bx-matt2: #a76a5c;
+    --bx-matt3: #96604f;
+    --bx-aus: #7c524a;
+    --bx-kante: #6d3c31;
+    --bx-kante-hell: #84483b;
+    --bx-kante2: #4a2b24;
+    --bx-grund: #2e1d1a;
+    --bx-grund2: #341f1b;
+    --bx-grund3: #281a18;
+    --bx-grund4: #231917;
+    --bx-grund5: #2a1c19;
+    --bx-aus-flaeche: #4a2b24;
+    --bx-aus-kante: #5c352c;
+    --bx-loeschen: #b8483a;
+    --bx-loeschen-kante: #8f382c;
+    --bx-senden-aus: #482924;
+    --bx-senden-aus-kante: #573129;
+    --manuell: #a184d0;
+    --muster: #7fa3c2;
+    --gr-flaeche: #37764e;  --gr-flaeche2: #2c6340;  --gr-schrift: #7ecb9c;  --gr-kante: #4e9a6c;  --bx-flaeche: #9c3627;  --bx-schrift: #e2907f;  --bx-kante-stark: #a8503f;  --bx-aus-schrift: #a8837b;
+    --schatten-grund: #000000;
+    --color-accent: #7ea8d0;
+    --color-accent-100: #1a2430;  --color-accent-600: #8fb4d6;  --color-accent-700: #a9c6e0;  --color-accent-800: #c6dbee;  --color-accent-2-100: #1b2530;  --color-accent-2-800: #c2d6e6;
+    --color-divider: color-mix(in srgb, #ece9e3 16%, transparent);
+    --shadow-sm: 0 1px 2px color-mix(in srgb, #000000 45%, transparent);
+    --shadow-md: 0 3px 10px color-mix(in srgb, #000000 50%, transparent);
+    --shadow-lg: 0 12px 32px color-mix(in srgb, #000000 58%, transparent);
+    --ph-gruppe-address-fl: #2b2717;  --ph-gruppe-address-ra: #87773b;  --ph-gruppe-address-sc: #dcd19d;
+    --ph-gruppe-contact-fl: #292b17;  --ph-gruppe-contact-ra: #7d883a;  --ph-gruppe-contact-sc: #d5e09a;
+    --ph-gruppe-finance-fl: #172b1f;  --ph-gruppe-finance-ra: #457d58;  --ph-gruppe-finance-sc: #a4d5b4;
+    --ph-gruppe-health-fl: #2b1718;  --ph-gruppe-health-ra: #883a40;  --ph-gruppe-health-sc: #de9ba2;
+    --ph-gruppe-official-fl: #172b28;  --ph-gruppe-official-ra: #3a887a;  --ph-gruppe-official-sc: #9bded5;
+    --ph-gruppe-origin-fl: #171d2b;  --ph-gruppe-origin-ra: #3a5188;  --ph-gruppe-origin-sc: #a0add9;
+    --ph-gruppe-person-fl: #20172b;  --ph-gruppe-person-ra: #603a88;  --ph-gruppe-person-sc: #b6a0d9;
+    --ph-gruppe-plain-fl: #202022;  --ph-gruppe-plain-ra: #496179;  --ph-gruppe-plain-sc: #a5bdd4;
+    --ph-gruppe-process-fl: #2b2817;  --ph-gruppe-process-ra: #827a3f;  --ph-gruppe-process-sc: #d9d2a1;
+    --ph-rest-1-fl: #17232b;  --ph-rest-1-ra: #416581;  --ph-rest-1-sc: #a1c3d8;
+    --ph-rest-2-fl: #2a1920;  --ph-rest-2-ra: #804257;  --ph-rest-2-sc: #d9a0b3;
+    --ph-rest-3-fl: #192a19;  --ph-rest-3-ra: #497949;  --ph-rest-3-sc: #a5d4aa;
+    --ph-rest-4-fl: #2b2417;  --ph-rest-4-ra: #86693c;  --ph-rest-4-sc: #dcc39d;
+    --ph-tag-ahvn13-fl: #172b28;  --ph-tag-ahvn13-ra: #3a887a;  --ph-tag-ahvn13-sc: #9bded5;
+    --ph-tag-case_id-fl: #171b2b;  --ph-tag-case_id-ra: #3a4988;  --ph-tag-case_id-sc: #a0abd9;
+    --ph-tag-city-fl: #2b172b;  --ph-tag-city-ra: #883a88;  --ph-tag-city-sc: #d9a0d5;
+    --ph-tag-date-fl: #2b2617;  --ph-tag-date-ra: #88733a;  --ph-tag-date-sc: #e1ce98;
+    --ph-tag-email-fl: #292b17;  --ph-tag-email-ra: #7d883a;  --ph-tag-email-sc: #d5e09a;
+    --ph-tag-fullname-fl: #20172b;  --ph-tag-fullname-ra: #603a88;  --ph-tag-fullname-sc: #b6a0d9;
+    --ph-tag-org-fl: #2b2817;  --ph-tag-org-ra: #827a3f;  --ph-tag-org-sc: #d9d2a1;
+    --ph-tag-phone-fl: #2b1718;  --ph-tag-phone-ra: #883a40;  --ph-tag-phone-sc: #de9ba2;
+    --ph-tag-street-fl: #2b2717;  --ph-tag-street-ra: #87773b;  --ph-tag-street-sc: #dcd19d;
+  }
+}
+:root[data-thema="dunkel"] {
+    --color-bg: #1a1917;
+    --color-surface: #232220;
+    --color-text: #ece9e3;
+    --papier: #2b2a27;
+    --auf-farbe: #f4f2ee;
+    --color-neutral-100: #1f1e1c;
+    --color-neutral-200: #2a2926;
+    --color-neutral-300: #343330;
+    --color-neutral-400: #423f3b;
+    --color-neutral-500: #5b5852;
+    --color-neutral-600: #7d7972;
+    --color-neutral-700: #a5a29b;
+    --color-neutral-800: #c9c5be;
+    --color-neutral-900: #ece9e3;
+    --gr-tief: #43895c;
+    --gr-dunkel2: #4e9a6c;
+    --gr-hell: #5fb37f;
+    --gr-matt: #5f9f78;
+    --gr-aus: #385644;
+    --gr-aus-kante: #456450;
+    --gr-grund: #1d2a22;
+    --gr-grund2: #24382c;
+    --gr-grund3: #1a241e;
+    --bx-dunkel: #8a2e21;
+    --bx-tief: #b23f2e;
+    --bx-dunkel2: #7c2d22;
+    --bx-matt: #ba7869;
+    --bx-matt2: #a76a5c;
+    --bx-matt3: #96604f;
+    --bx-aus: #7c524a;
+    --bx-kante: #6d3c31;
+    --bx-kante-hell: #84483b;
+    --bx-kante2: #4a2b24;
+    --bx-grund: #2e1d1a;
+    --bx-grund2: #341f1b;
+    --bx-grund3: #281a18;
+    --bx-grund4: #231917;
+    --bx-grund5: #2a1c19;
+    --bx-aus-flaeche: #4a2b24;
+    --bx-aus-kante: #5c352c;
+    --bx-loeschen: #b8483a;
+    --bx-loeschen-kante: #8f382c;
+    --bx-senden-aus: #482924;
+    --bx-senden-aus-kante: #573129;
+    --manuell: #a184d0;
+    --muster: #7fa3c2;
+    --gr-flaeche: #37764e;  --gr-flaeche2: #2c6340;  --gr-schrift: #7ecb9c;  --gr-kante: #4e9a6c;  --bx-flaeche: #9c3627;  --bx-schrift: #e2907f;  --bx-kante-stark: #a8503f;  --bx-aus-schrift: #a8837b;
+    --schatten-grund: #000000;
+    --color-accent: #7ea8d0;
+    --color-accent-100: #1a2430;  --color-accent-600: #8fb4d6;  --color-accent-700: #a9c6e0;  --color-accent-800: #c6dbee;  --color-accent-2-100: #1b2530;  --color-accent-2-800: #c2d6e6;
+    --color-divider: color-mix(in srgb, #ece9e3 16%, transparent);
+    --shadow-sm: 0 1px 2px color-mix(in srgb, #000000 45%, transparent);
+    --shadow-md: 0 3px 10px color-mix(in srgb, #000000 50%, transparent);
+    --shadow-lg: 0 12px 32px color-mix(in srgb, #000000 58%, transparent);
+    --ph-gruppe-address-fl: #2b2717;  --ph-gruppe-address-ra: #87773b;  --ph-gruppe-address-sc: #dcd19d;
+    --ph-gruppe-contact-fl: #292b17;  --ph-gruppe-contact-ra: #7d883a;  --ph-gruppe-contact-sc: #d5e09a;
+    --ph-gruppe-finance-fl: #172b1f;  --ph-gruppe-finance-ra: #457d58;  --ph-gruppe-finance-sc: #a4d5b4;
+    --ph-gruppe-health-fl: #2b1718;  --ph-gruppe-health-ra: #883a40;  --ph-gruppe-health-sc: #de9ba2;
+    --ph-gruppe-official-fl: #172b28;  --ph-gruppe-official-ra: #3a887a;  --ph-gruppe-official-sc: #9bded5;
+    --ph-gruppe-origin-fl: #171d2b;  --ph-gruppe-origin-ra: #3a5188;  --ph-gruppe-origin-sc: #a0add9;
+    --ph-gruppe-person-fl: #20172b;  --ph-gruppe-person-ra: #603a88;  --ph-gruppe-person-sc: #b6a0d9;
+    --ph-gruppe-plain-fl: #202022;  --ph-gruppe-plain-ra: #496179;  --ph-gruppe-plain-sc: #a5bdd4;
+    --ph-gruppe-process-fl: #2b2817;  --ph-gruppe-process-ra: #827a3f;  --ph-gruppe-process-sc: #d9d2a1;
+    --ph-rest-1-fl: #17232b;  --ph-rest-1-ra: #416581;  --ph-rest-1-sc: #a1c3d8;
+    --ph-rest-2-fl: #2a1920;  --ph-rest-2-ra: #804257;  --ph-rest-2-sc: #d9a0b3;
+    --ph-rest-3-fl: #192a19;  --ph-rest-3-ra: #497949;  --ph-rest-3-sc: #a5d4aa;
+    --ph-rest-4-fl: #2b2417;  --ph-rest-4-ra: #86693c;  --ph-rest-4-sc: #dcc39d;
+    --ph-tag-ahvn13-fl: #172b28;  --ph-tag-ahvn13-ra: #3a887a;  --ph-tag-ahvn13-sc: #9bded5;
+    --ph-tag-case_id-fl: #171b2b;  --ph-tag-case_id-ra: #3a4988;  --ph-tag-case_id-sc: #a0abd9;
+    --ph-tag-city-fl: #2b172b;  --ph-tag-city-ra: #883a88;  --ph-tag-city-sc: #d9a0d5;
+    --ph-tag-date-fl: #2b2617;  --ph-tag-date-ra: #88733a;  --ph-tag-date-sc: #e1ce98;
+    --ph-tag-email-fl: #292b17;  --ph-tag-email-ra: #7d883a;  --ph-tag-email-sc: #d5e09a;
+    --ph-tag-fullname-fl: #20172b;  --ph-tag-fullname-ra: #603a88;  --ph-tag-fullname-sc: #b6a0d9;
+    --ph-tag-org-fl: #2b2817;  --ph-tag-org-ra: #827a3f;  --ph-tag-org-sc: #d9d2a1;
+    --ph-tag-phone-fl: #2b1718;  --ph-tag-phone-ra: #883a40;  --ph-tag-phone-sc: #de9ba2;
+    --ph-tag-street-fl: #2b2717;  --ph-tag-street-ra: #87773b;  --ph-tag-street-sc: #dcd19d;
+}
+:root { --fokus: var(--gr-flaeche); }
+/* Die Farbe des aktiven Rahmens folgt der SPALTE, nicht dem Feld: in der
+ * roten Spalte darf kein Feld einen gruenen Rahmen tragen — Gruen heisst
+ * «bleibt auf dem Geraet».
+ */
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+::selection { background: color-mix(in srgb, var(--color-accent) 30%, transparent); }
+
+/* — rules — */
+.hr {
+  height: 1px; border: 0; margin: var(--space-4) 0;
+  background: var(--color-divider);
+}
+
+/* — buttons — */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem;
+  cursor: pointer; text-decoration: none;
+  font-family: var(--ui-heading); font-weight: var(--font-heading-weight);
+  font-size: 0.875rem; line-height: 1.2; color: var(--color-text); /* matches the.input's 14px —
+                                                                      the pair sits side by side in sign-up rows */
+  background: transparent; border: 1px solid transparent;
+  padding: var(--space-2) calc(var(--space-3) * 1.2);
+  border-radius: var(--radius-md);
+}
+.btn svg { display: block; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-primary { background: var(--color-accent); color: var(--color-bg); }
+.btn-primary:hover { background: var(--color-accent-600); }
+.btn-primary:active { background: var(--color-accent-700); }
+.btn-secondary { border-color: var(--color-divider); }
+.btn-secondary:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+.btn-secondary:active { background: color-mix(in srgb, var(--color-text) 14%, transparent); }
+.btn-ghost { color: var(--color-accent); padding-inline: var(--space-1); }
+.btn-ghost:hover { background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+.btn-ghost:active { background: color-mix(in srgb, var(--color-accent) 18%, transparent); }
+.btn-icon { width: 2.25rem; height: 2.25rem; padding: 0; }
+.btn-block { width: 100%; margin-top: var(--space-2); }
+
+/* — forms — */
+.field > label {
+  display: block; font-size: 0.75rem; margin-bottom: 0.3125rem;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+}
+.input {
+  width: 100%; min-height: 2.25rem; padding: 0.375rem 0.625rem; font: inherit;
+  font-size: 0.875rem; color: var(--color-text); caret-color: var(--color-accent);
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider); border-radius: var(--radius-md);
+}
+.input:hover { border-color: color-mix(in srgb, var(--color-text) 45%, transparent); }
+.input:focus-visible { border-color: var(--color-accent); outline-offset: 0; }
+textarea.input { min-height: 5.625rem; resize: vertical; }
+.radio { display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.875rem; }
+.radio input, .seg-opt input {
+  position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;
+}
+.radio .dot {
+  width: 1rem; height: 1rem; flex: none; border-radius: 50%;
+  border: 1.5px solid var(--color-divider);
+}
+.radio:hover .dot { border-color: var(--color-accent); }
+.radio input:checked + .dot {
+  border-color: var(--color-accent); background: var(--color-accent);
+  box-shadow: inset 0 0 0 4px var(--color-bg);
+}
+.radio input:focus-visible + .dot { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.seg {
+  display: inline-flex; overflow: hidden;
+  border: 1px solid var(--color-divider); border-radius: var(--radius-md);
+}
+.seg-opt {
+  display: inline-flex; align-items: center; gap: 0.375rem;
+  padding: 0.4375rem 0.75rem; font-size: 0.8125rem; cursor: pointer;
+}
+.seg-opt + .seg-opt { border-left: 1px solid var(--color-divider); }
+.seg-opt:has(input:checked) { background: var(--color-accent); color: var(--color-bg); }
+.seg-opt:not(:has(input:checked)):hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+.seg-opt:has(input:focus-visible) { outline: 2px solid var(--color-accent); outline-offset: -2px; }
+
+/* — cards — */
+.card {
+  display: flex; flex-direction: column; gap: var(--space-2);
+  padding: var(--space-3); border-radius: var(--radius-md); background: var(--color-surface);
+}
+.card-kicker { font-size: 0.625rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent); }
+.card-title {
+  font-family: var(--ui-heading); font-weight: var(--font-heading-weight);
+  font-size: 1.0625rem; line-height: 1.2;
+}
+.card-body { margin: 0; font-size: 0.8125rem; opacity: 0.8; flex: 1; }
+.card-meta {
+  display: flex; align-items: center; gap: 0.375rem; font-size: 0.6875rem;
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+}
+.elev-sm { box-shadow: var(--shadow-sm); }
+.elev-md { box-shadow: var(--shadow-md); }
+.elev-lg { box-shadow: var(--shadow-lg); }
+
+/* — tags — */
+.tag {
+  display: inline-flex; align-items: center; font-size: 0.6875rem;
+  letter-spacing: 0.02em; padding: 0.1875rem 0.625rem;
+  border-radius: var(--radius-md);
+}
+.tag-accent { background: var(--color-accent-100); color: var(--color-accent-800); }
+.tag-accent-2 { background: var(--color-accent-2-100); color: var(--color-accent-2-800); }
+.tag-neutral { background: var(--color-neutral-100); color: var(--color-neutral-800); }
+.tag-outline { border: 1px solid var(--color-accent); color: var(--color-accent); }
+
+/* — navigation — */
+.nav {
+  display: flex; align-items: center; gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: none;
+}
+.nav-brand {
+  font-family: var(--ui-heading); font-weight: var(--font-heading-weight);
+  font-size: 1.125rem; margin-right: auto;
+}
+.nav a { color: inherit; text-decoration: none; font-size: 0.875rem; }
+.nav a:hover, .nav a[aria-current='page'] { color: var(--color-accent); }
+
+/* — tables — */
+.table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.table th {
+  text-align: left; font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text) 60%, transparent);
+  padding: var(--space-2); border-bottom: 1px solid var(--color-divider);
+}
+.table td {
+  padding: var(--space-2);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+.table tbody tr:hover { background: color-mix(in srgb, var(--color-text) 4%, transparent); }
+
+/* — dialog — */
+.dialog-backdrop {
+  position: fixed; inset: 0; display: grid; place-items: center;
+  padding: var(--space-4);
+  background: color-mix(in srgb, var(--color-neutral-900) 50%, transparent);
+}
+.dialog {
+  width: min(27.5rem, 100%); display: flex; flex-direction: column; gap: var(--space-3);
+  padding: var(--space-4); border-radius: var(--radius-md);
+  background: var(--color-surface); box-shadow: var(--shadow-lg);
+}
+.dialog-title {
+  font-family: var(--ui-heading); font-weight: var(--font-heading-weight);
+  font-size: 1.25rem;
+}
+.dialog-body { font-size: 0.875rem; opacity: 0.85; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-2); }
+
+/* — blueprint frame: components are wireframe objects (see.blueprint
+   and.corner above) — square, transparent, hairline-bordered — */
+.card, .btn, .input, .tag, .seg, .dialog { border-radius: 0; }
+.card, .dialog { background: transparent; border: 1px solid var(--color-divider); }
+.btn { border: 1px solid var(--color-divider); }
+.btn-primary { border-color: var(--color-accent); }
+.btn-ghost { border-color: transparent; }
+
+
+/* ========================================================================
+ * Geruest
+ *
+ * Die Masse sind aus dem Gestaltungsentwurf zu Klassen zusammengefasst.
+ * ====================================================================
+ */
+
+/* --- Kopfzeile --------------------------------------------------------- */
+/* Rechts 1rem: das Zahnrad soll mit dem «Einklappen»-Knopf darunter
+ * fluchten, und der sitzt in `.bereich-kopf` mit 1rem Innenabstand.
+ * `tests/test_oberflaeche.js` Punkt 33 haelt die zwei Zahlen zusammen.
+ */
+.kopfzeile {
+  flex: none; display: flex; align-items: center; justify-content: space-between;
+  gap: 1.5rem; padding: 0.875rem 1rem 0.75rem; background: var(--papier);
+  border-bottom: 1px solid var(--color-neutral-300);
+  /* ⚠️ `z-index` und `position`, sonst liegt der Schatten unter dem
+     Inhalt und ist nicht zu sehen. */
+  position: relative; z-index: 3;
+  transition: box-shadow .15s ease;
+}
+/* ⚠️ Der Schatten erscheint NUR, wenn wirklich gerollt ist — er ist eine
+   Aussage und keine Verzierung: «oben geht es weiter». Steht die Seite am
+   Anfang, sagt die blosse Linie schon alles.
+
+   Er kann nur gestapelt auftreten: nebeneinander rollt jeder Kasten fuer
+   sich, und die Kopfzeile hat gar nichts, worueber sie liegen koennte. */
+.kopfzeile.gerollt {
+  box-shadow: 0 0.25rem 0.625rem -0.25rem color-mix(in srgb, var(--schatten-grund) 35%, transparent);
+}
+/* Die Wortmarke ist ein KNOPF (sie beginnt von vorne, wie «Neu») und
+ * sieht trotzdem aus wie eine Wortmarke: kein Rand, kein Grund, keine
+ * Knopfschrift. Ein `div` mit `onclick` waere fuer jeden unerreichbar, der
+ * nicht zeigt.
+ */
+.kopfzeile .links {
+  display: flex; align-items: center; gap: 0.875rem;
+  border: none; background: none; padding: 0; margin: 0;
+  font: inherit; color: inherit; text-align: left; cursor: pointer;
+}
+.kopfzeile .links:focus-visible { outline: 2px solid var(--fokus); }
+/* `maske.svg` ist randlos beschnitten, also kein negativer Rand. Das
+ * Kaestchen ist 3.1875rem minus 1.125rem hoch; die Maske steht hochkant,
+ * also bestimmt die Hoehe die Breite.
+ */
+.kopfzeile .logo {
+  /* ⚠️ Der negative Rand RECHTS holt die Wortmarke 4 px an die Maske heran,
+     ohne die Maske selbst zu bewegen — sie steht als erstes Kind, ihr
+     linker Rand bleibt. Ueber `gap` waere es nicht gegangen: der gilt auch
+     zwischen Wortmarke und Spruch, und der Abstand dort ist richtig. */
+  margin-right: -0.25rem;
+  flex: none; width: 1.75rem; height: 2.0625rem;
+  background-image: url("maske.svg"); background-repeat: no-repeat;
+  background-position: center; background-size: contain;
+}
+.kopfzeile .marke {
+  font-family: var(--font-heading); font-size: 1.625rem; letter-spacing: .06em;
+  text-transform: uppercase; line-height: 1; font-weight: 400;
+}
+.kopfzeile .marke b { font-weight: 700; }
+.kopfzeile .spruch {
+  font-size: 0.75rem; color: var(--color-neutral-600); letter-spacing: .04em;
+  margin-top: 2px;
+}
+.kopfzeile .rechts { display: flex; align-items: center; gap: 0.625rem; }
+.lokalzeiger {
+  /* Nicht umbrechen: sonst stuende «100 %» ueber «LOKAL», und die Kopfzeile
+   * wuerde eine Zeile hoeher.
+   */
+  white-space: nowrap;
+  display: flex; align-items: center; gap: 0.4375rem; color: var(--color-text);
+  padding: 0.3125rem 0.625rem; font-size: 0.6875rem; letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.lokalzeiger i { display: block; width: 0.4375rem; height: 0.4375rem; background: var(--color-text); }
+.zahnrad {
+  flex: none; width: 1.6875rem; height: 1.6875rem; display: inline-flex;
+  align-items: center; justify-content: center;
+  border: 1px solid var(--color-neutral-400); background: var(--papier);
+  color: var(--color-text); cursor: pointer;
+  border-radius: var(--radius-md);
+}
+.zahnrad:hover { background: var(--color-neutral-200); }
+.gruppe { display: flex; border: 1px solid var(--color-neutral-400); }
+/* Die Sprachwahl ist ein Knopfverbund: der Rahmen traegt die Rundung, und
+ * `overflow: hidden` schneidet die Flaeche des gewaehlten Knopfs an den
+ * Ecken mit ab. */
+#sprachen { border-radius: var(--radius-md); overflow: hidden; }
+.gruppe button {
+  font-family: var(--ui-heading); font-size: 0.7188rem; font-weight: 500;
+  letter-spacing: .1em; text-transform: uppercase; padding: 0.25rem 0.6875rem;
+  border: none; background: var(--papier); color: var(--color-neutral-700);
+  cursor: pointer;
+}
+.gruppe button:hover { background: var(--color-neutral-300); }
+.gruppe button.aktiv {
+  background: var(--color-neutral-900); color: var(--color-neutral-100);
+}
+
+/* --- Die fuenf Bereiche ------------------------------------------------ */
+/* KEINE Mindesthoehe. Die Hoehe kommt vom Fenster, die Kaesten teilen sie
+ * unter sich auf. Gerollt wird NUR in den Textfeldern — nie die Seite, nie
+ * ein Kasten. Dafuer braucht jede Stufe der Kette `min-height: 0`, sonst
+ * setzt der Vorgabewert `min-height: auto` von Flex und Grid die Kaesten
+ * auf ihre Inhaltshoehe und schiebt den Rest hinaus.
+ */
+main.raster {
+  flex: 1 1 0; min-height: 0; display: flex; gap: 1px;
+  background: var(--color-neutral-300);
+}
+main.raster > .spalte {
+  flex: 1 1 0; min-width: 0; display: grid;
+  grid-template-rows: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1px;
+  background: var(--color-neutral-300); overflow: hidden;
+}
+/* KEINE Mindestbreite: sie machte aus jedem schmalen Fenster ein waagrecht
+ * rollendes, und weil `rem` an `--skala` haengt, verschoebe sie sich mit dem
+ * Schriftregler. Stattdessen stapeln die Kaesten unterhalb einer Grenze
+ * (siehe weiter unten).
+ *
+ * Die Grenzen stehen in `em` und nicht in `px`: `em` misst in einer
+ * Medienabfrage die Schrift des BROWSERS, nicht `--skala`.
+ */
+.kopfzeile, main.raster, footer { min-width: 0; }
+
+/* --- Dritte Spalte: eingeklappt ---------------------------------------- */
+/* Sie startet EINGEKLAPPT: solange nichts hinausgeht, soll die Oberflaeche
+ * auch nicht so aussehen, als ginge schon etwas hinaus. Die Schiene bleibt
+ * sichtbar, damit klar ist, dass es sie gibt.
+ */
+.schiene {
+  flex: none; width: 2.875rem; border-left: 2px solid var(--bx-kante-stark);
+  box-shadow: inset 5px 0 7px -5px color-mix(in srgb, var(--bx-flaeche) 55%, transparent); z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+  background: var(--bx-grund3); padding: 0.875rem 0; cursor: pointer;
+}
+.schiene button {
+  border: 1px solid var(--color-neutral-400); background: var(--papier);
+  width: 1.625rem; height: 1.625rem; cursor: pointer; color: var(--bx-schrift);
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-md);
+}
+.schiene button:hover { background: var(--color-neutral-200); }
+.schiene .senkrecht {
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  font-family: var(--ui-heading); font-size: 0.75rem; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--color-neutral-600);
+}
+body.drei .schiene { display: none; }
+body:not(.drei) .spalte.hinaus { display: none; }
+
+.einklappen {
+  margin-left: auto; display: inline-flex; align-items: center; gap: 0.4375rem;
+  border: 1px solid var(--color-neutral-400); background: var(--papier);
+  color: var(--bx-schrift); padding: 0.1875rem 0.5625rem; cursor: pointer;
+  font-family: var(--ui-heading); font-size: 0.7188rem; letter-spacing: .1em;
+  text-transform: uppercase;
+  border-radius: var(--radius-md);
+}
+.einklappen:hover { background: var(--color-neutral-200); }
+
+/* --- Fusszeile --------------------------------------------------------- */
+footer {
+  flex: none; display: flex; align-items: center; justify-content: space-between;
+  gap: 1.25rem; padding: 0.5rem 1.25rem; background: var(--color-bg);
+  border-top: 1px solid var(--color-neutral-300); font-size: 0.6875rem;
+  letter-spacing: .05em; color: var(--color-neutral-600);
+}
+/* `inline-block` und NICHT `white-space: nowrap`: das Stueck bleibt
+ * zusammen, solange es passt, und darf bei wirklich zu schmalem Fenster
+ * trotzdem umbrechen, statt hinauszuragen.
+ */
+.fuss-teil { display: inline-block; }
+/* Die Fassungsnummer bricht NICHT — der Bindestrich in «-beta» ist sonst
+ * eine Umbruchgelegenheit, und ausgerechnet die Zahl, die einen
+ * Fehlerbericht zuordenbar macht, waere schwer abzulesen.
+ */
+#version { white-space: nowrap; }
+.bereich {
+  display: flex; flex-direction: column; min-height: 0; min-width: 0;
+  overflow: hidden; background: var(--color-bg);
+}
+/* ⚠️ Spalte 3 ist farblich abgesetzt, weil dort die Grenze verlaeuft: was
+   hier steht, geht hinaus. Das ist die Aussage der ganzen Oberflaeche. */
+.spalte.hinaus { border-left: 0.1875rem solid var(--bx-kante-stark); }
+.bereich.hinaus { background: var(--bx-grund4); }
+.bereich.fertig { background: var(--gr-grund); }
+
+.bereich-kopf {
+  flex: none; display: flex; align-items: baseline; justify-content: space-between;
+  gap: 0.625rem; padding: 0.75rem 1rem 0.5rem;
+}
+.bereich-kopf .titelgruppe { display: flex; align-items: baseline; gap: 0.625rem; }
+.bereich-nr {
+  font-family: var(--ui-heading); font-size: 0.8125rem; letter-spacing: .18em;
+  color: var(--color-accent-700);
+}
+.bereich-titel {
+  font-family: var(--font-heading); font-size: 1rem; letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.bereich-zahl { font-size: 0.6875rem; color: var(--color-neutral-600); }
+
+/* --- Die Plaketten: das gestalterische Herzstueck ---------------------- */
+.plakette {
+  display: inline-flex; align-items: center; gap: 0.3125rem; flex: none;
+  border-radius: 999px; background: var(--papier); padding: 2px 0.5625rem 2px 0.4375rem;
+  font-family: var(--ui-heading); font-size: 0.6562rem; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase;
+}
+.plakette.lokal { border: 1px solid var(--gr-matt); color: var(--gr-schrift); }
+.plakette.online { border: 1px solid var(--bx-kante); color: var(--bx-schrift); }
+.plakette svg { flex: none; }
+
+/* --- Ablageflaeche ----------------------------------------------------- */
+.ablage {
+  flex: none; margin: 0 1rem 0.625rem; padding: 1.625rem 1rem; text-align: center;
+  border: 1px dashed var(--gr-matt); background: var(--gr-grund3); color: var(--gr-schrift);
+  cursor: pointer; font-family: var(--ui-heading); font-size: 0.8125rem;
+  letter-spacing: .06em;
+}
+.ablage:hover, .ablage.drueber { border-color: var(--gr-hell); background: var(--gr-grund2); }
+.ablage input { display: none; }
+
+/* --- Fortschritt beim Maskieren ---------------------------------------- */
+/* `[hidden]` zuerst und mit `display: none` — eine spaetere Regel mit
+ * `display` schluege sonst das `hidden`.
+ */
+.lauf[hidden] { display: none; }
+.lauf {
+  flex: none; display: flex; align-items: center; gap: 0.625rem;
+  padding: 0.5rem 1rem 0.25rem;
+}
+.lauf-balken {
+  flex: 1 1 auto; height: 0.375rem; background: var(--color-neutral-200);
+  border: 1px solid var(--color-neutral-400); overflow: hidden;
+}
+/* Ohne Zahl — solange nicht feststeht, wie viele Fenster es sind, wandert
+   der Balken, statt eine Laenge vorzutaeuschen. */
+.lauf-balken i {
+  display: block; height: 100%; width: 0%; background: var(--gr-flaeche2);
+  transition: width .2s linear;
+}
+.lauf.unbestimmt .lauf-balken i {
+  width: 32%; animation: wandern 1.5s ease-in-out infinite;
+}
+.lauf-wort {
+  flex: none; font-size: 0.6875rem; color: var(--color-neutral-600);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Ziehen und Ablegen ------------------------------------------------ */
+/* `[hidden]` ZUERST und mit `display: none`. Eine spaetere Regel mit
+ * `display` schluege sonst das `hidden`, und die Folge waere ein dauerhaft
+ * dunkler Bildschirm.
+ */
+.ziehschleier[hidden] { display: none; }
+.ziehschleier {
+  position: fixed; inset: 0; z-index: 150; background: color-mix(in srgb, var(--schatten-grund) 55%, transparent);
+  /* Der Schleier erklaert, er faengt nicht: sonst landet die Datei auf ihm
+     statt auf der Flaeche darunter. */
+  pointer-events: none;
+}
+/* Die Ablageflaeche ueber den Schleier heben und deutlich machen. Sie ist
+   waehrend des Ziehens das einzige helle Feld der Seite. */
+body.zieht .ablage {
+  position: relative; z-index: 160;
+  border-color: var(--gr-hell); border-width: 2px; background: var(--papier);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--gr-hell) 35%, transparent);
+}
+
+/* --- Startbildschirm --------------------------------------------------- */
+.startbild[hidden] { display: none; }
+.startbild {
+  position: fixed; inset: 0; z-index: 200; background: var(--papier);
+  display: flex; align-items: center; justify-content: center; padding: 2.5rem;
+}
+.startbild .innen {
+  width: 100%; max-width: 45rem; display: flex; flex-direction: column;
+  gap: 2.125rem;
+}
+.startbild .zeile { display: flex; align-items: center; gap: 2.125rem; }
+/* Ueber die HOEHE gebunden, nicht ueber die Breite: `maske.svg` steht
+ * hochkant, und bei fester Breite wuerde die ganze Zeile wachsen.
+ */
+.startbild img { display: block; height: 9.625rem; width: auto; flex: none; }
+.startbild .marke {
+  font-family: var(--font-heading); font-size: 3.875rem; line-height: .95;
+  letter-spacing: .1em; text-transform: uppercase; font-weight: 400;
+  color: var(--color-text);
+}
+.startbild .marke b { font-weight: 700; }
+.startbild .spruch {
+  font-size: 0.9375rem; line-height: 1.5; color: var(--color-neutral-700);
+}
+/* SCHMAL WIRD GESTAPELT: der Startbildschirm passt sich der Breite an.
+ *
+ * Bei 378 px Fensterbreite (Widget-Modus) ergeben Maske plus Abstand plus
+ * Wortmarke rund 435 px in einem 298 px breiten Kasten.
+ *
+ * Kein Rollbalken verriete es: `.startbild` ist `position: fixed`, und
+ * feste Elemente zaehlen nicht in `scrollWidth`. Der Ueberlauf wird
+ * schlicht abgeschnitten — deshalb steht die Zahl hier.
+ *
+ * 33em ist dieselbe Grenze, an der `.seite-tab` und `.seite-kopf` stapeln.
+ * `em` misst die Schrift des BROWSERS, nicht `--skala`.
+ */
+@media (max-width: 33em) {
+  .startbild { padding: 1.25rem; }
+  .startbild .innen { gap: 1.5rem; }
+  .startbild .zeile {
+    flex-direction: column; align-items: center; gap: 1rem;
+    text-align: center;
+  }
+  .startbild img { height: 5.5rem; }
+  .startbild .marke { font-size: 2.25rem; }
+  .startbild .spruch { font-size: 0.8125rem; }
+}
+/* Kein Prozentbalken. Solange `Zustand` laedt, antwortet nichts — der
+ * Browser kann nur fragen «schon da?». Eine Zahl waere erfunden, und zwar
+ * ausgerechnet in dem Werkzeug, dessen Sinn es ist, keine falsche
+ * Sicherheit anzuzeigen. Stattdessen ein laufender Streifen ohne Ende.
+ */
+.startbild .balken {
+  height: 0.5rem; background: var(--color-neutral-200);
+  border: 1px solid var(--color-neutral-400); overflow: hidden;
+}
+.startbild .balken i {
+  display: block; height: 100%; width: 32%; background: var(--gr-flaeche2);
+  animation: wandern 1.5s ease-in-out infinite;
+}
+@keyframes wandern {
+  0%   { transform: translateX(-105%); }
+  100% { transform: translateX(320%); }
+}
+.startbild .zeile-unten {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 0.75rem; margin-top: 0.5625rem; font-family: var(--ui-heading);
+  font-size: 0.7188rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--color-neutral-700);
+}
+@media (prefers-reduced-motion: reduce) {
+  .startbild .balken i { animation: none; width: 100%; opacity: .4; }
+}
+
+/* --- Rumpf und Fuss der Bereiche --------------------------------------- */
+/* `overflow: hidden` und NICHT `auto`. Rollt der Rumpf mit und das
+ * Textfeld darin auch, stehen zwei Rollbalken nebeneinander. Gerollt wird
+ * im Feld, nicht darum herum.
+ */
+/* `min-height: 0`: ein Mindestwert an dieser Stelle liesse den Kasten nicht
+ * kleiner werden als seinen Inhalt, und die Spalte wuechse ueber das
+ * Fenster hinaus. Der Rumpf darf beliebig schrumpfen; was drin ist, rollt.
+ */
+.rumpf {
+  flex: 1 1 0; min-height: 0; padding: 0.1875rem 1rem; display: flex;
+  position: relative; overflow: hidden;
+}
+.rumpf textarea#orig {
+  flex: 1; resize: none; border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-md); background: var(--papier); padding: 0.75rem 0.75rem 2.125rem;
+  font-family: var(--textschrift); font-size: var(--textgroesse);
+  line-height: 1.65; color: var(--color-text); outline: none;
+}
+.rumpf textarea#orig:focus { border-color: var(--gr-matt); }
+/* Knopf im Feld, unten rechts — deshalb der Innenabstand unten am Feld.
+ * Der Abstand rechts rechnet den Rollbalken des Textfelds mit.
+ */
+/* Eine Reihe statt Einzelpositionen: Beschriftungen sind je Sprache
+ * verschieden lang («Télécharger» gegen «Herunterladen»), und feste
+ * Positionen ueberlappten. Der Behaelter ordnet sie: Leeren,
+ * Herunterladen/Einfuegen, Kopieren. Immer dieselbe Reihenfolge, damit man
+ * die Stelle einmal lernt. Der Abstand rechts rechnet den Rollbalken mit.
+ */
+/* Der Abstand rechts haengt am ROLLBALKEN, nicht an einer geratenen Zahl.
+ *
+ * `--rollbalken` wird beim Start GEMESSEN (`maschera.js`): ein Probeklotz
+ * mit `overflow: scroll`, Aussenbreite minus Innenbreite. Ueberlagernde
+ * Rollbalken ergeben 0, und dann ist der Abstand genau der Innenabstand.
+ * Der Rueckfallwert gilt nur, solange das JavaScript nicht gelaufen ist.
+ */
+/* Behaelter fuer die Knoepfe IM Feld. Wird die Spalte schmal, werden auch
+ * «Herunterladen» und «Kopieren» zu blossen Zeichen — ihr Wort steht dann
+ * im Tooltip, den `knopfTitelSetzen` setzt. Gemessen wird das FELD und
+ * nicht das Fenster: bei drei Spalten ist es schmal, obwohl das Fenster
+ * breit ist.
+ */
+.rumpf, .feldbox { container-type: inline-size; container-name: feld; }
+@container feld (max-width: 24rem) {
+  .feldknoepfe button > span { display: none; }
+  .feldknoepfe button { padding-left: 0.4375rem; padding-right: 0.4375rem; }
+  .feldknoepfe { gap: 0.3125rem; }
+}
+
+.feldknoepfe {
+  position: absolute; bottom: 0.75rem; z-index: 2;
+  right: calc(0.75rem + 1px + var(--rollbalken, 0.9375rem));
+  display: flex; align-items: center; gap: 0.375rem;
+}
+/* Zwei Behaelter, zwei Werte. `right` misst vom PADDING-Rand des
+ * Elternteils: `.rumpf` haelt 1rem Innenabstand, `.feldbox` keinen. Die
+ * Rechnung ist Innenabstand + Rand + gemessener Rollbalken + Luft, je
+ * Behaelter eigens.
+ */
+.rumpf > .feldknoepfe {
+  right: calc(1rem + 0.75rem + 1px + var(--rollbalken, 0.9375rem));
+}
+/* Hellgrau statt weiss: weiss auf weissem Feld sieht man kaum, und der
+ * Kopierknopf ist der Weg, auf dem dieses Werkzeug ueberhaupt benutzt
+ * wird.
+ */
+.imfeld {
+  position: static; display: inline-flex;
+  align-items: center; gap: 0.3125rem; border: 1px solid var(--color-neutral-400);
+  background: var(--color-neutral-100); color: var(--color-neutral-700);
+  padding: 0.1875rem 0.5rem; min-height: 1.5625rem;
+  font-family: var(--ui-schrift); font-size: 0.7188rem; cursor: pointer;
+  border-radius: var(--radius-md); line-height: 1.5;
+}
+.imfeld:hover:not(:disabled) { background: var(--color-neutral-200); }
+.imfeld:disabled { opacity: .4; cursor: default; }
+.imfeld svg { flex: none; transition: color .12s ease; }
+
+/* Beim Ueberfahren faerbt sich NUR das Zeichen: gruen fuers Kopieren, rot
+ * fuers Leeren.
+ *
+ * Ueber eigene Klassen und nicht ueber `.nurbild`: das sagt etwas ueber die
+ * Form und nichts ueber die Wirkung. `tests/test_oberflaeche.js` Punkt 37
+ * prueft, dass kein Leer- oder Kopierknopf seine Klasse verliert.
+ */
+.imfeld.kopieren:hover:not(:disabled) svg { color: var(--gr-hell); }
+
+/* Der Leerknopf traegt seine Farbe DAUERND, nicht erst beim Ueberfahren.
+ * Er ist der einzige dieser Knoepfe, der etwas WEGNIMMT — das soll man
+ * sehen, bevor man ihn trifft. Beim Ueberfahren wird er kraeftig und das
+ * Zeichen weiss: dann ist klar, dass der naechste Klick loescht.
+ */
+.imfeld.loeschen {
+  background: var(--bx-grund); border-color: var(--bx-kante-hell); color: var(--bx-schrift);
+}
+.imfeld.loeschen:hover:not(:disabled) {
+  background: var(--bx-loeschen); border-color: var(--bx-loeschen-kante); color: var(--auf-farbe);
+}
+.imfeld.loeschen:hover:not(:disabled) svg { color: var(--auf-farbe); }
+
+/* «Bearbeiten» traegt seine Farbe ebenfalls DAUERND, hellgruen als
+ * Nebenhandlung: man soll sehen, dass sich der Text in 02 aendern laesst.
+ * Die Toene sind die, die es hier schon gibt (Plakette «lokal», Tagwolke).
+ *
+ * Beim Ueberfahren wird NICHT umgekehrt, anders als beim Leerknopf: dort
+ * ist die Umkehr eine Warnung, und Bearbeiten nimmt nichts weg.
+ *
+ * GEDRUECKT wird es voll gruen. `.imfeld.aktiv` setzt sonst neutrales Grau
+ * und naehme dem Knopf die Farbe genau dann, wenn das Feld beschreibbar
+ * ist. Deshalb steht die Regel HINTER `.imfeld.aktiv` — bei gleicher
+ * Spezifitaet gewinnt die spaetere.
+ *
+ * Kein Widerspruch zu Punkt 58: Bereich 02 steht in einer gewoehnlichen
+ * `.spalte`, und Gruen heisst dort «bleibt auf dem Geraet».
+ */
+.imfeld.bearbeiten {
+  background: var(--gr-grund); border-color: var(--gr-matt); color: var(--gr-schrift);
+}
+.imfeld.bearbeiten:hover:not(:disabled) {
+  background: var(--gr-grund2); border-color: var(--gr-hell);
+}
+/* `user-select: text` AUSDRUECKLICH. Dieser Kasten kann kein `textarea`
+ * werden — er traegt die Platzhalter-Plaketten, an denen Tagmenue,
+ * Woerterbuch und der Weg zurueck haengen. Also bleibt er ein `div` und
+ * sagt ausdruecklich, dass sein Text markierbar ist; `tabindex` im HTML
+ * macht ihn zusaetzlich anwaehlbar.
+ */
+#maskiert {
+  user-select: text; -webkit-user-select: text;
+  flex: 1; overflow: auto; border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-md); background: var(--papier); padding: 0.75rem 0.75rem 2.125rem;
+  white-space: pre-wrap; word-break: break-word;
+  font-family: var(--textschrift); font-size: var(--textgroesse);
+  line-height: 2.0;
+}
+#maskiert.istleer {
+  border-style: dashed; background: transparent;
+  color: var(--color-neutral-600); text-align: center;
+  padding-top: 1.625rem; white-space: normal;
+}
+.leer {
+  flex: 1; border: 1px dashed var(--color-neutral-400); border-radius: var(--radius-md);
+  padding: 1.125rem 1rem; color: var(--color-neutral-600); font-size: 0.8125rem;
+  margin: 0;
+}
+/* Jeder Fuss ist ein BEHAELTER. Wird er eng, verlieren seine Knoepfe die
+ * Beschriftung und behalten das Zeichen — der Zweck steht dann im Tooltip.
+ * Gemessen wird der Fuss und nicht das Fenster: wie breit er ist, haengt an
+ * der Spalte.
+ */
+.fuss {
+  container-type: inline-size; container-name: fuss;
+  flex: none; display: flex; align-items: center; gap: 0.625rem;
+  padding: 0.625rem 1rem 0.875rem;
+}
+.fuss button.tat:not(.haupt):not(.senden) { padding: 0 0.875rem; }
+/* 13rem: darueber wuerde auch ein Fuss mit einem einzigen Knopf sein Wort
+ * verlieren, obwohl reichlich Platz da ist. Dazu unten mehr Innenraum,
+ * damit das Wort nicht am Rand klebt.
+ */
+@container fuss (max-width: 13rem) {
+  /* Die Beschriftung geht, das Zeichen bleibt. `.marke` und die Zaehler
+   * bleiben ebenfalls — sie sind Inhalt, keine Beschriftung.
+   *
+   * NICHT der Sendeknopf. Er ist der einzige, bei dem der Text sagt, WOHIN
+   * etwas geht — «Kopieren und Gemini oeffnen». Ein Zeichen allein
+   * verschwiege genau das. Er schrumpft erst weiter unten.
+   */
+  .fuss button.tat:not(.senden) > span:not(.marke),
+  .fuss button.imfeld > span:not(.marke) { display: none; }
+  .fuss button.tat:not(.senden) { padding: 0 0.5rem; }
+  .fuss button.tat:not(.senden) svg {
+    margin-right: 0 !important; margin-left: 0 !important;
+  }
+}
+@container fuss (max-width: 9rem) {
+  .fuss button.tat.senden > span { display: none; }
+  .fuss button.tat.senden:not(.pfeil) { padding: 0 0.5rem; }
+  /* Der Pfeil bleibt quadratisch, auch wenn es eng wird. Eine Regel in einer
+   * Container-Abfrage ist nicht spezifischer als draussen; deshalb hier
+   * ausdruecklich ausgenommen.
+   */
+  .fuss button.tat.senden svg { margin-right: 0 !important; }
+}
+.fuss .weit { margin-left: auto; }
+/* NEU und Beispiel linksbuendig, MASKIEREN rechts. */
+.fuss { justify-content: flex-start; flex-wrap: wrap; gap: 0.5rem; }
+.fuss .weit { margin-left: auto; }
+/* Einspaltig wachsen die Hauptknoepfe: MASKIEREN bis zum Beispielknopf,
+ * «Uebernahme in Prompt» bis zu «Weg zurueck».
+ *
+ * Ab 39.99em, der Grenze, die `einspaltig()` schon kennt — keine vierte
+ * Zahl. Ein halber FullHD-Bildschirm (960 px = 60em) liegt darueber.
+ *
+ * Nicht ueber eine Behaelterabfrage: dreispaltig ist jede Leiste ebenfalls
+ * schmal, und dort sollen die Knoepfe nicht wachsen. Gemessen wird das
+ * FENSTER.
+ */
+@media (max-width: 39.99em) {
+  .fuss .weit { flex: 1; }
+  .fuss button.tat.senden { flex: 1; }
+  .fuss-04 .weit { flex: 1; margin-left: 0; }
+}
+button.tat {
+  height: 1.9375rem; box-sizing: border-box; display: inline-flex;
+  align-items: center; justify-content: center; padding: 0 0.75rem;
+  font-family: var(--ui-heading); font-size: 0.8125rem; letter-spacing: .11em;
+  text-transform: uppercase; white-space: nowrap; cursor: pointer;
+  border: 1px solid var(--color-neutral-400); background: var(--papier);
+  color: var(--color-neutral-800);
+  border-radius: var(--radius-md);
+}
+button.tat:hover:not(:disabled) { background: var(--color-neutral-200); }
+button.tat:disabled { opacity: .45; cursor: default; }
+/* «Beispiel» in gemischter Schreibung und ohne Sperrung — es ist eine
+ * Nebenhandlung und soll nicht wie eine Haupthandlung wirken.
+ */
+button.tat.neben {
+  text-transform: none; letter-spacing: 0; font-size: 0.8125rem;
+  font-family: var(--ui-schrift); color: var(--color-neutral-700);
+}
+button.tat.haupt {
+  position: relative; background: var(--gr-flaeche); color: var(--auf-farbe);
+  border: 1px solid var(--gr-kante);
+}
+button.tat.haupt:hover:not(:disabled) { background: var(--gr-tief); }
+button.tat.haupt:disabled { background: var(--gr-aus); border-color: var(--gr-aus-kante); }
+body.ohne-modell button.tat.haupt:not(:disabled) {
+  background: var(--bx-flaeche); border-color: var(--bx-dunkel);
+}
+button.tat svg { flex: none; }
+/* Die nachgeruesteten Knoepfe (Regeln speichern, Pruefen, Hinzufuegen,
+ * Schliessen) bekommen ihr Zeichen aus `KNOPFBILDER`; Abstand und Groesse
+ * gehoeren hierher und in `rem`, nicht in ein `style`-Attribut.
+ */
+/* `[class*="rand-"]` markiert Symbole, die im HTML gezeichnet sind und
+ * Groesse und Abstand selbst mitbringen — diese Regel laesst sie in Ruhe.
+ */
+button.tat > svg:first-child:not([class*="rand-"]) {
+  width: 0.875rem; height: 0.875rem;
+}
+/* DER ABSTAND GEHOERT AN DIE BESCHRIFTUNG, NICHT AN DAS ZEICHEN.
+ *
+ * Ein `margin-right` am Zeichen traefe jeden Knopf, dessen erstes Kind ein
+ * Zeichen ist — auch den, der NUR ein Zeichen hat, und dort verschoebe es
+ * das Zeichen aus der Mitte (beim Pfeil gemessen: 4 px nach links). Eine
+ * Regel, die eine FORM trifft statt eines Zwecks.
+ *
+ * Am Nachbarn gesetzt loest es sich von selbst: kein Nachbar, kein Abstand.
+ * Kein `:has()` noetig, keine Ausnahme fuer den Pfeil.
+ */
+button.tat > svg:first-child:not([class*="rand-"]) + span {
+  margin-left: 0.4375rem;
+}
+
+.ph {
+  border-radius: var(--radius-md); padding: 1px 0.375rem; margin: 0 1px;
+  font-family: var(--ui-heading); font-size: 0.7812rem; font-weight: 600;
+  letter-spacing: .04em; white-space: nowrap;
+}
+.vok { display: flex; align-items: center; gap: 0.625rem; padding: 0.3125rem 0;
+       border-bottom: 1px solid var(--color-neutral-300); font-size: 0.75rem; }
+.vok-wert { margin-left: auto; font-family: ui-monospace, monospace; }
+.pill {
+  border-radius: 999px; padding: 2px 0.5625rem; font-family: var(--ui-heading);
+  font-size: 0.6875rem; font-weight: 600; letter-spacing: .06em;
+  white-space: nowrap;
+}
+.warnung {
+  padding: 0.625rem 1.25rem; border-bottom: 2px solid var(--bx-kante-stark);
+  background: color-mix(in srgb, var(--bx-flaeche) 10%, transparent);
+  color: var(--bx-schrift); font-weight: 600; font-size: 0.8125rem;
+}
+.hinweis, .fehler-text {
+  margin: 0; padding: 2px 1rem; font-size: 0.7188rem;
+  color: var(--color-neutral-700);
+}
+.fehler-text { color: var(--bx-schrift); font-weight: 600; padding: 0.5rem 1.25rem; }
+/* Beide Behaelter stehen in Bereich 01, unter der Ablageflaeche. Leer
+ * duerfen sie keinen Platz kosten — sie sind die meiste Zeit leer, und
+ * `.bereich` ist eine Flexspalte mit Abstand zwischen den Kindern.
+ */
+#warnbereich:empty, #fehler:empty { display: none; }
+/* Die ruhigen Meldungen stehen auf einer Zeile, durch `·` getrennt. Bei
+   vielen Meldungen bricht sie um — das ist gewollt: lieber zwei Zeilen als
+   ein waagrechter Rollbalken unter dem Kasten. */
+.hinweiszeile { text-wrap: pretty; }
+/* In der Spalte ist der Rand der Ablageflaeche das Mass, nicht der des
+   Fensters. */
+#warnbereich, #fehler { flex: none; margin: 0 1rem; }
+#warnbereich .warnung {
+  padding: 0.5rem 0.75rem; border: 1px solid var(--bx-kante-stark); border-radius: var(--radius-md);
+}
+#fehler .hinweis, #fehler .fehler-text { padding-left: 0; padding-right: 0; }
+/* DAMIT DER ROLLBALKEN DIE RUNDEN ECKEN FREI LAESST. Ein nativer
+ * Rollbalken haelt sich nicht an den `border-radius` des Elements: er wird
+ * rechteckig in die Randbox gezeichnet und ueberdeckt die Rundung. Deshalb
+ * durchsichtige Laufbahn und ein Griff, der ueber einen durchsichtigen
+ * Rand Abstand haelt.
+ *
+ * Die BREITE bleibt unangetastet: `messeRollbalken` misst sie und setzt
+ * `--rollbalken`, davon haengt der Abstand der Knoepfe ab. Deshalb kein
+ * `width` und kein `scrollbar-width: thin`.
+ *
+ * Zwei Schreibweisen fuer zwei Umsetzungen: `::-webkit-…` in Chromium und
+ * damit im eigenen Fenster, `scrollbar-color` in Firefox.
+ */
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-400);
+  border-radius: 999px;
+  border: 4px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover { background: var(--color-neutral-500);
+  background-clip: padding-box; }
+*::-webkit-scrollbar-corner { background: transparent; }
+* { scrollbar-color: var(--color-neutral-400) transparent; }
+
+html { height: 100%; }
+/* `100dvh` und NICHT `100vh`. `100vh` ist auf einem Handy die Hoehe OHNE
+ * eingeblendete Adressleiste: die Seite reicht hinter sie, und der unterste
+ * Streifen waere nicht erreichbar. `100dvh` misst, was gerade wirklich da
+ * ist.
+ *
+ * `100vh` bleibt als Rueckfall davor stehen: ein Browser ohne `dvh`
+ * ueberliest die zweite Zeile und behaelt die erste.
+ */
+body {
+  margin: 0; height: 100vh; height: 100dvh;
+  display: flex; flex-direction: column;
+  background: var(--color-neutral-300);
+  overflow-x: auto; overflow-y: hidden;
+}
+
+
+/* ========================================================================
+ * Vokabular
+ * ====================================================================
+ */
+
+.ablage { border-radius: var(--radius-md); }
+.rumpf textarea#orig, #maskiert, .leer { border-radius: var(--radius-md); }
+.imfeld { border-radius: var(--radius-md); }
+
+.bereich.vokabular { background: var(--color-neutral-100); }
+/* NICHT umbrechen. Wird es eng, soll die ZAHL schrumpfen und nicht der
+ * Klappknopf in die zweite Zeile rutschen: die Zahl ist Auskunft, der Knopf
+ * ist Bedienung.
+ */
+.bereich-kopf.breit { flex-wrap: nowrap; align-items: center; gap: 0.375rem 0.625rem; }
+/* MITTIG, nicht auf der Schriftlinie. `.titelgruppe` richtet sonst an der
+ * Grundlinie aus — richtig fuer Titel neben Titel, falsch, sobald ein
+ * SCHALTER dabeisteht: der hat keine Schriftlinie und saesse zu hoch. Nur
+ * im breiten Kopf, also dort, wo der Schalter steht.
+ */
+.bereich-kopf.breit .titelgruppe { align-items: center; }
+/* ⚠️ Kuerzbar mit «…». `min-width: 0` ist zwingend: ein Flex-Kind
+   schrumpft sonst nie unter seine Inhaltsbreite, und dann bricht die
+   Zeile trotzdem um. Der volle Text steht im Tooltip (`maschera.js`). */
+.bereich-kopf .zahlen {
+  min-width: 0; flex: 0 1 auto;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.bereich-kopf .zahlen { font-size: 0.6875rem; color: var(--color-neutral-600); }
+.bereich-kopf .zahlen strong { font-weight: 700; }
+
+/* Der Schalter «an / aus». Ist er aus, entsteht gar kein Woerterbuch —
+   `"woerterbuch": false` in der Anfrage. Dann ist die Maskierung endgueltig,
+   und das ist ein anderer Ablauf, kein Verschweigen. */
+.schalter {
+  position: relative; flex: none; width: 2.125rem; height: 1.1875rem;
+  border-radius: 999px; border: 1px solid var(--gr-kante); background: var(--gr-flaeche);
+  cursor: pointer; padding: 0;
+}
+.schalter i {
+  position: absolute; top: 2px; left: 1.0625rem; width: 0.8125rem; height: 0.8125rem;
+  border-radius: 999px; background: var(--papier); transition: left .12s;
+}
+.schalter[aria-checked="false"] {
+  background: var(--color-neutral-300); border-color: var(--color-neutral-400);
+}
+.schalter[aria-checked="false"] i { left: 2px; }
+.schalterwort {
+  font-family: var(--ui-heading); font-size: 0.6562rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--color-neutral-600);
+}
+
+/* Oben 0.375rem: die Plaketten sollen nicht an der Kopfzeile kleben. */
+.vokabular-rumpf {
+  flex: 1 1 0; min-height: 0; padding: 0.375rem 1rem 0.75rem; display: flex;
+  flex-direction: column;
+}
+.vokabular-rollen { flex: 1; min-height: 0; overflow: auto; padding-right: 0.375rem; }
+/* Unten 1rem: derselbe Abstand zwischen den Plaketten und der
+ * Tabellenkopfzeile darunter.
+ */
+.legende { display: flex; flex-wrap: wrap; gap: 0.375rem; padding-bottom: 1rem; }
+.legende .chip {
+  display: inline-flex; align-items: center; gap: 0.375rem; border-radius: 999px;
+  padding: 2px 0.625rem 2px 0.5rem; font-family: var(--ui-heading);
+  font-size: 0.6875rem; font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; white-space: nowrap;
+}
+.legende .chip i {
+  display: block; width: 0.4375rem; height: 0.4375rem; border-radius: 999px; flex: none;
+}
+.legende .chip b { font-weight: 400; color: var(--color-neutral-600); }
+
+table.vokabular { width: 100%; border-collapse: collapse; font-size: 0.7812rem; }
+table.vokabular th {
+  text-align: left; padding: 0 0.5rem 0.375rem 0; font-family: var(--ui-heading);
+  font-size: 0.625rem; font-weight: 600; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--color-neutral-600);
+  border-bottom: 1px solid var(--color-neutral-400);
+}
+table.vokabular td {
+  padding: 0.25rem 0.5rem 0.25rem 0; vertical-align: middle;
+  border-bottom: 1px solid var(--color-neutral-300);
+}
+table.vokabular td:first-child { width: 32%; }
+table.vokabular td:last-child { padding-right: 0; width: 1%; }
+table.vokabular input {
+  width: 100%; box-sizing: border-box; border: 1px solid var(--color-neutral-300);
+  background: var(--papier); padding: 0.25rem 0.4375rem; font-size: 0.7812rem;
+  font-family: var(--ui-schrift); color: var(--color-text); border-radius: var(--radius-md);
+}
+table.vokabular input:focus { outline: none; border-color: var(--gr-matt); }
+.vok-ph {
+  border-radius: var(--radius-md); padding: 1px 0.375rem; font-family: var(--ui-heading);
+  font-size: 0.75rem; font-weight: 600; letter-spacing: .04em; white-space: nowrap;
+}
+.vokabular-leer {
+  border: 1px dashed var(--color-neutral-400); border-radius: var(--radius-md);
+  padding: 1rem; color: var(--color-neutral-600); font-size: 0.7812rem;
+  margin: 0;
+}
+.warnhinweis { color: var(--bx-schrift); font-weight: 600; }
+
+/* ========================================================================
+ * Bereich 03
+ * ====================================================================
+ */
+.drei-rumpf {
+  flex: 1 1 0; min-height: 0; padding: 0 1rem; display: flex;
+  flex-direction: column; gap: 0.625rem;
+}
+/* MINDESTHOEHE, und der Rumpf rollt notfalls. Bereich 03 traegt ZWEI
+ * Textfelder und einen Fuss; bei niedrigem Fenster druckte das Raster sie
+ * sonst auf 60 px zusammen. Lieber ein Rollbalken in der Spalte als Felder,
+ * die keine mehr sind.
+ */
+/* Nur SENKRECHT rollen. Waagrechtes Rollen entstuende, sobald etwas
+ * Absolutes ueber den Rand ragt, und dann verschoebe sich die ganze Spalte.
+ */
+.drei-rumpf { overflow-x: hidden; overflow-y: auto; }
+/* `flex: 1 0 auto` — wachsen JA, schrumpfen NEIN. Mit `1 1 auto`
+ * schrumpfte der Teil unter seinen Inhalt, waehrend `.feldbox` ihre
+ * Mindesthoehe behielt: das Feld ragte heraus und laege ueber dem
+ * naechsten. So rollt der Rumpf, statt dass sich die Teile ueberlagern.
+ */
+/* Die zwei Teile TEILEN sich die Hoehe, statt dass die Spalte als Ganzes
+ * rollt; der Prompt hat Vorrang.
+ *
+ * `min-height: auto` und nicht `0`: mit `0` schnitte das Prompt-Feld in
+ * «Das geht hinaus». So teilen sie den Platz und kommen nie unter Kopf plus
+ * Feldmindesthoehe.
+ */
+.drei-rumpf .teil {
+  flex: 3 1 auto; min-height: auto; display: flex; flex-direction: column;
+  gap: 0.3125rem;
+}
+/* Der Prompt hat Vorrang — die Sicht auf den zusammengestellten Text darf
+   kleiner ausfallen. */
+.drei-rumpf .teil + .teil { flex: 2 1 auto; }
+.drei-rumpf .feldbox { min-height: 4.5rem; }
+/* Der Behaelter gehoert hierher und nicht auf `.vorlagenzeile`.
+ * `container-type: inline-size` bedeutet Einschluss: die Breite darf nicht
+ * mehr vom INHALT abhaengen. Auf einer Zeile, die genau so breit ist wie
+ * ihre Knoepfe, maesse sie dann null. Ein Behaelter braucht seine Breite
+ * von AUSSEN; `.teil-kopf` ist so breit wie der Teil.
+ *
+ * Und `flex-wrap: wrap`: reicht der Platz nicht, soll die Zeile UMBRECHEN
+ * statt hinauszulaufen. Umbrechen sieht man, Hinauslaufen nicht.
+ */
+.teil-kopf {
+  container-type: inline-size; container-name: teilkopf;
+  flex: none; display: flex; align-items: baseline; flex-wrap: wrap;
+  justify-content: space-between; gap: 0.625rem;
+}
+
+/* Zuerst geht die Beschriftung «Vorlagen (lokal gespeichert)» — sie
+   erklaert und bedient nicht. Erst danach die Beschriftung des Knopfes:
+   ein Knopf ohne Wort ist immer noch ein Knopf, ein fehlender nicht. */
+/* Die Schwellen messen die GANZE Kopfzeile, samt dem Titel «Prompt» —
+ * nicht nur die Knopfzeile. Bei drei Spalten ist sie schmal, obwohl die
+ * Knoepfe noch Platz haben; die Werte sind darauf gemessen.
+ */
+@container teilkopf (max-width: 26rem) {
+  .vorlagen-lokal { display: none; }
+}
+/* Das Vorlagenmenue muss in den PLATZ passen, nicht in seinen Inhalt. Ein
+ * `min-width` breiter als die Spalte erzeugte waagrechtes Rollen und
+ * schoebe die dritte Spalte beim Oeffnen nach links. Eng wird es so breit
+ * wie der Knopf; die Eintraege kuerzt `.waehlen` mit «…», und ihr voller
+ * Name steht im Tooltip.
+ */
+@container teilkopf (max-width: 26rem) {
+  /* `.vorlagenwahl.vorlagen-menu` und nicht `.vorlagen-menu`: Regeln in einer
+   * `@container`-Abfrage sind NICHT genauer als draussen, und
+   * `.vorlagen-menu { min-width: 16.25rem }` steht weiter unten, gewinnt also
+   * bei gleicher Spezifitaet.
+   */
+  .vorlagenwahl .vorlagen-menu {
+    min-width: 100%; width: 100%; max-width: 100%;
+  }
+}
+@container teilkopf (max-width: 20rem) {
+  /* ⚠️ Nur das Wort geht, das Zeichen bleibt — und der Zweck steht im
+     `title`, den die Oberflaeche in allen vier Sprachen setzt, mitsamt
+     der Warnung ueber den Klartext. */
+  #vorlage-sichern-text { display: none; }
+  #knopf-vorlage-sichern { padding: 0 0.4375rem; }
+}
+.teil-titel {
+  font-family: var(--ui-heading); font-size: 0.75rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--bx-schrift);
+}
+.teil-zahl { font-size: 0.6875rem; color: var(--color-neutral-600); }
+.feldbox { position: relative; flex: 1 1 0; min-height: 0; display: flex; }
+.feldbox textarea {
+  flex: 1; resize: none; border: 1px solid var(--color-neutral-400);
+  border-radius: var(--radius-md); background: var(--papier); padding: 0.6875rem 0.75rem 2.125rem;
+  font-family: var(--textschrift); font-size: var(--textgroesse);
+  line-height: 1.6; color: var(--color-text); outline: none;
+}
+.feldbox textarea:focus { border-color: var(--bx-matt3); }
+#hinaus {
+  flex: 1; overflow: auto; border: 1px solid var(--color-neutral-400);
+  border-radius: var(--radius-md); background: var(--color-neutral-100);
+  color: var(--color-neutral-800); padding: 0.75rem 0.75rem 2.125rem;
+  font-family: var(--textschrift); font-size: var(--textgroesse);
+  line-height: 1.7; white-space: pre-wrap; word-break: break-word;
+}
+/* Die Trennzeile und der Anhang stehen in Rot. Was hier steht, verlaesst
+ * das Geraet — und der Anhang ist der Teil, den man vor dem Absenden lesen
+ * soll. Die Leckrate ist nicht null.
+ */
+#hinaus .trenner { display: block; margin: 0.5rem 0; color: var(--bx-matt2); }
+#hinaus .anhang { color: var(--bx-dunkel2); }
+#hinaus.istleer {
+  border-style: dashed; background: transparent;
+  color: var(--color-neutral-600);
+}
+.fuss-03 { justify-content: flex-end; }
+/* Der staendige ONLINE-Hinweis neben dem Sendeknopf.
+ *
+ * Wird die Spalte schmal, bricht `.fuss` um und der Hinweis steht ueber dem
+ * Knopf — er verschwindet nie, das ist der Punkt.
+ */
+/* Direkt vor dem Knopf, nicht am anderen Ende der Zeile: ein Warnhinweis
+ * gehoert dorthin, wo die Hand hingeht. Und nicht kleiner als die uebrigen
+ * Beschriftungen der Spalte — es ist der Satz, der sagt, dass hier etwas
+ * hinausgeht.
+ */
+.onlinewarnung {
+  display: flex; align-items: center; gap: 0.375rem;
+  /* ⚠️ `align-self: center` zusaetzlich zum `align-items` des Fusses:
+     bricht die Zeile um, wird der Hinweis zu einer eigenen Flex-Zeile,
+     und dann richtet ihn `align-items` nicht mehr am Knopf aus. */
+  align-self: center;
+  /* `margin: 0`: der Hinweis ist ein `<p>`, und beim mittigen Ausrichten
+   * zaehlte sein Aussenabstand mit — der Text saesse 5 px zu hoch.
+   */
+  margin: 0;
+  color: var(--bx-schrift); font-size: 0.8125rem; line-height: 1.25; max-width: 22rem;
+}
+/* Die Groesse steht im Blatt und in `rem`, nicht als SVG-Attribut
+ * (`width="13"`) im HTML. Ein SVG-Attribut ist weder CSS noch `style` und
+ * waechst mit dem Schriftregler nicht mit — gerade dieses Zeichen soll man
+ * aber sehen und entziffern koennen.
+ */
+.onlinewarnung svg { flex: none; width: 1.625rem; height: 1.625rem; }
+/* Wird es eng, bleibt NUR DAS DREIECK, damit der Fuss nicht umbricht und
+ * der Spalte Hoehe frisst. Der Satz verschwindet dabei nicht:
+ * `maschera.js` setzt ihn zusaetzlich als Tooltip, und er steht weiter im
+ * Text — `tests/test_app.py` Punkt 16 liest ihn dort. Der Umschaltpunkt
+ * liegt frueher als der der Knoepfe: der Satz ist das laengste Stueck in
+ * dieser Zeile.
+ */
+@container fuss (max-width: 34rem) {
+  #onlinewarnung-text {
+    position: absolute; width: 1px; height: 1px;
+    margin: -1px; padding: 0; border: 0;
+    clip-path: inset(50%); overflow: hidden; white-space: nowrap;
+  }
+  .onlinewarnung { gap: 0; cursor: help; }
+}
+/* Das Burgermenue in der Kopfzeile — dasselbe Aussehen wie das
+   Dienstmenue, nur oben statt unten verankert. */
+.burgerwahl { position: relative; display: inline-flex; }
+.burgermenu {
+  position: absolute; top: calc(100% + 0.375rem); right: 0; z-index: 300;
+  min-width: 13rem; background: var(--papier);
+  border: 1px solid var(--color-neutral-500); box-shadow: var(--shadow-lg);
+  display: flex; flex-direction: column;
+  border-radius: var(--radius-md); overflow: hidden;
+}
+.burgermenu[hidden] { display: none; }
+.burgermenu a, .burgermenu button {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 0.75rem; text-align: left; border: none; background: var(--papier);
+  padding: 0.5rem 0.75rem; font-family: var(--ui-schrift);
+  font-size: 0.7812rem; color: var(--color-text); text-decoration: none;
+  cursor: pointer;
+}
+/* `a` UND `button`, in EINEM Selektor: Hilfe und Impressum sind Knoepfe
+ * (sie oeffnen einen Einseiter im Fenster), die uebrigen Eintraege Verweise.
+ * Beide brauchen denselben Rollover.
+ *
+ * Der TOTE Eintrag bleibt ausgenommen: ein Rollover wuerde eine
+ * Bedienbarkeit versprechen, die es nicht gibt.
+ */
+/* Zeichen und Wort im Menue: das Zeichen fest, der Text daneben. */
+.burgermenu svg { flex: none; width: 0.9375rem; height: 0.9375rem;
+                  color: var(--color-neutral-600); }
+.burgermenu a, .burgermenu button { justify-content: flex-start; }
+.burgermenu .spaeter { margin-left: auto; }
+.burgermenu a:hover,
+.burgermenu button:not(.tot):hover { background: var(--color-neutral-200); }
+/* ⚠️ Der tote Eintrag ist grau UND sagt daneben, warum. Ohne das zweite
+   Wort liest sich ein Eintrag, der nichts tut, als Fehler. */
+.burgermenu button.tot { color: var(--color-neutral-600); cursor: default; }
+.burgermenu .spaeter {
+  font-family: var(--ui-heading); font-size: 0.625rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--color-neutral-600);
+}
+
+.sendegruppe { position: relative; display: flex; align-items: stretch; }
+button.tat.senden {
+  background: var(--bx-flaeche); color: var(--auf-farbe); border: 1px solid var(--bx-tief);
+  padding: 0 1rem;
+}
+button.tat.senden:hover:not(:disabled) { background: var(--bx-tief); }
+button.tat.senden:disabled { background: var(--bx-aus-flaeche); border-color: var(--bx-aus-kante); }
+/* Der Pfeilteil ist WEISS mit rotem Pfeil. Auf dunkelrotem Grund waere der
+ * Pfeil kaum zu sehen — und er ist der einzige Hinweis darauf, dass sich
+ * der Dienst wechseln laesst. Der linke Rand bleibt, sonst verschwimmen die
+ * zwei Haelften ineinander.
+ */
+/* QUADRATISCH, der Pfeil genau in der Mitte.
+ *
+ * Die Breite ist DIESELBE Zahl wie die Hoehe von `button.tat` und steht
+ * nicht daneben abgeschrieben: `aspect-ratio: 1` nimmt sie sich von der
+ * Hoehe. Wer die Knopfhoehe aendert, aendert das Quadrat mit.
+ *
+ * `padding: 0` gehoert dazu: `button.tat` bringt 0.75rem seitlich mit, und
+ * damit waere das Zeichen nach rechts geschoben. Das Mittigsein kommt aus
+ * dem `justify-content: center`, das `button.tat` ohnehin traegt.
+ */
+button.tat.senden.pfeil {
+  background: var(--papier); color: var(--bx-schrift); border: 1px solid var(--bx-tief);
+  padding: 0; aspect-ratio: 1;
+  /* DURCHSICHTIG, NICHT `none`. Mit `border-left: none` laege der Pfeil am
+   * Hauptknopf an, aber sein Zeichen rutschte um einen halben Pixel nach
+   * links: bei `box-sizing: border-box` sitzt der Inhalt zwischen den
+   * Raendern, und fehlt einer, ist die Mitte nicht mehr die Mitte.
+   */
+  border-left-color: transparent;
+}
+/* Sendeknopf und Pfeil sind EIN Knopf mit zwei Teilen: die Rundung sitzt
+ * aussen, die Naht dazwischen bleibt gerade. */
+button.tat.senden:not(.pfeil) {
+  border-top-right-radius: 0; border-bottom-right-radius: 0;
+}
+button.tat.senden.pfeil {
+  border-top-left-radius: 0; border-bottom-left-radius: 0;
+}
+/* Weiss bleibt weiss: beim Ueberfahren dieselbe Bewegung wie die uebrigen
+ * Knoepfe der Spalte — Flaeche unveraendert, Kante kraeftig, Schrift
+ * tiefer.
+ */
+button.tat.senden.pfeil:hover:not(:disabled) {
+  background: var(--papier); border-color: var(--bx-schrift);
+  color: var(--bx-tief);
+  box-shadow: inset 0 0 0 1px var(--bx-schrift);
+}
+button.tat.senden.pfeil:disabled {
+  background: var(--papier); color: var(--bx-aus-schrift); border-color: var(--bx-aus-kante);
+}
+/* `fixed` und nicht `absolute`. Der Kasten traegt `overflow: hidden`, und
+ * der Sendeknopf sitzt an seiner Unterkante — nach unten geoeffnet waere das
+ * Menue abgeschnitten. `fixed` verlaesst den Kasten; die Lage rechnet
+ * `dienstmenuStellen()` in `maschera.js` aus dem Knopf aus.
+ */
+.dienstmenu {
+  position: fixed; z-index: 30;
+  min-width: 13.125rem; background: var(--papier);
+  border: 1px solid var(--color-neutral-400); box-shadow: var(--shadow-md);
+  display: flex; flex-direction: column;
+  border-radius: var(--radius-md); overflow: hidden;
+}
+.dienstmenu[hidden] { display: none; }
+.dienstmenu button {
+  text-align: left; border: none;
+  border-bottom: 1px solid var(--color-neutral-200); background: var(--papier);
+  padding: 0.5625rem 0.8125rem; font-size: 0.7812rem; color: var(--color-text);
+  cursor: pointer; white-space: nowrap;
+}
+.dienstmenu button:hover { background: var(--color-neutral-200); }
+.dienstmenu button.aktiv { background: var(--color-neutral-200); }
+
+/* --- Weg zurueck und Uebernahme ------------------------------------ */
+.fuss-02 { align-items: center; gap: 0.5rem; }
+#antwortfeld {
+  flex: 1; resize: none; border: 1px solid var(--color-neutral-400);
+  border-radius: var(--radius-md); background: var(--papier); padding: 0.75rem 0.75rem 2.125rem;
+  font-family: var(--textschrift); font-size: var(--textgroesse);
+  line-height: 1.7; color: var(--color-text); outline: none;
+}
+#antwortfeld:focus { border-color: var(--gr-matt); }
+#antwortfeld[hidden] { display: none; }
+#maskiert[hidden] { display: none; }
+/* Im Rueckweg steht der maskierte Text als reiner Text — ohne Plaketten.
+   Was zurueckkommt, ist Text eines Sprachmodells und keine Fundstelle. */
+#maskiert.schlicht .ph {
+  background: none !important; border: none !important; padding: 0;
+  color: inherit !important; font-family: inherit; font-size: inherit;
+  font-weight: inherit; letter-spacing: inherit;
+}
+/* Ein `textarea` bricht selbst um. `resize: none` — die Groesse kommt aus
+ * dem Raster, und ein Ziehgriff in der Ecke saehe in dieser Oberflaeche nach
+ * Fremdkoerper aus.
+ */
+#final {
+  flex: 1; overflow: auto; resize: none; outline: none;
+  border: 1px solid var(--gr-matt); border-radius: var(--radius-md);
+  background: var(--papier); padding: 0.75rem 0.75rem 2.125rem;
+  font-family: var(--textschrift);
+  font-size: var(--textgroesse); line-height: 1.7; color: var(--color-text);
+}
+#final[hidden] { display: none; }
+
+/* --- Bereich 04 und die Rueckmeldung in 05 ------------------------ */
+#antwort04 {
+  flex: 1; resize: none; border: 1px solid var(--color-neutral-400);
+  border-radius: var(--radius-md); background: var(--papier); padding: 0.6875rem 0.75rem 2.125rem;
+  font-family: var(--textschrift); font-size: var(--textgroesse);
+  line-height: 1.7; color: var(--color-text); outline: none;
+}
+#antwort04:focus { border-color: var(--bx-matt3); }
+/* Linksbuendig, anders als 03. Der Knopf zeigt mit seinem Pfeil nach
+ * LINKS — dorthin, wo das Vokabular einfliesst. Das `.weit` am Knopf setzt
+ * `margin-left: auto` und muss hier zurueckgenommen werden.
+ */
+.fuss-04 { justify-content: flex-start; }
+.fuss-04 .weit { margin-left: 0; }
+button.tat.einpflegen {
+  background: var(--gr-flaeche2); color: var(--auf-farbe); border: 1px solid var(--gr-dunkel2);
+}
+button.tat.einpflegen:hover:not(:disabled) { background: var(--gr-dunkel2); }
+button.tat.einpflegen:disabled { background: var(--gr-aus); border-color: var(--gr-aus-kante); }
+
+/* ⚠️ `nicht_gefunden` ist der wichtigste Teil der Rueckwandlung. Sprachmodelle
+   schreiben Platzhalter um — aus `[FULLNAME_1]` wird `**[FULLNAME_1]**` oder
+   `[Fullname_1]`. Was nicht zugeordnet werden konnte, steht im fertigen Text
+   noch als Platzhalter drin. Wer das uebersieht, verschickt einen Brief mit
+   `[FULLNAME_1]` darin. Deshalb rot, oben, und nicht wegklickbar. */
+.offen {
+  flex: none; margin: 0 1rem 0.5rem; padding: 0.5625rem 0.75rem;
+  border: 2px solid var(--bx-kante-stark);
+  background: color-mix(in srgb, var(--bx-flaeche) 8%, transparent);
+  color: var(--bx-schrift); font-size: 0.7812rem;
+}
+.offen strong { font-family: var(--ui-heading); letter-spacing: .04em; }
+.offen .liste {
+  display: flex; flex-wrap: wrap; gap: 0.3125rem; margin-top: 0.375rem;
+}
+.offen .liste span {
+  border: 1px solid var(--bx-matt3); border-radius: var(--radius-md); padding: 1px 0.375rem;
+  font-family: var(--ui-heading); font-size: 0.75rem; font-weight: 600;
+  background: var(--papier);
+}
+.gutzeile {
+  flex: none; padding: 2px 1rem 0.375rem; font-size: 0.7188rem;
+  color: var(--gr-schrift);
+}
+
+/* ========================================================================
+ * Einstellungen
+ * ====================================================================
+ */
+.einst-hintergrund {
+  position: fixed; inset: 0; z-index: 100; display: flex;
+  align-items: flex-start; justify-content: center; padding: 3rem 1.5rem;
+  background: color-mix(in srgb, var(--schatten-grund) 45%, transparent); overflow: auto;
+}
+.einst-hintergrund[hidden] { display: none; }
+/* Die eigene Rueckfrage — dieselbe Huelle, klein und mittig. Im schmalen
+   Fenster stehen die Knoepfe untereinander, das Ja oben. */
+.frage-hintergrund { align-items: center; padding: 1.5rem 1rem; }
+.einst.frage {
+  max-width: 28rem; padding: 1.25rem 1.5rem;
+  display: flex; flex-direction: column; gap: 1rem;
+}
+/* Erste Zeile die Frage, zweite die Folge — getrennt durch `\n` im Text. */
+.frage-text {
+  margin: 0; line-height: 1.5; overflow-wrap: anywhere; white-space: pre-line;
+}
+.frage-text::first-line { font-weight: 600; }
+.frage-feld[hidden] { display: none; }
+.frage-knoepfe .tat { gap: 0.4375rem; }
+.frage-knoepfe {
+  display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.5rem;
+}
+@media (max-width: 30em) {
+  .frage-knoepfe { flex-direction: column-reverse; align-items: stretch; }
+  .frage-knoepfe .tat { width: 100%; justify-content: center; }
+}
+/* Die Meldung im Dialog. Leer nimmt sie keinen Platz — kein `hidden`,
+   also auch keine `display`-Gegenregel noetig. */
+.einst-meldung:not(:empty) {
+  margin: 0 0 var(--space-4); padding: 0.5rem 0.75rem;
+  border-left: 3px solid var(--bx-kante-stark);
+  background: var(--bx-grund); color: var(--bx-schrift);
+  font-size: 0.8125rem; font-weight: 600; border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+.einst-meldung:empty { display: none; }
+.einst {
+  width: 100%; max-width: 53.75rem; background: var(--papier);
+  border: 1px solid var(--color-neutral-400); box-shadow: var(--shadow-lg);
+  display: flex; flex-direction: column; max-height: 100%;
+  border-radius: var(--radius-md); overflow: hidden;
+}
+/* EIN BEHAELTER, damit der Speichern-Knopf stufenweise kuerzen kann.
+ * Gemessen wird der KOPF und nicht das Fenster: wie viel Platz ein Knopf
+ * hat, haengt an seiner Leiste.
+ */
+.einst-kopf {
+  container-type: inline-size; container-name: einstkopf;
+  flex: none; display: flex; align-items: center;
+  justify-content: space-between; gap: 1rem;
+  padding: 1.125rem 1.5rem 0.875rem; border-bottom: 1px solid var(--color-neutral-300);
+}
+/* Zeichen und Wort brauchen Abstand — ueber `gap`, nicht ueber feste Pixel
+ * im Markup. Punkt 28 verlangt `rem`.
+ */
+#knopf-einst-zu { gap: 0.4375rem; }
+/* Stufe 1: der Zusatz geht, «Speichern» und das Zeichen bleiben. */
+@container einstkopf (max-width: 22rem) {
+  #einst-zu-rest { display: none; }
+}
+/* Stufe 2: nur noch das Zeichen. Den Zweck traegt dann der Tooltip, den
+   `knopfTitelSetzen()` in vier Sprachen setzt — Punkt 45 haelt das fest. */
+@container einstkopf (max-width: 14rem) {
+  #knopf-einst-zu > span { display: none; }
+  #knopf-einst-zu { padding: 0 0.5rem; gap: 0; }
+}
+.einst-kopf h2 {
+  margin: 0; font-family: var(--ui-heading); font-size: 1.1875rem;
+  letter-spacing: .16em; text-transform: uppercase; font-weight: 400;
+}
+.einst-rumpf { flex: 1; overflow: auto; padding: 0.375rem 1.5rem 1.5rem; }
+
+/* HILFE UND IMPRESSUM teilen sich die Huelle des Einstellungsdialogs —
+ * `.einst-hintergrund`, `.einst`, `.einst-kopf`, `.einst-rumpf`. Ein zweites
+ * Geruest waere ein zweiter Verwalter fuer dieselbe Form.
+ *
+ * Was hier steht, ist nur der LESETEXT — er braucht eine Zeilenlaenge, die
+ * man lesen kann. Alle Masse in `rem` und damit an `--skala` gebunden, wie
+ * Punkt 28 es verlangt.
+ */
+/* DAS SCHREIBFELD IN BEREICH 02 sitzt genau dort, wo sonst die gesetzte
+ * Ansicht steht — gleiche Flaeche, gleiche Raender, gleicher
+ * Zeilenabstand. Springt der Text beim Umschalten, sucht der Anwender die
+ * Stelle wieder, an der er war.
+ */
+#maskiert-feld {
+  flex: 1; resize: none; border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-md); background: var(--papier);
+  padding: 0.75rem 0.75rem 2.125rem;
+  font-family: var(--textschrift); font-size: var(--textgroesse);
+  /* 2.0 wie `#maskiert` und NICHT 1.7 wie `#antwortfeld`: der Kasten braucht
+   * die Hoehe fuer die Plaketten, und beim Umschalten soll keine Zeile
+   * rucken.
+   */
+  line-height: 2.0; color: var(--color-text); outline: none;
+}
+#maskiert-feld[hidden] { display: none; }
+/* Der Knopf zeigt an, dass er gedrueckt IST — sonst sagt nur die
+   Beschriftung, in welchem der zwei Zustaende man steht, und die liest
+   man nicht, waehrend man tippt. */
+.imfeld.aktiv {
+  background: var(--color-neutral-200);
+  border-color: var(--color-neutral-500);
+}
+/* NACH `.imfeld.aktiv`, nicht davor: gleiche Spezifitaet (zwei Klassen),
+ * also gewinnt die spaetere Regel, und «Bearbeiten» behaelt seine Farbe,
+ * wenn das Feld beschreibbar ist.
+ */
+.imfeld.bearbeiten.aktiv {
+  background: var(--gr-flaeche); border-color: var(--gr-kante); color: var(--auf-farbe);
+}
+.imfeld.bearbeiten.aktiv svg { color: var(--auf-farbe); }
+
+/* Der KASTEN wird schmaler, nicht der Text darin: sonst bliebe eine
+ * handbreite weisse Flaeche, und der Rollbalken saesse weit weg von der
+ * Zeile, die er rollt.
+ *
+ * 47rem = 44rem Lesetext + zweimal 1.5rem Rand aus `.einst-rumpf`. Die
+ * Einstellungen behalten ihre Breite: sie tragen zweispaltige Felder, kein
+ * Fliesstext.
+ */
+#seite .einst { max-width: 47rem; }
+/* Das Kopfstueck der beiden Einseiter: Logo und Untertitel. Angelehnt an
+ * `.startbild`, aber kleiner — hier steht Lesetext darunter.
+ *
+ * Alle Masse in `rem`, gebunden an `--skala`. Wird es eng, stapeln Maske
+ * und Wortmarke, wie `.seite-tab` daneben.
+ */
+/* Der einzige rote Absatz der Hilfe — der Bruch zwischen 03 und 04.
+ * Dieselbe Leiter wie die rote Spalte: `--bx-schrift` auf `--bx-grund`,
+ * und die kraeftige Kante links. Damit sagt der Absatz mit der Farbe
+ * dasselbe wie der Kasten, auf den er zeigt.
+ *
+ * Und er bleibt der EINZIGE: waere er einer von vielen, sagte die Farbe
+ * nichts mehr.
+ */
+.seite-rot {
+  margin: 0.25rem 0 1.25rem; padding: 0.75rem 1rem;
+  border-left: 3px solid var(--bx-kante-stark);
+  background: var(--bx-grund); color: var(--bx-schrift);
+  font-weight: 600; line-height: 1.5; border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.seite-kopf {
+  display: flex; align-items: center; gap: 1.125rem;
+  padding-bottom: 1.125rem; margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-neutral-300);
+}
+.seite-kopf img { display: block; height: 3.75rem; width: auto; flex: none; }
+.seite-kopf .marke {
+  font-family: var(--font-heading); font-size: 1.875rem; line-height: .95;
+  letter-spacing: .1em; text-transform: uppercase; font-weight: 400;
+  color: var(--color-text);
+}
+.seite-kopf .marke b { font-weight: 700; }
+.seite-kopf .spruch {
+  margin: 0.375rem 0 0; font-size: 0.7812rem; line-height: 1.45;
+  color: var(--color-neutral-700);
+}
+/* Der erste Titel steht unter dem Kopfstueck und braucht seinen Abstand
+   wieder — `:first-child` greift dort nicht mehr. */
+.seite-kopf + .seite-h { margin-top: 1rem; }
+@media (max-width: 33em) {
+  .seite-kopf { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .seite-kopf img { height: 3rem; }
+}
+.seite-h {
+  margin: 1.5rem 0 0.5rem; font-family: var(--ui-heading);
+  font-size: 0.9375rem; font-weight: 600; letter-spacing: .02em;
+  color: var(--color-accent-700);
+}
+.seite-h:first-child { margin-top: 0.5rem; }
+.seite-p { margin: 0 0 0.75rem; line-height: 1.6; }
+.seite-liste { margin: 0 0 0.75rem; padding-left: 1.25rem; line-height: 1.6; }
+.seite-liste li { margin-bottom: 0.25rem; }
+/* Zwei Spalten, die zweite traegt den Satz. Wird es eng, stapeln sie —
+   eine feste Spaltenbreite haette den Text auf dem Handy zerquetscht. */
+.seite-tab {
+  display: grid; grid-template-columns: 9rem 1fr;
+  gap: 0.5rem 1rem; margin: 0 0 1rem;
+}
+.seite-tab-links {
+  font-family: var(--ui-heading); font-size: 0.8125rem; font-weight: 600;
+  color: var(--color-neutral-700);
+}
+.seite-tab-rechts { line-height: 1.55; }
+@media (max-width: 33em) {
+  .seite-tab { grid-template-columns: 1fr; gap: 0.125rem 0; }
+  .seite-tab-rechts { margin-bottom: 0.625rem; }
+}
+.einst-teil { padding: 1.125rem 0; border-bottom: 1px solid var(--color-neutral-300); }
+.einst-teil:last-child { border-bottom: none; }
+.einst-teil h3 {
+  margin: 0 0 0.375rem; font-family: var(--ui-heading); font-size: 0.875rem;
+  letter-spacing: .14em; text-transform: uppercase; font-weight: 600;
+}
+.einst-hilfe {
+  margin: 0 0 0.75rem; font-size: 0.7812rem; color: var(--color-neutral-700);
+  line-height: 1.5;
+}
+.einst-zeile { display: flex; align-items: flex-end; gap: 0.625rem; flex-wrap: wrap; }
+/* `flex: 1 1 9rem` UND NICHT `flex: 1`. Die Zeile traegt `flex-wrap: wrap`,
+ * aber umgebrochen wird erst, wenn die Teile an ihrer GRUNDBREITE nicht mehr
+ * nebeneinander passen. Mit `flex: 1` ist die Grundbreite 0 — das Feld
+ * schrumpfte auf null, statt den Umbruch auszuloesen, und die Beschriftung
+ * liefe ueber den Nachbarn.
+ *
+ * 9rem ist die Breite, ab der ein Auswahlfeld mit «Serifenlos» noch lesbar
+ * ist; darunter bricht die Zeile lieber um. In `rem`, damit die Grenze bei
+ * 140 % Schrift mitwaechst.
+ */
+.feld { display: flex; flex-direction: column; gap: 0.25rem;
+        flex: 1 1 9rem; min-width: 0; }
+/* Schmal fuer den Port (vier bis fuenf Ziffern), mehr Platz fuer die
+ * Adresse. In `rem`, damit es bei 140 % Schrift mitwaechst.
+ */
+.feld.schmal { flex: 0 0 4.5rem; }
+
+/* ══ DIE THEMENWAHL ═══════════════════════════════════════════════════
+ * Drei Knoepfe mit Zeichen statt eines Auswahlfelds: ein `<option>` kann kein
+ * SVG tragen, und ein Emoji neben lauter 24x24-Strichzeichen saehe fremd
+ * aus. Also eine Knopfreihe, wie die Sprachwahl daneben.
+ */
+.themawahl { display: flex; gap: 0.25rem; flex-wrap: wrap; }
+.themaknopf {
+  display: inline-flex; align-items: center; gap: 0.375rem;
+  height: 2.1875rem; box-sizing: border-box; padding: 0 0.6875rem;
+  border: 1px solid var(--color-neutral-400); background: var(--papier);
+  color: var(--color-neutral-700); font-family: var(--ui-schrift);
+  font-size: 0.75rem; letter-spacing: .06em; cursor: pointer;
+  border-radius: var(--radius-md);
+}
+.themaknopf svg { flex: none; width: 0.9375rem; height: 0.9375rem; }
+.themaknopf:hover { background: var(--color-neutral-200); }
+/* Die gewaehlte Stufe traegt GRUEN. In dieser Oberflaeche heisst Gruen
+ * «bleibt auf dem Geraet» — und eine Farbwahl geht nirgendwohin. Dieselbe
+ * Leiter wie `.imfeld.bearbeiten`.
+ */
+.themaknopf.aktiv {
+  background: var(--gr-grund); border-color: var(--gr-matt);
+  color: var(--gr-schrift); font-weight: 600;
+}
+
+/* Jede Schrift zeigt sich selbst: zeigen schlaegt bezeichnen.
+ *
+ * Die Familien stehen damit ein zweites Mal im Blatt; die erste Fassung
+ * lebt in `SCHRIFTEN` in `maschera.js`. `test_api` Punkt 21 haelt die NAMEN
+ * der vier Stufen zusammen — dass beide Seiten dieselben Schriften meinen,
+ * kann keine Wache pruefen, nur ein Blick.
+ *
+ * QtWebEngine zeichnet Auswahlfelder selbst. Traegt es die Familien nicht,
+ * stehen dort vier gleich aussehende Eintraege — nicht schlimmer als ohne,
+ * aber ohne den Nutzen.
+ */
+.schriftwahl option[value="werk"]  { font-family: var(--font-body); }
+.schriftwahl option[value="sans"]  {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+.schriftwahl option[value="serif"] {
+  font-family: Iowan Old Style, Palatino, Georgia, serif; }
+.schriftwahl option[value="mono"]  {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+/* Eine Beschriftung ragt nie ueber ihren Kasten hinaus: beim naechsten
+ * engen Kasten stuende die Schrift sonst auf dem Nachbarn, und das saehe
+ * nach einem kaputten Zeichensatz aus statt nach einem Layoutfehler.
+ */
+.feld > span {
+  font-size: 0.6875rem; letter-spacing: .06em; color: var(--color-neutral-700);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.feld input, .einst-yaml {
+  border: 1px solid var(--color-neutral-400); border-radius: var(--radius-md);
+  padding: 0.4375rem 0.5625rem; font-family: ui-monospace, monospace; font-size: 0.7812rem;
+  color: var(--color-text); background: var(--papier); outline: none;
+}
+.feld input:focus, .einst-yaml:focus { border-color: var(--gr-matt); }
+.einst-yaml {
+  width: 100%; box-sizing: border-box; min-height: 9.375rem; resize: vertical;
+  margin-bottom: 0.625rem; line-height: 1.55;
+}
+/* `anywhere`: ein Modellpfad hat keine Leerzeichen und lief sonst ueber den
+   Rand — im schmalen Fenster fehlte die Mitte. */
+.einst-befund { margin: 0.5rem 0 0; font-size: 0.75rem; overflow-wrap: anywhere; }
+.einst-befund.gut { color: var(--gr-schrift); }
+.einst-befund.schlecht { color: var(--bx-schrift); font-weight: 600; }
+/* `.einst-haken` traegt dieselben Werte wie die Schalterzeile darueber —
+ * ohne eigene Regel erbte die Zeile die Grundschrift und stuende groesser
+ * als alles daneben.
+ */
+/* `[hidden]` ZUERST und mit `display: none`. `display: flex` ist eine
+ * Autorenregel und schlaegt das `[hidden] { display: none }` des Browsers;
+ * ohne diese Zeile waere `zeile-tray.hidden = true` in `zeichne()`
+ * wirkungslos, und im Browser stuenden zwei Schalter, die sich bedienen
+ * lassen und nichts bewirken.
+ */
+.einst-haken[hidden], .einst-schalterzeile[hidden] { display: none; }
+.einst-haken, .einst-schalterzeile {
+  display: flex; align-items: center; gap: 0.5625rem; margin-top: 0.875rem;
+  font-size: 0.7812rem; color: var(--color-neutral-700); cursor: pointer;
+}
+/* In der Zeile mit «Hinzufügen» trägt der Abstand die `einst-zeile`. */
+.einst-zeile > .einst-schalterzeile { margin-top: 0; margin-bottom: 0.4375rem; }
+/* Der Hinweis unter den zwei Fensterschaltern, mit Abstand darunter und in
+ * Gruen — demselben Ton, der schon Text traegt (Plakette «lokal»,
+ * Ablageflaeche, «Bearbeiten», die gute Befundzeile).
+ */
+.einst-hilfe.erst-neustart {
+  margin-top: 0.875rem; color: var(--gr-schrift);
+}
+.dienstzeile {
+  display: grid; grid-template-columns: 1fr 2fr auto; gap: 0.5rem;
+  margin-bottom: 0.4375rem; align-items: center;
+}
+.dienstzeile input {
+  /* Flaeche und Schrift stehen hier ausdruecklich: im Hellen saehe die
+   * Browservorgabe (weiss auf schwarz) richtig aus, im Dunkeln waere es ein
+   * weisser Kasten im dunklen Dialog.
+   */
+  background: var(--papier); color: var(--color-text);
+  border: 1px solid var(--color-neutral-400); border-radius: var(--radius-md);
+  padding: 0.375rem 0.5rem; font-size: 0.7812rem; font-family: var(--ui-schrift);
+  outline: none; min-width: 0;
+}
+.dienstzeile input:focus { border-color: var(--gr-matt); }
+.dienstzeile button {
+  border: 1px solid var(--color-neutral-400); background: var(--papier);
+  color: var(--bx-schrift); width: 1.875rem; height: 1.875rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-md);
+}
+.dienstzeile button:hover { background: var(--color-neutral-200); }
+/* Der Behaelter der Gruppen ist ein BLOCK, die Wolke darin ein Flexkasten.
+ * Truege `#einst-tags` selbst `display: flex`, stuende jede Ueberschrift
+ * neben der ersten Reihe statt darueber.
+ */
+.tagliste { display: block; }
+.tagwolke { display: flex; flex-wrap: wrap; gap: 0.375rem; }
+.tagwolke button {
+  display: inline-flex; align-items: center; gap: 0.4375rem; border-radius: 999px;
+  padding: 0.1875rem 0.6875rem 0.1875rem 0.5rem; cursor: pointer;
+  border: 1px solid var(--color-neutral-400); background: var(--papier);
+  font-family: var(--ui-heading); font-size: 0.6875rem; font-weight: 600;
+  letter-spacing: .06em; color: var(--color-neutral-700);
+}
+.tagwolke button i {
+  display: block; width: 0.4375rem; height: 0.4375rem; border-radius: 999px; flex: none;
+  background: var(--color-neutral-400);
+}
+.tagwolke button[aria-pressed="true"] {
+  border-color: var(--gr-kante); background: var(--gr-grund); color: var(--gr-schrift);
+}
+.tagwolke button[aria-pressed="true"] i { background: var(--gr-flaeche); }
+/* ⚠️ Besonders schuetzenswert: sichtbar anders, damit ein Fehlgriff auffaellt. */
+.tagwolke button.bspd { border-style: dashed; }
+.tagwolke button.bspd[aria-pressed="true"] {
+  border-color: var(--bx-kante-stark); background: var(--bx-grund5); color: var(--bx-schrift);
+}
+.tagwolke button.bspd[aria-pressed="true"] i { background: var(--bx-flaeche); }
+.tagwolke button.starr { opacity: .5; cursor: default; }
+
+/* ========================================================================
+ * Kontextmenue
+ * ====================================================================
+ */
+.kontext {
+  position: fixed; z-index: 300; min-width: 15.625rem; max-width: 18.75rem;
+  max-height: 72vh; max-height: 72dvh; overflow: auto; background: var(--papier);
+  border: 1px solid var(--color-neutral-500); box-shadow: var(--shadow-lg);
+  font-size: 0.7812rem;
+  border-radius: var(--radius-md);
+}
+.kontext[hidden] { display: none; }
+.kontext .kopf {
+  padding: 0.5625rem 0.75rem 0.4375rem; border-bottom: 1px solid var(--color-neutral-300);
+  background: var(--color-neutral-100);
+}
+.kontext .kopf .wert {
+  font-family: ui-monospace, monospace; font-size: 0.75rem;
+  word-break: break-all; color: var(--color-text);
+}
+.kontext .kopf .unter {
+  margin-top: 0.1875rem; font-size: 0.6875rem; color: var(--color-neutral-600);
+}
+/* Kein `width: 100%`: in einer rollenden Flexspalte ist 100 % die Breite
+ * OHNE Rollbalken, und die Zeile ragte darueber hinaus. `align-self:
+ * stretch` passt sich an.
+ */
+/* Kein waagrechtes Rollen. Die Bezeichnung kuerzt mit Auslassungspunkten,
+ * statt ueber den Kasten hinauszuragen.
+ */
+.kontext { overflow-x: hidden; }
+/* Der reservierte Streifen nur im Tagmenue, nicht auf `.kontext`: das
+ * Feldmenue teilt sich dasselbe Element und rollt nie.
+ *
+ * Im Tagmenue muss er BLEIBEN: der Rollbalken erscheint dort erst beim
+ * Aufklappen einer Rubrik. Ohne reservierten Streifen schrumpfte das
+ * Inhaltsfeld in genau diesem Augenblick um 17 px, und die rechtsbuendigen
+ * Bezeichnungen wanderten mit.
+ */
+.kontext.tagmenu { scrollbar-gutter: stable; }
+/* `width: 100%`, und `.kontext` ist ein BLOCK, kein Flexbehaelter —
+ * `align-self: stretch` wirkte dort nie, und jede Gruppe waere so breit wie
+ * ihr Name. Die Breite des Inhaltsfeldes rechnet den senkrechten
+ * Rollbalken bereits ab, weil `overflow-x` aus ist.
+ */
+.kontext button {
+  display: flex; align-items: center; gap: 0.5rem;
+  width: 100%; box-sizing: border-box; min-width: 0;
+  text-align: left; border: none; background: var(--papier); cursor: pointer;
+  padding: 0.375rem 0.75rem; font-size: 0.7812rem; color: var(--color-text);
+  font-family: var(--ui-schrift);
+}
+.kontext button:hover:not(:disabled) { background: var(--color-neutral-200); }
+.kontext button:disabled { opacity: .4; cursor: not-allowed; }
+.kontext button .tagname {
+  flex: none; font-family: var(--ui-heading); font-weight: 600;
+  letter-spacing: .05em;
+}
+.kontext button .bez {
+  margin-left: auto; min-width: 0; font-size: 0.6875rem;
+  color: var(--color-neutral-600); white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis;
+}
+.kontext .marke { flex: none; width: 0.8125rem; text-align: center; }
+/* ⚠️ Drei Zeichen, drei Aussagen: ✓ mathematisch sicher, ⚠ besonders
+   schuetzenswert, • aktuell gesetzt. Sie stehen VOR dem Namen, damit die
+   Spalte beim Ueberfliegen eine Spalte bleibt. */
+.kontext .marke.pruef { color: var(--gr-schrift); }
+.kontext .marke.bspd { color: var(--bx-schrift); }
+.kontext .marke.jetzt { color: var(--manuell); }
+.kontext .trenner {
+  height: 1px; background: var(--color-neutral-300); margin: 0.25rem 0;
+}
+.kontext .gruppe {
+  padding: 0.4375rem 0.75rem 0.1875rem; font-family: var(--ui-heading); font-size: 0.625rem;
+  letter-spacing: .13em; text-transform: uppercase;
+  color: var(--color-neutral-600);
+}
+.kontext .entfernen { color: var(--bx-schrift); font-weight: 600; }
+.kontext .mehr {
+  color: var(--color-neutral-700); font-style: italic;
+}
+/* Der maskierte Text nimmt Rechtsklicks entgegen; die Platzhalter sind die
+   Ziele. */
+#maskiert .ph { cursor: context-menu; }
+
+/* Vokabular herunter- und hochladen. Im Fuss des Vokabularbereichs, nicht
+ * im Kopf: die Tabelle darueber rollt, und wer unten angekommen ist, hat
+ * die Knoepfe dort, wo er hinsieht.
+ */
+.vokabular-fuss {
+  flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 1rem 0.75rem;
+}
+.ghostknopf {
+  height: 2.1875rem; box-sizing: border-box; display: inline-flex;
+  align-items: center; gap: 0.4375rem; border: 1px solid var(--color-neutral-400);
+  background: var(--papier); padding: 0 0.75rem; font-family: var(--ui-schrift);
+  font-size: 0.75rem; letter-spacing: .06em; color: var(--color-neutral-700);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+}
+.ghostknopf:hover:not(:disabled) { background: var(--color-neutral-200); }
+
+/* ══ DAS WOERTERBUCH BLEIBT HIER ══════════════════════════════════════
+ * Die Vokabularknoepfe sind hellgruen, wie «Bearbeiten» in 02.
+ *
+ * «Herunterladen» ist der EINZIGE Weg, das Woerterbuch zu retten — wer es
+ * verliert, kann nie mehr zurueckwandeln. Der Knopf, an dem die
+ * Umkehrbarkeit des ganzen Werkzeugs haengt, darf nicht wie eine Nebensache
+ * aussehen.
+ *
+ * GRUEN IST HIER WAHR, nicht bloss heller: Gruen heisst «bleibt auf dem
+ * Geraet» — und genau das tut das Woerterbuch.
+ *
+ * EINE EIGENE KLASSE UND NICHT `.ghostknopf`: im Blatt stehen Regeln
+ * `.spalte.hinaus .ghostknopf` in Rot. Eine Gruenregel auf die blosse
+ * Klasse gewaenne oder verloere dort je nach Spezifitaet. Die Klasse sagt
+ * deshalb, WAS gemeint ist, nicht wie der Knopf aussieht.
+ */
+.bleibt-hier {
+  background: var(--gr-grund); border-color: var(--gr-matt);
+  color: var(--gr-schrift);
+}
+.bleibt-hier:hover:not(:disabled) {
+  background: var(--gr-grund2); border-color: var(--gr-hell);
+}
+/* Deaktiviert HELLER, nicht durchsichtiger: `opacity` legt einen Schleier
+ * ueber Schrift und Rahmen und macht auf gruenem Grund einen schmutzigen
+ * Ton.
+ */
+.bleibt-hier:disabled {
+  opacity: 1; background: var(--gr-grund3); border-color: var(--gr-grund2);
+  color: var(--gr-matt);
+}
+.ghostknopf:disabled { opacity: .45; cursor: default; }
+.ghostknopf.klein { height: 1.875rem; padding: 0 0.625rem; font-size: 0.7188rem; }
+.ghostknopf svg { flex: none; }
+
+/* Vorlagen fuer den Prompt */
+.vorlagenzeile {
+  position: relative; display: flex; flex-wrap: wrap; align-items: center;
+  gap: 0.5rem; margin-left: auto;
+}
+
+/* Zuerst geht die Beschriftung «Vorlagen (lokal gespeichert)» — sie
+   erklaert und bedient nicht. Erst danach die Beschriftung des Knopfes:
+   ein Knopf ohne Wort ist immer noch ein Knopf, ein fehlender nicht. */
+
+.vorlagen-lokal { font-size: 0.6562rem; color: var(--color-neutral-600); }
+.vorlagenwahl { position: relative; display: inline-flex; }
+.vorlagen-lokal {
+  font-family: var(--ui-heading); font-size: 0.6562rem; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--color-neutral-600);
+}
+/* Wie der Senden-Knopf: der Pfeil ist ein eigenes, quadratisches Segment
+ * am rechten Rand, mit einer Naht in der Rahmenfarbe des Knopfs und
+ * demselben gezeichneten Pfeil. Der ganze Knopf oeffnet das Menue — das
+ * Segment zeigt nur, dass es eines gibt. */
+#knopf-vorlagen {
+  min-width: 11.25rem; justify-content: space-between; padding-right: 0;
+}
+#knopf-vorlagen .pfeil {
+  align-self: stretch; aspect-ratio: 1; display: flex; align-items: center;
+  justify-content: center; margin-left: 0.5rem;
+  border-left: 1px solid; border-left-color: inherit;
+}
+.vorlagen-menu[hidden] { display: none; }
+.vorlagen-menu {
+  position: absolute; left: 0; top: calc(100% + 0.25rem); z-index: 40;
+  min-width: 16.25rem; max-width: 21.25rem; background: var(--papier);
+  border: 1px solid var(--color-neutral-400); box-shadow: var(--shadow-md);
+  display: flex; flex-direction: column;
+  border-radius: var(--radius-md); overflow: hidden;
+}
+/* Das Suchfeld braucht einen eigenen Hintergrund. Ohne Regel nimmt der
+ * Browser seine Vorgabe — WEISS, in jedem Thema —, und im Dunkeln stuende
+ * helle Schrift auf Weiss: man tippt und sieht nichts.
+ *
+ * Gemessen, warum `--color-neutral-100` und nicht `--papier`:
+ *
+ *                     Schrift  Platzhalter  gegen Menue
+ *     --papier          11.8       3.3         1.00
+ *     --color-neutral-100 13.7     3.8         1.16
+ *
+ * `--papier` waere gegen das Menue 1.00 — als Feld unsichtbar.
+ * `--color-neutral-100` liegt eine Stufe TIEFER als das Menue und liest sich
+ * als Mulde: hier wird getippt.
+ *
+ * Der Platzhalter braucht seine eigene Farbe, sonst nimmt der Browser
+ * wieder seine Vorgabe.
+ */
+#vorlagen-filter {
+  flex: none; border: none; border-bottom: 1px solid var(--color-neutral-300);
+  padding: 0.5rem 0.625rem; font-family: var(--ui-schrift); font-size: 0.7812rem;
+  background: var(--color-neutral-100); color: var(--color-text);
+  outline: none;
+}
+#vorlagen-filter::placeholder { color: var(--color-neutral-600); }
+/* Der Streifen nur, wenn wirklich gerollt wird — `maschera.js` setzt
+ * `rollend` nach dem Zeichnen. Anders als beim Feldmenue ein ZUSTAND: die
+ * Liste kann beim Filtern kuerzer werden. Sie steht beim Oeffnen fest, und
+ * der Sprung beim Tippen ist der kleinere Preis als ein dauerhaft leerer
+ * Streifen.
+ */
+#vorlagen-liste {
+  max-height: 13.125rem; overflow-y: auto; overflow-x: hidden;
+}
+#vorlagen-liste.rollend { scrollbar-gutter: stable; }
+.vorlagen-menu .zeile {
+  display: flex; align-items: center;
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+.vorlagen-menu .zeile.aktiv { background: var(--gr-grund); }
+.vorlagen-menu .waehlen {
+  flex: 1; min-width: 0; text-align: left; border: none; background: none;
+  padding: 0.5rem 0.625rem; font-family: var(--ui-schrift); font-size: 0.7812rem;
+  color: var(--color-text); cursor: pointer; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap;
+}
+.vorlagen-menu .waehlen:hover { background: var(--color-neutral-200); }
+/* Der Papierkorb steht am Ende der Zeile, beim Eintrag, den er trifft. */
+.vorlagen-menu .weg {
+  flex: none; border: none; background: none; padding: 0.5rem 0.625rem;
+  color: var(--bx-schrift); cursor: pointer; line-height: 1;
+}
+.vorlagen-menu .weg:hover { background: var(--bx-grund2); }
+.vorlagen-menu .leer {
+  padding: 0.625rem 0.75rem; font-size: 0.75rem; color: var(--color-neutral-600);
+}
+
+h4.tagsgruppe {
+  display: block; width: 100%; margin: 1.125rem 0 0.5rem; font-family: var(--ui-heading); font-size: 0.6875rem;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--color-neutral-700); font-weight: 600;
+}
+h4.tagsgruppe:first-child { margin-top: 0.25rem; }
+/* Feste Hoehe fuer ALLE. Die besonders schuetzenswerten Tags tragen ein ⚠
+ * und denselben Rand wie der Rest: die Kennzeichnung benennt den Grund,
+ * statt ihn mit einem gestrichelten Rand anzudeuten, der wie ein hoeherer
+ * Knopf wirkt.
+ */
+.tagwolke button { height: 1.6875rem; box-sizing: border-box; }
+.tagwolke button.bspd { border-style: solid; }
+.tagwolke button .warn { flex: none; color: var(--bx-schrift); font-size: 0.6875rem; }
+.tagwolke button[aria-pressed="true"] .warn { color: inherit; }
+.tagwolke button .tagname { font-family: var(--ui-heading); }
+.tagwolke button .tagwort {
+  color: var(--color-neutral-600); font-family: var(--ui-schrift);
+  letter-spacing: 0;
+}
+.tagwolke button[aria-pressed="true"] .tagwort { color: inherit; opacity: .8; }
+
+/* Kontextmenue: Gruppenkopf zum Aufklappen. Immer nur eine Gruppe offen —
+   bei acht Gruppen und 45 Tags waere alles offen wieder eine Liste, die
+   laenger ist als der Bildschirm. */
+.kontext .gruppenkopf {
+  box-sizing: border-box; width: 100%; display: flex; align-items: center;
+  justify-content: space-between; gap: 0.5rem; text-align: left; border: none;
+  border-top: 1px solid var(--color-neutral-200);
+  background: var(--color-neutral-100); padding: 0.4375rem 0.6875rem;
+  font-family: var(--ui-heading); font-size: 0.625rem; letter-spacing: .14em;
+  /* Fett: zehn Pixel gesperrte Versalien ohne Fettung sind an der Grenze
+   * des Lesbaren — Grossbuchstaben haben keine Ober- und Unterlaengen, an
+   * denen das Auge Woerter erkennt.
+   */
+  font-weight: 600;
+  text-transform: uppercase; color: var(--color-text); cursor: pointer;
+}
+.kontext .gruppenkopf:hover { background: var(--color-neutral-200); }
+/* `.aufgeklappt`, nicht `.offen`: `.offen` ist die rote Warnbox der nicht
+ * zugeordneten Platzhalter, und ihr `margin: 0 1rem` schoebe den
+ * Gruppenkopf nach rechts.
+ */
+.kontext .gruppenkopf.aufgeklappt {
+  background: var(--color-neutral-200); color: var(--color-text);
+}
+.kontext .gruppenkopf .pfeil { font-size: 0.8125rem; line-height: 1; }
+
+/* Schriftwahl in den Einstellungen. Die Probe zeigt, was die Wahl bewirkt —
+   ein Auswahlfeld mit vier Wortern zeigt es nicht. */
+.einst-teil select {
+  height: 1.9375rem; box-sizing: border-box; width: 100%;
+  border: 1px solid var(--color-neutral-400); background: var(--papier);
+  padding: 0 0.5rem; font-family: var(--ui-schrift); font-size: 0.7812rem;
+  color: var(--color-text); cursor: pointer;
+  border-radius: var(--radius-md);
+}
+.schriftprobe {
+  flex: 1 1 12.5rem; min-width: 0; align-self: flex-end; padding-bottom: 0.375rem;
+  font-family: var(--textschrift); font-size: var(--textgroesse);
+  color: var(--color-neutral-700); white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Farbpunkt im Kontextmenue — dieselbe Farbe wie die Plakette im Text. */
+.kontext .punkt {
+  display: block; width: 0.5rem; height: 0.5rem; border-radius: 999px; flex: none;
+}
+.kontext button:disabled .punkt { opacity: .4; }
+
+/* Eine Reihe, immer dieselbe Ordnung: Leeren, Herunterladen, Kopieren —
+ * von links nach rechts, unten rechts im Feld. So muss man die Stelle
+ * einmal lernen. Die Abstaende rechnen den Rollbalken mit.
+ */
+/* Der Leeren-Knopf traegt nur den Papierkorb und erklaert sich im Tooltip.
+   Beschriftet waere er in jeder der sechs Reihen ein Wort, das man nach dem
+   ersten Mal nicht mehr liest — und er stuende dort, wo der Text hin will. */
+/* Ohne diese Zeile schluege `display: inline-flex` die Browservorgabe
+ * `[hidden] { display: none }`, und ein versteckter Knopf liesse sich
+ * druecken, ohne dass etwas geschieht.
+ */
+.imfeld[hidden] { display: none; }
+/* NUR waagrecht schmaler. Die HOEHE kommt aus `min-height` an `.imfeld` —
+ * gleicher Innenabstand genuegt nicht: der bildlose Knopf ist so hoch wie
+ * sein Zeichen, der beschriftete so hoch wie seine Zeile. Zwei Knoepfe
+ * nebeneinander, die sich um fuenf Pixel unterscheiden, sieht man sofort.
+ */
+.imfeld.nurbild { padding: 0.1875rem 0.4375rem; }
+
+/* Der Abschluss: fetter gruener Knopf unter dem finalen Text. Er ist das
+   Ende des Wegs — 01 lesen, 02 maskieren, 03 fragen, 04 einfuegen, 05
+   mitnehmen. Deshalb traegt er die volle Breite und nicht die Ecke. */
+/* ⚠️ Volle Breite, aber dieselbe Hoehe wie jeder andere gruene Knopf. Die
+   Breite sagt «hier endet der Weg», eine Sonderhoehe saehe nur aus wie ein
+   Ausreisser. */
+/* Oben 0.375rem statt null, damit der Knopf nicht am Textfeld klebt.
+ * Weniger als bei den anderen Fuessen, weil der Knopf hier die volle Breite
+ * hat und dadurch ohnehin schwerer wirkt.
+ */
+.fuss-05 { padding: 0.375rem 1rem 0.875rem; }
+/* Der zweite «Neu»-Knopf am Ende des Weges — nur gestapelt. Nebeneinander
+ * steht 05 neben 01, und der Knopf oben ist nah; untereinander sind es zwei
+ * Bildschirmlaengen.
+ *
+ * `button.tat.neu-unten` und nicht `.neu-unten`: `button.tat { display:
+ * inline-flex }` ist genauer als eine Klasse allein und gewinnt, egal in
+ * welcher Reihenfolge.
+ */
+button.tat.neu-unten { display: none; }
+button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
+
+/* ⚠️ Das aktive Feld muss man sehen. Ein Fenster mit fuenf Textflaechen und
+   einem 1px-Rahmen ueberall sagt nicht, wohin das naechste Zeichen geht.
+   Kein dickerer Rahmen, sondern ein zweiter darueber: eine Randbreite zu
+   aendern verschoebe den Text um ein Pixel bei jedem Hineinklicken. */
+.rumpf textarea:focus, .feldbox textarea:focus, #antwortfeld:focus,
+#antwort04:focus, #prompt:focus, #einst-regeln:focus {
+  border-color: var(--fokus);
+  box-shadow: 0 0 0 1px var(--fokus);
+  outline: none;
+}
+
+/* Der Klappknopf existiert nur in der einspaltigen Ansicht.
+ * Diese Grundregel steht VOR den Medienabfragen: dahinter gewaenne ihr
+ * `display: none` gegen das `inline-flex` in der Abfrage.
+ */
+.vok-klappe {
+  display: none; align-items: center; justify-content: center;
+  flex: none; width: 1.75rem; height: 1.75rem; margin-left: auto;
+  border: 1px solid var(--gr-matt);
+  background: var(--gr-grund); color: var(--gr-schrift);
+  border-radius: var(--radius-md); cursor: pointer;
+}
+.vok-klappe:hover {
+  background: var(--gr-grund2); border-color: var(--gr-hell);
+}
+.vok-klappe:hover { background: var(--color-neutral-200); }
+.vok-klappe svg { transition: transform .15s ease; }
+
+/* ===== Zwei Stufen: drei Spalten — oder alles untereinander ============
+ *
+ * `em` UND NICHT `px`: `em` misst hier die Schrift des BROWSERS, nicht
+ * `--skala`; die Grenze verschiebt sich nicht mit dem Schriftregler. 60em =
+ * 960 px bei Browservorgabe — ein halbiertes FullHD-Fenster, und dort
+ * muessen drei Spalten stehen.
+ *
+ * Es gibt keine Zwischenstufe: zwei Spalten dazwischen setzten 05 — das
+ * ENDE des Weges — auf halbe Hoehe, waehrend 03 und 04 darunter kaemen. Eine
+ * Anordnung, die den Weg unterbricht, ist schlechter als eine, die Platz
+ * verschenkt.
+ */
+
+/* --- Alles untereinander, in der Reihenfolge des Arbeitswegs -----------
+ *
+ * AUCH BEI ZU WENIG HOEHE, nicht nur bei zu wenig Breite: drei Spalten
+ * tragen je zwei Bereiche uebereinander, Bereich 03 darin nochmals zwei
+ * Textfelder und einen Fuss. 44em = 704 px; darunter ist nebeneinander
+ * keine Anordnung mehr, sondern eine Quetschung.
+ */
+@media (max-width: 59.99em), (max-height: 44em) {
+  /* Der Spruch neben der Wortmarke ist das Erste, was gehen darf: er
+     erklaert, was ohnehin auf jedem Kasten steht. Danach der Lokalzeiger —
+     er sagt dasselbe wie die Plakette auf jedem einzelnen Kasten. */
+  .kopfzeile .spruch { display: none; }
+  .kopfzeile .lokalzeiger { display: none; }
+  .kopfzeile { gap: 0.75rem; padding: 0.625rem 0.75rem 0.5rem; }
+
+  /* ⚠️ `height: auto` und NICHT `100dvh`: sonst schneidet der Koerper den
+     Inhalt genau dort ab, wo er ihn eben rollen laesst. `min-height`
+     haelt den Fuss trotzdem unten, wenn wenig Inhalt da ist. */
+  body { height: auto; min-height: 100vh; min-height: 100dvh;
+         overflow-y: auto; }
+  main.raster { flex: 1 0 auto; }
+  /* Die Kopfzeile bleibt oben stehen — sie traegt den Sprachwechsel und
+     das Zahnrad, und der Schatten sagt weiter «oben geht es weiter». */
+  .kopfzeile { position: sticky; top: 0; }
+
+  /* ⚠️ `display: contents` loest die Spalten auf, ohne sie aus dem HTML zu
+     nehmen: die sechs Kaesten werden zu direkten Kindern des Rasters und
+     lassen sich frei anordnen. Ohne das wirkte `order` nur INNERHALB einer
+     Spalte, und 03/04 kaemen nie zwischen 02 und 05.
+
+     ⚠️ Flex und nicht Raster, gemessen: eine Zeilenspur behielt ihre Hoehe,
+     waehrend der Kasten durch `min-height` groesser wurde — er ragte in den
+     naechsten hinein. Eine Flex-Spalte nimmt die Hoehe des Kastens. */
+  /* GESTAPELT ROLLT DIE SEITE, nicht das Raster; dreispaltig umgekehrt. Der
+   * Grund ist die Fusszeile: sie steht im HTML NEBEN dem Raster und klebte als
+   * Nicht-Teil des Rollflusses dauernd am unteren Fensterrand. So steht sie
+   * zuunterst, unter dem NEU-Knopf.
+   *
+   * Damit wandert der Roller; `maschera.js` fragt `rollBehaelter()`.
+   */
+  main.raster { display: flex; flex-direction: column; overflow: visible; }
+  main.raster > .spalte { display: contents; }
+  main.raster > .spalte > .bereich { flex: none; }
+
+  /* ⚠️ DIE REIHENFOLGE IST DER ARBEITSWEG, nicht die des HTML. Im HTML
+     stehen die Kaesten spaltenweise (01/05, 02/Vokabular, 03/04), weil das
+     der Dreispaltigen entspricht. Untereinander gelesen muss es der Weg
+     sein: lesen, maskieren, fragen, antworten, mitnehmen.
+
+     Das Vokabular steht direkt unter 02 — dort entsteht es —, aber
+     ZUGEKLAPPT: ein schmaler Balken, der den Weg nicht unterbricht. */
+  #b01  { order: 1; }
+  #b02  { order: 2; }
+  #bvok { order: 3; }
+  #b03  { order: 4; }
+  #b04  { order: 5; }
+  #b05  { order: 6; }
+
+  /* Die eingeklappte dritte Spalte gibt es hier nicht mehr: 03 und 04
+     stehen im Weg nach unten, nicht daneben. Eine Schiene, die etwas
+     ausklappt, was schon offen ist, waere eine Attrappe. */
+  .schiene { display: none; }
+  .einklappen { display: none; }
+  body:not(.drei) .spalte.hinaus { display: contents; }
+
+  /* «Fuenf hoehere Fenster» — jeder Kasten fuellt gut zwei Drittel des
+     Schirms, damit man beim Tippen etwas sieht und trotzdem merkt, dass
+     darunter weitergeht.
+     ⚠️ `.bereich.hinaus` ausdruecklich mit: es ist genauer als `.bereich`,
+     und ohne diese Zeile blieben ausgerechnet 03 und 04 flach. */
+  /* `dvh` aus demselben Grund wie bei `body` — mit `vh` waren die Kaesten
+     auf dem Handy um die Hoehe der Adressleiste zu hoch. `vh` bleibt als
+     Rueckfall davor stehen. */
+  main.raster > .spalte > .bereich,
+  main.raster > .spalte > .bereich.hinaus { min-height: 62vh; }
+  main.raster > .spalte > .bereich,
+  main.raster > .spalte > .bereich.hinaus { min-height: 62dvh; }
+
+  /* ⚠️ NUR DIE RICHTUNGSPFEILE, im HTML als solche ausgezeichnet
+     (`class="richtung"`). Ein Pfeil, der eine Richtung MEINT, wird
+     gedreht; ein Zeichen, das etwas anderes meint, nicht. Mit `button.tat
+     svg` traf es auch das Kopierzeichen und den Menuepfeil — und der sagt
+     zur Seite gedreht das Gegenteil von dem, was passiert. */
+  button.tat svg.richtung, .imfeld.weiter svg { transform: rotate(90deg); }
+  /* Der Einpflegen-Pfeil zeigt nach LINKS (auf 05, das breit daneben
+     steht). Untereinander steht 05 ebenfalls unten — also andersherum
+     drehen, sonst zeigt er nach oben. */
+  #knopf-einpflegen04 svg.richtung { transform: rotate(-90deg); }
+
+  /* Zwei Knoepfe untereinander im Fuss von 05: erst mitnehmen, dann neu
+     anfangen. `.breit` macht den oberen voll breit; der zweite bekommt
+     dieselbe Breite, damit es kein halber Knopf daneben wird. */
+  .fuss-05 { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+  button.tat.neu-unten { display: inline-flex; justify-content: center; }
+
+  /* ⚠️ Der unterste Knopf braucht Luft unter sich. `100dvh` haelt die
+     Adressleiste aus der Rechnung heraus; die GESTENLEISTE am unteren Rand
+     steht trotzdem darueber, und sie ist genau dort, wo «Neu» sitzt.
+     `env(safe-area-inset-bottom)` ist auf einem Geraet ohne solche Leiste
+     null — der Zuschlag kostet dort nichts. */
+  .fuss-05 { padding-bottom: calc(0.875rem + env(safe-area-inset-bottom)); }
+
+  /* KEIN ZWEITER ROLLBALKEN. Untereinander rollen die SEITE und die
+   * Textfelder — nicht die Kaesten. `.drei-rumpf` muss nebeneinander rollen
+   * (sonst quetscht es die zwei Felder); untereinander darf der Kasten
+   * einfach hoeher werden.
+   */
+  /* `1 0 auto` — WACHSEN ja, schrumpfen nein. Mit `0 0 auto` bliebe der
+   * Rumpf so hoch wie sein Inhalt, waehrend der Kasten seine 62vh behielte:
+   * darunter stuende eine leere rote Flaeche. Wachsen fuellt sie; nicht
+   * schrumpfen verhindert den zweiten Rollbalken.
+   */
+  .drei-rumpf { flex: 1 0 auto; overflow: visible; }
+  .drei-rumpf .teil { flex: 1 0 auto; }
+  /* Und der Kasten darf wachsen: `min-height` ist ein Mindestmass, aber
+     `overflow: hidden` haette den Ueberhang abgeschnitten. */
+  main.raster > .spalte > .bereich { overflow: visible; }
+
+  /* Das Vokabular zugeklappt: nur der Kopf bleibt stehen. */
+  #bvok.zu { min-height: 0; }
+  #bvok.zu > :not(.bereich-kopf) { display: none; }
+  #bvok.zu .bereich-kopf { border-bottom: none; }
+  .vok-klappe { display: inline-flex; }
+  #bvok.zu .vok-klappe svg { transform: rotate(-90deg); }
+}
+
+/* Der Pfeil der Uebernahme wird ueber eine KLASSE gedreht, nicht ueber
+ * `style.transform` aus dem JavaScript. Inline schlaegt jede Stilvorlage —
+ * und in der einspaltigen Ansicht dreht das CSS oben alle Pfeile nach
+ * unten.
+ */
+#uebernahme-pfeil.gedreht { transform: rotate(90deg); }
+
+
+/* ========================================================================
+ * DIE ROTE SPALTE SPRICHT ROT
+ *
+ * Die Spalte, die als einzige nach draussen fuehrt, traegt ihre
+ * Beschriftungen in Rot statt in Grau — Grau auf Rosa liest sich schlechter
+ * und sagt weniger deutlich, dass hier etwas anderes gilt.
+ *
+ * EINE LEITER AUS EINEM TON, nicht fuenf Einzelfarben: alle Werte sind
+ * Abstufungen der Farbe der Spalte selbst. Damit bleibt sie ruhig, obwohl
+ * mehr Farbe darin steckt.
+ *
+ * WAS AUSDRUECKLICH GRAU BLEIBT: die Feldknoepfe «Kopieren»,
+ * «Herunterladen» und «Einfuegen» (`.imfeld`). Sie sehen in allen sechs
+ * Bereichen gleich aus; deshalb steht hier keine Regel fuer `.imfeld` —
+ * auch ihr Rollover bleibt grau.
+ * ====================================================================
+ */
+/* Die `--bx-`-Werte stehen in `:root`; hier bleibt, was wirklich
+ * spaltenweise ist: der Rahmen des aktiven Feldes folgt der Spalte.
+ */
+.spalte.hinaus { --fokus: var(--bx-kante-stark); }
+
+/* Beschriftungen */
+.spalte.hinaus .vorlagen-lokal,
+.spalte.hinaus .ghostknopf { color: var(--bx-schrift); }
+.spalte.hinaus .teil-zahl { color: var(--bx-matt); }
+
+/* Der Fensterrahmen der Textfelder und die Rahmen der Knoepfe und Menues */
+.spalte.hinaus .ghostknopf,
+.spalte.hinaus .einklappen,
+.spalte.hinaus .vorlagen-menu,
+.spalte.hinaus .dienstmenu,
+.spalte.hinaus .feldbox textarea,
+.spalte.hinaus .rumpf textarea { border-color: var(--bx-kante); }
+
+/* Der Informationstext: Platzhalter und der leere Hinaus-Kasten */
+.spalte.hinaus .feldbox textarea::placeholder,
+.spalte.hinaus .rumpf textarea::placeholder { color: var(--bx-matt); }
+.spalte.hinaus #hinaus.istleer {
+  color: var(--bx-matt); border-color: var(--bx-kante);
+}
+
+/* ⚠️ Deaktiviert wird HELLER, nicht durchsichtiger. `opacity` legt einen
+   Schleier ueber Schrift UND Rahmen und ergibt auf rosa Grund einen
+   schmutzigen Ton; eigene helle Werte bleiben sauber rot. */
+/* `:not(.einpflegen)` — GRUEN IST VON DIESER LEITER AUSGENOMMEN. Rot sagt
+ * «geht hinaus», Gruen «bleibt lokal». «Vokabular einpflegen» fuehrt vom
+ * Antwortfeld zurueck nach Bereich 05 und ist der einzige Knopf in der
+ * roten Spalte, der nach INNEN zeigt. Ohne die Ausnahme gewaenne diese Regel
+ * gegen `button.tat.einpflegen` (mehr Klassen).
+ */
+.spalte.hinaus .ghostknopf:disabled,
+.spalte.hinaus button.tat:not(.einpflegen):not(.haupt):disabled {
+  opacity: 1; color: var(--bx-aus); border-color: var(--bx-kante2);
+}
+.spalte.hinaus button.tat.senden:disabled {
+  background: var(--bx-senden-aus); border-color: var(--bx-senden-aus-kante); color: var(--auf-farbe);
+}
+/* Der Pfeil gehoert dazu: deaktiviert traegt er denselben hellroten Rand
+ * wie der Knopf daneben. `button.tat.senden.pfeil:disabled` traegt vier
+ * Klassen und schluege die Spaltenregel mit dreien.
+ *
+ * DIESELBE MARKE und nicht eine zweite mit gleichem Wert: zwei Marken, die
+ * heute dasselbe zeigen, laufen beim naechsten Farbwechsel auseinander.
+ */
+.spalte.hinaus button.tat.senden.pfeil:disabled,
+.spalte.hinaus button.tat.senden.pfeil.gedaempft {
+  border-color: var(--bx-senden-aus-kante); color: var(--bx-aus-schrift);
+}
+/* ⚠️ `.gedaempft` ist NICHT `:disabled`. Der Pfeil bleibt bedienbar —
+   die Dienstwahl ist auch dann sinnvoll, wenn noch nichts zu senden ist.
+   Er sieht nur so aus wie sein Nachbar, statt als kraeftige Kante neben
+   einem blassen Knopf zu stehen. Deshalb behaelt er seinen Rollover. */
+.spalte.hinaus button.tat.senden.pfeil.gedaempft:hover {
+  border-color: var(--bx-kante); color: var(--bx-schrift);
+}
+
+/* ══ ROLLOVER: KANTE UND SCHRIFT ══════════════════════════════════════
+ * Gemessen, warum ein blosser Flaechenwechsel blass wirkt:
+ *
+ *     Spaltengrund  #fbf2f0   L* 96.1
+ *     Rollover      #f9e6e1   L* 92.6
+ *                             ΔL*  3.5
+ *
+ * Ein Zustandswechsel auf einer Flaeche braucht rund 5 L*, damit er als
+ * ABSICHT gelesen wird; bei kleinen Zielen mehr. Ganz oben im
+ * Helligkeitsbereich drueckt die Wahrnehmung die Abstaende zusaetzlich
+ * zusammen. Und heller heisst auf hellem Grund «weiter weg», nicht
+ * «angefasst».
+ *
+ * Deshalb drei Kanaele zusammen: die Flaeche wird Papier, der Rand
+ * kraeftig und doppelt (`box-shadow: inset`), die Schrift eine Stufe
+ * tiefer. Damit liest es sich auch an einem kleinen Knopf, ohne dass die
+ * Spalte beim Ueberfahren flackert.
+ *
+ * Alles ueber Marken, also traegt es im Dunkelmodus mit: dort ist
+ * `--papier` dunkel und `--bx-schrift` hell, und die Richtung dreht sich
+ * von selbst um.
+ */
+.spalte.hinaus .ghostknopf:hover:not(:disabled),
+.spalte.hinaus button.tat:not(.einpflegen):not(.haupt):not(.senden):hover:not(:disabled),
+.spalte.hinaus .einklappen:hover {
+  background: var(--papier); border-color: var(--bx-schrift);
+  color: var(--bx-tief);
+  box-shadow: inset 0 0 0 1px var(--bx-schrift);
+}
+/* DER HAUPTKNOPF IST AUSGENOMMEN und dunkelt nach, wie der gruene links
+ * (`button.tat.senden:hover`, weiter oben). Zwei Hauptknoepfe, ein
+ * Verhalten.
+ */
+
+/* Auch der Rollbalken der Spalte */
+.spalte.hinaus * { scrollbar-color: var(--bx-kante) transparent; }
+.spalte.hinaus *::-webkit-scrollbar-thumb {
+  background: var(--bx-kante); background-clip: padding-box;
+}
+
+/* Abstaende der Symbole, die im HTML stehen. Die Antworten tragen eine
+ * Content-Security-Policy (`style-src 'self'`), also laeuft kein
+ * Inline-Stil — damit eingeschleuster Code auch ueber CSS nichts ausrichten
+ * kann. `tests/test_app.py` haelt fest, dass keiner zurueckkommt.
+ */
+.rand-r-schmal { margin-right: 0.25rem; }
+.rand-l { margin-left: 0.5625rem; }
+.rand-r { margin-right: 0.5625rem; }

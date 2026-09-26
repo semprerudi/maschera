@@ -1,0 +1,36 @@
+# Zusaetzlich zur Paketlaufzeit: das eigene FENSTER.
+#
+#     pip install -r tools/paket/requirements-appimage.txt
+#
+# NUR fuer die AppImage, NICHT fuer das Abbild. Das Docker-Paket liefert
+# eine Weboberflaeche aus — dort waere ein Fenster sinnlos und wuerde das
+# Abbild um rund 500 MB aufblaehen.
+#
+# Warum es ein eigenes Fenster braucht: MASCHERA verspricht, dass nichts das
+# Geraet verlaesst. Ein Fenster mit Adresszeile, Lesezeichen und Verlauf
+# sagt das Gegenteil. Das Fenster ist die sichtbare Form des Versprechens.
+#
+# QtWebEngine und NICHT der GTK-Weg (`webkit2gtk`). Der GTK-Weg braucht
+# PyGObject und die Typelibs des WIRTS, in je nach Distribution
+# verschiedenen Fassungen. Qt bringt alles im Rad mit — nichts vom Wirt,
+# gleiche Fassung ueberall.
+#
+# PyQt6 und nicht PySide6, obwohl beide gehen: `qtpy` waehlt PyQt6, wenn
+# beide daliegen, und beide mitzugeben waere 1.2 GB fuer eine Sache, die
+# einmal gebraucht wird. `AppRun` setzt `QT_API=pyqt6` ausdruecklich.
+
+-r requirements-paket.txt
+
+# ⚠️ `[qt]` ist NICHT optional. Ohne die Zusatzangabe fehlt `qtpy`, und
+# `pywebview` findet keine Anzeigeschicht:
+#
+#     ModuleNotFoundError: No module named 'qtpy'
+#     ModuleNotFoundError: No module named 'gi'
+#
+# Der erste Bau hatte nur `pywebview>=6.0`. In der Entwicklungsumgebung
+# lag `qtpy` von einer frueheren Installation herum, im Paket nicht — der
+# Unterschied fiel erst auf, als die fertige AppImage LIEF. Genau die
+# Sorte Fehler, die eine Verpackung hat und die Werkstatt nicht.
+pywebview[qt]>=6.0
+qtpy>=2.4                 # ausdruecklich, nicht nur ueber das Extra
+PyQt6-WebEngine>=6.6      # zieht PyQt6 und PyQt6-Qt6 mit, rund 525 MB

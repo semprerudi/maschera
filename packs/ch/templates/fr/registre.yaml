@@ -1,0 +1,136 @@
+# Modèles FR — registre des habitants, état civil, droits politiques
+#
+# Tagweise statt dokumentweise gebaut (SPEC §7): jede Vorlage deckt gezielt
+# die geschlossenen Wertlisten aus dem Amtlichen Katalog der Merkmale ab —
+# `{RELIGION}`, `{RESIDENCE_STATUS}`, `{VOTING_RIGHTS}`.
+#
+# ⚠️ Die Wortlaute stammen aus dem Verwaltungsgebrauch, nicht aus einer
+# amtlichen franzoesischen Fassung des Katalogs. Gegenlesen.
+
+templates:
+
+  - id: fr_extrait_registre_habitants
+    doc_type: registre_habitants
+    text: |
+      {ORG}, {CITY}
+      Extrait du registre des habitants
+
+      Nom: {FULLNAME}
+      Prénoms: {GIVENNAME}
+      Date de naissance: {DATE}
+      Lieu de naissance: {CITY}
+      Sexe: {SEX}
+      État civil: {MARITALSTATUS}
+      Lieu d'origine: {PLACE_OF_ORIGIN}
+      Nationalité: {NATIONALITY}
+      Confession: {RELIGION}
+      Rapport d'annonce: {RESIDENCE_STATUS}
+      Adresse: {@address}
+      Numéro AVS: {AHVN13}
+
+      Délivré le {DATE} à {CITY}. Il est perçu {~amount}.
+
+  - id: fr_attestation_etat_civil
+    doc_type: etat_civil
+    text: |
+      {ORG}
+      Attestation d'état civil
+
+      Il est attesté que {@person}, de {PLACE_OF_ORIGIN}, est
+      {MARITALSTATUS} au sens du code civil suisse.
+
+      Sexe: {SEX}
+      Nationalité: {NATIONALITY}
+      Domicile: {@address}
+      Numéro AVS: {AHVN13}
+
+      {~legal}. La présente attestation est délivrée le {DATE}.
+      Renseignements: {@contact}
+
+  - id: fr_carte_electeur
+    doc_type: droits_politiques
+    text: |
+      Commune de {CITY}, numéro OFS {MUNICIPALITY_ID}
+      Carte de vote — scrutin du {DATE}
+
+      {@person}
+      {@address}
+
+      Droit de vote: {VOTING_RIGHTS}
+      Rapport d'annonce: {RESIDENCE_STATUS}
+
+      Le matériel de vote doit être retourné {~deadline}.
+      Référence {~number}.
+
+  - id: fr_declaration_impot_personnalia
+    doc_type: fiscalite
+    text: |
+      Administration fiscale cantonale
+      Déclaration d'impôt — données personnelles
+
+      Contribuable: {@person}
+      Numéro AVS: {AHVN13}
+      État civil: {MARITALSTATUS}, depuis le {DATE}
+      Confession: {RELIGION}
+      Nationalité: {NATIONALITY}
+      Adresse: {@address}
+      Dossier fiscal: {CASE_ID}
+
+      L'impôt paroissial est perçu selon la confession déclarée.
+      Est déductible {~amount}. Délai de dépôt {~deadline}.
+
+  - id: fr_livret_etranger
+    doc_type: migration
+    text: |
+      {ORG}
+      Livret pour étrangers
+
+      Titulaire: {@person}
+      Nationalité: {NATIONALITY}
+      Titre de séjour: {PERMIT_TYPE}, valable jusqu'au {DATE}
+      Numéro du document: {IDDOC}
+      Sexe: {SEX}
+      État civil: {MARITALSTATUS}
+      Rapport d'annonce: {RESIDENCE_STATUS}
+      Adresse: {@address}
+
+      {~legal}. Tout changement doit être annoncé {~deadline}.
+
+  - id: fr_courriel_fil
+    doc_type: courriel
+    text: |
+      De: {GIVENNAME} {FULLNAME} <{EMAIL}>
+      Envoyé: {DATE} {TIME}
+      À: {GIVENNAME} {FULLNAME} <{EMAIL}>
+      Objet: RE: dossier {CASE_ID}
+
+      Bonjour {GIVENNAME}
+
+      Merci pour ton message. Le dossier de {@person}, domicilié
+      {@address}, a été complété. Le numéro AVS {AHVN13} figure
+      désormais correctement dans le registre.
+
+      Meilleures salutations
+      {GIVENNAME} {FULLNAME}
+      {ORG}
+      {@address}
+      téléphone {PHONE}
+      {EMAIL}
+      {URL}
+
+  - id: fr_bloc_signature
+    doc_type: courriel
+    text: |
+      Cordialement
+
+      {GIVENNAME} {FULLNAME}
+      Collaborateur scientifique
+      {ORG}
+      {ORG}
+
+      {@address}
+      Tél. {PHONE} | {EMAIL}
+      {URL}
+
+      Ce message est destiné uniquement à son destinataire. Référence
+      {~number}.

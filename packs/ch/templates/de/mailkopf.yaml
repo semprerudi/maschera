@@ -1,0 +1,94 @@
+# Vorlagen DE — Mailkoepfe, Verlaeufe, Signaturbloecke
+#
+# In Mailkopfzeilen steht der Name in Outlook-Reihenfolge — «Nachname
+# Vorname». Ohne Vorlagen mit dieser Stellung haette das Modell keinen
+# Anlass, Vor- und Nachnamen lexikalisch zu unterscheiden.
+#
+# Die Kopfzeilen sind bewusst voll ausgeschrieben (Von/Gesendet/An/Cc/
+# Betreff), weil genau diese Zeilenfolge das Umfeld ist, in dem die
+# Verwechslung entsteht.
+
+templates:
+
+  - id: de_mailkopf_weiterleitung
+    doc_type: mailverlauf
+    text: |
+      Von: {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Gesendet: {DATE} {TIME}
+      An: {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Cc: {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Betreff: WG: Ticket {CASE_ID}
+
+      Guten Tag
+
+      Ich leite die Anfrage weiter. Betroffen ist der Datensatz von
+      {@person}, {AHVN13}, erfasst unter {PATIENT_ID}.
+
+      Formular {~number}, {~legal}.
+
+      Freundliche Gruesse
+      {GIVENNAME} {FULLNAME}
+      {ORG}, {CITY}
+      {PHONE}
+
+  - id: de_mailkopf_verlauf
+    doc_type: mailverlauf
+    text: |
+      Von: {FULLNAME} {GIVENNAME}
+      Gesendet: {DATE} {TIME}
+      An: {FULLNAME} {GIVENNAME}
+      Betreff: AW: Zugriff {URL}
+
+      Danke fuer die Rueckmeldung. Der Anmeldename lautet {USERNAME},
+      die Anfrage kam von {IPADDRESS}.
+
+      Serverantwort: {~technical}
+
+      Bitte um Bearbeitung {~deadline}.
+
+      -----Urspruengliche Nachricht-----
+      Von: {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Gesendet: {DATE} {TIME}
+      An: {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Betreff: Zugriff {URL}
+
+      Guten Tag {FULLNAME}
+
+      Seit {DATE} ist die Anmeldung nicht mehr moeglich.
+
+  - id: de_mailkopf_signaturblock
+    doc_type: signaturblock
+    text: |
+      Betreff: Rueckfrage zu Ticket {CASE_ID}
+
+      Guten Tag
+
+      Die Auskunft betrifft {@person}, von {PLACE_OF_ORIGIN}, wohnhaft
+      {@address}. Rechtsgrundlage: {~legal}, {~place}.
+
+      Freundliche Gruesse
+
+      {FULLNAME} {GIVENNAME}
+      Fachbereich Register
+      {ORG}, {CITY}
+      {@address}
+      Telefon {PHONE} | {EMAIL}
+
+  - id: de_formular_name_vorname
+    doc_type: formular
+    text: |
+      Anmeldung Benutzerkonto — Formular {CASE_ID}
+
+      Name, Vorname: {@person_feld}
+      Geburtsdatum: {DATE}
+      AHV-Nummer: {AHVN13}
+      Heimatort: {PLACE_OF_ORIGIN}
+      Adresse: {@address}
+      Anmeldename: {USERNAME}
+      Mailadresse: {EMAIL}
+
+      Formularstand {~number}, Erfassungsmaske {~technical}.
+
+      Bewilligende Stelle: {ORG}, {CITY}
+      Sachbearbeitung: {FULLNAME} {GIVENNAME}
+      Erfasst am {DATE} um {TIME}.

@@ -1,0 +1,93 @@
+# Vorlagen DE — Justiz, Betreibung, Zivilstand
+templates:
+
+  - id: de_betreibungsregisterauszug
+    doc_type: betreibungsamt
+    text: |
+      {ORG}, {CITY}
+      Auszug aus dem Betreibungsregister
+
+      Geprueft wurde: {@person}, geboren am {DATE}, von {PLACE_OF_ORIGIN}
+      Wohnsitz: {@address}
+      AHV-Nummer: {AHVN13}
+
+      Innert der letzten fuenf Jahre sind Eintraege verzeichnet.
+      Offene Forderung: {AMOUNT}, Glaeubiger {ORG}
+      Betreibungs-Nr. {CASE_ID}
+
+      Erhoben wird {~amount}. Beleg {~number}. Ausgestellt am {DATE}.
+
+  - id: de_zahlungsbefehl
+    doc_type: betreibungsamt
+    text: |
+      Zahlungsbefehl in der Betreibung Nr. {CASE_ID}
+
+      Glaeubiger: {ORG}, {@address}
+      Schuldner: {@person}, {@address}
+      Forderungsbetrag: {AMOUNT}
+      Zahlung auf {IBAN}, Referenz {QR_REFERENCE}
+
+      {~legal}. Rechtsvorschlag {~deadline} beim {ORG}, {CITY}.
+
+  - id: de_zivilstandsurkunde
+    doc_type: zivilstandsamt
+    text: |
+      {ORG}
+      Geburtsurkunde
+
+      Name: {FULLNAME}
+      Vornamen: {GIVENNAME}
+      Geburtsdatum: {DATE}
+      Geburtsort: {CITY}
+      Geschlecht: {SEX}
+      Buergerort: {PLACE_OF_ORIGIN}
+      Staatsangehoerigkeit: {NATIONALITY}
+      Geburtsland: {COUNTRY}
+
+      Eltern: {@person} und {@person}
+      Eintrag im Register {CASE_ID}
+
+      Ausgestellt am {DATE} in {CITY}. Verrechnet wird {~amount}.
+
+  - id: de_eheschliessung
+    doc_type: zivilstandsamt
+    text: |
+      {ORG}
+      Bestaetigung der Eheschliessung
+
+      Braut: {@person}, von {PLACE_OF_ORIGIN}, {AHVN13}
+      Braeutigam: {@person}, von {PLACE_OF_ORIGIN}, {AHVN13}
+      Zivilstand vor der Trauung: {MARITALSTATUS}
+
+      Trauung am {DATE}, {TIME}, in {CITY}
+      Wohnsitz nach der Trauung: {@address}
+
+      Eintrag {CASE_ID}. {~legal}.
+
+  - id: de_gerichtsverfuegung
+    doc_type: gericht
+    text: |
+      {ORG}, {CITY}
+      Verfuegung vom {DATE}, Geschaefts-Nr. {CASE_ID}
+
+      In Sachen {@person}, {@address}, vertreten durch {ORG},
+      gegen {@person}, {@address},
+
+      betreffend Forderung von {AMOUNT}.
+
+      Die Parteikosten werden auf {AMOUNT} festgesetzt. Vorbehalten bleibt {~amount}.
+      {~legal}. Berufung {~deadline}.
+
+  - id: de_erbschein
+    doc_type: gericht
+    text: |
+      Erbbescheinigung
+
+      Verstorben: {@person}, geboren am {DATE}, von {PLACE_OF_ORIGIN},
+      zuletzt wohnhaft {@address}, AHV-Nummer {AHVN13}
+      Todestag: {DATE}
+
+      Als Erben eingesetzt: {@person}, {@address}
+      und {@person}, {@address}
+
+      Amtsblatt {~number}. Ausgestellt {DATE} durch das {ORG}, {CITY}.

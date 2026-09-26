@@ -1,0 +1,50 @@
+# Modèles FR — courrier administratif
+templates:
+
+  - id: fr_attestation_domicile
+    doc_type: controle_habitants
+    text: |
+      {ORG}, de {CITY}
+      Décision du {DATE}
+
+      Madame, Monsieur {FULLNAME}
+
+      Il est attesté que {@person}, originaire de {PLACE_OF_ORIGIN}, est
+      domicilié depuis le {DATE} à l'adresse suivante: {@address}
+
+      Numéro AVS: {AHVN13}
+      Dossier: {CASE_ID}
+
+      {~legal}. Un recours est possible {~deadline}.
+
+  - id: fr_aide_sociale
+    doc_type: service_social
+    text: |
+      {ORG}, de {CITY}
+      Dossier {CASE_ID}
+
+      Bénéficiaire: {@person}
+      Adresse: {@address}
+      Numéro AVS: {AHVN13}
+      État civil: {MARITALSTATUS}, nationalité: {NATIONALITY}
+      Titre de séjour: {PERMIT_TYPE}
+
+      La prestation mensuelle s'élève à {AMOUNT}.
+      A été pris en compte: {~amount}.
+
+      {~legal}. Recours {~deadline}.
+
+  - id: fr_facture
+    doc_type: facturation
+    text: |
+      {ORG}
+      IDE: {UID}
+
+      Destinataire: {@person}
+      {@address}
+
+      Montant dû: {AMOUNT}
+      Référence: {QR_REFERENCE}
+      Compte: {IBAN}
+
+      Paiement {~deadline}. Renseignements: {@contact}

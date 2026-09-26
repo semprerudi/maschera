@@ -1,0 +1,70 @@
+# Vorlagen EN — Mailkoepfe, Verlaeufe, Signaturbloecke
+#
+# Siehe de/mailkopf.yaml.
+
+templates:
+
+  - id: en_mail_header_forward
+    doc_type: mailverlauf
+    text: |
+      From: {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Sent: {DATE} {TIME}
+      To: {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Cc: {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Subject: FW: case {CASE_ID}
+
+      Good morning
+
+      I am forwarding the request. It concerns {@person}, {AHVN13},
+      filed under {PATIENT_ID}.
+
+      Form {~number}, {~legal}.
+
+      Best regards
+      {GIVENNAME} {FULLNAME}
+      {ORG}, {CITY}
+      {PHONE}
+
+  - id: en_mail_header_thread
+    doc_type: mailverlauf
+    text: |
+      From: {FULLNAME} {GIVENNAME}
+      Sent: {DATE} {TIME}
+      To: {FULLNAME} {GIVENNAME}
+      Subject: RE: access to {URL}
+
+      Thank you for your reply. The account name is {USERNAME},
+      the request came from {IPADDRESS}.
+
+      Server response: {~technical}
+
+      Please process {~deadline}.
+
+      -----Original Message-----
+      From: {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Sent: {DATE} {TIME}
+      To: {FULLNAME} {GIVENNAME} <{EMAIL}>
+      Subject: access to {URL}
+
+      Good morning {FULLNAME}
+
+      Since {DATE} the login has been failing.
+
+  - id: en_form_surname_first
+    doc_type: formular
+    text: |
+      User account request — form {CASE_ID}
+
+      Surname, first name: {@person_feld}
+      Date of birth: {DATE}
+      OASI number: {AHVN13}
+      Place of origin: {PLACE_OF_ORIGIN}
+      Address: {@address}
+      Account name: {USERNAME}
+      Email address: {EMAIL}
+
+      Form revision {~number}, entry mask {~technical}.
+
+      Competent authority: {ORG}, {CITY}
+      Processed by: {FULLNAME} {GIVENNAME}
+      Recorded on {DATE} at {TIME}.

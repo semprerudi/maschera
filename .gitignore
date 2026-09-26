@@ -1,0 +1,88 @@
+# Nomenklaturen werden reproduzierbar gebaut, nicht versioniert
+# (`packs/ch/nomenclatures/build.py`). Der INHALT wird ignoriert, die
+# Verzeichnisse bleiben — sonst muesste sie jeder nach dem Klonen von Hand
+# anlegen.
+packs/*/nomenclatures/raw/*
+packs/*/nomenclatures/dist/*
+!packs/*/nomenclatures/raw/.gitkeep
+!packs/*/nomenclatures/dist/.gitkeep
+
+# Eigene Testsets gehoeren unter den Goldpfad (`docs/GOLDDOKUMENTE.md`),
+# ausserhalb dieses Baums. Legt sie trotzdem jemand hier ab, nimmt git sie
+# nicht mit. `README.md` und `.gitkeep` erklaeren die leeren Ordner und
+# sind verfolgt — ohne die Negationen waeren sie verfolgt UND ignoriert.
+packs/*/eval/real/*
+!packs/*/eval/real/README.md
+!packs/*/eval/real/.gitkeep
+
+# Markierte Fassungen: Werte ersetzt, aber Struktur und Formulierungen
+# stammen aus echten Dokumenten. Gleiche Behandlung.
+packs/*/eval/markup/*
+!packs/*/eval/markup/README.md
+!packs/*/eval/markup/.gitkeep
+
+# Dokumente, die neben dem Werkzeug liegen. Ein Werkzeug, das Dokumente
+# einliest, hat zwangslaeufig Dokumente neben sich liegen — und ein Brief,
+# den man kurz durchschickt, ist genau die Datei, die niemand absichtlich
+# committet.
+#
+# Ausgenommen ist NUR `beispiele/`. Was dort liegt, ist erfunden und von
+# `tests/test_veroeffentlichung.py` auf Metadaten geprueft — eine `.docx`
+# traegt in `docProps/` den Verfasser.
+*.docx
+*.doc
+*.dot
+*.odt
+*.xlsx
+*.pptx
+*.pdf
+*.eml
+*.msg
+*.mbox
+!beispiele/**
+
+# Die `woff2` unter `app/static/schriften/` SIND im Repository: Schriften
+# lassen sich nicht reproduzierbar bauen, und sie beim Start
+# herunterzuladen waere Nachladen von aussen. Lizenz und Herkunft dort.
+
+# Eigene Regeln: betriebsinterne Bezeichner, unter Umstaenden
+# Personendaten.
+regeln.yaml
+!beispiele/regeln.beispiel.yaml
+
+# Erzeugte Datensaetze, reproduzierbar mit `generate_dataset.py --n N
+# --seed S`. Git waechst monoton: ein grosser Satz bliebe fuer immer in der
+# Geschichte.
+*.jsonl
+
+# Modelle und Checkpoints. Gebaut, nicht versioniert; ausgefuehrte Modelle
+# baut `tools/build_release.py`.
+weights/
+runs/
+release/
+
+# Der Bauort der Pakete. Der Schraegstrich vorn ist noetig: ohne ihn
+# traefe `dist/` auch `packs/*/nomenclatures/dist/`, und git stiege fuer
+# dessen `.gitkeep` gar nicht erst hinein.
+/dist/
+*.safetensors
+
+__pycache__/
+*.py[cod]
+.venv/
+
+# Arbeitsnotizen und Werkzeugeinstellungen der Entwicklung — nicht Teil
+# des Projekts. `.claude/` als ganzes Verzeichnis, damit auch
+# Zwischendateien beim Schreiben nicht durchrutschen.
+HANDOVER.md
+GIT.md
+CLAUDE.md
+UEBERGABE.md
+BETRIEB.md
+SITZUNG.md
+VERBOTEN_INTERN.txt
+.claude/
+
+# Von `tools/paket/bauen.fish` geschrieben: Fassung und Werte dieser
+# Maschine.
+tools/paket/.env

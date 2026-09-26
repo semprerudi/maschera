@@ -1,0 +1,159 @@
+# MASCHERA als Flatpak — Debian, Ubuntu, Fedora, openSUSE in EINEM Bauweg.
+#
+#     flatpak-builder --user --install --state-dir=<ort> bau \
+#         tools/paket/ch.maschera.Maschera.yml
+#
+# `--state-dir` gehoert dazu. Ohne ihn legt `flatpak-builder` sein
+# `.flatpak-builder` in den PROJEKTBAUM und bricht ab, sobald das Ziel auf
+# einer anderen Dateiablage liegt.
+#
+# Der Bau braucht viel Platz (SDK, Raeder, ein entpacktes torch); ein
+# `/tmp` als tmpfs kann dafuer zu klein sein.
+#
+# Warum Flatpak und kein .deb: Debian und Ubuntu paketieren flask, yaml,
+# pymupdf, olefile, qtpy und PyQt6-WebEngine, aber NICHT PyTorch,
+# transformers und tokenizers. Ein `.deb` kann seine Hauptabhaengigkeit
+# also nicht aus dem System beziehen. Ein Flatpak bringt seine Laufzeit
+# selbst mit, laeuft auf allen vier Distributionen und wird ueber Flathub
+# gefunden.
+
+app-id: ch.maschera.Maschera
+runtime: org.kde.Platform
+runtime-version: '6.11'
+sdk: org.kde.Sdk
+
+# Der PyQt-Unterbau von Flathub, Zweig 6.11 — dieselbe Fassung, die
+# `requirements-appimage.txt` festnagelt. Ihn selbst zu bauen hiesse, Qt
+# und PyQt ein zweites Mal zu uebersetzen.
+base: com.riverbankcomputing.PyQt.BaseApp
+base-version: '6.11'
+
+command: maschera
+
+finish-args:
+  # Anzeige. `fallback-x11` und nicht `x11`: unter Wayland laeuft es
+  # nativ, X11 ist der Rueckfall.
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --share=ipc
+  - --device=dri
+
+  # ⚠️⚠️ NETZ — UND WOFUER GENAU.
+  #
+  # Fuer EINEN Vorgang: das Modell einmal holen, wenn es fehlt. Der
+  # erste Start fragt vorher, nennt Quelle, Groesse und Ziel, und
+  # «Spaeter» schliesst die Anwendung. Danach laeuft alles ohne Netz.
+  #
+  # Es wird NICHT gebraucht fuer: das Maskieren (die Kette laeuft
+  # vollstaendig im Sandkasten), das Oeffnen eines KI-Dienstes (das geht
+  # ueber das Portal, nicht ueber diese Erlaubnis) und irgendeine Art von
+  # Statistik. Einen Endpunkt, der Text verschickt, gibt es nicht.
+  #
+  # ⚠️ Die Erlaubnis steht in Flathub sichtbar am Paket, und das ist
+  # richtig so. Wer sie nicht will, nimmt die AppImage: dort faehrt das
+  # Modell mit, und es gibt nichts zu holen.
+  - --share=network
+
+  # WOHIN QT SEINEN BROWSERPROZESS SUCHEN SOLL. Ohne diese Zeile:
+  #
+  #     The following paths were searched for Qt WebEngine Process:
+  #       /usr/lib/libexec/QtWebEngineProcess … but could not find it.
+  #
+  # Er liegt bei `/app/lib/libexec/QtWebEngineProcess`. Die Qt-Bibliotheken
+  # kommen aus der Laufzeit unter `/usr`, WebEngine aus dem BaseApp unter
+  # `/app`; Qt leitet den Pfad aus dem ersten ab und findet das zweite nicht.
+  #
+  # Das Fenster bliebe dabei einfach LEER — kein Absturz, keine Meldung im
+  # Fenster. Nur auf der Standardausgabe steht der Grund.
+  - --env=QTWEBENGINEPROCESS_PATH=/app/lib/libexec/QtWebEngineProcess
+
+  # KEIN `--filesystem=home`. Dokumente kommen ueber das Dateiauswahl-Portal
+  # herein; der Sandkasten sieht das Heimatverzeichnis nicht. Bei einem
+  # Werkzeug, das Personendaten verarbeitet, ist das der Unterschied zwischen
+  # «es liest nur, was du ihm gibst» als Zusage und als Eigenschaft.
+  #
+  # Der Dateidialog zeigt trotzdem den ganzen Baum: er laeuft AUSSERHALB des
+  # Sandkastens und reicht danach genau die eine gewaehlte Datei herein. Von
+  # innen sieht die Anwendung im Heimatverzeichnis nur die drei Verzeichnisse,
+  # die Flatpak selbst anlegt (.config, .local, .var) — nie ein Verzeichnis
+  # des Anwenders, nur ein Dokument.
+
+modules:
+  # DIE PYTHON-ABHAENGIGKEITEN WERDEN ERZEUGT, NICHT ABGESCHRIEBEN. Flatpak
+  # baut ohne Netz; jedes Rad braucht eine Adresse und eine Pruefsumme. Von
+  # Hand eingetragene Pruefsummen waeren beim naechsten Fassungswechsel
+  # falsch.
+  #
+  #     flatpak --filesystem=/tmp --user --devel --share=network \
+  #         --command=pip3 run org.kde.Sdk//6.11 \
+  #         install --dry-run --ignore-installed \
+  #         --report /tmp/pip-report.json -r requirements-flatpak.txt
+  #     python3 tools/paket/flatpak_deps.py /tmp/pip-report.json
+  #
+  # Nicht `flatpak-pip-generator`: er findet `torch/2.14.0+cpu` auf PyPI nicht
+  # (404). Die Begruendung steht im Kopf von `flatpak_deps.py`, und dort wird
+  # auch geprueft, dass ein Rad `+cpu` traegt.
+  - flatpak-python-deps.json
+
+  - name: maschera
+    buildsystem: simple
+    build-commands:
+      # Die drei Dateien aus `tools/`, dieselbe Liste wie im `Dockerfile`.
+      # `app/serve.py` holt `evaluate_model` erst im Rumpf von `Zustand.__init__`
+      # — wer nur `sys.modules` durchsieht, findet zwei von drei.
+      # `tests/test_fenster.py` Punkt 12 haelt die Verpackungen zusammen.
+      - install -d /app/lib/maschera/tools
+      - cp -r app core packs /app/lib/maschera/
+      - install -Dm644 tools/dokumente.py tools/filter_document.py
+                       tools/evaluate_model.py -t /app/lib/maschera/tools/
+
+      # Was nur zum Erzeugen und Messen da ist, bleibt draussen — 105 MB
+      # der 106 MB von `packs/`. Gegenprobe gemacht: ohne `dist/`
+      # maskiert die Kette AHV-Nummer und Postleitzahl weiterhin.
+      # Ebenso alles andere aus `tools/paket/draussen.txt`.
+      - rm -rf /app/lib/maschera/packs/*/nomenclatures
+      - rm -rf /app/lib/maschera/packs/*/templates
+      - rm -rf /app/lib/maschera/packs/*/macros.yaml
+      - rm -rf /app/lib/maschera/packs/*/generators
+      - rm -rf /app/lib/maschera/packs/*/eval
+      - rm -rf /app/lib/maschera/packs/*/pack.yaml
+      - rm -f /app/lib/maschera/core/injector.py
+
+      # Und nicht den Bytecode der Entwicklungsmaschine: `cp -r` naehme
+      # `__pycache__` mit, `.pyc` fuer andere Python-Fassungen als die im
+      # Sandkasten. Nichts davon wird je gelesen.
+      - find /app/lib/maschera -name __pycache__ -type d -exec rm -rf {} +
+
+      - install -Dm755 tools/paket/maschera-start /app/bin/maschera
+      - install -Dm644 tools/paket/maschera.desktop
+                       /app/share/applications/ch.maschera.Maschera.desktop
+      # ⚠️ ZWEI ZEILEN, NICHT EINE. `Exec=AppRun` gilt nur in der
+      # AppImage, und `Icon=maschera` findet unter Flatpak NICHTS: dort
+      # muss der Name der Ikone der App-ID gleichen. Die erste Zeile
+      # fehlt beim Start auf, die zweite NIE — das Programm laeuft, es
+      # hat nur kein Bild in der Leiste. Ein Fehler, der nicht meldet,
+      # sondern nur schlechter aussieht.
+      - sed -i -e 's|^Exec=.*|Exec=maschera|'
+               -e 's|^Icon=.*|Icon=ch.maschera.Maschera|'
+             /app/share/applications/ch.maschera.Maschera.desktop
+      # ⚠️ QUADRATISCH, SONST BRICHT DAS AUSSPIELEN AB.
+      # `flatpak-validate-icon` verlangt es: «Expected a square icon but
+      # got: 1278x1506». Der Bau war da schon fertig — es scheiterte erst
+      # der allerletzte Schritt. `maske.svg` selbst bleibt, wie sie ist:
+      # sie ist die EINE Quelle fuer Favicon, Kopfzeile, Startbildschirm
+      # und AppImage-Symbol.
+      - python3 tools/paket/symbol_quadrat.py app/static/maske.svg
+               /app/share/icons/hicolor/scalable/apps/ch.maschera.Maschera.svg
+      # ⚠️ OHNE DIESE DATEI BAUT ES, UND FLATHUB NIMMT ES NICHT. Der
+      # lokale Bau waere gruen und die Einreichung durchgefallen.
+      - install -Dm644 tools/paket/ch.maschera.Maschera.metainfo.xml
+                       /app/share/metainfo/ch.maschera.Maschera.metainfo.xml
+      # Alle drei: das gebaute Paket steht unter AGPL-3.0, `LIZENZ.md` sagt
+      # warum. Bis 0.9.65 lag hier nur die MIT-Lizenz.
+      - install -Dm644 LICENSE /app/share/licenses/maschera/LICENSE
+      - install -Dm644 LICENSE-AGPL-3.0.txt
+                       /app/share/licenses/maschera/LICENSE-AGPL-3.0.txt
+      - install -Dm644 LIZENZ.md /app/share/licenses/maschera/LIZENZ.md
+    sources:
+      - type: dir
+        path: ../..

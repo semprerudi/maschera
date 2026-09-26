@@ -1,0 +1,63 @@
+# Deutsche Vorlagen — Einwohnerregister, Konfession, Stimmrecht
+#
+# Tagweise gebaut fuer die Tags, die der Merkmalskatalog liefert und die
+# sonst kaum Belege haetten: `RELIGION`, `VOTING_RIGHTS`, `RESIDENCE_STATUS`.
+#
+# Behoerdennamen stehen bewusst in `{ORG}`-Slots, nicht als Literal — sonst
+# lehrt das Trainingsset `O`, waehrend die Stufe 2 `ORG` erkennt.
+
+templates:
+
+  - id: de_registerauszug
+    doc_type: einwohnerregister
+    text: |
+      {ORG}, {CITY}
+      Auszug aus dem Einwohnerregister
+
+      Name: {FULLNAME}
+      Vornamen: {GIVENNAME}
+      Geburtsdatum: {DATE}
+      Geburtsort: {CITY}
+      Geschlecht: {SEX}
+      Zivilstand: {MARITALSTATUS}
+      Heimatort: {PLACE_OF_ORIGIN}
+      Staatsangehörigkeit: {NATIONALITY}
+      Konfession: {RELIGION}
+      Meldeverhältnis: {RESIDENCE_STATUS}
+      Wohnadresse: {@address}
+      Gemeindenummer: {MUNICIPALITY_ID}
+      AHV-Nummer: {AHVN13}
+
+      Ausgestellt am {DATE} in {CITY}. Erhoben wird {~amount}.
+
+  - id: de_stimmrechtsausweis
+    doc_type: politische_rechte
+    text: |
+      Gemeinde {CITY}, BFS-Nr. {MUNICIPALITY_ID}
+      Stimmrechtsausweis für die Abstimmung vom {DATE}
+
+      {@person}
+      {@address}
+
+      Stimm- und Wahlrecht: {VOTING_RIGHTS}
+      Meldeverhältnis: {RESIDENCE_STATUS}
+
+      Das Stimmmaterial ist {~deadline} zurückzusenden.
+      Referenz {~number}.
+
+  - id: de_steuererklaerung_personalien
+    doc_type: steuern
+    text: |
+      {ORG}
+      Steuererklärung — Personalien
+
+      Steuerpflichtige Person: {@person}
+      AHV-Nummer: {AHVN13}
+      Zivilstand: {MARITALSTATUS}, seit {DATE}
+      Konfession: {RELIGION}
+      Staatsangehörigkeit: {NATIONALITY}
+      Adresse: {@address}
+      Register-Nr.: {CASE_ID}
+
+      Die Kirchensteuer richtet sich nach der angegebenen Konfession.
+      Abziehbar ist {~amount}. Einreichefrist {~deadline}.

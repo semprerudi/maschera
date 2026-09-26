@@ -1,0 +1,138 @@
+# Vorlagen DE — Verwaltungs- und Behördenpost
+#
+# Slot-Grammatik:
+#   {TAG}       echte Entität, wird getaggt
+#   {@makro}    gekoppelte Gruppe aus macros.yaml
+#   {~decoy}    sieht aus wie eine Entität, bleibt aber O
+#
+# Jede Vorlage soll mindestens einen Decoy enthalten. Ein Modell, das nur echte
+# Entitäten sieht, lernt "CHF + Zahl = AMOUNT" statt "CHF + Zahl ohne
+# Freibetragskontext = AMOUNT".
+
+templates:
+
+  - id: de_meldebestaetigung
+    doc_type: einwohnerdienste
+    text: |
+      {ORG}, der Stadt {CITY}
+      Verfügung vom {DATE}
+
+      Sehr geehrter Herr {FULLNAME}
+
+      Hiermit wird bestätigt, dass {@person}, von {PLACE_OF_ORIGIN}, seit
+      {DATE} an der {@address} angemeldet ist.
+
+      Versichertennummer: {AHVN13}
+      Dossier: {CASE_ID}
+
+      {~legal} wird verfügt. Eine Einsprache ist {~deadline} möglich.
+
+      Sachbearbeitung: {@person}
+
+  - id: de_sozialhilfe_verfuegung
+    doc_type: sozialdienst
+    text: |
+      {ORG}, {CITY}
+      Dossier {CASE_ID}
+
+      Verfügung betreffend wirtschaftliche Sozialhilfe
+
+      Gesuchsteller: {@person}
+      Wohnadresse: {@address}
+      Versichertennummer: {AHVN13}
+      Zivilstand: {MARITALSTATUS}, Nationalität: {NATIONALITY}
+      Aufenthaltsstatus: {RESIDENCE_STATUS}, {PERMIT_TYPE}
+
+      Der monatliche Unterstützungsbeitrag beträgt {AMOUNT}.
+      Berücksichtigt wurde {~amount}.
+
+      {~legal}. Rechtsmittel: Beschwerde {~deadline}.
+
+  - id: de_steuerveranlagung
+    doc_type: steueramt
+    text: |
+      {ORG}, der Gemeinde {CITY}, BFS-Nr. {MUNICIPALITY_ID}
+
+      Veranlagungsverfügung Steuerperiode {DATE}
+
+      {@person}
+      {@address}
+
+      AHV-Nummer: {AHVN13}
+      Steuerbares Einkommen: {AMOUNT}
+      Geschuldeter Betrag: {AMOUNT}
+
+      Zahlung mit Referenz {QR_REFERENCE} auf {IBAN}.
+      Hinweis: {~amount}.
+      Zahlbar {~deadline}.
+
+  - id: de_krankenkasse
+    doc_type: versicherung
+    text: |
+      {ORG}
+      Police {INSURANCE_POLICY}
+
+      Versicherte Person: {@person}
+      {@address}
+      Versichertennummer: {AHVN13}
+
+      Behandelnde Stelle: {HEALTHCARE_ORG}, ZSR-Nr. {ZSR_RCC}
+      Rechnungsbetrag: {AMOUNT}
+
+      Ihr Kostenanteil ergibt sich nach Abzug der Franchise.
+      Angerechnet wird {~amount}. Rückfragen: {@contact}
+
+  - id: de_gebaeudeversicherung
+    doc_type: gebaeudeversicherung
+    text: |
+      Gebäudeversicherung Kanton {CANTON}
+
+      Objekt: {@address}
+      EGID: {EGID}, EWID: {EWID}
+      Parzelle {PARCEL}, Gemeinde-Nr. {MUNICIPALITY_ID}
+
+      Eigentümerschaft: {@person}
+      Versicherungswert: {AMOUNT}
+
+      {~number}. Meldungen {~deadline} an {@contact}.
+
+  - id: de_handelsregister
+    doc_type: handelsregister
+    text: |
+      {ORG}, Kanton {CANTON}
+
+      Eintragung vom {DATE}
+
+      Firma: {ORG}
+      UID: {UID}
+      Sitz: {@address}
+
+      Zeichnungsberechtigt: {@person}, von {PLACE_OF_ORIGIN}
+      Kapital: {AMOUNT}
+
+      Publikationsorgan SHAB, {~number}.
+
+  - id: de_arbeitsvertrag
+    doc_type: arbeitgeber
+    text: |
+      Arbeitsvertrag
+
+      Zwischen {ORG}, {@address},
+      und {@person}, wohnhaft {@address},
+      AHV-Nummer {AHVN13}.
+
+      Arbeitsbeginn: {DATE}
+      Jahreslohn: {AMOUNT}
+      Auszahlung auf {IBAN}
+
+      Kündigungsfrist {~deadline}. {~legal}.
+
+  - id: de_kurzmitteilung
+    doc_type: kurz
+    text: |
+      Guten Tag {GIVENNAME}
+
+      Deine Anmeldung für {DATE}, {TIME} ist eingegangen.
+      Kontakt: {@contact}
+
+      Bitte {~deadline} bestätigen.

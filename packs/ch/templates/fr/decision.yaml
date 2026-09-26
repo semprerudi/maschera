@@ -1,0 +1,181 @@
+# Erzeugt mit tools/generate_templates.py und von Hand nachgebessert.
+# Jede Vorlage hat die Wachen bestanden — vor dem Training trotzdem lesen:
+# die Wachen pruefen die Form, nicht den Sinn.
+
+templates:
+- id: fr_decision_admin_01
+  doc_type: courrier administratif avec décision et bloc de signature
+  text: "{ORG}\n\n{GIVENNAME} {FULLNAME}\n{STREET} {BUILDINGNUM}\n{@plz_ort}\n\nNotre Réf: {CASE_ID}\n\
+    \nMadame,\n\nNous avons examiné avec attention votre demande déposée auprès de nos services. Après\
+    \ analyse du dossier, nous avons le regret de vous informer que votre requête a été refusée car elle\
+    \ ne remplit pas les conditions requises. \n\nIl convient de noter que {~legal} pour justifier un\
+    \ tel octroi.\n\nNous restons à votre disposition pour tout complément d'information.\n\nJe vous prie\
+    \ d'agréer, Madame, l'expression de mes salutations distinguées.\n\n{GIVENNAME} {FULLNAME}\nResponsable\
+    \ administratif"
+- id: fr_decision_admin_02
+  doc_type: courrier administratif avec décision et bloc de signature
+  text: '{ORG}
+
+
+    {FULLNAME} {GIVENNAME}
+
+    {STREET} {BUILDINGNUM}
+
+    {@plz_ort}
+
+
+    Dossier n° {CASE_ID}
+
+
+    Monsieur,
+
+
+    Par la présente, nous vous notifions notre décision concernant le litige mentionné en référence. Après
+    étude des pièces fournies, l''autorité compétente a décidé de valider votre demande.
+
+
+    En conséquence, nous procéderons au versement où {~amount} sera crédité sur votre compte dans les
+    meilleurs délais.
+
+
+    Nous vous prions de recevoir, Monsieur, nos salutations distinguées.
+
+
+    {GIVENNAME} {FULLNAME}
+
+    Chef de section'
+- id: fr_decision_admin_03
+  doc_type: courrier administratif avec décision et bloc de signature
+  text: '{ORG}
+
+
+    À l''attention de Madame la Directrice
+
+    {FULLNAME} {GIVENNAME}
+
+    {STREET} {BUILDINGNUM}
+
+    {@plz_ort}
+
+
+    Objet: Décision finale relative à la procédure {CASE_ID}
+
+
+    Madame la Directrice,
+
+
+    Faisant suite à notre dernier échange, je vous informe que le département a rendu sa décision. Le
+    projet est approuvé sans réserve.
+
+
+    Nous soulignons toutefois que {~technical} pour assurer la conformité du système.
+
+
+    Veuillez agréer, Madame la Directrice, l''expression de ma haute considération.
+
+
+    {GIVENNAME} {FULLNAME}
+
+    Directeur général'
+- id: fr_decision_admin_04
+  doc_type: courrier administratif avec décision et bloc de signature
+  text: '{ORG}
+
+
+    {GIVENNAME} {FULLNAME}
+
+    {STREET} {BUILDINGNUM}
+
+    {@plz_ort}
+
+
+    Affaire: {CASE_ID}
+
+
+    Madame, Monsieur,
+
+
+    Nous revenons vers vous concernant votre recours administratif. Après une nouvelle évaluation des
+    faits, nous avons décidé de maintenir la décision initiale.
+
+
+    Il apparaît en effet que {~legal} dans le cadre de cette réglementation.
+
+
+    L''administration considère ce dossier comme clos.
+
+
+    Meilleures salutations,
+
+
+    {GIVENNAME} {FULLNAME}
+
+    Conseiller juridique'
+- id: fr_decision_admin_05
+  doc_type: courrier administratif avec décision et bloc de signature
+  text: '{ORG}
+
+
+    {FULLNAME} {GIVENNAME}
+
+    {STREET} {BUILDINGNUM}
+
+    {@plz_ort}
+
+
+    Réf. interne: {CASE_ID}
+
+
+    Monsieur,
+
+
+    Le service des ressources humaines a statué sur votre demande de mutation. Nous avons le plaisir de
+    vous confirmer que votre transfert vers l''autre site est accepté.
+
+
+    Nous précisons que {~place} sera le lieu d''affectation principale dès le mois prochain.
+
+
+    Nous vous souhaitons plein succès dans vos nouvelles fonctions.
+
+
+    Cordialement,
+
+
+    {GIVENNAME} {FULLNAME}
+
+    Directeur des RH'
+- id: fr_decision_admin_06
+  doc_type: courrier administratif avec décision et bloc de signature
+  text: '{ORG}
+
+
+    Madame la Directrice {FULLNAME}
+
+    {STREET} {BUILDINGNUM}
+
+    {@plz_ort}
+
+
+    Décision administrative n° {CASE_ID}
+
+
+    Madame la Directrice,
+
+
+    Conformément à la loi sur les procédures administratives, je vous notifie par ce courrier l''octroi
+    de l''autorisation sollicitée.
+
+
+    Il est impératif que {~deadline} soit respectée pour la mise en œuvre des mesures prévues.
+
+
+    Je reste convaincu que cette décision permettra d''optimiser vos opérations.
+
+
+    Je vous prie d''agréer, Madame la Directrice, mes salutations respectueuses.
+
+
+    {GIVENNAME} {FULLNAME}
+
+    Commissaire cantonal'

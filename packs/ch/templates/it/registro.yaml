@@ -1,0 +1,136 @@
+# Modelli IT — controllo abitanti, stato civile, diritti politici
+#
+# Costruiti per tag: ogni modello copre i valori del Catalogo ufficiale dei
+# caratteri — `{MARITALSTATUS}`, `{RELIGION}`, `{RESIDENCE_STATUS}`,
+# `{VOTING_RIGHTS}`, `{PERMIT_TYPE}`, `{NATIONALITY}`.
+#
+# ⚠️ I termini provengono dall'uso amministrativo, non da una versione
+# italiana ufficiale del catalogo. Da rileggere.
+
+templates:
+
+  - id: it_estratto_controllo_abitanti
+    doc_type: controllo_abitanti
+    text: |
+      {ORG}, {CITY}
+      Estratto dal controllo abitanti
+
+      Cognome: {FULLNAME}
+      Nomi: {GIVENNAME}
+      Data di nascita: {DATE}
+      Luogo di nascita: {CITY}
+      Sesso: {SEX}
+      Stato civile: {MARITALSTATUS}
+      Luogo di attinenza: {PLACE_OF_ORIGIN}
+      Cittadinanza: {NATIONALITY}
+      Confessione: {RELIGION}
+      Tipo di domicilio: {RESIDENCE_STATUS}
+      Indirizzo: {@address}
+      Numero AVS: {AHVN13}
+
+      Rilasciato il {DATE} a {CITY}. È riscossa {~amount}.
+
+  - id: it_certificato_stato_civile
+    doc_type: stato_civile
+    text: |
+      {ORG}
+      Certificato di stato civile
+
+      Si attesta che {@person}, attinente di {PLACE_OF_ORIGIN}, risulta
+      {MARITALSTATUS} ai sensi del Codice civile svizzero.
+
+      Sesso: {SEX}
+      Cittadinanza: {NATIONALITY}
+      Domicilio: {@address}
+      Numero AVS: {AHVN13}
+
+      {~legal}. Il presente certificato è rilasciato il {DATE}.
+      Informazioni: {@contact}
+
+  - id: it_carta_di_voto
+    doc_type: diritti_politici
+    text: |
+      Comune di {CITY}, numero UST {MUNICIPALITY_ID}
+      Carta di voto — votazione del {DATE}
+
+      {@person}
+      {@address}
+
+      Diritto di voto: {VOTING_RIGHTS}
+      Tipo di domicilio: {RESIDENCE_STATUS}
+
+      Il materiale di voto va restituito {~deadline}.
+      Riferimento {~number}.
+
+  - id: it_dichiarazione_imposta_dati
+    doc_type: fiscalita
+    text: |
+      Divisione delle contribuzioni
+      Dichiarazione d'imposta — dati personali
+
+      Contribuente: {@person}
+      Numero AVS: {AHVN13}
+      Stato civile: {MARITALSTATUS}, dal {DATE}
+      Confessione: {RELIGION}
+      Cittadinanza: {NATIONALITY}
+      Indirizzo: {@address}
+      Incarto fiscale: {CASE_ID}
+
+      L'imposta di culto è riscossa secondo la confessione dichiarata.
+      È deducibile {~amount}. Termine di consegna {~deadline}.
+
+  - id: it_libretto_stranieri
+    doc_type: migrazione
+    text: |
+      {ORG}
+      Libretto per stranieri
+
+      Titolare: {@person}
+      Cittadinanza: {NATIONALITY}
+      Permesso: {PERMIT_TYPE}, valido fino al {DATE}
+      Numero del documento: {IDDOC}
+      Sesso: {SEX}
+      Stato civile: {MARITALSTATUS}
+      Tipo di domicilio: {RESIDENCE_STATUS}
+      Indirizzo: {@address}
+
+      {~legal}. Ogni cambiamento va notificato {~deadline}.
+
+  - id: it_filo_posta_elettronica
+    doc_type: posta_elettronica
+    text: |
+      Da: {GIVENNAME} {FULLNAME} <{EMAIL}>
+      Inviato: {DATE} {TIME}
+      A: {GIVENNAME} {FULLNAME} <{EMAIL}>
+      Oggetto: R: incarto {CASE_ID}
+
+      Ciao {GIVENNAME}
+
+      Grazie del tuo messaggio. L'incarto di {@person}, domiciliato
+      {@address}, è stato completato. Il numero AVS {AHVN13} figura
+      ora correttamente nel registro.
+
+      Cari saluti
+      {GIVENNAME} {FULLNAME}
+      {ORG}
+      {@address}
+      telefono {PHONE}
+      {EMAIL}
+      {URL}
+
+  - id: it_blocco_firma
+    doc_type: posta_elettronica
+    text: |
+      Cordiali saluti
+
+      {GIVENNAME} {FULLNAME}
+      Collaboratore scientifico
+      {ORG}
+      {ORG}
+
+      {@address}
+      Tel. {PHONE} | {EMAIL}
+      {URL}
+
+      Il presente messaggio è destinato unicamente al destinatario.
+      Riferimento {~number}.

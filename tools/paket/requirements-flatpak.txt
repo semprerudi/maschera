@@ -1,0 +1,36 @@
+# Laufzeit des FLATPAKS.
+#
+# Warum diese Datei fuer sich steht und kein `-r` benutzt:
+# `flatpak-pip-generator` und der Bau im Sandkasten sehen nur `/tmp` und
+# nehmen die Zeile `-r requirements-paket.txt` woertlich mit; pip sucht sie
+# dann neben der Zwischendatei, findet nichts und bricht ab.
+#
+# Damit stehen die Pakete an zwei Orten. Deshalb haelt
+# `tests/test_fenster.py` Punkt 22 fest, dass diese Datei und
+# `requirements-paket.txt` dieselben Pakete mit denselben Schranken fuehren
+# — abzueglich der hier benannten Unterschiede.
+#
+# KEIN PyQt: `flatpak-pip-generator` bricht ab, sobald PyQt in der
+# Aufloesung auftaucht, und verweist auf den BaseApp
+# com.riverbankcomputing.PyQt.BaseApp. Der bringt PyQt6 und
+# PyQt6-WebEngine mit; ein zweites PyQt ueber pip waeren 525 MB doppelt.
+
+flask>=3.0                # der Kern, app/serve.py
+gunicorn>=21.2            # der Server im Betrieb
+pyyaml>=6.0               # taxonomy.yaml, patterns.yaml, eigene Regeln
+tokenizers>=0.15
+pymupdf>=1.24             # PDF-Text
+olefile>=0.46             # Outlook .msg
+
+# NUR die CPU-Fassung, und die Zeile unten erzwingt das NICHT — dieselbe
+# Falle wie in `requirements-paket.txt`, wo sie ausfuehrlich steht.
+torch>=2.0
+transformers>=4.40
+
+# ⚠️ OHNE `[qt]`. Das Extra zieht PyQt6 nach, und genau das darf nicht
+# passieren. pywebview findet den Unterbau ueber `qtpy` und das PyQt6
+# aus dem BaseApp.
+pywebview>=6.0
+qtpy>=2.4
+
+--extra-index-url https://download.pytorch.org/whl/cpu

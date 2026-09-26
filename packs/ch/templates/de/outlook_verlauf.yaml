@@ -1,0 +1,219 @@
+# Erzeugt mit tools/generate_templates.py und von Hand nachgebessert.
+# Jede Vorlage hat die Wachen bestanden — vor dem Training trotzdem lesen:
+# die Wachen pruefen die Form, nicht den Sinn.
+
+templates:
+- id: de_outlook_thread_01
+  doc_type: Outlook-Mailverlauf
+  text: 'Von: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Gesendet: {DATE}, {TIME}
+
+    An: {FULLNAME} {GIVENNAME}
+
+    Cc: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Betreff: Betrifft Akte {CASE_ID} / {ORG}
+
+
+    Sehr geehrter Herr {FULLNAME},
+
+    ich beziehe mich auf unser Telefonat von heute Morgen. Es ist zu prüfen, ob {~legal} in diesem Fall
+    anwendbar ist.
+
+    Können Sie mir bitte die fehlenden Belege zukommen lassen?
+
+
+    Von: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Gesendet: {DATE}, {TIME}
+
+    An: {FULLNAME} {GIVENNAME}
+
+    Betreff: Re: Betrifft Akte {CASE_ID} / {ORG}
+
+
+    Hallo {GIVENNAME},
+
+    anbei sende ich Ihnen die gewünschten Dokumente im PDF-Format.
+
+    Beste Grüsse,
+
+    {FULLNAME}'
+- id: de_outlook_thread_02
+  doc_type: Outlook-Mailverlauf
+  text: 'Von: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Gesendet: {DATE}, {TIME}
+
+    An: {FULLNAME} {GIVENNAME}
+
+    Cc: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Betreff: Eintritt von {FULLNAME} - Projekt {CASE_ID}
+
+
+    Guten Tag zusammen,
+
+    wir begrüssen {GIVENNAME} herzlich bei der {ORG}. Die Unterlagen sind im Anhang beigefügt, Vorgang
+    {~number}.
+
+    Bitte stellen Sie sicher, dass {~technical} bis zum ersten Arbeitstag bereitsteht.
+
+
+    Von: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Gesendet: {DATE}, {TIME}
+
+    An: {FULLNAME} {GIVENNAME}
+
+    Betreff: Re: Eintritt von {FULLNAME} - Projekt {CASE_ID}
+
+
+    Vielen Dank für die Information. Ich werde den Zugang sofort beantragen.
+
+    Freundliche Grüsse,
+
+    {GIVENNAME}'
+- id: de_outlook_thread_03
+  doc_type: Outlook-Mailverlauf
+  text: 'Von: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Gesendet: {DATE}, {TIME}
+
+    An: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Betreff: Schadenmeldung - {ORG}
+
+
+    Sehr geehrte Frau {FULLNAME},
+
+    bezüglich der Schadennummer {CASE_ID} fehlen uns noch einige Angaben zur Person.
+
+    Es wurde bereits festgestellt, dass {~amount} zu niedrig angesetzt war und {~deadline} bereits verstrichen
+    ist.
+
+    Bitte senden Sie die ergänzten Daten direkt an {GIVENNAME}.
+
+
+    Von: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Gesendet: {DATE}, {TIME}
+
+    An: {FULLNAME} {GIVENNAME}
+
+    Betreff: Re: Schadenmeldung - {ORG}
+
+
+    Ich habe die Unterlagen geprüft und schicke Ihnen die Kopien sofort zu.
+
+    Herzliche Grüsse,
+
+    {FULLNAME}'
+- id: de_outlook_thread_04
+  doc_type: Outlook-Mailverlauf
+  text: 'Von: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Gesendet: {DATE}, {TIME}
+
+    An: {FULLNAME} {GIVENNAME}
+
+    Cc: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Betreff: Ticket {CASE_ID} - Systemstörung bei {ORG}
+
+
+    Hallo {GIVENNAME},
+
+    wir haben das Problem mit dem Server gelöst. {@person} hat den Zugriff bereits bestätigt.
+
+    In der Analyse wurde bemerkt, dass {~trace} im Log-File auftauchte.
+
+    Bitte prüfen Sie nun die Verbindung erneut.
+
+
+    Von: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Gesendet: {DATE}, {TIME}
+
+    An: {FULLNAME} {GIVENNAME}
+
+    Betreff: Re: Ticket {CASE_ID} - Systemstörung bei {ORG}
+
+
+    Danke für die schnelle Hilfe, es funktioniert jetzt wieder einwandfrei.
+
+    Viele Grüsse,
+
+    {FULLNAME}'
+- id: de_outlook_thread_05
+  doc_type: Outlook-Mailverlauf
+  text: 'Von: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Gesendet: {DATE}, {TIME}
+
+    An: {FULLNAME} {GIVENNAME}
+
+    Betreff: Dossier {CASE_ID} - Koordination {ORG}
+
+
+    Sehr geehrte Damen und Herren,
+
+    wir benötigen eine dringende Auskunft über {FULLNAME} {GIVENNAME}.
+
+    Wir gehen davon aus, dass {~place} hierbei keine Rolle spielt. Die betroffene Person ist {@origin}.
+    Bitte senden Sie uns die Belege per Post.
+
+    Ich erwarte Ihre Antwort bis Ende der Woche.
+
+
+    Von: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Gesendet: {DATE}, {TIME}
+
+    An: {FULLNAME} {GIVENNAME}
+
+    Betreff: Re: Dossier {CASE_ID} - Koordination {ORG}
+
+
+    Die gewünschten Unterlagen wurden heute Vormittag versandt.
+
+    Freundliche Grüsse,
+
+    {GIVENNAME}'
+- id: de_outlook_thread_06
+  doc_type: Outlook-Mailverlauf
+  text: 'Von: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Gesendet: {DATE}, {TIME}
+
+    An: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Cc: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Betreff: Terminabsprache zu Fall {CASE_ID} ({ORG})
+
+
+    Grüezi {GIVENNAME},
+
+    hätten Sie am kommenden {DATE} Zeit für eine gemeinsame Besprechung?
+
+    Wir haben notiert, dass {~number} Personen an dem Termin teilnehmen werden.
+
+    Das Treffen findet in den Räumlichkeiten der {ORG} statt.
+
+
+    Von: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Gesendet: {DATE}, {TIME}
+
+    An: {FULLNAME} {GIVENNAME}
+
+    Betreff: Re: Terminabsprache zu Fall {CASE_ID} ({ORG})
+
+
+    Das passt mir zeitlich sehr gut. Ich werde {FULLNAME} ebenfalls zum Gespräch mitbringen.
+
+    Beste Grüsse,
+
+    {GIVENNAME}'

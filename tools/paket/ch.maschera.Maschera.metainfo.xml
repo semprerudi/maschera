@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AppStream-Beschreibung fuer Flathub.
+
+  ⚠️ OHNE DIESE DATEI GIBT ES KEIN FLATHUB. `flatpak-builder` baut auch
+  ohne sie, und genau das ist die Falle: der lokale Bau ist gruen, die
+  Einreichung faellt durch. Geprueft wird sie mit
+
+      flatpak run org.freedesktop.appstream.cli validate \
+          tools/paket/ch.maschera.Maschera.metainfo.xml
+
+  ⚠️ DIE DATEI-ID MUSS DER APP-ID GLEICHEN, und der Name der Ikone
+  ebenfalls. Deshalb setzt das Manifest im Bau `Icon=` in der
+  Desktop-Datei um: dort steht `maschera`, weil die AppImage sie so
+  braucht, und unter Flatpak faende das nichts.
+-->
+<component type="desktop-application">
+  <id>ch.maschera.Maschera</id>
+
+  <name>MASCHERA</name>
+  <summary>Mask personal data in documents, entirely offline</summary>
+
+  <metadata_license>MIT</metadata_license>
+  <!--
+    Das Flatpak ist eine ausgelieferte Binaerdatei und traegt PyMuPDF
+    (AGPL-3) und PyQt6 (GPL-3) mit: AGPL-3.0, siehe LIZENZ.md. Der
+    Quellcode allein steht unter MIT.
+  -->
+  <project_license>AGPL-3.0-only</project_license>
+
+  <!--
+    Als Entwickler steht das Projekt, nicht eine Person.
+  -->
+  <developer id="ch.maschera">
+    <name>MASCHERA</name>
+  </developer>
+
+  <launchable type="desktop-id">ch.maschera.Maschera.desktop</launchable>
+
+  <!--
+    ⚠️ `appstreamcli validate` verlangt eine `homepage`. Sie zeigt auf das
+    Repository: alles muss auch ohne eine eigene Webseite funktionieren.
+  -->
+  <url type="homepage">https://www.maschera.ch</url>
+  <url type="bugtracker">https://github.com/semprerudi/maschera/issues</url>
+  <url type="vcs-browser">https://github.com/semprerudi/maschera</url>
+
+  <description>
+    <p>
+      MASCHERA finds and replaces personal data in documents — names,
+      addresses, dates of birth, social security and case numbers — so a
+      text can be shown, shared or given to an online service without
+      handing over the people in it.
+    </p>
+    <p>
+      Everything happens on the machine. The document is not uploaded,
+      and there is no endpoint that could send it anywhere. The model
+      runs locally; the only time MASCHERA uses the network is the one
+      download of that model on first start, and it asks before doing so.
+    </p>
+    <p>
+      Built for Swiss documents, in the three official languages of the
+      Confederation — German, French and Italian — as well as English.
+      Rumantsch is not supported.
+    </p>
+    <p>
+      This is pseudonymisation, not anonymisation: the replacements are
+      kept in a dictionary, so a masked text can be turned back. That is
+      a feature for reviewing a case, and a responsibility for storing
+      the dictionary.
+    </p>
+  </description>
+
+  <categories>
+    <category>Office</category>
+    <category>Utility</category>
+  </categories>
+
+  <keywords>
+    <keyword>anonymisation</keyword>
+    <keyword>pseudonymisation</keyword>
+    <keyword>privacy</keyword>
+    <keyword>GDPR</keyword>
+    <keyword>redaction</keyword>
+  </keywords>
+
+  <content_rating type="oars-1.1" />
+
+  <!--
+    ⚠️ SCHIRMBILDER FEHLEN, und Flathub verlangt mindestens eines. Sie
+    brauchen eine oeffentliche Adresse im Repository; der lokale Bau
+    laeuft ohne.
+  -->
+
+  <releases>
+    <release version="1.0.0" date="2026-09-26">
+      <description>
+        <p>First public release: Linux (AppImage, Flatpak), Windows and
+        Docker.</p>
+      </description>
+    </release>
+  </releases>
+</component>

@@ -1,0 +1,188 @@
+# Erzeugt mit tools/generate_templates.py und von Hand nachgebessert.
+# Jede Vorlage hat die Wachen bestanden — vor dem Training trotzdem lesen:
+# die Wachen pruefen die Form, nicht den Sinn.
+#
+# Zitierte Verlaeufe (weitergeleitete Mailketten) sind die Struktur, um die
+# es in dieser Familie geht, und {ORG} steht bewusst auch mitten im Satz.
+
+templates:
+- id: en_forwarded_mail_1
+  doc_type: forwarded mail chain
+  text: 'From: {FULLNAME} <{EMAIL}>
+
+    To: {GIVENNAME} {FULLNAME}
+
+    Date: {DATE}
+
+    Subject: FW: Contract Negotiation / Final Draft / {ORG}
+
+
+    Dear {GIVENNAME},
+
+
+    Please find the latest version of the agreement for case {CASE_ID} below. The legal department at
+    {ORG} has approved the terms, although {~legal} remains a point of discussion.
+
+
+    I would appreciate your feedback {~deadline}.
+
+
+    Best regards,
+
+    {FULLNAME}
+
+
+    -----Original Message-----
+
+    From: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Sent: {DATE}
+
+    Subject: Contract Negotiation / {ORG}
+
+
+    Please see the attached draft, revision {~number}.'
+- id: en_forwarded_mail_2
+  doc_type: forwarded mail chain
+  text: 'From: {GIVENNAME} <{EMAIL}>
+
+    To: {FULLNAME} {GIVENNAME}
+
+    Date: {DATE}
+
+    Subject: RE: Urgent Inquiry / Payment Delay / {ORG}
+
+
+    Hi {FULLNAME},
+
+
+    I am forwarding the request from case {CASE_ID}. It seems that {~amount} was not processed correctly
+    by {ORG}. The ledger entry is {~trace}.
+
+
+    Could you please verify this with the accounting team?
+
+
+    Thanks,
+
+    {GIVENNAME}'
+- id: en_forwarded_mail_3
+  doc_type: forwarded mail chain
+  text: 'From: {FULLNAME} <{EMAIL}>
+
+    To: {GIVENNAME} {FULLNAME}
+
+    Date: {DATE}
+
+    Subject: FW: Onboarding Process / New Employee / {ORG}
+
+
+    Hello {GIVENNAME},
+
+
+    Please see the details below regarding case {CASE_ID}. We need to set up system access for {FULLNAME}
+    ({EMAIL}) immediately, form {~number}.
+
+
+    I have already informed the IT department at {ORG}.
+
+
+    Let me know once it''s done.
+
+
+    Regards,
+
+    {FULLNAME}
+
+
+    -----Original Message-----
+
+    From: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Sent: {DATE}
+
+    Subject: Onboarding Process / {ORG}
+
+
+    The start date is confirmed. Account name {USERNAME}, request {~technical}.'
+- id: en_forwarded_mail_4
+  doc_type: forwarded mail chain
+  text: 'From: {GIVENNAME} <{EMAIL}>
+
+    To: {FULLNAME}
+
+    Date: {DATE}
+
+    Subject: RE: Technical Support / Server Migration / {ORG}
+
+
+    Regarding case {CASE_ID}, the issue is still unresolved. The technician, {FULLNAME} {GIVENNAME}, mentioned
+    that {~technical} needs to be checked at {ORG}.
+
+
+    The window closes {~deadline}. Please contact them via {EMAIL} for a detailed log.
+
+
+    Best,
+
+    {GIVENNAME}'
+- id: en_forwarded_mail_5
+  doc_type: forwarded mail chain
+  text: 'From: {FULLNAME} <{EMAIL}>
+
+    To: {GIVENNAME} {FULLNAME}
+
+    Date: {DATE}
+
+    Subject: FW: Policy Update / Insurance Claim / {ORG}
+
+
+    Dear {GIVENNAME},
+
+
+    I am forwarding the claim for case {CASE_ID}. The claimant is listed as {FULLNAME} ({EMAIL}) in our
+    records at {ORG}, policy {INSURANCE_POLICY}.
+
+
+    Please check if {~place} is correctly assigned to this file, reference {~number}.
+
+
+    Kind regards,
+
+    {FULLNAME}'
+- id: en_forwarded_mail_6
+  doc_type: forwarded mail chain
+  text: 'From: {GIVENNAME} <{EMAIL}>
+
+    To: {FULLNAME} {GIVENNAME}
+
+    Date: {DATE}
+
+    Subject: RE: Project Alpha / Milestone 2 / {ORG}
+
+
+    Hi {FULLNAME},
+
+
+    As discussed, please see the trail below for case {CASE_ID}. I have already contacted {GIVENNAME}
+    from {ORG}. The build reference is {~trace}.
+
+
+    You can reach them directly at {EMAIL} if you have further questions.
+
+
+    Cheers,
+
+    {GIVENNAME}
+
+
+    -----Original Message-----
+
+    From: {FULLNAME} {GIVENNAME} <{EMAIL}>
+
+    Sent: {DATE}
+
+    Subject: Project Alpha / Milestone 2 / {ORG}
+
+
+    Milestone 2 is complete. Sign-off is due {~deadline}.'

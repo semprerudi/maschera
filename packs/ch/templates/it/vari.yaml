@@ -1,0 +1,70 @@
+# Modelli IT — esecuzioni, stato civile, supporto informatico, lavoro
+templates:
+
+  - id: it_estratto_esecuzioni
+    doc_type: ufficio_esecuzione
+    text: |
+      {ORG}, di {CITY}
+      Estratto del registro delle esecuzioni
+
+      Riguardante: {@person}, nato il {DATE}, attinente di {PLACE_OF_ORIGIN}
+      Domicilio: {@address}
+      Numero AVS: {AHVN13}
+
+      Credito aperto: {AMOUNT}, creditore {ORG}
+      Esecuzione n. {CASE_ID}
+
+      {~amount}. Rilasciato il {DATE}.
+
+  - id: it_atto_nascita
+    doc_type: stato_civile
+    text: |
+      {ORG}, di {CITY}
+      Atto di nascita
+
+      Cognome: {FULLNAME}
+      Nomi: {GIVENNAME}
+      Data di nascita: {DATE}
+      Luogo di origine: {PLACE_OF_ORIGIN}
+      Sesso: {SEX}
+      Cittadinanza: {NATIONALITY}
+      Paese di nascita: {COUNTRY}
+
+      Genitori: {@person} e {@person}
+      Iscrizione {CASE_ID}
+
+      Rilasciato il {DATE}. È riscossa {~amount}.
+
+  - id: it_ticket_supporto
+    doc_type: it_support
+    text: |
+      Ticket {CASE_ID} — {ORG}, di {CITY}
+
+      Segnalato da: {@person}, {@contact}
+      Applicazione: {URL}
+      Postazione: {IPADDRESS}
+
+      Salvando i dati di {@person}, numero AVS {AHVN13}, compare un errore.
+
+      Nome utente {USERNAME}
+
+      Estratto dalla schermata:
+      {~trace}
+      {~technical}
+
+      Verificatosi il {DATE} alle {TIME}. {~technical}.
+
+  - id: it_contratto_lavoro
+    doc_type: datore_lavoro
+    text: |
+      Contratto di lavoro
+
+      Tra {ORG}, IDI {UID}, {@address},
+      e {@person}, domiciliato in {@address},
+      numero AVS {AHVN13}.
+
+      Inizio: {DATE}
+      Salario annuo: {AMOUNT}
+      Versamento su {IBAN}
+
+      Termine di disdetta {~deadline}. {~legal}.

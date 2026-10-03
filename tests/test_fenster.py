@@ -1594,6 +1594,21 @@ else:
             check(_ausl <= {"push", "pull_request"} and _ausl,
                   f"der Testlauf startet bei etwas anderem als Push und "
                   f"Pull Request: {_aus}")
+# 4. Dependabot hebt Untergrenzen NICHT auf die neueste Fassung an. Die
+#    Untergrenzen in den Requirements sind die kleinste Fassung ohne bekannte
+#    Luecke; ohne `increase-if-necessary` machte Dependabot am ersten Tag
+#    zehn Pull Requests, die genau das zunichte machten (3.10.2026).
+_dep = WURZEL / ".github" / "dependabot.yml"
+if _dep.is_file():
+    import yaml as _yaml26b
+    _d = _yaml26b.safe_load(_dep.read_text(encoding="utf-8"))
+    _pip = [_u for _u in _d.get("updates", [])
+            if _u.get("package-ecosystem") == "pip"]
+    check(len(_pip) >= 1, "dependabot.yml hat keinen pip-Eintrag mehr")
+    for _u in _pip:
+        check(_u.get("versioning-strategy") == "increase-if-necessary",
+              f"dependabot.yml: pip {_u.get('directory')} hebt die "
+              "Untergrenze auf die neueste Fassung an")
 if not failures:
     print(f"   OK   gemeinsame Listen; {len(_wfs)} Workflows: nur lesen, "
           "Actions gepinnt, richtige Ausloeser")

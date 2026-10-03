@@ -1,0 +1,12 @@
+# Aenderungen an der Seite muessen sofort ankommen — sonst sieht ein Besucher
+# eine neue index.html mit einer alten sprachen.js (am 3.10.2026 gemessen: der
+# Server schickte keine Cache-Anweisung, der Browser entschied selbst).
+#
+# `no-cache` heisst nicht «nie speichern», sondern «vor Gebrauch beim Server
+# nachfragen»: solange sich nichts geaendert hat, antwortet er mit einem
+# winzigen 304 (ETag). Bilder und Schriften bleiben im Zwischenspeicher.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|js|css)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

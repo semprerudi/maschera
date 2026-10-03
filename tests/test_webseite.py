@@ -101,6 +101,27 @@ if len(failures) == _vorher:
     print(f"   OK   {len(_schluessel)} Schluessel in de, fr, it, en")
 
 
+print("\n3b. Der Server darf HTML, JS und CSS nicht auf eigene Faust zwischenspeichern")
+# ⚠️ Am 3.10.2026 sah ein Besucher nach einem Update die neue Seite mit der
+# Uebersetzung von gestern: der Server schickte keine Cache-Anweisung, und der
+# Browser entscheidet dann selbst, wie lange er `sprachen.js` behaelt. Die
+# `.htaccess` neben der Seite sagt «vor Gebrauch nachfragen» (`no-cache`, mit
+# ETag ein winziges 304). Ohne sie ist die naechste Aktualisierung wieder eine
+# Mischung aus alt und neu.
+_ht = SITE / ".htaccess"
+check(_ht.is_file(), "site/.htaccess fehlt")
+if _ht.is_file():
+    _hc = "\n".join(z for z in _ht.read_text(encoding="utf-8").splitlines()
+                    if not z.lstrip().startswith("#"))
+    check("Cache-Control" in _hc and "no-cache" in _hc,
+          ".htaccess setzt kein Cache-Control: no-cache")
+    check(all(e in _hc for e in ("html", "js", "css")),
+          ".htaccess nennt nicht html, js und css")
+    check("png" not in _hc and "woff" not in _hc,
+          ".htaccess nimmt auch Bilder oder Schriften aus dem Zwischenspeicher")
+if not failures:
+    print("   OK   no-cache fuer html, js, css; Bilder bleiben im Zwischenspeicher")
+
 print("\n4. Die Seite verspricht nichts, was nicht stimmt")
 _vorher = len(failures)
 # Die Lizenz der Pakete, und die Adresse des Modells: beides muss mit dem

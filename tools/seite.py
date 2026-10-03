@@ -60,6 +60,9 @@ NETRC_NAMEN = (FTP_HOST, "maschera.ch")
 FTP_ORDNER = "/www/maschera"
 SPRACHEN = ("de", "fr", "it", "en")
 AGENT = "maschera-seite/1.0"
+# Dateien, die Apache nie ueber HTTP ausliefert: sie lassen sich nur per FTP
+# vergleichen und nachpruefen.
+NUR_PER_FTP = {".htaccess"}
 
 
 # ---------------------------------------------------------------- Entdecken
@@ -161,6 +164,13 @@ def _reihenfolge(pfade: list[str]) -> list[str]:
     return sorted(pfade, key=lambda p: (p == "index.html", p))
 
 
+def _teile(lokal: dict[str, bytes]):
+    """Was sich per HTTP vergleichen laesst, und was nur per FTP."""
+    http = {k: v for k, v in lokal.items() if k not in NUR_PER_FTP}
+    ftp = {k: v for k, v in lokal.items() if k in NUR_PER_FTP}
+    return http, ftp
+
+
 def _bericht(neu, anders, gleich, nur_live) -> None:
     print(f"   gleich:      {len(gleich)}")
     print(f"   neu:         {len(neu)}")
@@ -223,6 +233,18 @@ def _stelle_ordner_sicher(ftps: ftplib.FTP_TLS, rel: str) -> None:
     ftps.cwd(FTP_ORDNER)
 
 
+def lies_fern(ftps: ftplib.FTP_TLS, rel: str) -> bytes | None:
+    """Eine Datei vom Server lesen (nur fuer die, die HTTP nicht ausliefert)."""
+    import io
+    puffer = io.BytesIO()
+    try:
+        ftps.cwd(FTP_ORDNER)
+        ftps.retrbinary(f"RETR {rel}", puffer.write)
+    except ftplib.error_perm:
+        return None
+    return puffer.getvalue()
+
+
 def lade_hoch(ftps: ftplib.FTP_TLS, rel: str, daten: bytes) -> None:
     import io
     _stelle_ordner_sicher(ftps, rel)
@@ -260,9 +282,11 @@ def cmd_spiegeln(args) -> int:
 
 def cmd_vergleichen(args) -> int:
     print("── site/ gegen die Live-Seite")
-    neu, anders, gleich, nur_live = vergleiche(
-        lokal_stand(Path(args.nach)), live_stand())
+    http, ftp = _teile(lokal_stand(Path(args.nach)))
+    neu, anders, gleich, nur_live = vergleiche(http, live_stand())
     _bericht(neu, anders, gleich, nur_live)
+    for rel in sorted(ftp):
+        print(f"   · {rel}: nur per FTP prüfbar (wird beim Hochladen verglichen)")
     return 0
 
 
@@ -281,38 +305,65 @@ def cmd_verbindung(args) -> int:
 def cmd_hochladen(args) -> int:
     nach = Path(args.nach)
     lokal = lokal_stand(nach)
+    http, ftp = _teile(lokal)
     print("── Vergleich mit der Live-Seite")
     live = live_stand()
-    neu, anders, gleich, nur_live = vergleiche(lokal, live)
+    neu, anders, gleich, nur_live = vergleiche(http, live)
     _bericht(neu, anders, gleich, nur_live)
     liste = _reihenfolge(neu + anders)
-    if not liste:
-        print("   Nichts zu tun: online steht schon, was in site/ liegt.")
-        return 0
     if not args.ja:
+        for rel in sorted(ftp):
+            print(f"   · {rel}: nur per FTP prüfbar — wird beim Hochladen verglichen")
+        if not liste and not ftp:
+            print("   Nichts zu tun: online steht schon, was in site/ liegt.")
+            return 0
         print("\n   Trockenlauf. Hochladen mit:  python3 tools/seite.py hochladen --ja")
         return 0
-    if input(f"\n{len(liste)} Datei(en) nach {FTP_HOST}{FTP_ORDNER} hochladen? "
+    ftps = None
+    ftp_liste = []
+    if ftp:
+        # Nur diese Dateien brauchen schon jetzt die Anmeldung: Apache liefert
+        # sie nie ueber HTTP aus, also vergleicht nur der Server selbst.
+        ftps = verbinden()
+        ftp_liste = sorted(r for r, d in ftp.items() if lies_fern(ftps, r) != d)
+        for rel in sorted(ftp):
+            print(f"   {'~' if rel in ftp_liste else '='} {rel} (per FTP verglichen)")
+    # `index.html` bleibt die letzte, auch hinter den FTP-only-Dateien.
+    gesamt = [r for r in liste if r != "index.html"] + ftp_liste \
+        + [r for r in liste if r == "index.html"]
+    if not gesamt:
+        print("   Nichts zu tun: online steht schon, was in site/ liegt.")
+        if ftps:
+            ftps.quit()
+        return 0
+    if input(f"\n{len(gesamt)} Datei(en) nach {FTP_HOST}{FTP_ORDNER} hochladen? "
              "[ja/N] ").strip().lower() != "ja":
         print("   Abgebrochen.")
+        if ftps:
+            ftps.quit()
         return 1
-    ftps = verbinden()
-    for rel in liste:
+    if ftps is None:
+        ftps = verbinden()
+    for rel in gesamt:
         lade_hoch(ftps, rel, lokal[rel])
         print(f"   hochgeladen: {rel}")
-    ftps.quit()
-    print("── Nachpruefung gegen die Live-Seite")
+    print("── Nachpruefung")
     fehler = []
-    for rel in liste:
-        d = _hole(rel)
-        if d is None or _sha(d) != _sha(lokal[rel]):
-            fehler.append(rel)
+    for rel in gesamt:
+        if rel in NUR_PER_FTP:
+            if lies_fern(ftps, rel) != lokal[rel]:
+                fehler.append(rel)
+        else:
+            d = _hole(rel)
+            if d is None or _sha(d) != _sha(lokal[rel]):
+                fehler.append(rel)
+    ftps.quit()
     if fehler:
         print("   ⚠️ online weicht ab (Browser-Zwischenspeicher oder Fehler):")
         for rel in fehler:
             print(f"     {rel}")
         return 1
-    print(f"   ok    {len(liste)} Datei(en) online, Pruefsummen gleich")
+    print(f"   ok    {len(gesamt)} Datei(en) online, Pruefsummen gleich")
     return 0
 
 

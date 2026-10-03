@@ -148,6 +148,95 @@ check((_neu, _anders, _gleich, _nur) == (["c"], ["b"], ["a"], ["z"]),
 if len(failures) == _vorher:
     print("   OK   Reihenfolge, Kommentare, Vergleich")
 
+print("\n7. `.htaccess` geht nur ueber FTP — verglichen, hochgeladen, nachgeprueft")
+# ⚠️ Apache liefert `.htaccess` nie ueber HTTP aus. Haette das Werkzeug sie wie
+# die anderen ueber die Live-Seite verglichen, waere sie immer «neu» gewesen
+# und die Nachpruefung nach dem Hochladen immer gescheitert. Geprueft am
+# ganzen Ablauf mit einem Server aus dem Speicher: Vergleich, Reihenfolge
+# (index.html zuletzt), Nachpruefung, und ein zweiter Lauf, der nichts tut.
+import io as _io7
+
+
+class _Fern:
+    """Ein Server aus dem Speicher — nur, was das Werkzeug benutzt."""
+    def __init__(self):
+        self.dateien = {}
+        self.hochgeladen = []
+
+    def cwd(self, ziel):
+        pass
+
+    def retrbinary(self, befehl, schreibe):
+        name = befehl.split(" ", 1)[1]
+        if name not in self.dateien:
+            raise seite.ftplib.error_perm("550 nicht da")
+        schreibe(self.dateien[name])
+
+    def storbinary(self, befehl, quelle):
+        self._zwischen = (befehl.split("/")[-1], quelle.read())
+
+    def rename(self, von, nach):
+        name = nach.replace(seite.FTP_ORDNER + "/", "")
+        self.dateien[name] = self._zwischen[1]
+        self.hochgeladen.append(name)
+
+    def mkd(self, pfad):
+        pass
+
+    def quit(self):
+        pass
+
+
+_vorher = len(failures)
+_lokal = {"index.html": b"neu", "stil.css": b"css", ".htaccess": b"Header x"}
+_live = {"index.html": b"alt", "stil.css": b"css"}
+_h, _f = seite._teile(_lokal)
+check(set(_h) == {"index.html", "stil.css"} and set(_f) == {".htaccess"},
+      f"die Teilung nach HTTP und FTP stimmt nicht: {sorted(_h)} / {sorted(_f)}")
+
+_fern = _Fern()
+_orig = (seite.verbinden, seite.live_stand, seite.lokal_stand, seite._hole,
+         __builtins__["input"] if isinstance(__builtins__, dict) else __builtins__.input)
+_ausgabe = _io7.StringIO()
+_stdout = sys.stdout
+import builtins as _bi7
+try:
+    seite.verbinden = lambda: _fern
+    seite.live_stand = lambda: dict(_live)
+    seite.lokal_stand = lambda ordner: dict(_lokal)
+    seite._hole = lambda rel: (_fern.dateien.get(rel) or _live.get(rel)
+                               if rel not in seite.NUR_PER_FTP else None)
+    _bi7.input = lambda *_: "ja"
+    sys.stdout = _ausgabe
+
+    class _A:
+        nach = "unbenutzt"
+        ja = True
+    _rc = seite.cmd_hochladen(_A())
+    sys.stdout = _stdout
+    check(_rc == 0, f"der Lauf meldet {_rc}: {_ausgabe.getvalue()[-200:]}")
+    check(_fern.hochgeladen[-1] == "index.html",
+          f"index.html kam nicht zuletzt: {_fern.hochgeladen}")
+    check(".htaccess" in _fern.hochgeladen
+          and _fern.dateien.get(".htaccess") == b"Header x",
+          f".htaccess wurde nicht hochgeladen: {_fern.hochgeladen}")
+    check("stil.css" not in _fern.hochgeladen,
+          "eine unveraenderte Datei wurde hochgeladen")
+    # Zweiter Lauf: online steht jetzt alles — nichts darf mehr hochgeladen werden.
+    _live["index.html"] = b"neu"
+    _fern.hochgeladen.clear()
+    sys.stdout = _ausgabe = _io7.StringIO()
+    _rc = seite.cmd_hochladen(_A())
+    sys.stdout = _stdout
+    check(_rc == 0 and not _fern.hochgeladen,
+          f"ein zweiter Lauf laedt wieder hoch: {_fern.hochgeladen}")
+finally:
+    sys.stdout = _stdout
+    seite.verbinden, seite.live_stand, seite.lokal_stand, seite._hole = _orig[:4]
+    _bi7.input = _orig[4]
+if len(failures) == _vorher:
+    print("   OK   .htaccess per FTP verglichen, index.html zuletzt, zweiter Lauf leer")
+
 print()
 if failures:
     print(f"{len(failures)} Pruefung(en) fehlgeschlagen.")

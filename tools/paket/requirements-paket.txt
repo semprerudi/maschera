@@ -36,7 +36,7 @@ jinja2>=3.1.6         # Vorlagen von Flask, siehe oben
 # EIN Arbeiter mit Faeden, nicht mehrere Prozesse: die Kette traegt eine
 # Sperre um sich selbst, und zwei Prozesse haetten jeder ihre eigene. Siehe
 # `app/wsgi.py`.
-gunicorn>=22.0        # der Server im Betrieb, nicht der Entwicklungsserver
+gunicorn>=26.2.0        # der Server im Betrieb, nicht der Entwicklungsserver
 pyyaml>=6.0           # taxonomy.yaml, patterns.yaml, eigene Regeln
 tokenizers>=0.15      # wird von transformers ohnehin gezogen
 pymupdf>=1.24         # PDF-Text. Ohne sie laufen txt, md, eml und mbox weiter

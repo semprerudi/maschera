@@ -37,8 +37,18 @@ jobs:
       - name: Anzeigeschicht (Messwert fuer MACOS.md Abschnitt 6)
         continue-on-error: true
         run: |
-          python -c "import sys, webview; print('python', sys.version); print('webview', webview.__version__)"
-          python -c "import webview; print(webview.platforms)"
+          python - <<'PY'
+          import sys, importlib.metadata as m
+          print("python", sys.version)
+          print("pywebview", m.version("pywebview"))
+          import webview
+          print("platforms", getattr(webview, "platforms", None))
+          try:
+              import webview.platforms.cocoa  # noqa: F401
+              print("cocoa: importierbar")
+          except Exception as e:  # Messwert, kein Fehler des Laufs
+              print("cocoa: NICHT importierbar:", type(e).__name__, e)
+          PY
 
       - name: Modell holen (Pruefsumme aus packs/ch/modell.json)
         run: |
@@ -57,12 +67,28 @@ jobs:
         run: |
           MASCHERA_PFAD="dist/macos-bau/dist/MASCHERA.app/Contents/MacOS/MASCHERA"
           "$MASCHERA_PFAD" --im-browser --port 4199 > rauchtest.log 2>&1 &
+          PID=$!
+          ok=0
           for i in $(seq 1 90); do
-            curl -fsS http://127.0.0.1:4199/api/zustand && break
+            if curl -fsS http://127.0.0.1:4199/api/zustand; then ok=1; break; fi
+            if ! kill -0 "$PID" 2>/dev/null; then echo "Der Prozess ist beendet."; break; fi
             sleep 2
           done
-          curl -fsS http://127.0.0.1:4199/api/zustand
-          cat rauchtest.log | tail -20
+          echo "--- Protokoll der App (letzte 80 Zeilen)"
+          tail -80 rauchtest.log || true
+          if kill -0 "$PID" 2>/dev/null; then echo "--- Prozess laeuft noch"; else echo "--- Prozess beendet"; fi
+          if [ "$ok" != 1 ]; then
+            echo "::warning title=Rauchtest::Der Server auf Port 4199 hat nicht geantwortet"
+            exit 1
+          fi
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        if: always()
+        with:
+          name: rauchtest-log
+          path: rauchtest.log
+          if-no-files-found: ignore
+          retention-days: 7
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:

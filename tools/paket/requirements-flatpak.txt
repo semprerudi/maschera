@@ -25,7 +25,7 @@ gunicorn>=22.0            # der Server im Betrieb
 pyyaml>=6.0               # taxonomy.yaml, patterns.yaml, eigene Regeln
 tokenizers>=0.15
 pymupdf>=1.24             # PDF-Text
-olefile>=0.46             # Outlook .msg
+olefile>=0.47             # Outlook .msg
 
 # NUR die CPU-Fassung, und die Zeile unten erzwingt das NICHT — dieselbe
 # Falle wie in `requirements-paket.txt`, wo sie ausfuehrlich steht.

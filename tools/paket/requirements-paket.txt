@@ -42,7 +42,7 @@ tokenizers>=0.15      # wird von transformers ohnehin gezogen
 pymupdf>=1.24         # PDF-Text. Ohne sie laufen txt, md, eml und mbox weiter
 # Outlook `.msg` ist OLE2, nicht MIME. Eine einzelne Python-Datei, BSD,
 # ohne eigene Abhaengigkeiten.
-olefile>=0.46         # Outlook .msg. Ohne sie laufen alle anderen weiter
+olefile>=0.47         # Outlook .msg. Ohne sie laufen alle anderen weiter
 
 # NUR die CPU-Fassung — und die Zeile unten erzwingt das NICHT.
 #

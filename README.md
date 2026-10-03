@@ -56,10 +56,10 @@ are here — including the less flattering one.**
 
 | | practice texts (synthetic) | real documents (gold documents) |
 |---|---|---|
-| Size | 2000 generated texts, 29,493 personal details (gold spans) | 9 real documents, 280 personal details (gold spans) |
-| **Left visible** (leak rate) | **0.00 %** — nothing missed | **1.27 %** — 6 details missed in whole or in part |
-| Overall score (micro-F1, 1 = perfect) | 0.993 | 0.739 |
-| Masked too much | 222 places | 94 places |
+| Size | 2000 generated texts, 29,210 personal details (gold spans) | 9 real documents, 280 personal details (gold spans) |
+| **Left visible** (leak rate) | **0.02 %** — 13 details missed in whole or in part | **1.27 %** — 6 details missed in whole or in part |
+| Overall score (micro-F1, 1 = perfect) | 0.997 | 0.736 |
+| Masked too much | 84 places | 95 places |
 | Anyone can recheck it | **yes** | **no** |
 
 The **leak rate** is the share of letters and digits belonging to personal
@@ -74,6 +74,10 @@ numbers with this command:
 ```fish
 python3 tools/mess_synthetisch.py --model runs/ch-v63b --n 2000
 ```
+
+The numbers in the table were measured this way with MASCHERA 1.0.1. The
+texts depend on the templates and the generator: if those change, the
+numbers change with them, and the table has to be measured again.
 
 ⚠️ **The practice texts are familiar to the model.** They are built from
 the same templates as the texts it learned from. It has never seen the
@@ -208,7 +212,7 @@ A ready-made image, about 4.2 GB, the model included:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:1.0.0
+    ghcr.io/semprerudi/maschera:1.0.1
 ```
 
 Then open `http://127.0.0.1:4141` in the browser. The server keeps
@@ -335,3 +339,9 @@ PyMuPDF (AGPL-3), the Windows installer PyMuPDF; a single MIT over
 everything would have promised something the bundled parts do not allow.
 
 The model weights are MIT.
+
+## How it was written
+
+The source code was written with Claude Code (Anthropic), under the
+direction and responsibility of the maintainer. From 1.0.1 on, the
+commits carry a `Co-Authored-By: Claude` line.

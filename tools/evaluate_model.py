@@ -47,7 +47,13 @@ class TorchScorer:
         self.torch = torch
         path = Path(model_dir)
         self.tokenizer = AutoTokenizer.from_pretrained(path)
-        self.model = AutoModelForTokenClassification.from_pretrained(path)
+        # ⚠️ Nur `model.safetensors`. Ohne das Flag faellt `from_pretrained`
+        # still auf `pytorch_model.bin` zurueck — eine Pickle-Datei, die beim
+        # Laden Code ausfuehren kann. Mit dem Flag gibt es diesen Rueckgriff
+        # nicht: fehlt die safetensors-Datei, bricht das Laden ab, statt
+        # etwas anderes zu oeffnen.
+        self.model = AutoModelForTokenClassification.from_pretrained(
+            path, use_safetensors=True)
         self.model.eval()
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model.to(self.device)

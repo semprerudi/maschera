@@ -47,6 +47,14 @@ WERKZEUGE = ("dokumente.py", "filter_document.py", "evaluate_model.py")
 # Was nur zum Erzeugen und Messen da ist, steht in `draussen.txt` — der
 # einen Quelle fuer alle Verpackungen.
 DRAUSSEN = Path(__file__).with_name("draussen.txt")
+# Was im Modellordner NICHT mitfaehrt: Zwischenstaende des Trainings und
+# alles, was Pickle sein kann (`training_args.bin` ist eine). Die Dateien
+# werden zur Laufzeit nicht gelesen (`core/modell.py`, `PFLICHT`), und eine
+# Pickle-Datei in einem Paket kann beim Oeffnen Code ausfuehren. Dieselbe
+# Liste steht in `.dockerignore` und `appimage_bauen.fish`;
+# `tests/test_fenster.py` Punkt 25 haelt die drei zusammen.
+MODELL_DRAUSSEN = ("checkpoint-*", "*.bin", "*.pt", "*.pth", "*.pkl",
+                   "*.ckpt", "*.pickle")
 
 
 def draussen() -> list[str]:
@@ -106,6 +114,13 @@ def zusammenstellen(zwischen: Path) -> None:
     (zwischen / "tools").mkdir()
     for name in WERKZEUGE:
         shutil.copy2(WURZEL / "tools" / name, zwischen / "tools" / name)
+
+
+def modell_zusammenstellen(ziel: Path) -> None:
+    """Den Modellordner ohne Trainingsartefakte nach `ziel` kopieren —
+    `--add-data` nimmt ein Verzeichnis ganz oder gar nicht."""
+    shutil.copytree(WURZEL / "runs" / MODELL, ziel,
+                    ignore=shutil.ignore_patterns(*MODELL_DRAUSSEN))
 
 
 def importe() -> list[str]:
@@ -185,8 +200,10 @@ def main() -> int:
     for teil in (*DATEN, "tools"):
         argumente += ["--add-data",
                       f"{zwischen / teil}{trenner}maschera/{teil}"]
+    modell = BAU / "modell" / MODELL
+    modell_zusammenstellen(modell)
     argumente += ["--add-data",
-                  f"{WURZEL / 'runs' / MODELL}{trenner}maschera/runs/{MODELL}"]
+                  f"{modell}{trenner}maschera/runs/{MODELL}"]
     import PyInstaller.__main__
     PyInstaller.__main__.run(argumente)
 

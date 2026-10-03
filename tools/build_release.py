@@ -93,7 +93,10 @@ def main() -> int:
     out.mkdir(parents=True, exist_ok=True)
 
     tokenizer = AutoTokenizer.from_pretrained(ckpt)
-    model = AutoModelForTokenClassification.from_pretrained(ckpt)
+    # Nur safetensors, kein stiller Rueckgriff auf eine Pickle-Datei (siehe
+    # `TorchScorer` in `tools/evaluate_model.py`).
+    model = AutoModelForTokenClassification.from_pretrained(
+        ckpt, use_safetensors=True)
     before = sum(p.numel() for p in model.parameters())
     print(f"Checkpoint: {before/1e6:.0f}M Parameter, "
           f"Vokabular {model.config.vocab_size}")

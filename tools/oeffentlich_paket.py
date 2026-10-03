@@ -56,6 +56,9 @@ DRAUSSEN: dict[str, str] = {
         "legt den GitHub-Ordner auf dem Abgleichserver ab — nennt ihn",
     "tools/appimage_holen.fish":
         "holt die AppImage ueber sync.fish vom Abgleichserver",
+    "tools/schirmbilder.fish":
+        "nimmt die Bilder der Projektseite auf und legt das ZIP im "
+        "Ablageordner der Entwicklungsumgebung ab",
     "tools/im-terminal.fish":
         "der Starter der Ablagesymbole — ohne sie ohne Zweck",
     "tools/nachbessern_v55.py": "einmaliges Nachbesserungsskript",

@@ -365,6 +365,39 @@ finally:
             os.environ[_k] = _v
 print("   OK   APPDATA fuer Einstellungen, LOCALAPPDATA fuer das Modell")
 
+print("\n12. Ein Modell wird nur aus safetensors geladen")
+# ⚠️ OHNE `use_safetensors=True` faellt `from_pretrained` still auf
+# `pytorch_model.bin` zurueck — eine Pickle-Datei, die beim Laden Code
+# ausfuehren kann (CVE-2025-32434 betraf `torch.load`, der Weg dorthin ist
+# derselbe). Mit dem Flag bricht das Laden ab, statt etwas anderes zu oeffnen.
+#
+# Geprueft wird die EIGENSCHAFT, nicht eine Liste: jeder Aufruf von
+# `AutoModelForTokenClassification.from_pretrained(` im Laufzeitpfad und im
+# Ausfuhrwerkzeug traegt das Flag. `train.py` bleibt aussen vor — dort kann
+# ein Basismodell vom Hub kommen, das nicht in jedem Fall safetensors hat.
+import re as _re12
+
+_orte12 = [*(WURZEL / "app").rglob("*.py"), *(WURZEL / "core").rglob("*.py"),
+           WURZEL / "tools" / "evaluate_model.py",
+           WURZEL / "tools" / "build_release.py",
+           WURZEL / "tools" / "dokumente.py",
+           WURZEL / "tools" / "filter_document.py"]
+_gefunden12 = 0
+for _datei12 in _orte12:
+    if not _datei12.is_file():
+        continue
+    _text12 = _datei12.read_text(encoding="utf-8")
+    for _m12 in _re12.finditer(
+            r"AutoModel\w*\.from_pretrained\((.*?)\)\s*\n", _text12, _re12.S):
+        _gefunden12 += 1
+        check("use_safetensors=True" in _m12.group(1),
+              f"{_datei12.relative_to(WURZEL)}: from_pretrained ohne "
+              f"use_safetensors=True")
+check(_gefunden12 >= 2,
+      f"nur {_gefunden12} Aufrufe gefunden, 2+ erwartet — dann sucht die "
+      f"Wache an der falschen Stelle")
+print(f"   OK   {_gefunden12} Aufrufe, alle mit use_safetensors=True")
+
 print()
 if failures:
     print(f"{len(failures)} Pruefung(en) fehlgeschlagen.")

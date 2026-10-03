@@ -1500,6 +1500,104 @@ finally:
 if not failures:
     print("   OK   Symbol, zwei Eintraege, Beenden beendet, zweiter Start holt hervor")
 
+print("\n25. Kein Paket nimmt Pickle-Dateien aus dem Modellordner mit")
+# ⚠️ `runs/ch-v63b/training_args.bin` ist eine Pickle-Datei. Docker
+# (`COPY runs/ch-v63b/`), AppImage (`cp -a`) und Windows (`--add-data`)
+# kopierten das ganze Verzeichnis; ausgeschlossen war nur `checkpoint-*`.
+# Die Datei wird zur Laufzeit nicht gelesen (`core/modell.py`, `PFLICHT`),
+# kann aber beim Oeffnen Code ausfuehren — im Paket hat sie nichts verloren.
+#
+# Wie Punkt 12: Windows wird AUSGEFUEHRT (auf einem kleinen Modellordner),
+# die beiden anderen Verpackungen statisch gelesen — und zwar jede Endung
+# einzeln, damit eine vergessene auffaellt.
+_endungen25 = ["*.bin", "*.pt", "*.pth", "*.pkl", "*.ckpt", "*.pickle"]
+check(all(_e in _wbm.MODELL_DRAUSSEN for _e in _endungen25)
+      and "checkpoint-*" in _wbm.MODELL_DRAUSSEN,
+      f"windows_bauen.MODELL_DRAUSSEN fuehrt nicht alle Endungen: "
+      f"{_wbm.MODELL_DRAUSSEN}")
+_docker25 = (WURZEL / ".dockerignore").read_text(encoding="utf-8")
+_appimage25 = ohne_kommentare((WURZEL / "tools/paket/appimage_bauen.fish")
+                              .read_text(encoding="utf-8"))
+for _e in _endungen25:
+    check(f"runs/ch-v63b/{_e}" in _docker25,
+          f".dockerignore laesst {_e} im Modellordner nicht weg")
+    check(f"-name '{_e}'" in _appimage25,
+          f"appimage_bauen.fish loescht {_e} im Modellordner nicht")
+with _tf.TemporaryDirectory() as _tmp25:
+    _wurzel25 = Path(_tmp25) / "baum"
+    _modell25 = _wurzel25 / "runs" / _wbm.MODELL
+    (_modell25 / "checkpoint-100").mkdir(parents=True)
+    for _n in ("config.json", "model.safetensors", "pack.json",
+               "training_args.bin", "pytorch_model.bin", "x.pt", "x.pth",
+               "x.pkl", "x.ckpt", "x.pickle", "checkpoint-100/optimizer.pt"):
+        (_modell25 / _n).write_bytes(b"x")
+    _alt25 = _wbm.WURZEL
+    _wbm.WURZEL = _wurzel25
+    try:
+        _ziel25 = Path(_tmp25) / "modell"
+        _wbm.modell_zusammenstellen(_ziel25)
+    finally:
+        _wbm.WURZEL = _alt25
+    _drin25 = sorted(_p.name for _p in _ziel25.rglob("*") if _p.is_file())
+    check(_drin25 == ["config.json", "model.safetensors", "pack.json"],
+          f"der Windows-Modellordner enthaelt {_drin25}")
+if not failures:
+    print("   OK   Docker, AppImage und Windows lassen Pickle und Checkpoints weg")
+
+print("\n26. Der macOS-Bau teilt die Listen mit Windows, die Workflows sind zahm")
+# ⚠️ `macos_bauen.py` ist neu und auf einem Mac noch nicht gemessen. Was sich
+# pruefen laesst, ohne einen Mac zu haben, ist die EIGENSCHAFT, an der ein
+# Fehler am teuersten waere:
+#   1. Der Bau benutzt die Zusammenstellung des Windows-Baus — dieselben
+#      Listen, dieselbe Pickle-Sperre. Eine zweite, abgeschriebene Liste
+#      bliebe beim naechsten Aendern zurueck (so war es bei den Paketen bis
+#      0.9.58).
+#   2. JEDER Workflow darf nur lesen, und jede Action ist auf einen Commit
+#      festgenagelt. Eine Marke wie `@v4` laesst sich verschieben.
+#   3. Der macOS-Workflow startet nur von Hand (er holt 1,2 GB und braucht
+#      rund eine Stunde); der Testlauf nur bei Push und Pull Request — nie
+#      `pull_request_target`, das Beitraegen von aussen Geheimnisse und
+#      Schreibrechte liehe.
+_mac = ohne_kommentare((WURZEL / "tools/paket/macos_bauen.py")
+                       .read_text(encoding="utf-8"))
+for _name in ("wb.zusammenstellen(", "wb.modell_zusammenstellen(",
+              "wb.importe()", "wb.DATEN"):
+    check(_name in _mac, f"macos_bauen.py benutzt {_name} nicht — dann "
+          "laufen die Listen von Windows und macOS auseinander")
+_wfs = sorted((WURZEL / ".github" / "workflows").glob("*.yml")) \
+    if (WURZEL / ".github" / "workflows").is_dir() else []
+if not _wfs:
+    print("   HINWEIS kein .github/workflows/ — Punkt 26 prueft nur den Bau")
+else:
+    import yaml as _yaml26
+    for _wf in _wfs:
+        _w = _yaml26.safe_load(_wf.read_text(encoding="utf-8"))
+        _aus = _w.get(True, _w.get("on"))   # YAML liest `on` als True
+        _ausl = set(_aus if isinstance(_aus, (list, dict)) else [_aus])
+        check(_w.get("permissions") == {"contents": "read"},
+              f"{_wf.name} darf mehr als lesen: {_w.get('permissions')}")
+        check("pull_request_target" not in _ausl,
+              f"{_wf.name} nutzt pull_request_target — das liehe Beitraegen "
+              "von aussen Geheimnisse und Schreibrechte")
+        _text26 = _wf.read_text(encoding="utf-8")
+        _uses = re.findall(r"^\s*-?\s*uses:\s*(\S+)", _text26, re.M)
+        check(len(_uses) >= 2, f"{_wf.name}: nur {len(_uses)} Actions "
+              "gefunden — die Wache sucht an der falschen Stelle")
+        for _u in _uses:
+            check(re.fullmatch(r"[\w./-]+@[0-9a-f]{40}", _u) is not None,
+                  f"{_wf.name}: Action nicht auf einen Commit festgenagelt: "
+                  f"{_u}")
+        if _wf.name == "macos.yml":
+            check(_ausl == {"workflow_dispatch"},
+                  f"der macOS-Workflow startet nicht nur von Hand: {_aus}")
+        if _wf.name == "tests.yml":
+            check(_ausl <= {"push", "pull_request"} and _ausl,
+                  f"der Testlauf startet bei etwas anderem als Push und "
+                  f"Pull Request: {_aus}")
+if not failures:
+    print(f"   OK   gemeinsame Listen; {len(_wfs)} Workflows: nur lesen, "
+          "Actions gepinnt, richtige Ausloeser")
+
 print()
 if failures:
     print(f"{len(failures)} Pruefung(en) fehlgeschlagen.")

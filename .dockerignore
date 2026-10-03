@@ -17,6 +17,15 @@
 runs/*
 !runs/ch-v63b/
 runs/ch-v63b/checkpoint-*
+# Pickle-Dateien: `training_args.bin` sagt nur, wie trainiert wurde, wird zur
+# Laufzeit nicht gelesen (`core/modell.py`, `PFLICHT`) und kann beim Oeffnen
+# Code ausfuehren. Dieselbe Liste: `appimage_bauen.fish`, `windows_bauen.py`.
+runs/ch-v63b/*.bin
+runs/ch-v63b/*.pt
+runs/ch-v63b/*.pth
+runs/ch-v63b/*.pkl
+runs/ch-v63b/*.ckpt
+runs/ch-v63b/*.pickle
 *.jsonl
 
 # Was die Laufzeit nicht liest: Erzeugung synthetischer Trainingsdaten,

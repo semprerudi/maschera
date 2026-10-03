@@ -11,11 +11,14 @@
 -r requirements.txt
 
 # --- Training ---------------------------------------------------------
-torch>=2.1                # nur fuer `--model` gegen einen Trainingsordner
-transformers>=4.40        # Trainer, AutoModelForTokenClassification
+# Untergrenzen = kleinste Fassung ohne bekannte Luecke (pip-audit,
+# 3.10.2026): torch < 2.6 CVE-2025-32434, torch < 2.10 CVE-2026-24747,
+# transformers 4.56 bis 5.2 CVE-2026-4372.
+torch>=2.13               # nur fuer `--model` gegen einen Trainingsordner
+transformers>=5.10        # Trainer, AutoModelForTokenClassification
 
 # --- Ausfuhr nach ONNX (tools/build_release.py) -----------------------
-onnx>=1.16                # Modellformat
+onnx>=1.22                # Modellformat; ab 1.22 ohne bekannte Luecke
 onnxscript>=0.1           # `torch.onnx.export` braucht es ab torch 2.6
 
 # --- Auswertung -------------------------------------------------------

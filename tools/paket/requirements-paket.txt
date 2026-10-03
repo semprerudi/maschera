@@ -5,8 +5,11 @@
 # Laeufer, mit dem gemessen wird. Am Golddokument-Testset (280 Goldspannen):
 #
 #     Laeufer                     Lecks   Micro-F1   Uebermask
-#     torch      runs/ch-v63b         6      0.739          94
-#     ONNX int8  release/ch-v63b     13      0.711         109
+#     torch      runs/ch-v63b         6      0.736          95
+#     ONNX int8  release/ch-v63b     13      0.712         120
+#
+# (Gemessen am 3.10.2026 mit 1.0.1; vorher stand dort 0.739 / 94 und
+# 0.711 / 109 — das Testset und die Vorlagen haben sich seither bewegt.)
 #
 # Zwei Laeufer mit eigener Fensterung, eigenen Sondertoken und eigener
 # Abschneidung koennen sich unterschiedlich verhalten, und jeder solche
@@ -18,7 +21,14 @@
 #
 # `requirements.txt` bleibt gueltig — fuer den ONNX-Weg (`--onnx`).
 
-flask>=3.0            # der Kern, app/serve.py
+flask>=3.1.3          # der Kern, app/serve.py; ab 3.1.3 ohne bekannte Luecke
+# Werkzeug und Jinja2 stehen hier AUSDRUECKLICH, obwohl Flask sie ohnehin
+# mitbringt: Flask 3.1.3 verlangt selbst nur `werkzeug>=3.1.0` und
+# `jinja2>=3.1.2`, und beide Untergrenzen erlauben Fassungen mit bekannten
+# Luecken (pip-audit, 3.10.2026). Die zwei Zeilen heben nur die Schranke auf
+# die kleinste Fassung ohne bekannte Luecke; sie ziehen nichts Neues nach.
+werkzeug>=3.1.6       # Unterbau von Flask, siehe oben
+jinja2>=3.1.6         # Vorlagen von Flask, siehe oben
 
 # gunicorn: der Flask-Entwicklungsserver ist fuer den Betrieb im Netz
 # nicht gedacht. Reines Python, MIT, rund 1 MB.
@@ -26,7 +36,7 @@ flask>=3.0            # der Kern, app/serve.py
 # EIN Arbeiter mit Faeden, nicht mehrere Prozesse: die Kette traegt eine
 # Sperre um sich selbst, und zwei Prozesse haetten jeder ihre eigene. Siehe
 # `app/wsgi.py`.
-gunicorn>=21.2        # der Server im Betrieb, nicht der Entwicklungsserver
+gunicorn>=22.0        # der Server im Betrieb, nicht der Entwicklungsserver
 pyyaml>=6.0           # taxonomy.yaml, patterns.yaml, eigene Regeln
 tokenizers>=0.15      # wird von transformers ohnehin gezogen
 pymupdf>=1.24         # PDF-Text. Ohne sie laufen txt, md, eml und mbox weiter
@@ -53,6 +63,10 @@ olefile>=0.46         # Outlook .msg. Ohne sie laufen alle anderen weiter
 # `appimage_bauen.fish` brechen ab, wenn in `torch.__version__` kein `+cpu`
 # steht; `tests/test_fenster.py` haelt fest, dass beide das tun. Auf einer
 # Maschine MIT Grafikkarte fiele der Fehlgriff sonst nicht auf.
-torch>=2.0
-transformers>=4.40
+#
+# Untergrenzen = kleinste Fassung ohne bekannte Luecke (pip-audit,
+# 3.10.2026): torch < 2.6 CVE-2025-32434, torch < 2.10 CVE-2026-24747,
+# transformers 4.56 bis 5.2 CVE-2026-4372.
+torch>=2.13
+transformers>=5.10
 --extra-index-url https://download.pytorch.org/whl/cpu

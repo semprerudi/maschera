@@ -1,0 +1,43 @@
+# Die Testsuite bei jedem Push und Pull Request auf `main`.
+#
+# Was ein Runner sehen kann: den oeffentlichen Baum — ohne das Modell (1,2 GB,
+# nicht in Git) und ohne die echten Golddokumente. `tools/run_tests.py` laeuft
+# dort mit 31 von 32 Pruefungen; «Langes Dokument» braucht das Modell und
+# meldet sich als uebersprungen. Das ist im Protokoll zu lesen, nicht still.
+# Die Messungen (`mess_synthetisch.py`, `eval_documents.py`) laufen hier nicht.
+#
+# ⚠️ `contents: read`, keine Geheimnisse, und `pull_request` statt
+# `pull_request_target`: ein Beitrag von aussen laeuft ohne Schreibrechte und
+# ohne Zugriff auf Geheimnisse des Repositories. Jede Action ist auf einen
+# Commit festgenagelt, nicht auf eine Marke, die sich verschieben liesse.
+name: Tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        with:
+          python-version: "3.13"
+
+      - name: Abhaengigkeiten (CPU-torch, wie im Paket)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r tools/paket/requirements-paket.txt -r requirements.txt fonttools brotli
+
+      - name: Pruefungen
+        run: python tools/run_tests.py

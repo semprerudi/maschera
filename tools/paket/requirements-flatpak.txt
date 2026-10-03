@@ -15,8 +15,13 @@
 # com.riverbankcomputing.PyQt.BaseApp. Der bringt PyQt6 und
 # PyQt6-WebEngine mit; ein zweites PyQt ueber pip waeren 525 MB doppelt.
 
-flask>=3.0                # der Kern, app/serve.py
-gunicorn>=21.2            # der Server im Betrieb
+flask>=3.1.3              # der Kern, app/serve.py; ab 3.1.3 ohne bekannte Luecke
+# Werkzeug und Jinja2 ausdruecklich: Flask verlangt selbst nur 3.1.0 bzw.
+# 3.1.2, beide Schranken erlauben Fassungen mit bekannten Luecken. Die
+# Begruendung steht ausfuehrlich in `requirements.txt`.
+werkzeug>=3.1.6
+jinja2>=3.1.6
+gunicorn>=22.0            # der Server im Betrieb
 pyyaml>=6.0               # taxonomy.yaml, patterns.yaml, eigene Regeln
 tokenizers>=0.15
 pymupdf>=1.24             # PDF-Text
@@ -24,8 +29,8 @@ olefile>=0.46             # Outlook .msg
 
 # NUR die CPU-Fassung, und die Zeile unten erzwingt das NICHT — dieselbe
 # Falle wie in `requirements-paket.txt`, wo sie ausfuehrlich steht.
-torch>=2.0
-transformers>=4.40
+torch>=2.13
+transformers>=5.10
 
 # ⚠️ OHNE `[qt]`. Das Extra zieht PyQt6 nach, und genau das darf nicht
 # passieren. pywebview findet den Unterbau ueber `qtpy` und das PyQt6

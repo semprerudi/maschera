@@ -57,10 +57,10 @@ Das mitgelieferte Modell (`runs/ch-v63b`) wurde auf zwei Arten geprüft.
 
 | | Übungstexte (synthetisch) | echte Dokumente (Golddokumente) |
 |---|---|---|
-| Umfang | 2000 erzeugte Texte, 29 493 Personenangaben (Goldspannen) | 9 echte Dokumente, 280 Personenangaben (Goldspannen) |
-| **Sichtbar geblieben** (Leckrate) | **0,00 %** — nichts übersehen | **1,27 %** — 6 Angaben ganz oder teilweise übersehen |
-| Gesamtnote (Micro-F1, 1 = perfekt) | 0,993 | 0,739 |
-| Zu viel verdeckt | 222 Stellen | 94 Stellen |
+| Umfang | 2000 erzeugte Texte, 29 210 Personenangaben (Goldspannen) | 9 echte Dokumente, 280 Personenangaben (Goldspannen) |
+| **Sichtbar geblieben** (Leckrate) | **0,02 %** — 13 Angaben ganz oder teilweise übersehen | **1,27 %** — 6 Angaben ganz oder teilweise übersehen |
+| Gesamtnote (Micro-F1, 1 = perfekt) | 0,997 | 0,736 |
+| Zu viel verdeckt | 84 Stellen | 95 Stellen |
 | Kann jeder nachprüfen | **ja** | **nein** |
 
 Die **Leckrate** ist der Anteil der Buchstaben und Ziffern aus
@@ -75,6 +75,10 @@ dieselben Zahlen:
 ```fish
 python3 tools/mess_synthetisch.py --model runs/ch-v63b --n 2000
 ```
+
+Die Zahlen in der Tabelle sind so mit MASCHERA 1.0.1 gemessen. Die Texte
+hängen von den Vorlagen und vom Erzeuger ab: ändern sich diese, ändern sich
+die Zahlen mit, und die Tabelle muss neu gemessen werden.
 
 ⚠️ **Die Übungstexte sind dem Modell vertraut.** Sie sind nach denselben
 Vorlagen gebaut wie die Texte, mit denen es gelernt hat. Die Namen und
@@ -212,7 +216,7 @@ Ein fertiges Abbild, rund 4,2 GB, das Modell fährt mit:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:1.0.0
+    ghcr.io/semprerudi/maschera:1.0.1
 ```
 
 Danach im Browser `http://127.0.0.1:4141` öffnen. Der Server speichert
@@ -337,3 +341,9 @@ MIT über alles hätte etwas zugesagt, das die mitgelieferten Teile nicht
 hergeben.
 
 Die Modellgewichte stehen unter MIT.
+
+## Wie es entstanden ist
+
+Der Quellcode wurde mit Claude Code (Anthropic) geschrieben, unter
+Anleitung und Verantwortung des Maintainers. Ab 1.0.1 tragen die Commits
+eine Zeile `Co-Authored-By: Claude`.

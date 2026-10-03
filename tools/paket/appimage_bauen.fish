@@ -112,6 +112,12 @@ find $BAU/usr/lib/maschera -name __pycache__ -type d -exec rm -rf {} + 2>/dev/nu
 mkdir -p $BAU/usr/lib/maschera/runs
 cp -a runs/ch-v63b $BAU/usr/lib/maschera/runs/
 rm -rf $BAU/usr/lib/maschera/runs/ch-v63b/checkpoint-*
+# Und alles, was Pickle sein kann — `training_args.bin` ist eine. Wird zur
+# Laufzeit nicht gelesen (`core/modell.py`, `PFLICHT`), und eine Pickle-Datei
+# im Paket kann beim Oeffnen Code ausfuehren. Dieselbe Liste: `.dockerignore`,
+# `windows_bauen.py`; `tests/test_fenster.py` Punkt 25 haelt sie zusammen.
+find $BAU/usr/lib/maschera/runs/ch-v63b -type f '(' -name '*.bin' -o -name '*.pt' \
+    -o -name '*.pth' -o -name '*.pkl' -o -name '*.ckpt' -o -name '*.pickle' ')' -delete
 
 # Die Lizenztexte fahren mit — das gebaute Paket steht unter AGPL-3.0, und
 # wer es weitergibt, gibt den Text mit. `tests/test_fenster.py` Punkt 12.

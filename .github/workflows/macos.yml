@@ -1,0 +1,71 @@
+# MASCHERA fuer macOS bauen — nur auf Knopfdruck, nichts wird veroeffentlicht.
+#
+# Starten: im Repository den Reiter «Actions», «macOS-Bau», «Run workflow».
+# Ergebnis: ein Artefakt mit dem unsignierten `.dmg`, sieben Tage abrufbar.
+#
+# ⚠️ Der Bau ist neu und auf einem Mac noch nicht gemessen
+# (`tools/paket/macos_bauen.py`, `tools/paket/MACOS.md` Abschnitt 6). Die
+# Schritte «Anzeigeschicht» und «Rauchtest» liefern genau die Messwerte, die
+# dort fehlen — sie brechen den Lauf nicht ab, damit man sie lesen kann.
+#
+# ⚠️ Kein Zeitplan, kein Push-Ausloeser: der Lauf holt 1,2 GB Modell und
+# braucht rund eine Stunde. `contents: read` — der Workflow darf nichts
+# schreiben. Jede Action ist auf einen Commit festgenagelt, nicht auf eine
+# Marke, die sich verschieben liesse.
+name: macOS-Bau
+on: workflow_dispatch
+
+permissions:
+  contents: read
+
+jobs:
+  bauen:
+    runs-on: macos-14   # Apple Silicon (arm64)
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        with:
+          python-version: "3.13"
+
+      - name: Abhaengigkeiten
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r tools/paket/requirements-paket.txt
+          pip install pywebview pyinstaller
+
+      - name: Anzeigeschicht (Messwert fuer MACOS.md Abschnitt 6)
+        continue-on-error: true
+        run: |
+          python -c "import sys, webview; print('python', sys.version); print('webview', webview.__version__)"
+          python -c "import webview; print(webview.platforms)"
+
+      - name: Modell holen (Pruefsumme aus packs/ch/modell.json)
+        run: |
+          python -c "
+          from pathlib import Path
+          from core import modell
+          modell.hole(modell.manifest('ch'), Path('runs/ch-v63b'))
+          print('Modell geholt')
+          "
+
+      - name: Bauen
+        run: python tools/paket/macos_bauen.py
+
+      - name: Rauchtest (Messwert fuer MACOS.md Abschnitt 6)
+        continue-on-error: true
+        run: |
+          MASCHERA_PFAD="dist/macos-bau/dist/MASCHERA.app/Contents/MacOS/MASCHERA"
+          "$MASCHERA_PFAD" --im-browser --port 4199 > rauchtest.log 2>&1 &
+          for i in $(seq 1 90); do
+            curl -fsS http://127.0.0.1:4199/api/zustand && break
+            sleep 2
+          done
+          curl -fsS http://127.0.0.1:4199/api/zustand
+          cat rauchtest.log | tail -20
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: MASCHERA-macOS-dmg
+          path: dist/MASCHERA-*.dmg
+          retention-days: 7

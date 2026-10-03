@@ -93,6 +93,14 @@
   -->
 
   <releases>
+    <release version="1.0.1" date="2026-10-03">
+      <description>
+        <p>Security update: raised minimum versions of the dependencies
+        (torch, transformers, Flask, Werkzeug, Jinja2, gunicorn), the model
+        is loaded from safetensors only, and training artifacts are no
+        longer shipped. Model and detection are unchanged.</p>
+      </description>
+    </release>
     <release version="1.0.0" date="2026-09-26">
       <description>
         <p>First public release: Linux (AppImage, Flatpak), Windows and

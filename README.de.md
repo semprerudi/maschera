@@ -238,6 +238,31 @@ und Einstellungen über einen Neustart behalten will, ergänzt
 oder unter einem anderen Namen als `127.0.0.1` gehört `MASCHERA_WIRT`
 gesetzt — siehe `tools/paket/LIESMICH.md`.
 
+### Downloads prüfen
+
+Jedes Release trägt `SHA256SUMS`. Neben die heruntergeladenen Dateien legen
+und prüfen:
+
+```fish
+sha256sum -c --ignore-missing SHA256SUMS
+```
+
+Unter macOS gibt `shasum -a 256 MASCHERA-latest-arm64.dmg` die Summe aus, die du
+mit der passenden Zeile in `SHA256SUMS` vergleichst.
+
+Das Docker-Abbild ist ab 1.0.2 signiert (ohne eigenen Schlüssel, mit
+[cosign](https://github.com/sigstore/cosign)); 1.0.1 ist es nicht. Die Signatur
+gehört zur `noreply`-Adresse des GitHub-Kontos, derselben wie auf den Commits:
+
+```fish
+cosign verify ghcr.io/semprerudi/maschera:1.0.2 \
+    --certificate-identity 30689933+semprerudi@users.noreply.github.com \
+    --certificate-oidc-issuer https://github.com/login/oauth
+```
+
+Zu jedem Release seit 1.0.1 gehören eine SBOM (SPDX) für das Docker-Abbild
+und eine für das AppImage.
+
 ### Selbst bauen
 
 ```fish

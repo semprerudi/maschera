@@ -13,6 +13,10 @@ Gefunden beim ersten Test auf macOS und durch CodeQL.
 - Die Seite www.maschera.ch zeigt macOS als Download; `site/` im Repository
   ist der Stand der Seite, `tools/seite.py` vergleicht und lädt hoch.
 
+### Nachträglich (3.10.2026)
+- Das Docker-Abbild 1.0.2 ist mit cosign signiert; die README erklärt, wie man
+  Prüfsummen und Signatur prüft.
+
 ### Behoben
 - «Kopieren und … öffnen» tat unter macOS nichts: `window.open` verliert dort
   nach dem Kopieren die Nutzergeste, und pywebview baut kein Popup. Unter macOS

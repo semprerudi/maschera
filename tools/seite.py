@@ -15,7 +15,7 @@ Live-Seite zerstoert. Deshalb gibt es `spiegeln`, und deshalb vergleicht
 `hochladen` immer zuerst mit der Live-Seite.
 
 ⚠️ **Zugangsdaten stehen nie hier.** Sie kommen aus `~/.netrc` (Rechte 600),
-Eintrag `machine maschera.ch`. Das Skript liest sie mit dem `netrc`-Modul der
+Eintrag `machine maschera.ch` (oder den Servernamen). Das Skript liest sie mit dem `netrc`-Modul der
 Standardbibliothek; sie erscheinen in keiner Ausgabe.
 
 ⚠️ **Nur verschluesselt.** Die Verbindung ist FTPS (explizites TLS). Bietet
@@ -49,7 +49,14 @@ from pathlib import Path, PurePosixPath
 
 WURZEL = Path(__file__).resolve().parent.parent
 SEITE = "https://www.maschera.ch/"
-FTP_HOST = os.environ.get("MASCHERA_FTP_HOST", "maschera.ch")
+# ⚠️ Der Servername, nicht die Domain: das Zertifikat des FTP-Servers gilt fuer
+# `*.web.hostpoint.ch`, nicht fuer `maschera.ch`. Mit der Domain scheitert die
+# Zertifikatspruefung (so gemessen am 3.10.2026) — und sie bleibt an. Den Namen
+# nennt die Rueckaufloesung der Adresse von www.maschera.ch.
+FTP_HOST = os.environ.get("MASCHERA_FTP_HOST", "sl2195.web.hostpoint.ch")
+# Unter welchem Namen `~/.netrc` die Zugangsdaten fuehrt: der Servername oder
+# die Domain, in dieser Reihenfolge.
+NETRC_NAMEN = (FTP_HOST, "maschera.ch")
 FTP_ORDNER = "/www/maschera"
 SPRACHEN = ("de", "fr", "it", "en")
 AGENT = "maschera-seite/1.0"
@@ -172,16 +179,19 @@ def _bericht(neu, anders, gleich, nur_live) -> None:
 
 def verbinden() -> ftplib.FTP_TLS:
     try:
-        zugang = netrc.netrc().authenticators(FTP_HOST)
+        daten = netrc.netrc()
+        zugang = next((z for z in (daten.authenticators(n) for n in NETRC_NAMEN)
+                       if z), None)
     except FileNotFoundError:
         raise SystemExit(
             "~/.netrc fehlt. Anlegen (mit eigenem Benutzer und Passwort):\n"
-            f"  printf 'machine {FTP_HOST}\\nlogin BENUTZER\\npassword "
+            f"  printf 'machine {NETRC_NAMEN[-1]}\\nlogin BENUTZER\\npassword "
             "PASSWORT\\n' >> ~/.netrc; chmod 600 ~/.netrc")
     except netrc.NetrcParseError as e:
         raise SystemExit(f"~/.netrc ist nicht lesbar oder zu offen: {e}")
     if not zugang:
-        raise SystemExit(f"In ~/.netrc steht kein Eintrag `machine {FTP_HOST}`.")
+        raise SystemExit("In ~/.netrc steht kein Eintrag `machine "
+                         f"{NETRC_NAMEN[-1]}` (oder {NETRC_NAMEN[0]}).")
     benutzer, _, passwort = zugang
     ftps = ftplib.FTP_TLS(context=ssl.create_default_context(), timeout=60)
     try:

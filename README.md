@@ -233,6 +233,31 @@ settings across restarts, add `-v maschera-config:/home/maschera/.config/mascher
 Behind a reverse proxy or under another name than `127.0.0.1`, set
 `MASCHERA_WIRT` — see `tools/paket/LIESMICH.md` (German).
 
+### Verify the downloads
+
+Every release carries `SHA256SUMS`. Put it next to the files you downloaded
+and check them:
+
+```fish
+sha256sum -c --ignore-missing SHA256SUMS
+```
+
+On macOS, `shasum -a 256 MASCHERA-latest-arm64.dmg` prints the sum to compare
+with the matching line in `SHA256SUMS`.
+
+The Docker image is signed (keyless, with [cosign](https://github.com/sigstore/cosign))
+from 1.0.2 on; 1.0.1 is not. The signature is tied to the GitHub account's
+`noreply` address, the same one that appears on the commits:
+
+```fish
+cosign verify ghcr.io/semprerudi/maschera:1.0.2 \
+    --certificate-identity 30689933+semprerudi@users.noreply.github.com \
+    --certificate-oidc-issuer https://github.com/login/oauth
+```
+
+An SBOM (SPDX) for the Docker image and one for the AppImage are attached to
+each release since 1.0.1.
+
 ### Build it yourself
 
 ```fish

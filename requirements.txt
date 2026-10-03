@@ -23,4 +23,4 @@ pymupdf>=1.24         # PDF-Text. Ohne sie laufen txt, md, eml und mbox weiter.
 # kleinste moegliche Antwort — eine einzelne Python-Datei, BSD, ohne eigene
 # Abhaengigkeiten. `extract_msg` haette `compressed_rtf`, `beautifulsoup4`
 # und `tzlocal` mitgebracht.
-olefile>=0.46         # Outlook .msg. Ohne sie laufen alle anderen weiter.
+olefile>=0.47         # Outlook .msg. Ohne sie laufen alle anderen weiter.

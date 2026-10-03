@@ -168,7 +168,7 @@ through. The command line allows it for measurements and says so.
 
 ## Install
 
-Three ways on Linux, an installer for Windows. They differ in exactly one
+Three ways on Linux, an installer for Windows, and a disk image for macOS. They differ in exactly one
 question: **does the model ship with the package, or is it fetched on
 first start?**
 
@@ -177,6 +177,7 @@ first start?**
 | **AppImage** | about 1.7 GB | included | one executable file; no installation, no dependencies |
 | **Flatpak** | about 0.3 GB, plus the KDE runtime from Flathub | fetched, 1.2 GB | Debian, Ubuntu, Fedora, openSUSE, Arch — wherever Flatpak runs |
 | **Windows installer** | about 1.4 GB | included | Windows 11, 64-bit; installs without administrator rights |
+| **macOS disk image** | about 1.4 GB | included | Macs with Apple silicon (M1 or newer); not signed |
 | **Docker** | about 4.2 GB | included | running as a service; interface in the browser |
 
 If the model is fetched, **the first start asks first**: it names source,
@@ -206,13 +207,24 @@ The Flatpak fetches the KDE runtime from Flathub when installed.
 On Windows, run `MASCHERA-latest-x64-setup.exe`. The installer is not
 signed, so Windows warns on first start: "More info" → "Run anyway".
 
+On macOS (Apple silicon only), open `MASCHERA-latest-arm64.dmg` and drag
+`MASCHERA` into *Applications*. The app is not signed, and recent macOS
+versions do not let you open it with a right click. Remove the quarantine flag
+once, in *Terminal*:
+
+```fish
+xattr -dr com.apple.quarantine /Applications/MASCHERA.app
+```
+
+The macOS build is new and has been tested on one Mac so far.
+
 ### Docker
 
 A ready-made image, about 4.2 GB, the model included:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:1.0.1
+    ghcr.io/semprerudi/maschera:1.0.2
 ```
 
 Then open `http://127.0.0.1:4141` in the browser. The server keeps
@@ -238,7 +250,7 @@ fish tools/paket/bauen.fish                   # Docker
 `tools/paket/LIESMICH.md` (German) describes each path and the decisions
 behind it, including how to fetch the model for the AppImage and Docker
 builds. `WINDOWS.md` (German) describes the Windows build as it was run;
-`MACOS.md` is the script for macOS, which has not been run yet.
+`MACOS.md` describes the macOS build, which runs on GitHub (workflow `macOS-Bau`, started by hand).
 
 ## Get started
 

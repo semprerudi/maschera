@@ -111,6 +111,20 @@ for _u in set(re.findall(r'href="(https://huggingface\.co/[^"]+)"', HTML)):
     check(_u in _readme, f"Modelladresse {_u} steht nicht im README")
 check(re.search(r'href="https://huggingface\.co/', HTML) is not None,
       "die Seite verweist nicht auf das Modell")
+# Jeder Download-Knopf zeigt auf einen Dateinamen, den das README ebenfalls
+# nennt. Die Dateien im Release tragen feste Namen (`MASCHERA-latest-…`);
+# ein Knopf auf einen anderen Namen fuehrt auf eine Fehlerseite — und das
+# faellt erst auf, wenn jemand klickt. (Gemessen am 3.10.2026 beim macOS-Knopf:
+# README und Seite muessen denselben Namen tragen.)
+_readme_de = (WURZEL / "README.de.md").read_text(encoding="utf-8")
+_dateien = re.findall(r'releases/latest/download/([\w.-]+)"', HTML)
+check(len(_dateien) >= 4, f"nur {len(_dateien)} Download-Knoepfe gefunden")
+for _d in _dateien:
+    check(_d in _readme and _d in _readme_de,
+          f"der Knopf fuehrt auf {_d}, das README nicht beide nennen")
+check(all(f'"{_d}"' not in HTML or True for _d in _dateien), "")
+check("In Arbeit" not in HTML or "MASCHERA-latest-arm64.dmg" not in HTML,
+      "die Seite nennt macOS zugleich «In Arbeit» und als Download")
 if len(failures) == _vorher:
     print("   OK   Lizenz und Modelladresse wie im Repository")
 

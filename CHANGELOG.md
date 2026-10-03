@@ -4,6 +4,15 @@
 
 Gefunden beim ersten Test auf macOS und durch CodeQL.
 
+### Neu
+- **macOS** (nur Apple-Chip, M1 oder neuer): `MASCHERA-latest-arm64.dmg`, rund
+  1,4 GB, das Modell fährt mit. Gebaut auf GitHub (`.github/workflows/macos.yml`),
+  auf einem Mac von Hand getestet. Nicht signiert: nach dem Ziehen in
+  «Programme» einmal `xattr -dr com.apple.quarantine /Applications/MASCHERA.app`
+  im Terminal.
+- Die Seite www.maschera.ch zeigt macOS als Download; `site/` im Repository
+  ist der Stand der Seite, `tools/seite.py` vergleicht und lädt hoch.
+
 ### Behoben
 - «Kopieren und … öffnen» tat unter macOS nichts: `window.open` verliert dort
   nach dem Kopieren die Nutzergeste, und pywebview baut kein Popup. Unter macOS

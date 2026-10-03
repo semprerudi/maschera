@@ -3,10 +3,34 @@
 Wie aus diesem Baum eine `.app` und ein `.dmg` werden. Das Gegenstück zu
 `appimage_bauen.fish` für Linux und zu `WINDOWS.md`.
 
-⚠️ **Diesen Bau gibt es noch nicht.** Wie beim Windows-Drehbuch ist das
-hier die Reihenfolge und die Begründung, nicht der Bericht über einen
-gelaufenen Bau. Abschnitt 6 trennt, was feststeht, von dem, was auf der
-Maschine gemessen werden muss.
+✅ **Diesen Bau gibt es seit dem 3.10.2026**, und er läuft auf GitHub, nicht auf
+einem eigenen Mac: `.github/workflows/macos.yml` (nur von Hand zu starten),
+Bauskript `tools/paket/macos_bauen.py`, Symbol `macos-symbol-1024.png`. Das
+Ergebnis ist ein Artefakt des Laufs, `MASCHERA-<fassung>-arm64.dmg`.
+
+**Was gemessen ist** (Lauf auf `macos-14`, Python 3.13, pywebview 6.2.1;
+Test auf einem Apple-Silicon-Mac von Hand):
+
+| | Ergebnis |
+|---|---|
+| Bau, `.dmg` | 1,44 GB, entsteht aus dem Baum ohne eigenen Mac |
+| Anzeigeschicht | **Cocoa** (`webview.platforms.cocoa` ist importierbar) |
+| Start, Modell laden | ja; `/api/zustand` antwortet im Runner |
+| Fenster, Menü-Links, Maskieren | gehen (Handtest) |
+| «Kopieren und … öffnen» | ging zuerst **nicht**: `window.open` verliert nach dem `await` die Nutzergeste, und pywebview baut kein Popup. Seitdem öffnet die Anwendung den Dienst im Standardbrowser (`fenster.dienst_oeffnen`) |
+| Symbol | fehlte zuerst (`--icon`); danach über `iconutil` aus `macos-symbol-1024.png` |
+| Gatekeeper, unsigniert | **Rechtsklick → Öffnen genügt nicht.** Es braucht `xattr -dr com.apple.quarantine /Applications/MASCHERA.app` |
+| Einmal-Start (Unix-Sockel), Ablagefach | nicht gemessen; ein Ablagefach gibt es nicht |
+
+⚠️ **Bekannt:** beim Start meldet ein Hilfsprozess `fenster.py: error:
+unrecognized arguments: -B -S -I -c from multiprocessing.resource_tracker …`.
+Das eingefrorene Programm reicht die Argumente des Hilfsprozesses an
+`fenster.py` weiter. Es stört den Betrieb nicht; ein Fix müsste Code aus den
+Startargumenten ausführen und gehört deshalb in eine eigene, geprüfte Runde.
+
+Der Rest dieses Dokuments ist das ursprüngliche Drehbuch für einen Bau auf
+einem **eigenen** Mac; es bleibt als Anleitung stehen, falls der Bau einmal
+dort laufen soll.
 
 ⚠️ **Kein Rechnername.** Das Rezept ist allgemeingültig; welche Maschine
 und wie man drankommt, steht in `BETRIEB.md` und bleibt intern.

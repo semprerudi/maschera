@@ -171,7 +171,7 @@ lässt es für Messungen zu und sagt es dabei.
 
 ## Installieren
 
-Drei Wege unter Linux, ein Installer für Windows. Sie unterscheiden sich
+Drei Wege unter Linux, ein Installer für Windows und ein Datenträgerabbild für macOS. Sie unterscheiden sich
 in genau einer Frage: **fährt das Modell mit, oder wird es beim ersten
 Start geholt?**
 
@@ -180,6 +180,7 @@ Start geholt?**
 | **AppImage** | rund 1,7 GB | fährt mit | eine einzige ausführbare Datei; keine Installation, keine Abhängigkeiten |
 | **Flatpak** | rund 0,3 GB, dazu die KDE-Laufzeit von Flathub | wird geholt, 1,2 GB | Debian, Ubuntu, Fedora, openSUSE, Arch — überall, wo Flatpak läuft |
 | **Windows-Installer** | rund 1,4 GB | fährt mit | Windows 11, 64 Bit; installiert ohne Administratorrechte |
+| **macOS-Abbild** | rund 1,4 GB | fährt mit | Macs mit Apple-Chip (M1 oder neuer); nicht signiert |
 | **Docker** | rund 4,2 GB | fährt mit | Betrieb als Dienst; Oberfläche im Browser |
 
 Wird das Modell geholt, **fragt der erste Start vorher**: er nennt
@@ -210,13 +211,24 @@ Unter Windows `MASCHERA-latest-x64-setup.exe` starten. Der Installer ist
 nicht signiert, deshalb warnt Windows beim ersten Start: «Weitere
 Informationen» → «Trotzdem ausführen».
 
+Unter macOS (nur Apple-Chip) `MASCHERA-latest-arm64.dmg` öffnen und `MASCHERA`
+in *Programme* ziehen. Die App ist nicht signiert, und neuere macOS-Fassungen
+lassen sie sich nicht per Rechtsklick öffnen. Einmal in *Terminal* die
+Quarantäne-Markierung entfernen:
+
+```fish
+xattr -dr com.apple.quarantine /Applications/MASCHERA.app
+```
+
+Der macOS-Bau ist neu und bisher auf einem Mac getestet.
+
 ### Docker
 
 Ein fertiges Abbild, rund 4,2 GB, das Modell fährt mit:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:1.0.1
+    ghcr.io/semprerudi/maschera:1.0.2
 ```
 
 Danach im Browser `http://127.0.0.1:4141` öffnen. Der Server speichert
@@ -243,7 +255,7 @@ fish tools/paket/bauen.fish                   # Docker
 `tools/paket/LIESMICH.md` beschreibt jeden Weg samt den Entscheiden
 dahinter, auch wie das Modell für AppImage und Docker geholt wird.
 `WINDOWS.md` beschreibt den Windows-Bau, wie er gelaufen ist; `MACOS.md`
-ist das Drehbuch für macOS und noch nicht gelaufen.
+beschreibt den macOS-Bau, der auf GitHub läuft (Workflow `macOS-Bau`, von Hand gestartet).
 
 ## Sofort loslegen
 

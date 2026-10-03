@@ -231,9 +231,8 @@
 
     <div class="paket">
       <h3 style="display:flex; align-items:baseline; gap:var(--s3); line-height:1"><span>macOS</span><svg viewBox="2.2 0 19.6 24" width="16.3" height="20" fill="currentColor" aria-hidden="true" style="flex:none; display:block"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"></path></svg></h3>
-      <p class="zeug" data-i18n="dl.mac">Gibt es leider noch nicht. Es wird daran gearbeitet. Schaue später wieder vorbei!</p>
-      <span class="marke-arbeit" data-i18n="dl.arbeit">In Arbeit</span>
-      <a class="knopf" aria-disabled="true" href="#" data-i18n="dl.nochnicht" style="font-size: 14px">Noch nicht verfügbar</a>
+      <p class="zeug" data-i18n-html="dl.mac">Abbild für Macs mit Apple-Chip (M1 oder neuer). Das Modell ist mit enthalten. Die App ist nicht signiert: Nach dem Ziehen in «Programme» einmal im Programm «Terminal» <code>xattr -dr com.apple.quarantine /Applications/MASCHERA.app</code> eingeben, sonst lässt sie sich nicht öffnen.</p>
+      <a class="knopf" href="https://github.com/semprerudi/maschera/releases/latest/download/MASCHERA-latest-arm64.dmg" rel="noopener noreferrer" data-datei="macos">macOS<span class="groesse">1,4 GB</span></a>
     </div>
   </div>
 
@@ -242,7 +241,7 @@
   <div class="raster-2" style="margin-top:var(--s12)">
     <div class="hinweis">
       <h3 data-i18n="dl.modellTitel">Der Hinweis zum Modell</h3>
-      <p data-i18n-html="dl.modell">Das Modell ist 1,2 GB gross. Die AppImage und der Windows-Installer tragen es mit. Das Flatpak holt es <strong>einmal beim ersten Start</strong>. Es kommt aus einer benannten Quelle, wird mit einer Prüfsumme kontrolliert und erst geladen, nachdem du zugestimmt hast. Wer gerade kein WLAN hat, lehnt ab und holt es ein andermal. Danach ist alles gleich offline.</p>
+      <p data-i18n-html="dl.modell">Das Modell ist 1,2 GB gross. Die AppImage, der Windows-Installer und das macOS-Abbild tragen es mit. Das Flatpak holt es <strong>einmal beim ersten Start</strong>. Es kommt aus einer benannten Quelle, wird mit einer Prüfsumme kontrolliert und erst geladen, nachdem du zugestimmt hast. Wer gerade kein WLAN hat, lehnt ab und holt es ein andermal. Danach ist alles gleich offline.</p>
     </div>
     <div>
       <h3 data-i18n="dl.archTitel">AppImage oder Flatpak?</h3>

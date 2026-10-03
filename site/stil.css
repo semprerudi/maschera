@@ -253,6 +253,9 @@ blockquote.verantwortung p:first-child { font-family: var(--schrift-titel); font
 .weitere a span { color: var(--leise); white-space: nowrap; }
 
 .knopf[aria-disabled="true"] { background: none; color: var(--leise); border-color: var(--linie); cursor: not-allowed; pointer-events: none; }
+/* Ein Befehl im Fliesstext einer Karte (macOS): Festbreitenschrift, darf umbrechen. */
+.zeug code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .85em;
+  overflow-wrap: anywhere; background: var(--flaeche); padding: .1em .35em; border-radius: 4px; }
 .marke-arbeit {
   display: inline-block; font-family: var(--schrift-titel); font-size: 12px; letter-spacing: 0.12em;
   text-transform: uppercase; color: var(--akzent-dunkel); align-self: start;

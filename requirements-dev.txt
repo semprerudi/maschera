@@ -19,7 +19,7 @@ transformers>=5.10        # Trainer, AutoModelForTokenClassification
 
 # --- Ausfuhr nach ONNX (tools/build_release.py) -----------------------
 onnx>=1.22                # Modellformat; ab 1.22 ohne bekannte Luecke
-onnxscript>=0.1           # `torch.onnx.export` braucht es ab torch 2.6
+onnxscript>=0.7.2           # `torch.onnx.export` braucht es ab torch 2.6
 
 # --- Auswertung -------------------------------------------------------
 pyyaml>=6.0               # steht auch in der Laufzeit, hier fuer Werkzeuge

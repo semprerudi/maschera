@@ -27,7 +27,7 @@ flask>=3.1.3          # der Kern, app/serve.py; ab 3.1.3 ohne bekannte Luecke
 # `jinja2>=3.1.2`, und beide Untergrenzen erlauben Fassungen mit bekannten
 # Luecken (pip-audit, 3.10.2026). Die zwei Zeilen heben nur die Schranke auf
 # die kleinste Fassung ohne bekannte Luecke; sie ziehen nichts Neues nach.
-werkzeug>=3.1.6       # Unterbau von Flask, siehe oben
+werkzeug>=3.1.9       # Unterbau von Flask, siehe oben
 jinja2>=3.1.6         # Vorlagen von Flask, siehe oben
 
 # gunicorn: der Flask-Entwicklungsserver ist fuer den Betrieb im Netz

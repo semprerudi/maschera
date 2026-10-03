@@ -65,12 +65,15 @@ jobs:
       - name: Rauchtest (Messwert fuer MACOS.md Abschnitt 6)
         continue-on-error: true
         run: |
+          # Kein `--port`: `fenster.py` kennt die Option nicht, die Adresse kommt
+          # aus den Einstellungen (Vorgabe 127.0.0.1:4141). Der erste Lauf scheiterte
+          # daran, nicht am Paket.
           MASCHERA_PFAD="dist/macos-bau/dist/MASCHERA.app/Contents/MacOS/MASCHERA"
-          "$MASCHERA_PFAD" --im-browser --port 4199 > rauchtest.log 2>&1 &
+          "$MASCHERA_PFAD" --im-browser > rauchtest.log 2>&1 &
           PID=$!
           ok=0
           for i in $(seq 1 90); do
-            if curl -fsS http://127.0.0.1:4199/api/zustand; then ok=1; break; fi
+            if curl -fsS http://127.0.0.1:4141/api/zustand; then ok=1; break; fi
             if ! kill -0 "$PID" 2>/dev/null; then echo "Der Prozess ist beendet."; break; fi
             sleep 2
           done
@@ -78,7 +81,7 @@ jobs:
           tail -80 rauchtest.log || true
           if kill -0 "$PID" 2>/dev/null; then echo "--- Prozess laeuft noch"; else echo "--- Prozess beendet"; fi
           if [ "$ok" != 1 ]; then
-            echo "::warning title=Rauchtest::Der Server auf Port 4199 hat nicht geantwortet"
+            echo "::warning title=Rauchtest::Der Server auf Port 4141 hat nicht geantwortet"
             exit 1
           fi
 

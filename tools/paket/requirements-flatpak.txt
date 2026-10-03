@@ -29,7 +29,7 @@ olefile>=0.46             # Outlook .msg
 
 # NUR die CPU-Fassung, und die Zeile unten erzwingt das NICHT — dieselbe
 # Falle wie in `requirements-paket.txt`, wo sie ausfuehrlich steht.
-torch>=2.13
+torch>=2.14.1+cpu
 transformers>=5.10
 
 # ⚠️ OHNE `[qt]`. Das Extra zieht PyQt6 nach, und genau das darf nicht

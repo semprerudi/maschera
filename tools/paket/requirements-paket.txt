@@ -67,6 +67,6 @@ olefile>=0.46         # Outlook .msg. Ohne sie laufen alle anderen weiter
 # Untergrenzen = kleinste Fassung ohne bekannte Luecke (pip-audit,
 # 3.10.2026): torch < 2.6 CVE-2025-32434, torch < 2.10 CVE-2026-24747,
 # transformers 4.56 bis 5.2 CVE-2026-4372.
-torch>=2.13
+torch>=2.14.1+cpu
 transformers>=5.10
 --extra-index-url https://download.pytorch.org/whl/cpu

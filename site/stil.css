@@ -3,35 +3,19 @@
    Farben und Masse stammen aus dem Stilblatt der Anwendung. */
 
 /* ── Schriften ───────────────────────────────────────────────────────────
-   Barlow und Barlow Condensed, dieselben Dateien wie in der Anwendung
-   (SIL Open Font License, schriften/OFL.txt). Je Schnitt zwei Teilmengen:
-   latin und latin-ext decken den amtlichen Zeichensatz der Schweizer
-   Personenregister ab. ────────────────────────────────────────────── */
+   Die vier .woff2 gehören nach schriften/ und werden hier eingebunden.
+   Bis sie geliefert sind, bleibt dieser Block auskommentiert und die Seite
+   nutzt die Systemschrift. Siehe schriften/LIESMICH.txt.
 
 @font-face { font-family:"Barlow"; font-style:normal; font-weight:400;
-  font-display:swap; src:url("schriften/Barlow-400-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-@font-face { font-family:"Barlow"; font-style:normal; font-weight:400;
-  font-display:swap; src:url("schriften/Barlow-400-latin-ext.woff2") format("woff2");
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  font-display:swap; src:url("schriften/barlow-400.woff2") format("woff2"); }
 @font-face { font-family:"Barlow"; font-style:normal; font-weight:500;
-  font-display:swap; src:url("schriften/Barlow-500-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-@font-face { font-family:"Barlow"; font-style:normal; font-weight:500;
-  font-display:swap; src:url("schriften/Barlow-500-latin-ext.woff2") format("woff2");
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  font-display:swap; src:url("schriften/barlow-500.woff2") format("woff2"); }
 @font-face { font-family:"Barlow"; font-style:normal; font-weight:700;
-  font-display:swap; src:url("schriften/Barlow-700-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-@font-face { font-family:"Barlow"; font-style:normal; font-weight:700;
-  font-display:swap; src:url("schriften/Barlow-700-latin-ext.woff2") format("woff2");
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  font-display:swap; src:url("schriften/barlow-700.woff2") format("woff2"); }
 @font-face { font-family:"Barlow Condensed"; font-style:normal; font-weight:600;
-  font-display:swap; src:url("schriften/BarlowCondensed-600-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-@font-face { font-family:"Barlow Condensed"; font-style:normal; font-weight:600;
-  font-display:swap; src:url("schriften/BarlowCondensed-600-latin-ext.woff2") format("woff2");
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  font-display:swap; src:url("schriften/barlow-condensed-600.woff2") format("woff2"); }
+──────────────────────────────────────────────────────────────────────── */
 
 :root {
   --bg: #fdfaf6;
@@ -53,8 +37,7 @@
   --s12: 48px; --s16: 64px; --s24: 96px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
+  :root[data-thema="dunkel"] {
     --bg: #191a18;
     --flaeche: #22241f;
     --text: #eeeae3;
@@ -66,11 +49,8 @@
     --linie: color-mix(in srgb, #eeeae3 20%, transparent);
     --leise: color-mix(in srgb, #eeeae3 66%, transparent);
   }
-}
 
 *, *::before, *::after { box-sizing: border-box; }
-
-picture { display: block; }
 
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
@@ -118,17 +98,6 @@ section:first-of-type { border-top: 0; }
 
 /* ── Wireframe-Rahmen ──────────────────────────────────────────────── */
 .rahmen { position: relative; border: 1px solid var(--linie); border-radius: 0; }
-.rahmen > i {
-  position: absolute; width: 11px; height: 11px;
-  color: color-mix(in srgb, var(--text) 55%, transparent);
-}
-.rahmen > i::before, .rahmen > i::after { content: ""; position: absolute; background: currentColor; }
-.rahmen > i::before { left: 5px; top: 0; width: 1px; height: 100%; }
-.rahmen > i::after  { top: 5px; left: 0; width: 100%; height: 1px; }
-.rahmen > i.tl { top: -6px; left: -6px; }
-.rahmen > i.tr { top: -6px; right: -6px; }
-.rahmen > i.bl { bottom: -6px; left: -6px; }
-.rahmen > i.br { bottom: -6px; right: -6px; }
 
 /* ── Kopf ──────────────────────────────────────────────────────────── */
 .kopf {
@@ -143,17 +112,17 @@ section:first-of-type { border-top: 0; }
 }
 .marke { display: flex; align-items: center; gap: var(--s3); text-decoration: none; color: inherit; margin-right: auto; }
 .marke img { width: 30px; height: 30px; display: block; }
-@media (prefers-color-scheme: dark) { .marke img { filter: invert(1); } }
+:root[data-thema="dunkel"] .marke img { filter: invert(1); }
 .wortmarke { font-family: var(--schrift-titel); font-size: 23px; letter-spacing: 0.06em; font-weight: 500; }
 /* Gleiche Schriftstärke für alle Zeichen — CH wird über die Strichbreite
    fett gemacht, damit Versalhöhe und Breite unverändert bleiben. */
-.ch { color: inherit; font-weight: inherit; -webkit-text-stroke: 0.7px currentColor; }
+.che { color: inherit; font-weight: inherit; -webkit-text-stroke: 0.7px currentColor; }
 .kopf-navi { display: flex; gap: var(--s4); }
 .kopf-navi a { font-family: var(--schrift-titel); font-size: 16px; letter-spacing: 0.04em; text-decoration: none; color: var(--text); }
 .kopf-navi a:hover { color: var(--akzent-dunkel); }
 @media (max-width: 860px) { .kopf-navi { display: none; } }
 
-.sprachen { display: flex; border: 1px solid var(--linie); }
+.sprachen { display: flex; border: 1px solid var(--linie); border-radius: 4px; overflow: hidden; }
 .sprachen button {
   font: inherit; font-family: var(--schrift-titel); font-size: 14px; letter-spacing: 0.06em;
   text-transform: uppercase; background: none; border: 0; border-left: 1px solid var(--linie);
@@ -169,7 +138,7 @@ section:first-of-type { border-top: 0; }
   position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--s2);
   font-family: var(--schrift-titel); font-weight: 600; font-size: 17px; letter-spacing: 0.02em;
   padding: 11px 20px; border: 1px solid var(--akzent); background: var(--akzent); color: #fff;
-  text-decoration: none; border-radius: 0; cursor: pointer;
+  text-decoration: none; border-radius: 4px; cursor: pointer;
   text-align: center; align-self: start; min-height: 49px;
 }
 .knopf:hover { background: #14351f; border-color: #14351f; color: #fff; }
@@ -197,15 +166,13 @@ mark.p-street { background: #f6f2e4; border-color: #b9a35c; color: #5f5019; }
 mark.p-num    { background: #fdf3dd; border-color: #d9a72c; color: #7a4f0c; }
 mark.p-zip    { background: #fdf0e6; border-color: #c98a4e; color: #7d461a; }
 mark.p-city   { background: #f8ecf8; border-color: #b968b9; color: #7d2a7d; }
-@media (prefers-color-scheme: dark) {
-  mark.platz { background: color-mix(in srgb, currentColor 16%, transparent); }
-  mark.p-name   { color: #c3a8f0; border-color: #8a6bd0; }
-  mark.p-ahv    { color: #86ccc0; border-color: #4fa89b; }
-  mark.p-street { color: #cfbd7d; border-color: #b9a35c; }
-  mark.p-num    { color: #e8c375; border-color: #d9a72c; }
-  mark.p-zip    { color: #e0a97c; border-color: #c98a4e; }
-  mark.p-city   { color: #dda2dd; border-color: #b968b9; }
-}
+  :root[data-thema="dunkel"] mark.platz { background: color-mix(in srgb, currentColor 16%, transparent); }
+  :root[data-thema="dunkel"] mark.p-name { color: #c3a8f0; border-color: #8a6bd0; }
+  :root[data-thema="dunkel"] mark.p-ahv { color: #86ccc0; border-color: #4fa89b; }
+  :root[data-thema="dunkel"] mark.p-street { color: #cfbd7d; border-color: #b9a35c; }
+  :root[data-thema="dunkel"] mark.p-num { color: #e8c375; border-color: #d9a72c; }
+  :root[data-thema="dunkel"] mark.p-zip { color: #e0a97c; border-color: #c98a4e; }
+  :root[data-thema="dunkel"] mark.p-city { color: #dda2dd; border-color: #b968b9; }
 @media (max-width: 720px) { .beispiel { grid-template-columns: 1fr; } }
 
 /* ── Platzhalterbilder ─────────────────────────────────────────────── */
@@ -216,6 +183,10 @@ mark.p-city   { background: #f8ecf8; border-color: #b968b9; color: #7d2a7d; }
 }
 .schirm { display: block; width: 100%; height: auto; }
 figure.rahmen .schirm { border: 0; }
+.schritt .schirm.zusatz { aspect-ratio: auto; object-fit: contain; margin-top: var(--s3); }
+.schirm.nur-dunkel { display: none; }
+:root[data-thema="dunkel"] .schirm.nur-hell { display: none; }
+:root[data-thema="dunkel"] .schirm.nur-dunkel { display: block; }
 .schritt .schirm { aspect-ratio: 4 / 3; object-fit: cover; object-position: top left; margin-top: var(--s4); border: 1px solid var(--linie); }
 
 .platzhalter b { font-family: var(--schrift-titel); font-size: 15px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--akzent-dunkel); }
@@ -251,7 +222,6 @@ td.stufe { color: var(--akzent-dunkel); }
   margin: 0 0 var(--s4); font-size: 21px;
   display: flex; align-items: baseline; gap: var(--s3);
 }
-.stufen-titel::before { content: "+"; color: var(--akzent-dunkel); font-size: 24px; line-height: 1; }
 
 /* ── Prüfen ────────────────────────────────────────────────────────── */
 .hinweis { background: var(--flaeche); border-left: 3px solid var(--akzent); padding: var(--s4) var(--s6); }
@@ -270,6 +240,17 @@ blockquote.verantwortung p:first-child { font-family: var(--schrift-titel); font
 
 .knopfstapel { display: flex; flex-direction: column; gap: var(--s2); }
 .knopfstapel .knopf { width: 100%; }
+.teilknopf { display: flex; align-items: stretch; }
+.teilknopf .knopf { flex: 1; align-self: stretch; }
+.teilknopf .auf { flex: 0 0 auto; width: 36px; min-width: 36px; padding: 0; border-left: 1px solid color-mix(in srgb, #fff 45%, transparent); }
+.teilknopf .auf::after { content: ""; width: 8px; height: 8px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translate(-2px, -2px); }
+.teilknopf .auf[aria-expanded="true"]::after { transform: rotate(225deg) translate(-1px, -1px); }
+.weitere { display: none; flex-direction: column; gap: var(--s2); margin-top: var(--s2); }
+.weitere[data-offen="true"] { display: flex; }
+.weitere a { display: flex; justify-content: space-between; gap: var(--s3); border: 1px solid var(--linie); padding: 8px 12px; text-decoration: none; color: var(--text); font-size: 15px; }
+.weitere a:hover { background: color-mix(in srgb, var(--akzent) 12%, transparent); border-color: var(--akzent); }
+.weitere a b { font-family: var(--schrift-titel); font-weight: 600; }
+.weitere a span { color: var(--leise); white-space: nowrap; }
 
 .knopf[aria-disabled="true"] { background: none; color: var(--leise); border-color: var(--linie); cursor: not-allowed; pointer-events: none; }
 .marke-arbeit {
@@ -289,3 +270,54 @@ footer { border-top: 1px solid var(--linie); padding: var(--s12) 0; font-size: 1
 footer .zeilen { display: flex; flex-wrap: wrap; gap: var(--s6); justify-content: space-between; }
 
 .tbd { border-bottom: 1px dashed var(--akzent); color: var(--akzent-dunkel); }
+
+.thema {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; padding: 0; margin-left: var(--s2); border-radius: 4px;
+  border: 1px solid var(--linie); background: transparent; color: var(--text); cursor: pointer;
+}
+.thema:hover { border-color: var(--akzent); color: var(--akzent-dunkel); }
+.thema svg { width: 18px; height: 18px; display: block; }
+.thema .sonne { display: none; }
+:root[data-thema="dunkel"] .thema .mond { display: none; }
+:root[data-thema="dunkel"] .thema .sonne { display: block; }
+
+/* Vergrösserte Schirmbilder */
+img.schirm { cursor: zoom-in; }
+.zoom-grund {
+  position: fixed; inset: 0; z-index: 100; cursor: zoom-out;
+  background: rgba(12,13,11,.72);
+}
+.zoom-bild {
+  position: fixed; display: block; max-width: none;
+  transform-origin: 0 0; box-shadow: 0 0 0 1px rgba(255,255,255,.12);
+  background: var(--bg);
+}
+html.zoom-offen { overflow: hidden; }
+
+/* ── Handy ─────────────────────────────────────────────────────────── */
+html, body { overflow-x: clip; }
+@media (max-width: 620px) {
+  .bereich { padding-left: var(--s4); padding-right: var(--s4); }
+  section { padding-top: var(--s16); padding-bottom: var(--s16); }
+  .kopf-inhalt { padding: var(--s2) var(--s4); gap: var(--s2); }
+  .marke { gap: var(--s2); min-width: 0; }
+  .marke img { width: 24px; height: 24px; }
+  .wortmarke { font-size: 18px; letter-spacing: 0.04em; }
+  .sprachen button { padding: 4px 7px; font-size: 13px; }
+  .thema { margin-left: 0; flex: 0 0 auto; }
+  .zeile { white-space: normal; overflow-wrap: anywhere; line-height: 1.9; }
+  mark.platz { white-space: normal; overflow-wrap: anywhere; }
+  .beispiel > div { padding: var(--s4); }
+  .stufen { padding: var(--s4); }
+  .stufen table, .stufen thead, .stufen tbody, .stufen tr, .stufen th, .stufen td { display: block; width: 100%; }
+  .stufen thead { display: none; }
+  .stufen tr { border-bottom: 1px solid var(--linie); padding: var(--s3) 0; }
+  .stufen td { border: 0; padding: 0; }
+  .stufen td.stufe, .stufen td.moegl { white-space: normal; margin-bottom: var(--s1); }
+  table { display: block; overflow-x: auto; }
+  td.stufe, td.moegl { white-space: normal; }
+  .knopf { white-space: normal; }
+  blockquote.verantwortung { padding: var(--s6) var(--s4); }
+  .hinweis { padding: var(--s4); }
+}

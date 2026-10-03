@@ -42,6 +42,34 @@ BAU = WURZEL / "dist" / "macos-bau"
 MODELL = wb.MODELL
 
 
+# Die Vorlage fuer das Symbol: 1024 Pixel, die Maske auf abgerundeter Flaeche
+# wie ein macOS-Symbol. Erzeugt mit `fish tools/paket/macos_symbol_bauen.fish`.
+SYMBOL_PNG = Path(__file__).with_name("macos-symbol-1024.png")
+
+
+def symbol_bauen(ziel: Path) -> Path:
+    """Aus der Vorlage ein `.icns` machen — mit den Bordmitteln von macOS.
+
+    ⚠️ Ohne `--icon` zeigt macOS das allgemeine Symbol einer App (beim
+    ersten Test sah es aus wie eine Diskette). PyInstaller will fuer macOS
+    ein `.icns`; `sips` und `iconutil` gehoeren zu macOS und brauchen keine
+    zusaetzliche Bibliothek.
+    """
+    satz = ziel / "MASCHERA.iconset"
+    satz.mkdir(parents=True)
+    for kante in (16, 32, 128, 256, 512):
+        for faktor in (1, 2):
+            px = kante * faktor
+            name = f"icon_{kante}x{kante}{'@2x' if faktor == 2 else ''}.png"
+            subprocess.run(["sips", "-z", str(px), str(px), str(SYMBOL_PNG),
+                            "--out", str(satz / name)],
+                           check=True, capture_output=True)
+    icns = ziel / "MASCHERA.icns"
+    subprocess.run(["iconutil", "-c", "icns", str(satz), "-o", str(icns)],
+                   check=True)
+    return icns
+
+
 def main() -> int:
     if sys.platform != "darwin":
         raise SystemExit("Dieses Skript baut unter macOS.")
@@ -71,11 +99,13 @@ def main() -> int:
     modell = BAU / "modell" / MODELL
     wb.modell_zusammenstellen(modell)
 
+    symbol = symbol_bauen(BAU)
     trenner = os.pathsep
     argumente = [
         str(BAU / "windows_start.py"), "--noconfirm", "--windowed",
         "--name", "MASCHERA",
         "--osx-bundle-identifier", "ch.maschera.Maschera",
+        "--icon", str(symbol),
         "--paths", str(BAU),
         "--distpath", str(BAU / "dist"),
         "--workpath", str(BAU / "arbeit"),

@@ -1,5 +1,8 @@
 """Die Projektseite unter `site/` — vollstaendig, in vier Sprachen, ohne Nachladen.
 
+`site/` ist, was unter www.maschera.ch online steht (`tools/seite.py` spiegelt
+und vergleicht).
+
     python3 tests/test_webseite.py
 
 Die Seite wirbt damit, dass MASCHERA nichts von aussen laedt und nichts
@@ -53,24 +56,30 @@ if not failures:
     print(f"   OK   {len(_geladen)} geladene Dateien, alle lokal")
 
 
-print("\n2. Jede geladene Datei liegt da, jedes Bild in hell UND dunkel")
+print("\n2. Jede geladene Datei liegt da, jedes Bild in jeder Sprache, hell UND dunkel")
 _vorher = len(failures)
 for _u in _geladen:
     check((SITE / _u).is_file(), f"index.html verweist auf {_u} — fehlt")
-for _u in re.findall(r'url\("([^"]+)"\)', CSS):
+# ⚠️ Kommentare zuerst weg: der Schriftenblock steht im Stilblatt
+# AUSKOMMENTIERT («bis sie geliefert sind»), und ein Verweis im Kommentar ist
+# keine Datei, die die Seite braucht. Ohne diesen Schritt schlug die Wache an
+# vier Dateien an, die es nicht geben muss.
+_css_code = re.sub(r"/\*.*?\*/", "", CSS, flags=re.S)
+for _u in re.findall(r'url\(\s*["\']?([^"\')]+)["\']?\s*\)', _css_code):
     check((SITE / _u).is_file(), f"stil.css verweist auf {_u} — fehlt")
-_hell = set(re.findall(r'src="bilder/hell/([^"]+)"', HTML))
-_dunkel = set(re.findall(r'srcset="bilder/dunkel/([^"]+)"', HTML))
-check(_hell, "keine Bildschirmfotos unter bilder/hell/ verwendet")
-check(_hell == _dunkel,
-      f"hell und dunkel ungleich: nur hell {sorted(_hell - _dunkel)}, "
-      f"nur dunkel {sorted(_dunkel - _hell)}")
-for _b in sorted(_hell):
-    for _art in ("hell", "dunkel"):
-        check((SITE / "bilder" / _art / _b).is_file(),
-              f"bilder/{_art}/{_b} fehlt")
+# Die Bilder liegen je Sprache unter `bilder/<sprache>/<name>.png`, das
+# dunkle Gegenstueck mit Endung `-dunkel`. Das HTML nennt die deutschen;
+# `sprachen.js` waehlt den Ordner zur Sprache.
+_bilder = sorted({m for m in re.findall(r'bilder/de/([\w-]+)\.png', HTML)
+                  if not m.endswith("-dunkel")})
+check(_bilder, "keine Bildschirmfotos unter bilder/de/ verwendet")
+for _b in _bilder:
+    for _spr in ("de", "fr", "it", "en"):
+        for _fassung in (_b, _b + "-dunkel"):
+            check((SITE / "bilder" / _spr / f"{_fassung}.png").is_file(),
+                  f"bilder/{_spr}/{_fassung}.png fehlt")
 if len(failures) == _vorher:
-    print(f"   OK   {len(_hell)} Bildschirmfotos in beiden Designs")
+    print(f"   OK   {len(_bilder)} Bildschirmfotos, vier Sprachen, hell und dunkel")
 
 
 print("\n3. Jeder Textschluessel steht in allen vier Sprachen")

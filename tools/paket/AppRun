@@ -33,7 +33,10 @@ MODELL="$HERE/usr/lib/maschera/runs/ch-v63b"
 # einen haben soll — `core/einstellungen.VORGABE_PORT`.
 #
 # `MASCHERA_PORT` gibt es weiterhin, aber nur als ausdrueckliche
-# Uebersteuerung fuer diesen einen Start.
+# Uebersteuerung fuer diesen einen Start. Sie bleibt in der Umgebung, und
+# `fenster.py` liest sie selbst (`port_uebersteuerung`). Bis 1.0.1 gab dieses
+# Skript sie als `--port` weiter — eine Option, die `fenster.py` nicht kennt:
+# wer die Variable setzte, bekam einen Abbruch.
 
 # EIN EIGENES FENSTER, kein Browser. `app/fenster.py` traegt den Dienst in
 # einem Faden und das Fenster im Hauptprogramm; Adresse und Port kommen aus
@@ -44,4 +47,4 @@ MODELL="$HERE/usr/lib/maschera/runs/ch-v63b"
 # ist nicht die Vorgabe und faellt nicht still ein.
 exec "$HERE/usr/python/bin/python3" \
     "$HERE/usr/lib/maschera/app/fenster.py" --model "$MODELL" \
-    ${MASCHERA_PORT:+--port "$MASCHERA_PORT"} "$@"
+    "$@"

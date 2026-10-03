@@ -98,3 +98,6 @@ jobs:
           name: MASCHERA-macOS-dmg
           path: dist/MASCHERA-*.dmg
           retention-days: 7
+          # Das .dmg ist schon komprimiert: ein zweites Mal zu packen kostet
+          # Zeit beim Hochladen und beim Entpacken und spart nichts.
+          compression-level: 0

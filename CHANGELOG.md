@@ -1,5 +1,34 @@
 # Änderungen
 
+## 1.0.2 – 2026-10-03
+
+Gefunden beim ersten Test auf macOS und durch CodeQL.
+
+### Behoben
+- «Kopieren und … öffnen» tat unter macOS nichts: `window.open` verliert dort
+  nach dem Kopieren die Nutzergeste, und pywebview baut kein Popup. Unter macOS
+  und Windows öffnet jetzt die Anwendung die Adresse im Standardbrowser, und nur
+  eine Adresse aus den eigenen Diensten. Linux und der Browser bleiben, wie sie
+  waren.
+- macOS: die App hat ein eigenes Symbol (vorher das allgemeine einer App).
+- `MASCHERA_PORT` im AppImage: das Startskript gab `--port` an das Fenster
+  weiter, das diese Option nicht kennt; wer die Variable setzte, bekam einen
+  Abbruch. Jetzt gilt sie als Übersteuerung für diesen einen Start und wird
+  nicht gespeichert.
+
+### Sicherheit
+- Antworten der lokalen Schnittstelle nennen den Text einer Bibliotheks-Ausnahme
+  nicht mehr (CodeQL `py/stack-trace-exposure`). Bis 1.0.1 stand dort etwa der
+  Pfad einer temporären Datei; bei der Docker-Fassung im Netz verriet das
+  Serverpfade. Der Text steht im Protokoll des Servers.
+
+### Bekannt
+- macOS: die App ist nicht signiert. Unter neueren macOS-Fassungen genügt
+  «Rechtsklick → Öffnen» nicht; es braucht in der Konsole
+  `xattr -dr com.apple.quarantine /Applications/MASCHERA.app`.
+- macOS: beim Start meldet ein Hilfsprozess eine Fehlerzeile zu
+  `multiprocessing.resource_tracker`. Sie stört den Betrieb nicht.
+
 ## 1.0.1 – 2026-10-03
 
 ### Sicherheit

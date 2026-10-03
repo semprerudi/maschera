@@ -78,7 +78,7 @@ from filter_document import Mitschreiber  # noqa: E402
 # hier heraus. `tests/test_fenster.py` Punkt 7 prueft, dass es bei dieser
 # einen Stelle bleibt. In einem Fehlerbericht sagt sie, welcher Stand
 # gemeint ist.
-VERSION = "1.0.1"
+VERSION = "1.0.2"
 
 # Mehr nimmt der Server nicht an. Ein Dokument ist laut Messung 1500 bis 4500
 # Zeichen; 10 MB fangen auch ein PDF mit Bildern ab, ohne dass ein
@@ -393,13 +393,21 @@ def baue(z: Zustand) -> Flask:
         Sprachen in `maschera.js`. Sonst der allgemeine `schluessel` OHNE den
         Text der Ausnahme: der stammt aus einer Bibliothek oder vom
         Betriebssystem, ist englisch oder in der Sprache des Systems und traegt
-        mitunter einen temporaeren Pfad. `fehler` behaelt ihn fuer die
-        Kommandozeile und die API.
+        mitunter einen temporaeren Pfad.
+
+        ⚠️ Bis 1.0.1 blieb dieser Text in `fehler` («fuer die Kommandozeile und
+        die API»). Bei der Docker-Fassung im Netz verriet das Serverpfade an
+        jeden Aufrufer; CodeQL meldete es (`py/stack-trace-exposure`). Jetzt
+        steht er im Protokoll des Servers (Standardfehlerausgabe) und nicht
+        mehr in der Antwort. Nur `Abbruch` mit eigenem Schluessel traegt
+        seinen Satz weiter — der ist von uns geschrieben.
         """
         if getattr(e, "schluessel", None):
             return fehler(f"{vorsatz}: {e}", schluessel=e.schluessel,
                           **getattr(e, "werte", {}))
-        return fehler(f"{vorsatz}: {e}", schluessel=schluessel)
+        print(f"{vorsatz}: {type(e).__name__}: {e}", file=sys.stderr,
+              flush=True)
+        return fehler(vorsatz, schluessel=schluessel)
 
     def fehler(nachricht: str, code: int = 400,
                hinweise: list[dict] | None = None,
@@ -846,7 +854,11 @@ def baue(z: Zustand) -> Flask:
             else:
                 schluessel, werte = "regeldatei_fehlerhaft", {}
             return jsonify({"pfad": str(pfad), "yaml": _lies_roh(pfad),
-                            "regeln": [], "fehler": str(e),
+                            "regeln": [],
+                            # Nur der eigene Satz; der Text einer fremden
+                            # Ausnahme gehoert nicht in die Antwort.
+                            "fehler": (str(e) if getattr(e, "schluessel", None)
+                                       else "Regeldatei fehlerhaft"),
                             "fehler_schluessel": schluessel,
                             "fehler_werte": werte})
         return jsonify({

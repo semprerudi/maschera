@@ -37,6 +37,7 @@ SUITE = [
     ("Langes Dokument", "tests/test_langes_dokument.py"),
     ("Fenster",         "tests/test_fenster.py"),
     ("Projektseite",    "tests/test_webseite.py"),
+    ("Seiten-Upload",   "tests/test_seite.py"),
     ("Oberflaechenlogik", "tests/test_oberflaeche.js"),
 ]
 

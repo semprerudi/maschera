@@ -1384,7 +1384,32 @@ check(not [n for n in vars(_k) if not n.startswith("_")],
       "die kleine Bruecke traegt oeffentliche Felder")
 _km = sorted(n for n in dir(_k)
              if not n.startswith("_") and callable(getattr(_k, n)))
-check(_km == ["neustart"], f"die kleine Bruecke bietet {_km} an")
+check(_km == ["neustart", "oeffne_dienst"],
+      f"die kleine Bruecke bietet {_km} an, erwartet neustart, oeffne_dienst")
+
+# `oeffne_dienst` oeffnet NUR eine Adresse aus den eigenen Diensten. Eine
+# Methode, die jede Adresse oeffnete, liesse die Seite den Browser des
+# Anwenders steuern. Geprueft am echten Aufruf, mit eingesetztem Oeffner.
+_dienste = {"https://claude.ai/new", "https://chatgpt.com/"}
+_geoeffnet = []
+_oeff = lambda u: _geoeffnet.append(u) or True                    # noqa: E731
+check(fenster.dienst_oeffnen("https://claude.ai/new", _dienste, _oeff) is True
+      and _geoeffnet == ["https://claude.ai/new"],
+      "ein eigener Dienst wird nicht geoeffnet")
+for _fremd in ("https://boese.example/", "javascript:alert(1)",
+               "file:///etc/passwd", "claude.ai", "", None, 5,
+               "https://claude.ai/new#x", "http://claude.ai/new"):
+    _geoeffnet.clear()
+    check(fenster.dienst_oeffnen(_fremd, _dienste, _oeff) is False
+          and not _geoeffnet,
+          f"eine fremde Adresse wurde geoeffnet: {_fremd!r}")
+# Auch eine Adresse in der Liste, die kein http(s) ist, geht nicht.
+_geoeffnet.clear()
+check(fenster.dienst_oeffnen("file:///x", {"file:///x"}, _oeff) is False
+      and not _geoeffnet, "ein file:// aus der Liste wurde geoeffnet")
+# Ohne eigene Liste gilt die gespeicherte: ein fremder Eintrag bleibt zu.
+check(fenster.dienst_oeffnen("https://boese.example/", None, _oeff) is False,
+      "die Vorgabeliste laesst eine fremde Adresse zu")
 
 # Der Nachfolger startet auf demselben Weg — und wartet auf den Vorgaenger.
 _nb = fenster.neustart_befehl
@@ -1544,6 +1569,32 @@ with _tf.TemporaryDirectory() as _tmp25:
 if not failures:
     print("   OK   Docker, AppImage und Windows lassen Pickle und Checkpoints weg")
 
+print("\n27. Was das AppRun an fenster.py weitergibt, kennt fenster.py")
+# ⚠️ Bis 1.0.1 gab das `AppRun` `MASCHERA_PORT` als `--port` weiter — eine
+# Option, die `fenster.py` nicht hat. Wer die Variable setzte, bekam einen
+# Abbruch von argparse; der Kommentar im Skript versprach das Gegenteil.
+# Geprueft wird die EIGENSCHAFT: jede `--option` im Aufruf von `fenster.py`
+# gibt es dort. Und die Uebersteuerung selbst, am echten Aufruf.
+_optionen = set(re.findall(r'add_argument\(\s*"(--[\w-]+)"',
+                           (WURZEL / "app/fenster.py").read_text(encoding="utf-8")))
+check({"--model", "--im-browser"} <= _optionen,
+      f"die Optionen von fenster.py nicht gefunden: {sorted(_optionen)}")
+_apprun = ohne_kommentare((WURZEL / "tools/paket/AppRun").read_text(encoding="utf-8"))
+_aufruf = _apprun[_apprun.index("fenster.py"):]
+_gegeben = set(re.findall(r"(?<![\w-])(--[\w-]+)", _aufruf))
+check(_gegeben <= _optionen,
+      f"AppRun gibt {sorted(_gegeben - _optionen)} an fenster.py weiter — "
+      f"das kennt es nicht")
+check(fenster.port_uebersteuerung({"MASCHERA_PORT": "4242"}) == 4242
+      and fenster.port_uebersteuerung({"MASCHERA_PORT": " 4242 "}) == 4242,
+      "MASCHERA_PORT=4242 wird nicht gelesen")
+for _schlecht in ("", "abc", "0", "70000", "-5", "42.5"):
+    check(fenster.port_uebersteuerung({"MASCHERA_PORT": _schlecht}) is None,
+          f"MASCHERA_PORT={_schlecht!r} gilt als Portnummer")
+check(fenster.port_uebersteuerung({}) is None, "ohne Variable gilt ein Port")
+if not failures:
+    print("   OK   AppRun gibt nur bekannte Optionen weiter; MASCHERA_PORT gelesen")
+
 print("\n26. Der macOS-Bau teilt die Listen mit Windows, die Workflows sind zahm")
 # ⚠️ `macos_bauen.py` ist neu und auf einem Mac noch nicht gemessen. Was sich
 # pruefen laesst, ohne einen Mac zu haben, ist die EIGENSCHAFT, an der ein
@@ -1564,6 +1615,18 @@ for _name in ("wb.zusammenstellen(", "wb.modell_zusammenstellen(",
               "wb.importe()", "wb.DATEN"):
     check(_name in _mac, f"macos_bauen.py benutzt {_name} nicht — dann "
           "laufen die Listen von Windows und macOS auseinander")
+# Das macOS-Paket traegt ein Symbol. Ohne `--icon` zeigt macOS das allgemeine
+# einer App (der erste Test sah eine Diskette) — und der Bau meldet trotzdem
+# «FERTIG». Geprueft: die Vorlage ist da und 1024 × 1024, und der Bau uebergibt
+# ein `.icns` an PyInstaller.
+_png = WURZEL / "tools/paket/macos-symbol-1024.png"
+check(_png.is_file(), "tools/paket/macos-symbol-1024.png fehlt")
+if _png.is_file():
+    _kopf = _png.read_bytes()[:24]
+    _b, _h = int.from_bytes(_kopf[16:20], "big"), int.from_bytes(_kopf[20:24], "big")
+    check((_b, _h) == (1024, 1024), f"das macOS-Symbol misst {_b}x{_h}")
+check('"--icon"' in _mac and "iconutil" in _mac and "symbol_bauen(" in _mac,
+      "macos_bauen.py gibt PyInstaller kein Symbol mit (--icon, iconutil)")
 _wfs = sorted((WURZEL / ".github" / "workflows").glob("*.yml")) \
     if (WURZEL / ".github" / "workflows").is_dir() else []
 if not _wfs:

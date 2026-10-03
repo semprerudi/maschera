@@ -251,11 +251,11 @@ ist das Drehbuch für macOS und noch nicht gelaufen.
 python3 tools/run_tests.py
 ```
 
-Zweiunddreissig Prüfungen, keine Abhängigkeiten ausser PyYAML und Flask.
-Kein Modell, keine GPU, keine Downloads nötig — **einunddreissig laufen in einem
+Dreiunddreissig Prüfungen, keine Abhängigkeiten ausser PyYAML und Flask.
+Kein Modell, keine GPU, keine Downloads nötig — **zweiunddreissig laufen in einem
 frischen Klon sofort durch.**
 
-Die zweiunddreissigste braucht das Modell und sagt es; zwei weitere lassen je
+Die dreiunddreissigste braucht das Modell und sagt es; zwei weitere lassen je
 einen Punkt aus, solange die Nomenklatur nicht gebaut ist
 (`python3 packs/ch/nomenclatures/build.py`). Beides steht in der Ausgabe
 — **eine übersprungene Prüfung hat nichts geprüft**, und der Läufer
@@ -309,7 +309,7 @@ tools/             Werkzeuge
 site/              die Projektseite (www.maschera.ch)
 
 train.py           Training (braucht torch + GPU)
-tests/             einunddreissig Prüfdateien
+tests/             zweiunddreissig Prüfdateien
 ```
 
 ## Die eine Regel

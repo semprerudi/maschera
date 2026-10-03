@@ -2,10 +2,19 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
+<script>
+(function () {
+  var t = null;
+  try { t = localStorage.getItem("maschera.thema"); } catch (e) {}
+  if (t !== "hell" && t !== "dunkel") t = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dunkel" : "hell";
+  document.documentElement.setAttribute("data-thema", t);
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MASCHERA — Personendaten maskieren, auf deinem Gerät</title>
-<meta name="description" content="MASCHERA maskiert Personendaten in Schweizer Dokumenten — auf deinem Gerät, im Betrieb ohne Netzwerkverbindung.">
-<link rel="icon" href="bilder/maske-icon.png" type="image/png">
+<title>MASCHERA: Personendaten maskieren, auf deinem Gerät</title>
+<meta name="description" content="MASCHERA maskiert Personendaten in Schweizer Dokumenten, lokal auf deinem Gerät und ohne Netzwerkverbindung.">
+<link rel="icon" href="bilder/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="bilder/favicon.png">
 <link rel="stylesheet" href="stil.css">
 </head>
 <body>
@@ -14,7 +23,7 @@
   <div class="kopf-inhalt">
     <a class="marke" href="#oben">
       <img src="bilder/maske-icon.png" alt="">
-      <span class="wortmarke">MAS<span class="ch">CH</span>ERA</span>
+      <span class="wortmarke">MAS<span class="che">CH</span>ERA</span>
     </a>
     <nav class="kopf-navi" aria-label="Seitenabschnitte">
       <a href="#merkmale" data-i18n="nav.merkmale">Merkmale</a>
@@ -28,6 +37,10 @@
       <button type="button" data-sprache="it" aria-pressed="false" lang="it">it</button>
       <button type="button" data-sprache="en" aria-pressed="false" lang="en">en</button>
     </div>
+    <button class="thema" type="button" data-i18n-attr="aria-label:thema.label" aria-label="Hell/Dunkel umschalten">
+      <svg class="sonne" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2.5v2.5M12 19v2.5M2.5 12h2.5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"></path></svg>
+      <svg class="mond" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"></path></svg>
+    </button>
   </div>
 </header>
 
@@ -36,8 +49,8 @@
 <!-- 1 · Kopf ─────────────────────────────────────────────────────────── -->
 <section class="bereich" style="padding-top:var(--s16)">
   <p class="kicker" data-i18n="hero.kicker">Freie Software · Open Source · läuft ohne Netz</p>
-  <h1 data-i18n="hero.titel">MASCHERA maskiert Personendaten in Schweizer Dokumenten — auf deinem Gerät, im Betrieb ohne Netzwerkverbindung.</h1>
-  <p class="fuehrung" data-i18n="hero.lead">Du hast ein Schreiben, einen Mailverlauf oder ein PDF und willst ein KI-Werkzeug darüber fragen — aber die Namen, AHV-Nummern und Adressen sollen nicht mit.</p>
+  <h1 data-i18n-html="hero.titel" style="font-size: 40px">MASCHERA maskiert Personendaten in Schweizer Dokumenten<span style="display:block; font-size:0.75em; line-height:1.3; margin-top:0.3em">Das geschieht auf deinem Gerät, immer lokal, ohne Netzwerkverbindung!</span></h1>
+  <p class="fuehrung" data-i18n="hero.lead">Du hast ein Schreiben, einen Mailverlauf oder ein PDF und willst ein KI-Werkzeug dazu befragen. Die Namen, AHV-Nummern und Adressen sollen dabei aber nicht mitgehen.</p>
   <p style="display:flex;gap:var(--s4);flex-wrap:wrap;margin-top:var(--s8)">
     <a class="knopf" href="#herunterladen" data-i18n="hero.knopf1">Herunterladen</a>
     <a class="knopf zweit" href="#ablauf" data-i18n="hero.knopf2">Wie es funktioniert</a>
@@ -64,11 +77,7 @@
 <!-- 3 · Schirmbild ───────────────────────────────────────────────────── -->
 <section class="bereich" style="border-top:0;padding-top:0">
   <figure class="rahmen" style="margin:0">
-    <i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i>
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="bilder/dunkel/hero.png">
-      <img class="schirm" src="bilder/hell/hero.png" alt="" data-i18n-attr="alt:bild.gross">
-    </picture>
+    <img class="schirm nur-hell" src="bilder/de/hero.png" data-bild="hero" alt="" data-i18n-attr="alt:bild.gross"><img class="schirm nur-dunkel" src="bilder/de/hero-dunkel.png" data-bild="hero-dunkel" alt="" data-i18n-attr="alt:bild.gross" loading="lazy">
   </figure>
 </section>
 
@@ -80,22 +89,22 @@
     <div class="merkmal">
       <span class="nr">01</span>
       <h3 data-i18n="m1.titel">Es läuft auf deinem Gerät</h3>
-      <p data-i18n-html="m1.text">Die ganze Erkennung läuft lokal. Im Betrieb wird <strong>nichts</strong> nachgeladen und <strong>nichts</strong> gesendet — keine Schriften, keine Symbole, keine Statistik. Einen Endpunkt, der Text verschickt, gibt es nicht und wird es nicht geben; der Weg nach draussen führt immer über deine Zwischenablage.</p>
+      <p data-i18n-html="m1.text">Die ganze Erkennung läuft lokal. Im Betrieb wird <strong>nichts</strong> nachgeladen und <strong>nichts</strong> gesendet: keine Schriften, keine Symbole, keine Statistik. Einen Endpunkt, der Text verschickt, gibt es nicht und wird es nicht geben. Der Weg nach draussen führt immer über deine Zwischenablage.</p>
     </div>
     <div class="merkmal">
       <span class="nr">02</span>
       <h3 data-i18n="m2.titel">Es schreibt nichts auf</h3>
-      <p data-i18n="m2.text">Gespeichert werden nur deine eigenen Einstellungen — Regeln, Vorlagen, Vorlieben —, und auch die nur auf ausdrücklichen Befehl. Kein Dokumentinhalt, kein Wörterbuch, kein Protokoll.</p>
+      <p data-i18n="m2.text">Gespeichert werden nur deine eigenen Einstellungen, also Regeln, Vorlagen und Vorlieben. Auch diese werden nur auf ausdrücklichen Befehl gespeichert. Kein Dokumentinhalt, kein Wörterbuch, kein Protokoll.</p>
     </div>
     <div class="merkmal">
       <span class="nr">03</span>
       <h3 data-i18n="m3.titel">Umkehrbar, und das ist der Sinn</h3>
-      <p data-i18n-html="m3.text">Du maskierst, fragst, und fügst die Antwort zurück ein: MASCHERA setzt die echten Werte wieder ein. Deshalb heisst es <strong>Pseudonymisierung</strong> und nicht Anonymisierung — solange das Wörterbuch existiert, ist der Vorgang umkehrbar, und die Daten bleiben nach revDSG Personendaten.</p>
+      <p data-i18n-html="m3.text">Du maskierst, fragst, und fügst die Antwort zurück ein: MASCHERA setzt die echten Werte wieder ein. Deshalb heisst es <strong>Pseudonymisierung</strong> und nicht Anonymisierung. Solange das Wörterbuch existiert, ist der Vorgang umkehrbar, und die Daten bleiben nach revDSG Personendaten.</p>
     </div>
     <div class="merkmal">
       <span class="nr">04</span>
       <h3 data-i18n="m4.titel">Für Schweizer Dokumente gebaut</h3>
-      <p data-i18n-html="m4.text">AHV-Nummer, UID, IBAN, QR-Referenz, Gebäude- und Wohnungsidentifikator, Ausweiskategorie, Kontrollschild, ZSR-Nummer — mit den Prüfsummen, die dazugehören. <strong>45 Merkmalsarten</strong> insgesamt. Vier Sprachen: Deutsch, Französisch, Italienisch und Englisch.</p>
+      <p data-i18n-html="m4.text">Erkannt werden AHV-Nummer, UID, IBAN, QR-Referenz, Gebäude- und Wohnungsidentifikator, Ausweiskategorie, Kontrollschild und ZSR-Nummer, jeweils mit den zugehörigen Prüfsummen. <strong><br>45 Merkmalsarten</strong> insgesamt. Vier Sprachen: Deutsch, Französisch, Italienisch und Englisch.</p>
     </div>
   </div>
 </section>
@@ -109,46 +118,31 @@
       <span class="nr">1</span>
       <h3 data-i18n="s1.titel">Dokument öffnen bzw. reinziehen oder Text einfügen</h3>
       <p data-i18n="s1.text">Gelesen werden .pdf, .docx, .eml, .msg (Outlook), .mbox, .txt, .md, .csv, .json.</p>
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="bilder/dunkel/schritt1.png">
-        <img class="schirm" src="bilder/hell/schritt1.png" alt="">
-      </picture>
+      <img class="schirm nur-hell" src="bilder/de/schritt1.png" data-bild="schritt1" alt=""><img class="schirm nur-dunkel" src="bilder/de/schritt1-dunkel.png" data-bild="schritt1-dunkel" alt="" loading="lazy">
     </div>
     <div class="schritt">
       <span class="nr">2</span>
       <h3 data-i18n="s2.titel">Maskieren</h3>
-      <p data-i18n="s2.text">Jede Fundstelle wird farbig angezeigt, mit ihrer Herkunft — Prüfsumme, Muster oder Modell.</p>
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="bilder/dunkel/schritt2.png">
-        <img class="schirm" src="bilder/hell/schritt2.png" alt="">
-      </picture>
+      <p data-i18n="s2.text">Jede Fundstelle wird farbig angezeigt, zusammen mit ihrer Herkunft: Prüfsumme, Muster oder Modell.</p>
+      <img class="schirm nur-hell" src="bilder/de/schritt2.png" data-bild="schritt2" alt=""><img class="schirm nur-dunkel" src="bilder/de/schritt2-dunkel.png" data-bild="schritt2-dunkel" alt="" loading="lazy">
     </div>
     <div class="schritt">
       <span class="nr">3</span>
       <h3 data-i18n="s3.titel">Prüfen</h3>
       <p data-i18n="s3.text">Du siehst, was ersetzt wurde, bevor der Text irgendwohin geht.</p>
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="bilder/dunkel/schritt3.png">
-        <img class="schirm" src="bilder/hell/schritt3.png" alt="">
-      </picture>
+      <img class="schirm nur-hell" src="bilder/de/schritt3.png" data-bild="schritt3" alt=""><img class="schirm nur-dunkel" src="bilder/de/schritt3-dunkel.png" data-bild="schritt3-dunkel" alt="" loading="lazy">
     </div>
     <div class="schritt">
       <span class="nr">4</span>
       <h3 data-i18n="s4.titel">Kopieren und einfügen</h3>
       <p data-i18n="s4.text">Beim Dienst deiner Wahl, von Hand. Das Werkzeug schickt nichts selbst.</p>
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="bilder/dunkel/schritt4.png">
-        <img class="schirm" src="bilder/hell/schritt4.png" alt="">
-      </picture>
+      <img class="schirm nur-hell" src="bilder/de/schritt4.png" data-bild="schritt4" alt=""><img class="schirm nur-dunkel" src="bilder/de/schritt4-dunkel.png" data-bild="schritt4-dunkel" alt="" loading="lazy"><img class="schirm zusatz nur-hell" src="bilder/de/schritt4-auswahl.png" data-bild="schritt4-auswahl" alt=""><img class="schirm zusatz nur-dunkel" src="bilder/de/schritt4-auswahl-dunkel.png" data-bild="schritt4-auswahl-dunkel" alt="" loading="lazy">
     </div>
     <div class="schritt">
       <span class="nr">5</span>
       <h3 data-i18n="s5.titel">Antwort zurück einfügen</h3>
       <p data-i18n="s5.text">Die echten Werte kommen wieder herein.</p>
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="bilder/dunkel/schritt5.png">
-        <img class="schirm" src="bilder/hell/schritt5.png" alt="">
-      </picture>
+      <img class="schirm nur-hell" src="bilder/de/schritt5.png" data-bild="schritt5" alt=""><img class="schirm nur-dunkel" src="bilder/de/schritt5-dunkel.png" data-bild="schritt5-dunkel" alt="" loading="lazy">
     </div>
   </div>
 
@@ -158,18 +152,18 @@
 
   <!-- 6 · Drei Stufen -->
   <div class="stufen" style="margin-top:var(--s8)">
-    <h3 class="stufen-titel" data-i18n="stufen.titel">Drei Stufen — es ist nicht bloss «eine KI»</h3>
+    <h3 class="stufen-titel" data-i18n="stufen.titel">Drei Stufen, nicht bloss «eine KI»</h3>
     <table style="margin-top:var(--s6)">
       <thead>
         <tr><th data-i18n="stufen.th1">Stufe</th><th data-i18n="stufen.th2">Was sie tut</th></tr>
       </thead>
       <tbody>
         <tr><td class="stufe" data-i18n="stufen.1t">1 · Prüfsummen</td><td data-i18n="stufen.1b">AHV-Nummer, UID, IBAN, QR-Referenz, Kreditkarte, GLN. Gültige Prüfsumme → maskieren, auch wenn das Modell schweigt. Ungültige → verwerfen, auch wenn es anschlägt.</td></tr>
-        <tr><td class="stufe" data-i18n="stufen.2t">2 · Muster mit Kontextanker</td><td data-i18n-html="stufen.2b">Telefonnummer, Postleitzahl, Kontrollschild, Ausweiskategorie, Fallnummer und weitere — viersprachige Ankerwörter, kein Vorrang vor dem Modell. Dazu kommen deine eigenen Regeln: Wörter und Muster, die du selbst festlegst. Sie laufen wie die eingebauten Muster. Beispiele sind interne Fall-Nr. oder interne Dossier-Nr. etc.</td></tr>
-        <tr><td class="stufe" data-i18n="stufen.3t">3 · Sprachmodell</td><td data-i18n="stufen.3b">Namen, Adressen, Berufe, Organisationen, Daten — alles, was kein Muster hat.</td></tr>
+        <tr><td class="stufe" data-i18n="stufen.2t">2 · Muster mit Kontextanker</td><td data-i18n-html="stufen.2b">Telefonnummer, Postleitzahl, Kontrollschild, Ausweiskategorie, Fallnummer und weitere. Sie werden an viersprachigen Ankerwörtern erkannt und haben keinen Vorrang vor dem Modell. Dazu kommen deine eigenen Regeln: Wörter und Muster, die du selbst festlegst. Sie laufen wie die eingebauten Muster. Beispiele sind interne Fall-Nr. oder interne Dossier-Nr. etc.</td></tr>
+        <tr><td class="stufe" data-i18n="stufen.3t">3 · Sprachmodell</td><td data-i18n="stufen.3b">Namen, Adressen, Berufe, Organisationen und Daten, also alles, was kein Muster hat.</td></tr>
       </tbody>
     </table>
-    <p class="klein leise" style="margin-top:var(--s6)" data-i18n-html="stufen.modell">Das Modell ist <strong>1,2 GB</strong> gross und wurde auf <strong>synthetischen</strong> Daten trainiert — es hat nie ein echtes Dokument gesehen. <a href="#verweise">Technische Angaben zum Modell</a>.</p>
+    <p class="klein leise" style="margin-top:var(--s6)" data-i18n-html="stufen.modell">Das Modell ist <strong>1,2 GB</strong> gross und wurde auf <strong>synthetischen</strong> Daten trainiert. Es hat nie ein echtes Dokument gesehen. <a href="#verweise">Technische Angaben zum Modell</a>.</p>
   </div>
 </section>
 
@@ -179,18 +173,15 @@
   <div class="raster-2">
     <blockquote class="verantwortung">
       <p data-i18n="pruefen.satz">MASCHERA nimmt dir die Arbeit ab, nicht die Verantwortung.</p>
-      <p data-i18n="pruefen.text">Kein Werkzeug findet jedes Personendatum. Sieh den maskierten Text an, bevor du ihn weitergibst — dafür zeigt MASCHERA jede Fundstelle farbig und mit ihrer Herkunft.</p>
+      <p data-i18n="pruefen.text">Kein Werkzeug findet jedes Personendatum. Sieh den maskierten Text an, bevor du ihn weitergibst. Dafür zeigt MASCHERA jede Fundstelle farbig und mit ihrer Herkunft.</p>
     </blockquote>
     <div>
       <h3 data-i18n="herkunft.titel">Was «Herkunft» heisst</h3>
       <p data-i18n="herkunft.text">Jede Fundstelle zeigt, woher sie stammt: aus einer geprüften Nummer, aus einem Muster mit Kontext, oder aus dem Sprachmodell. Eine AHV-Nummer mit gültiger Prüfsumme ist sicher richtig erkannt, eine Modellvermutung verdient den zweiten Blick.</p>
       <figure class="rahmen" style="margin:var(--s6) 0 0">
-        <i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i>
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="bilder/dunkel/herkunft.png">
-          <img class="schirm" src="bilder/hell/herkunft.png" alt="" data-i18n-attr="alt:bild.herkunft">
-        </picture>
+        <img class="schirm nur-hell" src="bilder/de/herkunft-menu.png" data-bild="herkunft-menu" alt="" data-i18n-attr="alt:bild.herkunft"><img class="schirm nur-dunkel" src="bilder/de/herkunft-menu-dunkel.png" data-bild="herkunft-menu-dunkel" alt="" data-i18n-attr="alt:bild.herkunft" loading="lazy">
       </figure>
+      <p style="margin-top:var(--s4)" data-i18n="herkunft.menu">Mit einem Rechtsklick auf eine Fundstelle änderst du die Markierung: Du wählst eine andere Merkmalsart oder entfernst die Maske.</p>
     </div>
   </div>
 
@@ -198,11 +189,11 @@
   <p class="leise" style="max-width:66ch" data-i18n="moegl.lead">Fünf Möglichkeiten, alle in der Anwendung vorhanden.</p>
   <table style="margin-top:var(--s6)">
     <tbody>
-      <tr><td class="moegl" data-i18n="mo1t">Von Hand nachbessern</td><td data-i18n-html="mo1b">Der maskierte Text ist bearbeitbar. Platzhalter wie <code>[FULLNAME_1]</code> bleiben stehen — sie werden am Ende zurückgewandelt.</td></tr>
+      <tr><td class="moegl" data-i18n="mo1t">Von Hand nachbessern</td><td data-i18n-html="mo1b">Der maskierte Text ist bearbeitbar. Platzhalter wie <code>[FULLNAME_1]</code> bleiben stehen und werden am Ende zurückgewandelt.</td></tr>
       <tr><td class="moegl" data-i18n="mo2t">Eigene Regeln</td><td data-i18n="mo2b">Eigene Wörter und Muster, die zusätzlich maskiert werden. Ein Projektname, ein internes Kürzel, ein Spitzname.</td></tr>
-      <tr><td class="moegl" data-i18n="mo3t">Klartext-Typen</td><td data-i18n="mo3b">Einzelne Merkmalsarten dauerhaft im Klartext lassen — erkannt, aber nicht ersetzt. Wer Ortschaften stehenlassen will, stellt das einmal ein.</td></tr>
+      <tr><td class="moegl" data-i18n="mo3t">Klartext-Typen</td><td data-i18n="mo3b">Einzelne Merkmalsarten kannst du dauerhaft im Klartext lassen. Sie werden erkannt, aber nicht ersetzt. Wer Ortschaften stehenlassen will, stellt das einmal ein.</td></tr>
       <tr><td class="moegl" data-i18n="mo4t">Zurückwandeln</td><td data-i18n="mo4b">Die Antwort des Dienstes einfügen, und die echten Werte kommen wieder herein.</td></tr>
-      <tr><td class="moegl" data-i18n="mo5t">Endgültig anonymisieren</td><td data-i18n-html="mo5b">Ohne Wörterbuch maskieren. Dann ist der Vorgang <strong>nicht mehr umkehrbar</strong> — und die Anwendung sagt das vorher.</td></tr>
+      <tr><td class="moegl" data-i18n="mo5t">Endgültig anonymisieren</td><td data-i18n-html="mo5b">Ohne Wörterbuch maskieren. Dann ist der Vorgang <strong>nicht mehr umkehrbar</strong>, und die Anwendung weist vorher darauf hin.</td></tr>
     </tbody>
   </table>
   <p class="klein leise" style="margin-top:var(--s4)" data-i18n-html="moegl.beides"><strong>MASCHERA kann beides:</strong> umkehrbar für die Arbeit mit einem KI-Dienst, unumkehrbar für einen Text, der so aus dem Haus geht.</p>
@@ -216,44 +207,46 @@
 
   <div class="pakete" style="margin-top:var(--s12)">
     <div class="paket">
-      <h3>Linux</h3>
-      <p class="zeug" data-i18n="dl.linux">AppImage: eine einzige ausführbare Datei, das Modell fährt mit. Herunterladen, ausführbar machen, fertig.</p>
+      <h3 style="display:flex; align-items:baseline; gap:var(--s3); line-height:1"><span>Linux</span><svg viewBox="2.1 0 19.8 24" width="16.5" height="20" fill="currentColor" aria-hidden="true" style="flex:none; display:block"><path d="M12.504 0c-.155 0-.315.008-.48.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.051-2.127 2.75-2.716 4.521-.278.832-.41 1.684-.287 2.489a.424.424 0 00-.11.135c-.26.268-.45.6-.663.839-.199.199-.485.267-.797.4-.313.136-.658.269-.864.68-.09.189-.136.394-.132.602 0 .199.027.4.055.536.058.399.116.728.04.97-.249.68-.28 1.145-.106 1.484.174.334.535.47.94.601.81.2 1.91.135 2.774.6.926.466 1.866.67 2.616.47.526-.116.97-.464 1.208-.946.587-.003 1.23-.269 2.26-.334.699-.058 1.574.267 2.577.2.025.134.063.198.114.333l.003.003c.391.778 1.113 1.132 1.884 1.071.771-.06 1.592-.536 2.257-1.306.631-.765 1.683-1.084 2.378-1.503.348-.199.629-.469.649-.853.023-.4-.2-.811-.714-1.376v-.097l-.003-.003c-.17-.2-.25-.535-.338-.926-.085-.401-.182-.786-.492-1.046h-.003c-.059-.054-.123-.067-.188-.135a.357.357 0 00-.19-.064c.431-1.278.264-2.55-.173-3.694-.533-1.41-1.465-2.638-2.175-3.483-.796-1.005-1.576-1.957-1.56-3.368.026-2.152.236-6.133-3.544-6.139zm.529 3.405h.013c.213 0 .396.062.584.198.19.135.33.332.438.533.105.259.158.459.166.724 0-.02.006-.04.006-.06v.105a.086.086 0 01-.004-.021l-.004-.024a1.807 1.807 0 01-.15.706.953.953 0 01-.213.335.71.71 0 00-.088-.042c-.104-.045-.198-.064-.284-.133a1.312 1.312 0 00-.22-.066c.05-.06.146-.133.183-.198.053-.128.082-.264.088-.402v-.02a1.21 1.21 0 00-.061-.4c-.045-.134-.101-.2-.183-.333-.084-.066-.167-.132-.267-.132h-.016c-.093 0-.176.03-.262.132a.8.8 0 00-.205.334 1.18 1.18 0 00-.09.4v.019c.002.089.008.179.02.267-.193-.067-.438-.135-.607-.202a1.635 1.635 0 01-.018-.2v-.02a1.772 1.772 0 01.15-.768c.082-.22.232-.406.43-.533a.985.985 0 01.594-.2zm-2.962.059h.036c.142 0 .27.048.399.135.146.129.264.288.344.465.09.199.14.4.153.667v.004c.007.134.006.2-.002.266v.08c-.03.007-.056.018-.083.024-.152.055-.274.135-.393.2.012-.09.013-.18.003-.267v-.015c-.012-.133-.04-.2-.082-.333a.613.613 0 00-.166-.267.248.248 0 00-.183-.064h-.021c-.071.006-.13.04-.186.132a.552.552 0 00-.12.27.944.944 0 00-.023.33v.015c.012.135.037.2.08.334.046.134.098.2.166.268.01.009.02.018.034.024-.07.057-.117.07-.176.136a.304.304 0 01-.131.068 2.62 2.62 0 01-.275-.402 1.772 1.772 0 01-.155-.667 1.759 1.759 0 01.08-.668 1.43 1.43 0 01.283-.535c.128-.133.26-.2.418-.2zm1.37 1.706c.332 0 .733.065 1.216.399.293.2.523.269 1.052.468h.003c.255.136.405.266.478.399v-.131a.571.571 0 01.016.47c-.123.31-.516.643-1.063.842v.002c-.268.135-.501.333-.775.465-.276.135-.588.292-1.012.267a1.139 1.139 0 01-.448-.067 3.566 3.566 0 01-.322-.198c-.195-.135-.363-.332-.612-.465v-.005h-.005c-.4-.246-.616-.512-.686-.71-.07-.268-.005-.47.193-.6.224-.135.38-.271.483-.336.104-.074.143-.102.176-.131h.002v-.003c.169-.202.436-.47.839-.601.139-.036.294-.065.466-.065zm2.8 2.142c.358 1.417 1.196 3.475 1.735 4.473.286.534.855 1.659 1.102 3.024.156-.005.33.018.513.064.646-1.671-.546-3.467-1.089-3.966-.22-.2-.232-.335-.123-.335.59.534 1.365 1.572 1.646 2.757.13.535.16 1.104.021 1.67.067.028.135.06.205.067 1.032.534 1.413.938 1.23 1.537v-.043c-.06-.003-.12 0-.18 0h-.016c.151-.467-.182-.825-1.065-1.224-.915-.4-1.646-.336-1.77.465-.008.043-.013.066-.018.135-.068.023-.139.053-.209.064-.43.268-.662.669-.793 1.187-.13.533-.17 1.156-.205 1.869v.003c-.02.334-.17.838-.319 1.35-1.5 1.072-3.58 1.538-5.348.334a2.645 2.645 0 00-.402-.533 1.45 1.45 0 00-.275-.333c.182 0 .338-.03.465-.067a.615.615 0 00.314-.334c.108-.267 0-.697-.345-1.163-.345-.467-.931-.995-1.788-1.521-.63-.4-.986-.87-1.15-1.396-.165-.534-.143-1.085-.015-1.645.245-1.07.873-2.11 1.274-2.763.107-.065.037.135-.408.974-.396.751-1.14 2.497-.122 3.854a8.123 8.123 0 01.647-2.876c.564-1.278 1.743-3.504 1.836-5.268.048.036.217.135.289.202.218.133.38.333.59.465.21.201.477.335.876.335.039.003.075.006.11.006.412 0 .73-.134.997-.268.29-.134.52-.334.74-.4h.005c.467-.135.835-.402 1.044-.7zm2.185 8.958c.037.6.343 1.245.882 1.377.588.134 1.434-.333 1.791-.765l.211-.01c.315-.007.577.01.847.268l.003.003c.208.199.305.53.391.876.085.4.154.78.409 1.066.486.527.645.906.636 1.14l.003-.007v.018l-.003-.012c-.015.262-.185.396-.498.595-.63.401-1.746.712-2.457 1.57-.618.737-1.37 1.14-2.036 1.191-.664.053-1.237-.2-1.574-.898l-.005-.003c-.21-.4-.12-1.025.056-1.69.176-.668.428-1.344.463-1.897.037-.714.076-1.335.195-1.814.12-.465.308-.797.641-.984l.045-.022zm-10.814.049h.01c.053 0 .105.005.157.014.376.055.706.333 1.023.752l.91 1.664.003.003c.243.533.754 1.064 1.189 1.637.434.598.77 1.131.729 1.57v.006c-.057.744-.48 1.148-1.125 1.294-.645.135-1.52.002-2.395-.464-.968-.536-2.118-.469-2.857-.602-.369-.066-.61-.2-.723-.4-.11-.2-.113-.602.123-1.23v-.004l.002-.003c.117-.334.03-.752-.027-1.118-.055-.401-.083-.71.043-.94.16-.334.396-.4.69-.533.294-.135.64-.202.915-.47h.002v-.002c.256-.268.445-.601.668-.838.19-.201.38-.336.663-.336zm7.159-9.074c-.435.201-.945.535-1.488.535-.542 0-.97-.267-1.28-.466-.154-.134-.28-.268-.373-.335-.164-.134-.144-.333-.074-.333.109.016.129.134.199.2.096.066.215.2.36.333.292.2.68.467 1.167.467.485 0 1.053-.267 1.398-.466.195-.135.445-.334.648-.467.156-.136.149-.267.279-.267.128.016.034.134-.147.332a8.097 8.097 0 01-.69.468zm-1.082-1.583V5.64c-.006-.02.013-.042.029-.05.074-.043.18-.027.26.004.063 0 .16.067.15.135-.006.049-.085.066-.135.066-.055 0-.092-.043-.141-.068-.052-.018-.146-.008-.163-.065zm-.551 0c-.02.058-.113.049-.166.066-.047.025-.086.068-.14.068-.05 0-.13-.02-.136-.068-.01-.066.088-.133.15-.133.08-.031.184-.047.259-.005.019.009.036.03.03.05v.02h.003z"></path></svg></h3>
+      <p class="zeug" data-i18n-html="dl.linux"><b>AppImage:</b> eine einzige ausführbare Datei, das Modell ist mit enthalten. Herunterladen, ausführbar machen und starten. Es wird nichts installiert.</p>
       <div class="knopfstapel">
-        <a class="knopf" href="https://github.com/semprerudi/maschera/releases/latest/download/MASCHERA-latest-x86_64.AppImage" data-datei="appimage">AppImage<span class="groesse">1,7 GB</span></a>
-        <a class="knopf zweit" href="https://github.com/semprerudi/maschera/releases/latest/download/MASCHERA-latest-x86_64.flatpak" data-datei="flatpak">Flatpak<span class="groesse">0,3 GB</span></a>
+        <a class="knopf" href="https://github.com/semprerudi/maschera/releases/latest/download/MASCHERA-latest-x86_64.AppImage" rel="noopener noreferrer" data-datei="appimage">AppImage<span class="groesse">1,7 GB</span></a>
+        <p class="zeug" style="margin-top:var(--s4)" data-i18n-html="dl.flatpakHinweis"><b>Flatpak:</b> Das Modell (1,3 GB) wird beim ersten Start der Applikation von Hugging Face heruntergeladen.</p>
+        <a class="knopf" href="https://github.com/semprerudi/maschera/releases/latest/download/MASCHERA-latest-x86_64.flatpak" rel="noopener noreferrer" data-datei="flatpak">Flatpak<span class="groesse">0,3 GB</span></a>
       </div>
     </div>
 
     <div class="paket">
-      <h3>macOS</h3>
-      <p class="zeug" data-i18n="dl.mac">Gibt es noch nicht. Es wird daran gearbeitet — bis dahin gibt es keine Datei für macOS.</p>
+      <h3 style="display:flex; align-items:baseline; gap:var(--s3); line-height:1"><span>Windows</span><svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true" style="flex:none; display:block"><path d="M0 0h11.377v11.372H0Zm12.623 0H24v11.372H12.623ZM0 12.623h11.377V24H0Zm12.623 0H24V24H12.623"></path></svg></h3>
+      <p class="zeug" data-i18n="dl.win">Installer für Windows 11, 64 Bit. Installiert ohne Administratorrechte, das Modell ist mit enthalten.</p>
+      <a class="knopf" href="https://github.com/semprerudi/maschera/releases/latest/download/MASCHERA-latest-x64-setup.exe" rel="noopener noreferrer" data-datei="windows">Windows<span class="groesse">1,4 GB</span></a>
+    </div>
+
+    <div class="paket">
+      <h3 style="display:flex; align-items:baseline; gap:var(--s3); line-height:1"><span data-i18n="dl.serverTitel">Server</span><svg viewBox="0 3.35 24 17.3" width="20.8" height="15" fill="currentColor" aria-hidden="true" style="flex:none; display:block"><path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.185.185.186m-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.185.185.186m-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.185.185 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.185.186.186m5.893 2.715h2.118a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.184-.186h-2.12a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.082.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51-.338.001-.676.03-1.01.087-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.751.751 0 00-.75.748 11.376 11.376 0 00.692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137.983.003 1.963-.086 2.93-.266a12.248 12.248 0 003.823-1.389c.98-.567 1.86-1.288 2.61-2.136 1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288Z"></path></svg></h3>
+      <p class="zeug" data-i18n="dl.server">Docker, für den Betrieb als Dienst. Die Oberfläche öffnet sich im Browser. Das Modell ist mit enthalten. Der Server speichert nichts bei sich: kein Dokument, kein Wörterbuch, kein Protokoll. Nach der Antwort ist alles wieder vergessen.</p>
+      <a class="knopf" href="https://github.com/semprerudi/maschera" rel="noopener noreferrer">Docker<span class="groesse">4,2 GB</span></a>
+    </div>
+
+
+    <div class="paket">
+      <h3 style="display:flex; align-items:baseline; gap:var(--s3); line-height:1"><span>macOS</span><svg viewBox="2.2 0 19.6 24" width="16.3" height="20" fill="currentColor" aria-hidden="true" style="flex:none; display:block"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"></path></svg></h3>
+      <p class="zeug" data-i18n="dl.mac">Gibt es leider noch nicht. Es wird daran gearbeitet. Schaue später wieder vorbei!</p>
       <span class="marke-arbeit" data-i18n="dl.arbeit">In Arbeit</span>
-      <a class="knopf" aria-disabled="true" href="#" data-i18n="dl.nochnicht">Noch nicht verfügbar</a>
-    </div>
-
-    <div class="paket">
-      <h3>Windows</h3>
-      <p class="zeug" data-i18n="dl.win">Installer für Windows 11, 64 Bit. Installiert ohne Administratorrechte, das Modell fährt mit. Beim ersten Start warnt Windows, weil der Installer nicht signiert ist: «Weitere Informationen» → «Trotzdem ausführen».</p>
-      <div class="knopfstapel">
-        <a class="knopf" href="https://github.com/semprerudi/maschera/releases/latest/download/MASCHERA-latest-x64-setup.exe" data-datei="windows">Windows<span class="groesse">1,4 GB</span></a>
-      </div>
-    </div>
-
-    <div class="paket">
-      <h3 data-i18n="dl.serverTitel">Server</h3>
-      <p class="zeug" data-i18n="dl.server">Docker, für den Betrieb als Dienst — die Oberfläche öffnet sich im Browser. Das Modell fährt mit. Der Server speichert nichts bei sich: kein Dokument, kein Wörterbuch, kein Protokoll — nach der Antwort ist alles wieder vergessen.</p>
-      <a class="knopf zweit" href="https://github.com/semprerudi/maschera">Docker</a>
+      <a class="knopf" aria-disabled="true" href="#" data-i18n="dl.nochnicht" style="font-size: 14px">Noch nicht verfügbar</a>
     </div>
   </div>
+
+  <p class="klein leise" style="margin-top:var(--s6)" data-i18n-html="dl.platzhalterHinweis">Alle Dateien liegen bei den <a href="https://github.com/semprerudi/maschera/releases/latest" rel="noopener noreferrer">Veröffentlichungen auf GitHub</a>, dazu <code>SHA256SUMS</code> zum Prüfen.</p>
 
   <div class="raster-2" style="margin-top:var(--s12)">
     <div class="hinweis">
       <h3 data-i18n="dl.modellTitel">Der Hinweis zum Modell</h3>
-      <p data-i18n-html="dl.modell">Das Modell ist 1,2 GB gross. Die AppImage trägt es mit. Die schlanken Pakete holen es <strong>einmal beim ersten Start</strong> — aus einer benannten Quelle, mit Prüfsumme, und erst nachdem du zugestimmt hast. Wer gerade kein WLAN hat, lehnt ab und holt es ein andermal. Danach ist beides gleich offline.</p>
+      <p data-i18n-html="dl.modell">Das Modell ist 1,2 GB gross. Die AppImage und der Windows-Installer tragen es mit. Das Flatpak holt es <strong>einmal beim ersten Start</strong>. Es kommt aus einer benannten Quelle, wird mit einer Prüfsumme kontrolliert und erst geladen, nachdem du zugestimmt hast. Wer gerade kein WLAN hat, lehnt ab und holt es ein andermal. Danach ist alles gleich offline.</p>
     </div>
     <div>
       <h3 data-i18n="dl.archTitel">AppImage oder Flatpak?</h3>
-      <p data-i18n="dl.arch1">AppImage ist eine einzige Datei: herunterladen, ausführbar machen, starten — nichts wird installiert. Flatpak fügt sich in die Paketverwaltung ein und aktualisiert sich mit ihr.</p>
+      <p data-i18n="dl.arch1">AppImage ist eine einzige Datei: herunterladen, ausführbar machen und starten. Es wird nichts installiert. Flatpak fügt sich in die Paketverwaltung ein und aktualisiert sich mit ihr.</p>
       <p data-i18n-html="dl.arch2">Beide bringen ihre eigenen Bibliotheken mit und sind damit unabhängig von der Ausgabe deiner Verteilung. Auf Arch-Systemen läuft Flatpak bestens; ein eigenes Arch-Paket gibt es darum nicht.</p>
     </div>
   </div>
@@ -263,20 +256,58 @@
 <section class="bereich" id="verweise">
   <p class="kicker" data-i18n="verweise.kicker">Wo alles andere steht</p>
   <h2 data-i18n="verweise.titel">Das Technische wird dort gepflegt</h2>
-  <p class="fuehrung" data-i18n="verweise.lead">Wie gut das Modell misst, wie es trainiert wurde, wie das Programm gebaut ist — das steht dort und wird dort aktuell gehalten.</p>
+  <p class="fuehrung" data-i18n="verweise.lead">Wie gut das Modell misst, wie es trainiert wurde, wie das Programm gebaut ist: Das steht dort und wird dort aktuell gehalten.</p>
   <div class="raster-3" style="margin-top:var(--s8)">
-    <a class="verweis" href="https://github.com/semprerudi/maschera">
+    <a class="verweis" href="https://github.com/semprerudi/maschera" target="_blank" rel="noopener noreferrer">
       <h3 data-i18n="v1t">Quellcode und Fassungen</h3>
       <p data-i18n="v1b">Wie es gebaut ist, welche Programmfassung mit welchem Modell arbeitet, alle Prüfungen.</p>
     </a>
-    <a class="verweis" href="https://huggingface.co/semprerudi/maschera-ch-v63b">
+    <a class="verweis" href="https://huggingface.co/semprerudi/maschera-ch-v63b" target="_blank" rel="noopener noreferrer">
       <h3 data-i18n="v2t">Das Modell</h3>
       <p data-i18n="v2b">Wie gut das Modell ist, wie es trainiert wurde, welche Merkmalsarten es kennt.</p>
     </a>
-    <a class="verweis" href="https://github.com/semprerudi/maschera/issues">
+    <a class="verweis" href="https://github.com/semprerudi/maschera/issues" target="_blank" rel="noopener noreferrer">
       <h3 data-i18n="v3t">Fehler melden</h3>
       <p data-i18n="v3b">Was nicht erkannt wurde, was falsch ersetzt wurde, was fehlt.</p>
     </a>
+  </div>
+</section>
+
+<!-- Impressum -->
+<section class="bereich" id="impressum" style="padding-top:var(--s16); padding-bottom:var(--s16)">
+  <h2 data-i18n="imp.titel" style="font-size:25px">Impressum</h2>
+  <div class="raster-2" style="margin-top:var(--s6); gap:var(--s8) var(--s12)">
+    <div>
+      <h3 data-i18n="imp.verantw" style="font-size:18px; margin-bottom:var(--s2)">Verantwortlich</h3>
+      <table class="klein" style="font-size:15px">
+        <tbody>
+          <tr><th scope="row" data-i18n="imp.name" style="width:8em; padding-left:0; font-weight:500">Name</th><td>Rodolfo Semprevivo</td></tr>
+          <tr><th scope="row" data-i18n="imp.land" style="padding-left:0; font-weight:500">Land</th><td data-i18n="imp.landWert">Schweiz</td></tr>
+          <tr><th scope="row" data-i18n="imp.kontakt" style="padding-left:0; font-weight:500">Kontakt</th><td data-i18n-html="imp.kontaktWert">über <a href="https://github.com/semprerudi/maschera/issues" rel="noopener noreferrer">GitHub-Issues</a></td></tr>
+          <tr><th scope="row" data-i18n="imp.web" style="padding-left:0; font-weight:500">Web</th><td>www.maschera.ch</td></tr>
+        </tbody>
+      </table>
+    </div>
+      <div>
+        <h3 data-i18n="imp.zweckT" style="font-size:18px; margin-bottom:var(--s2)">Zweck</h3>
+        <p data-i18n="imp.zweck" class="klein" style="margin:0; max-width:62ch">MASCHERA ist ein Werkzeug zur lokalen Maskierung von Personendaten in Schweizer Dokumenten. Es wird als offene Software bereitgestellt.</p>
+      </div>
+      <div>
+        <h3 data-i18n="imp.siteT" style="font-size:18px; margin-bottom:var(--s2)">Diese Website</h3>
+        <p data-i18n="imp.site" class="klein" style="margin:0; max-width:62ch">Die Website wird über GitHub Pages ausgeliefert (GitHub, Inc., USA). Beim Aufruf verarbeitet GitHub technisch nötige Angaben wie die IP-Adresse in seinen Serverprotokollen; Einzelheiten stehen in der Datenschutzerklärung von GitHub. Die Website selbst setzt keine Cookies, erhebt keine Statistik und lädt nichts von fremden Servern. Die Dateien zum Herunterladen liegen ebenfalls bei GitHub.</p>
+      </div>
+      <div>
+        <h3 data-i18n="imp.appT" style="font-size:18px; margin-bottom:var(--s2)">Die Anwendung</h3>
+        <p data-i18n="imp.app" class="klein" style="margin:0; max-width:62ch">MASCHERA bearbeitet deine Dokumente ausschliesslich auf deinem eigenen Gerät. Es werden keine Inhalte an den Herausgeber oder an Dritte übermittelt, keine Nutzungsdaten erhoben und keine Cookies gesetzt. Der Herausgeber erhält dadurch keine Kenntnis von den bearbeiteten Daten und ist für sie nicht Verantwortlicher im Sinne des DSG. Verantwortlich für die Daten bleibst du. Sobald du einen maskierten Text in ein KI-Werkzeug einfügst, gelten die Bedingungen jenes Anbieters.</p>
+      </div>
+      <div>
+        <h3 data-i18n="imp.haftT" style="font-size:18px; margin-bottom:var(--s2)">Haftung</h3>
+        <p data-i18n="imp.haft" class="klein" style="margin:0; max-width:62ch">MASCHERA wird ohne Gewähr bereitgestellt. Die Erkennung von Personendaten erfolgt maschinell und ist nicht vollständig: sie kann Angaben übersehen und maskiert im Zweifel zu viel. Die Prüfung des maskierten Textes vor der Weitergabe liegt bei dir. Eine Haftung für Schäden aus der Verwendung ist im gesetzlich zulässigen Rahmen ausgeschlossen. Für die Inhalte verlinkter Seiten sind deren Betreiber verantwortlich.</p>
+      </div>
+      <div>
+        <h3 data-i18n="imp.lizT" style="font-size:18px; margin-bottom:var(--s2)">Lizenz</h3>
+        <p data-i18n-html="imp.liz" class="klein" style="margin:0; max-width:62ch">Quellcode MIT, ausgelieferte Pakete AGPL-3.0, Modell MIT. Der Quellcode und die verwendeten Werke Dritter mit ihren Lizenzen stehen auf <a href="https://github.com/semprerudi/maschera" rel="noopener noreferrer">GitHub</a>.</p>
+      </div>
   </div>
 </section>
 
@@ -284,20 +315,15 @@
 
 <footer>
   <div class="bereich zeilen">
-    <p data-i18n-html="fuss.name"><em>maschera</em> ist italienisch für Maske — und trägt die Landeskennung CH in der Mitte.</p>
+    <p data-i18n-html="fuss.name"><em>maschera</em> ist italienisch für Maske und trägt die Landeskennung CH in der Mitte.</p>
     <p>
-      <span data-i18n="fuss.lizenz">Quellcode MIT · Pakete AGPL-3.0</span> ·
+      <span data-i18n="fuss.lizenz">Lizenz MIT</span> ·
       <a href="#impressum" data-i18n="fuss.impressum">Impressum</a>
-    </p>
-    <p id="impressum">
-      <strong data-i18n="fuss.impressum">Impressum</strong> ·
-      <span data-i18n="impressum.verantwortlich">Verantwortlich:</span>
-      Rodolfo Semprevivo ·
-      <a href="https://github.com/semprerudi/maschera/issues" data-i18n="impressum.kontakt">Kontakt über GitHub-Issues</a>
     </p>
   </div>
 </footer>
 
 <script src="sprachen.js"></script>
+<script src="zoom.js" defer></script>
 </body>
 </html>

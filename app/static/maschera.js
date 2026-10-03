@@ -3018,6 +3018,18 @@ function imEigenenFenster() {
   return typeof window !== "undefined" && !!window.pywebview;
 }
 
+/* Ein Dienst wird ueber die Anwendung geoeffnet, wo `window.open` nicht
+ * verlaesslich ist: im eigenen Fenster unter macOS und Windows, wenn die
+ * Bruecke die Methode anbietet. Unter Linux (Qt) und im Browser geht
+ * `window.open`. */
+function dienstUeberAnwendung() {
+  const plattform = typeof navigator !== "undefined"
+    ? String(navigator.platform || "") : "";
+  return imEigenenFenster() && !/linux/i.test(plattform)
+    && !!window.pywebview.api
+    && typeof window.pywebview.api.oeffne_dienst === "function";
+}
+
 /* Das Symbol im Infobereich baut `app/fenster.py` unter Linux mit Qt und
  * unter Windows mit `pystray`. Unter macOS gibt es keines; ein Schalter
  * dafuer liesse sich bedienen und bewirkte nichts. */
@@ -4304,9 +4316,20 @@ function verbinde() {
     // Schliessen ist das Woerterbuch weg. Die GROESSENANGABEN machen aus dem
     // Reiter ein Fenster, nicht der Fenstername; `noopener` verhindert, dass
     // die geoeffnete Seite auf dieses Fenster zugreift.
-    window.open(d.url, "_blank", z.eigenesFenster
-      ? "noopener,noreferrer,width=1100,height=900"
-      : "noopener,noreferrer");
+    //
+    // ⚠️ UNTER macOS UND WINDOWS UEBER DIE ANWENDUNG. Dort tat `window.open`
+    // nach dem `await` oben nichts (macOS: die Nutzergeste ist verfallen, und
+    // pywebview baut kein Popup). Die Anwendung oeffnet die Adresse im
+    // Standardbrowser — mit seinen Anmeldungen —, und nur eine Adresse aus
+    // den eigenen Diensten (`fenster.dienst_oeffnen`). Unter Linux bleibt
+    // alles, wie es war.
+    if (dienstUeberAnwendung()) {
+      try { await window.pywebview.api.oeffne_dienst(d.url); } catch (e) {}
+    } else {
+      window.open(d.url, "_blank", z.eigenesFenster
+        ? "noopener,noreferrer,width=1100,height=900"
+        : "noopener,noreferrer");
+    }
     // Untereinander steht 04 als Naechstes: dort wird die Antwort
     // eingefuegt, wenn der Anwender aus dem Dienst zurueckkommt.
     springeZu("b04");

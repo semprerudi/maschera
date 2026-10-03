@@ -1026,11 +1026,65 @@ def neustart_ausloesen(fenster) -> None:
         neu_starten()
 
 
+def port_uebersteuerung(umgebung=None) -> int | None:
+    """`MASCHERA_PORT` — eine Uebersteuerung fuer DIESEN einen Start.
+
+    ⚠️ Das `AppRun` versprach sie («nur als ausdrueckliche Uebersteuerung fuer
+    diesen einen Start») und gab sie als `--port` an `fenster.py` weiter, das
+    diese Option nicht kennt: wer die Variable setzte, bekam sofort einen
+    Abbruch mit der Fehlermeldung von argparse. Eine Zusage im Kommentar
+    ohne Pruefung. Jetzt liest `fenster.py` die Variable selbst.
+
+    Gueltig ist eine ganze Zahl von 1 bis 65535; alles andere wird ignoriert
+    (und gemeldet), damit ein Tippfehler nicht den Start verhindert.
+    """
+    roh = (os.environ if umgebung is None else umgebung).get("MASCHERA_PORT")
+    if not roh:
+        return None
+    try:
+        port = int(roh)
+    except ValueError:
+        port = 0
+    if not 1 <= port <= 65535:
+        print(f"  ⚠ MASCHERA_PORT={roh!r} ist keine Portnummer — ignoriert.")
+        return None
+    return port
+
+
+def dienst_oeffnen(url, erlaubt=None, oeffner=None) -> bool:
+    """Eine Dienstadresse im Standardbrowser oeffnen — und nur eine, die der
+    Anwender selbst eingetragen hat.
+
+    ⚠️ Warum es das gibt: «Kopieren und … oeffnen» rief `window.open` NACH
+    einem `await` auf. Unter macOS (WKWebView) verfaellt die Nutzergeste dabei,
+    und pywebview faengt Popup-Fenster dort nicht ab — der Knopf tat gar
+    nichts. Unter Linux ging es nur, weil QtWebEngine das Popup selbst baut.
+    Die Menue-Links gingen immer, weil sie normale Verweise sind.
+
+    ⚠️ Warum eine Liste: die Seite darf diese Bruecke aufrufen, und eine
+    Methode, die JEDE Adresse oeffnet, waere ein Weg, den Browser des
+    Anwenders von der Seite aus zu steuern. Erlaubt ist, was in den
+    Einstellungen unter `dienste` steht (Vorgabe: Claude, ChatGPT, Gemini,
+    Copilot) — und nur mit `https://` oder `http://`.
+    """
+    if not isinstance(url, str):
+        return False
+    if erlaubt is None:
+        from core import einstellungen as est
+        erlaubt = {d["url"] for d in est.lade()["dienste"]}
+    if url not in erlaubt or not url.lower().startswith(("https://", "http://")):
+        return False
+    if oeffner is None:
+        import webbrowser
+        oeffner = webbrowser.open
+    return bool(oeffner(url))
+
+
 class Bruecke:
     """Die Bruecke der laufenden Oberflaeche, wenn es kein Onboarding gibt.
 
-    EINE Methode. Was hier steht, darf die Seite ausloesen — und sonst
-    nichts. Keine oeffentlichen Felder: pywebview steigt in jedes hinein
+    ZWEI Methoden: `neustart` und `oeffne_dienst`. Was hier steht, darf die
+    Seite ausloesen — und sonst nichts. Keine oeffentlichen Felder: pywebview steigt in jedes hinein
     (siehe `Onboarding`), unter Windows endlos. `tests/test_fenster.py`
     Punkt 23 haelt beides fest.
     """
@@ -1040,6 +1094,9 @@ class Bruecke:
 
     def neustart(self) -> None:
         neustart_ausloesen(self._fenster)
+
+    def oeffne_dienst(self, url: str) -> bool:
+        return dienst_oeffnen(url)
 
 
 def neu_starten() -> None:
@@ -1695,6 +1752,12 @@ def main() -> int:
     gespeichert = est.lade()
     wirt = gespeichert.get("adresse") or "127.0.0.1"
     port = int(gespeichert.get("port") or est.VORGABE_PORT)
+    # Eine Uebersteuerung gilt nur fuer diesen Start und wird NIE gespeichert
+    # (weder hier noch beim Ausweichen unten).
+    ueberstimmt = port_uebersteuerung()
+    if ueberstimmt is not None:
+        port = ueberstimmt
+        print(f"  MASCHERA_PORT: Port {port} nur fuer diesen Start.")
 
     # Laeuft schon eine? Gefragt wird VOR dem Modell — das laedt Sekunden,
     # und ein zweiter Start soll in einem Wimpernschlag wieder weg sein. Die
@@ -1724,8 +1787,11 @@ def main() -> int:
         # hart schliesst, soll die Wahl trotzdem behalten — sonst fragt
         # das Werkzeug jedes Mal dasselbe.
         try:
-            est.speichere({**gespeichert, "adresse": wirt, "port": port})
-            print(f"  Neue Adresse gesichert: {wirt}:{port}")
+            if ueberstimmt is not None:
+                print("  (Die Uebersteuerung wird nicht gespeichert.)")
+            else:
+                est.speichere({**gespeichert, "adresse": wirt, "port": port})
+                print(f"  Neue Adresse gesichert: {wirt}:{port}")
         except (est.Abgelehnt, OSError) as e:
             # Kein Abbruch — der Start soll gelingen. Aber nicht still:
             # sonst glaubt der Anwender, es sei gemerkt.

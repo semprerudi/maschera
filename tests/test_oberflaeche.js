@@ -4085,6 +4085,60 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     }
   }
 
+  console.log("81. «Kopieren und öffnen» geht unter macOS und Windows ueber die Anwendung");
+  // ⚠️ Der erste Test auf macOS: der Knopf legte den Text ab, oeffnete aber
+  // nichts. `window.open` nach einem `await` verliert dort die Nutzergeste,
+  // und pywebview baut kein Popup. Unter Linux ging es, weil QtWebEngine das
+  // Popup selbst baut. Jetzt ruft die Seite im eigenen Fenster unter macOS und
+  // Windows `oeffne_dienst` auf (die Anwendung oeffnet den Standardbrowser);
+  // unter Linux, im Browser und mit einer aelteren Anwendung ohne die Methode
+  // bleibt es bei `window.open`. Geprueft: je Fall GENAU EIN Weg.
+  {
+    const vorher = fehler;
+    const warFenster = window.pywebview;
+    const warPlattform = navigator.platform;
+    await feuer("knopf-beispiel");
+    await feuer("knopf-maskieren");
+    await new Promise((r) => setTimeout(r, 30));
+    await feuer("knopf-uebernahme");
+    const fall = async (api, plattform) => {
+      const ueber = [];
+      window.pywebview = api === undefined ? undefined : {
+        api: api ? { oeffne_dienst: async (u) => { ueber.push(u); return true; } } : {},
+      };
+      navigator.platform = plattform;
+      geoeffnetZahl = 0;
+      geoeffnet = null;
+      await feuer("knopf-senden");
+      await new Promise((r) => setTimeout(r, 20));
+      return { ueber, fenster: geoeffnetZahl };
+    };
+    const mac = await fall(true, "MacIntel");
+    const win = await fall(true, "Win32");
+    const linux = await fall(true, "Linux x86_64");
+    const browser = await fall(undefined, "MacIntel");
+    const alt = await fall(false, "MacIntel");
+    for (const [name, r] of [["macOS", mac], ["Windows", win]]) {
+      // Welcher Dienst gewaehlt ist, haengt von frueheren Punkten ab; es
+      // zaehlt, dass genau eine https-Adresse an die Anwendung geht.
+      pruefe(r.ueber.length === 1 && /^https:\/\/[\w.-]+\//.test(r.ueber[0]),
+             `${name}: der Dienst wurde nicht ueber die Anwendung geoeffnet: ${JSON.stringify(r.ueber)}`);
+      pruefe(r.fenster === 0,
+             `${name}: zusaetzlich window.open aufgerufen (${r.fenster}x) — Dienst doppelt`);
+    }
+    pruefe(linux.ueber.length === 0 && linux.fenster === 1,
+           "Linux: window.open sollte bleiben, die Anwendung nicht gerufen werden");
+    pruefe(browser.ueber.length === 0 && browser.fenster === 1,
+           "im Browser: window.open sollte bleiben");
+    pruefe(alt.ueber.length === 0 && alt.fenster === 1,
+           "ohne oeffne_dienst in der Bruecke (aeltere Anwendung): kein Rueckfall auf window.open");
+    window.pywebview = warFenster;
+    navigator.platform = warPlattform;
+    if (fehler === vorher) {
+      console.log("   OK   macOS und Windows ueber die Anwendung, Linux und Browser wie bisher");
+    }
+  }
+
   console.log("");
   amEnde = true;
   if (fehler) {

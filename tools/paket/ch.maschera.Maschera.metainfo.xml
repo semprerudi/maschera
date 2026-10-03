@@ -93,6 +93,15 @@
   -->
 
   <releases>
+    <release version="1.0.2" date="2026-10-03">
+      <description>
+        <p>Fixes found while testing on macOS: the button that copies the
+        prompt and opens the AI service now works there, and the app has
+        its own icon. The environment variable MASCHERA_PORT works as
+        documented, and error details from libraries no longer appear in
+        responses of the local API.</p>
+      </description>
+    </release>
     <release version="1.0.1" date="2026-10-03">
       <description>
         <p>Security update: raised minimum versions of the dependencies

@@ -246,10 +246,10 @@ builds. `WINDOWS.md` (German) describes the Windows build as it was run;
 python3 tools/run_tests.py
 ```
 
-32 checks, no dependencies except PyYAML and Flask. No model, no GPU, no
-downloads needed — **31 pass straight away in a fresh clone.**
+33 checks, no dependencies except PyYAML and Flask. No model, no GPU, no
+downloads needed — **32 pass straight away in a fresh clone.**
 
-The 32nd needs the model and says so; two more skip one point each as
+The 33rd needs the model and says so; two more skip one point each as
 long as the nomenclature has not been built
 (`python3 packs/ch/nomenclatures/build.py`). Both show up in the output —
 **a skipped check has checked nothing**, and the runner does not count it
@@ -307,7 +307,7 @@ tools/             tools
 site/              the project website (www.maschera.ch)
 
 train.py           training (needs torch + GPU)
-tests/             31 test files
+tests/             32 test files
 ```
 
 ## The one rule

@@ -880,6 +880,16 @@ d = r.get_json()
 check(d.get("fehler_schluessel") == "datei_unlesbar"
       and not d.get("fehler_werte"),
       f"kaputtes PDF traegt Fremdtext in die Oberflaeche: {d}")
+# ⚠️ Und auch NICHT in `fehler`. Bis 1.0.1 blieb dort der Text der Bibliothek
+# samt temporaerem Pfad stehen («fuer die Kommandozeile und die API»); bei der
+# Docker-Fassung im Netz verriet das Serverpfade an jeden Aufrufer (CodeQL
+# `py/stack-trace-exposure`). Geprueft am echten Aufruf, mit dem Temp-Ordner
+# als Suchwort.
+import tempfile as _tf_api  # noqa: E402
+check(_tf_api.gettempdir() not in str(d.get("fehler", "")),
+      f"die Antwort nennt einen temporaeren Pfad: {d.get('fehler')}")
+check(str(d.get("fehler", "")) == "Datei nicht lesbar",
+      f"die Antwort traegt mehr als den eigenen Satz: {d.get('fehler')!r}")
 r = c.post("/api/lesen", data={"datei": (_io.BytesIO(b"PK\x03\x04kaputt"), "x.docx")},
            content_type="multipart/form-data")
 d = r.get_json()

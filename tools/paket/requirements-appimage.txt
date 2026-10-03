@@ -33,4 +33,4 @@
 # Sorte Fehler, die eine Verpackung hat und die Werkstatt nicht.
 pywebview[qt]>=6.0
 qtpy>=2.4                 # ausdruecklich, nicht nur ueber das Extra
-PyQt6-WebEngine>=6.6      # zieht PyQt6 und PyQt6-Qt6 mit, rund 525 MB
+PyQt6-WebEngine>=6.11.0      # zieht PyQt6 und PyQt6-Qt6 mit, rund 525 MB

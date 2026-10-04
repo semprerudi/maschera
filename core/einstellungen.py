@@ -106,13 +106,18 @@ VORGABE = {
     "tray": True,
     "fenstermodus": "widget",
     "thema": "automatisch",
+    # Alphabetisch nach Name. Gewaehlt ist trotzdem `dienst` (oben): Claude.
+    # Mistral fehlte bis 1.0.2 hier, obwohl die Oberflaeche es kennt — die Liste
+    # kommt vom Server, und der kannte vier.
     "dienste": [
-        {"id": "claude", "name": "Claude", "url": "https://claude.ai/new"},
         {"id": "chatgpt", "name": "ChatGPT", "url": "https://chatgpt.com/"},
-        {"id": "gemini", "name": "Gemini",
-         "url": "https://gemini.google.com/app"},
+        {"id": "claude", "name": "Claude", "url": "https://claude.ai/new"},
         {"id": "copilot", "name": "Copilot",
          "url": "https://copilot.microsoft.com/"},
+        {"id": "gemini", "name": "Gemini",
+         "url": "https://gemini.google.com/app"},
+        {"id": "mistral", "name": "Mistral",
+         "url": "https://chat.mistral.ai/chat"},
     ],
 }
 

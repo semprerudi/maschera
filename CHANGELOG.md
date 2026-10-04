@@ -1,5 +1,23 @@
 # Änderungen
 
+## 1.0.3 – 2026-10-04
+
+### Behoben
+- macOS (und Windows): «Kopieren und … öffnen» öffnet den Dienst jetzt wie ein
+  Link im Burgermenü. Die Anwendung startet das Kopieren, klickt im selben Zug
+  einen echten Verweis an und wartet erst danach. Die Brücke zur Anwendung aus
+  1.0.2 half nicht und ist wieder weg. Linux und der Browser bleiben, wie sie
+  waren.
+- macOS: die Fehlzeile zu `multiprocessing.resource_tracker` beim Start ist weg.
+  Erkannt und aufgerufen wird genau dieser eine Aufruf der Standardbibliothek;
+  Text aus den Startargumenten wird nie ausgeführt.
+
+### Geändert
+- Die Dienste stehen alphabetisch (ChatGPT, Claude, Copilot, Gemini, Mistral),
+  im Pulldown und in den Einstellungen. **Mistral** ist neu in der Vorgabe.
+  Gewählt bleibt Claude. Wer schon eine eigene Liste gespeichert hat, behält sie;
+  angezeigt wird sie ebenfalls alphabetisch.
+
 ## 1.0.2 – 2026-10-03
 
 Gefunden beim ersten Test auf macOS und durch CodeQL.

@@ -1208,8 +1208,8 @@ const I18N = {
 
 /* Die vorgegebenen Dienste. Die Einstellungen koennen sie aendern. */
 const DIENSTE = [
-  { id: "claude",  name: "Claude",  url: "https://claude.ai/new" },
   { id: "chatgpt", name: "ChatGPT", url: "https://chatgpt.com/" },
+  { id: "claude",  name: "Claude",  url: "https://claude.ai/new" },
   { id: "copilot", name: "Copilot", url: "https://copilot.microsoft.com/" },
   { id: "gemini",  name: "Gemini",  url: "https://gemini.google.com/app" },
   { id: "mistral", name: "Mistral", url: "https://chat.mistral.ai/chat" },
@@ -2795,7 +2795,7 @@ function zeichneFinal() {
 function zeichneDienstliste() {
   const ziel = $("einst-dienste");
   ziel.replaceChildren();
-  z.dienste.forEach((d, i) => {
+  dienstAlphabetisch(z.dienste).forEach((d) => {
     const zeile = el("div", "dienstzeile");
     const name = document.createElement("input");
     name.value = d.name; name.placeholder = "Name";
@@ -2809,7 +2809,7 @@ function zeichneDienstliste() {
     weg.type = "button";
     weg.title = t().entfernen;
     weg.addEventListener("click", () => {
-      z.dienste.splice(i, 1);
+      z.dienste.splice(z.dienste.indexOf(d), 1);
       if (!z.dienste.some((x) => x.id === z.dienst) && z.dienste.length) {
         z.dienst = z.dienste[0].id;
       }
@@ -2979,6 +2979,18 @@ async function einstellungenOeffnen() {
   zeichneDienstliste();
 }
 
+/* Die Dienste alphabetisch nach Name, ohne Rücksicht auf Gross- und
+ * Kleinschreibung; ein Eintrag ohne Namen (gerade neu angelegt) steht
+ * zuletzt, damit er beim Tippen nicht davonspringt. Eine KOPIE: die Reihenfolge
+ * in `z.dienste` bleibt die gespeicherte. */
+function dienstAlphabetisch(liste) {
+  return [...liste].sort((a, b) => {
+    if (!a.name !== !b.name) return a.name ? -1 : 1;
+    return String(a.name).localeCompare(String(b.name), undefined,
+                                        { sensitivity: "base" });
+  });
+}
+
 function dienstJetzt() {
   return z.dienste.find((d) => d.id === z.dienst) || z.dienste[0]
          || { id: "?", name: "?", url: "" };
@@ -3018,16 +3030,28 @@ function imEigenenFenster() {
   return typeof window !== "undefined" && !!window.pywebview;
 }
 
-/* Ein Dienst wird ueber die Anwendung geoeffnet, wo `window.open` nicht
- * verlaesslich ist: im eigenen Fenster unter macOS und Windows, wenn die
- * Bruecke die Methode anbietet. Unter Linux (Qt) und im Browser geht
- * `window.open`. */
-function dienstUeberAnwendung() {
+/* Ein Dienst wird als VERWEIS geoeffnet, wo `window.open` nicht verlaesslich
+ * ist: im eigenen Fenster unter macOS und Windows. Unter Linux (Qt) und im
+ * Browser geht `window.open`. */
+function dienstUeberVerweis() {
   const plattform = typeof navigator !== "undefined"
     ? String(navigator.platform || "") : "";
-  return imEigenenFenster() && !/linux/i.test(plattform)
-    && !!window.pywebview.api
-    && typeof window.pywebview.api.oeffne_dienst === "function";
+  return imEigenenFenster() && !/linux/i.test(plattform);
+}
+
+/* Genau das, was ein Menue-Link ist: `<a target="_blank" rel="noopener …">`.
+ * Die Anwendung oeffnet ihn selbst im Standardbrowser. Der Verweis wird
+ * angelegt, angeklickt und wieder entfernt — alles in einem Zug, damit die
+ * Nutzergeste noch gilt. */
+function dienstOeffnenAlsVerweis(url) {
+  const a = document.createElement("a");
+  a.href = url;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  a.style.display = "none";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
 
 /* Das Symbol im Infobereich baut `app/fenster.py` unter Linux mit Qt und
@@ -3230,7 +3254,7 @@ function burgerAuf(offen) {
 function zeichneDienstmenu() {
   const menu = $("dienstmenu");
   menu.replaceChildren();
-  for (const d of z.dienste) {
+  for (const d of dienstAlphabetisch(z.dienste)) {
     const b = el("button", d.id === z.dienst ? "aktiv" : null, d.name);
     b.type = "button";
     b.addEventListener("click", () => {
@@ -4293,39 +4317,44 @@ function verbinde() {
   $("knopf-senden").addEventListener("click", async () => {
     const text = ausgehend();
     if (!text.trim()) return;
+    const d = dienstJetzt();
+    // ⚠️ UNTER macOS UND WINDOWS IM EIGENEN FENSTER GENAU WIE IM BURGERMENUE:
+    // ein echter Verweis, den die Anwendung selbst im Standardbrowser oeffnet.
+    // Die Menue-Links gingen dort von Anfang an; `window.open` nach dem `await`
+    // des Kopierens tat nichts, weil die Nutzergeste dann verbraucht ist
+    // (WKWebView). Deshalb: das Kopieren STARTEN (ohne zu warten), den Verweis
+    // SOFORT anklicken — beides noch in der Geste —, und erst danach warten.
+    // Das Kopieren beginnt vor dem Oeffnen, damit das Fenster beim Schreiben
+    // noch den Fokus hat.
+    const ueberVerweis = dienstUeberVerweis();
+    let kopiert = Promise.resolve();
+    try {
+      kopiert = Promise.resolve(navigator.clipboard.writeText(text))
+        .catch(() => {});
+    } catch (e) { /* keine Zwischenablage: weiter, der Dienst oeffnet trotzdem */ }
+    if (ueberVerweis) dienstOeffnenAlsVerweis(d.url);
+    await kopiert;
     // Nicht `inZwischenablage` — die setzt nach 1400 ms auf «Kopieren» zurueck,
     // waehrend dieser Ablauf die volle Beschriftung wiederherstellt. Beide
     // zusammen ergaeben ein Flackern zwischen drei Texten.
-    try { await navigator.clipboard.writeText(text); } catch (e) {}
     $("senden-text").textContent = t().kopiertK;
     clearTimeout(z.sendeUhr);
     z.sendeUhr = setTimeout(() => {
       z.sendeUhr = null;
       sendeBeschriftung();
     }, 3000);
-    const d = dienstJetzt();
-    // EIN Aufruf, kein Rueckfall. `noopener` im Merkmalsstring laesst
+    // Unter Linux (Qt) und im Browser geht `window.open`: Text zuerst, dann der
+    // Dienst. EIN Aufruf, kein Rueckfall. `noopener` im Merkmalsstring laesst
     // `window.open` laut Spezifikation `null` zurueckgeben — auch wenn das
     // Fenster aufgeht. Ein `if (!fenster)`-Rueckfall hielte das fuer ein
-    // Scheitern und oeffnete ein zweites Mal. Der Rueckgabewert ist hier also
-    // nicht auswertbar — und das ist in Ordnung, denn was danach im fremden
-    // Fenster passiert, geht uns nichts an.
+    // Scheitern und oeffnete ein zweites Mal.
     //
     // Eigenes Fenster statt Reiter: MASCHERA bleibt sichtbar und wird nicht
     // mitgeschlossen, wenn jemand nur den Reiter schliessen wollte — und beim
     // Schliessen ist das Woerterbuch weg. Die GROESSENANGABEN machen aus dem
     // Reiter ein Fenster, nicht der Fenstername; `noopener` verhindert, dass
     // die geoeffnete Seite auf dieses Fenster zugreift.
-    //
-    // ⚠️ UNTER macOS UND WINDOWS UEBER DIE ANWENDUNG. Dort tat `window.open`
-    // nach dem `await` oben nichts (macOS: die Nutzergeste ist verfallen, und
-    // pywebview baut kein Popup). Die Anwendung oeffnet die Adresse im
-    // Standardbrowser — mit seinen Anmeldungen —, und nur eine Adresse aus
-    // den eigenen Diensten (`fenster.dienst_oeffnen`). Unter Linux bleibt
-    // alles, wie es war.
-    if (dienstUeberAnwendung()) {
-      try { await window.pywebview.api.oeffne_dienst(d.url); } catch (e) {}
-    } else {
+    if (!ueberVerweis) {
       window.open(d.url, "_blank", z.eigenesFenster
         ? "noopener,noreferrer,width=1100,height=900"
         : "noopener,noreferrer");
@@ -5240,7 +5269,8 @@ if (typeof module !== "undefined" && module.exports) {
     auswahlOderWort, wortgrenzen, typOf, schreibfeld,
     zeichneKontext, zeichneFeldKontext, SINNBILDER, KNOPFBILDER,
     pruefeVokabular, uebernimmVokabular, vokabularDatei, VOK_PH_RE,
-    vorlageNehmen, zeichneVorlagen, zeichneDienstmenu, vorlagenAuf,
+    vorlageNehmen, zeichneVorlagen, zeichneDienstmenu, zeichneDienstliste,
+    vorlagenAuf,
     zeichneBurger, burgerAuf, imEigenenFenster, finalText,
     SEITEN, seiteZeigen, seiteSchliessen,
     pruefePlatzhalter, zeichneMaskiert, meldeVok, ablagefachMoeglich,

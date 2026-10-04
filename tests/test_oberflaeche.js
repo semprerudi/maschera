@@ -123,6 +123,9 @@ function mach(id) {
       return { top: o._top, left: 0, width: 0, height: o._hoehe };
     },
     remove() { entfernt.add(id); },
+    // Ein Klick wird gemeldet, nicht verschluckt: Punkt 81 prueft, dass der
+    // Dienst ueber einen angeklickten Verweis geoeffnet wird.
+    click() { if (verweisKlick) verweisKlick(o); },
     querySelector() { return mach("_kind"); },
     querySelectorAll() { return []; },
   };
@@ -203,6 +206,7 @@ global.document = {
 };
 let geoeffnet = null;
 let geoeffnetZahl = 0;
+let verweisKlick = null;
 let bestaetigt = true;
 let letzteFrage = null;
 let neuGeladen = 0;
@@ -4085,57 +4089,115 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     }
   }
 
-  console.log("81. «Kopieren und öffnen» geht unter macOS und Windows ueber die Anwendung");
+  console.log("81. «Kopieren und öffnen» geht unter macOS und Windows wie ein Menue-Link");
   // ⚠️ Der erste Test auf macOS: der Knopf legte den Text ab, oeffnete aber
-  // nichts. `window.open` nach einem `await` verliert dort die Nutzergeste,
-  // und pywebview baut kein Popup. Unter Linux ging es, weil QtWebEngine das
-  // Popup selbst baut. Jetzt ruft die Seite im eigenen Fenster unter macOS und
-  // Windows `oeffne_dienst` auf (die Anwendung oeffnet den Standardbrowser);
-  // unter Linux, im Browser und mit einer aelteren Anwendung ohne die Methode
-  // bleibt es bei `window.open`. Geprueft: je Fall GENAU EIN Weg.
+  // nichts. `window.open` NACH dem `await` des Kopierens verliert dort die
+  // Nutzergeste (WKWebView), und die Menue-Links gingen, weil sie echte
+  // Verweise sind. Eine Bruecke zur Anwendung half nicht und ist wieder weg.
+  // Jetzt, im eigenen Fenster unter macOS und Windows: das Kopieren STARTEN
+  // (ohne zu warten), einen echten `<a target="_blank">` SOFORT anklicken —
+  // beides noch in der Geste —, erst danach warten. Unter Linux (Qt) und im
+  // Browser bleibt `window.open`. Je Fall GENAU EIN Weg.
   {
     const vorher = fehler;
     const warFenster = window.pywebview;
     const warPlattform = navigator.platform;
+    const warSchreiben = navigator.clipboard.writeText;
     await feuer("knopf-beispiel");
     await feuer("knopf-maskieren");
     await new Promise((r) => setTimeout(r, 30));
     await feuer("knopf-uebernahme");
-    const fall = async (api, plattform) => {
-      const ueber = [];
-      window.pywebview = api === undefined ? undefined : {
-        api: api ? { oeffne_dienst: async (u) => { ueber.push(u); return true; } } : {},
+    const fall = async (fenster, plattform) => {
+      const klicks = [];
+      const ablauf = [];
+      navigator.clipboard.writeText = async (txt) => {
+        ablauf.push("kopieren");
+        letztKopiert = txt;
       };
+      verweisKlick = (o) => {
+        klicks.push({ href: o.href, target: o.target, rel: o.rel });
+        ablauf.push("verweis");
+      };
+      window.pywebview = fenster ? {} : undefined;
       navigator.platform = plattform;
       geoeffnetZahl = 0;
       geoeffnet = null;
+      // Eine Mikroaufgabe VOR dem Klick: sie laeuft erst, wenn der
+      // synchrone Teil des Behandlers durch ist. Steht «verweis» danach, hat
+      // der Behandler vor dem Klick gewartet — dann ist die Geste weg.
+      Promise.resolve().then(() => ablauf.push("mikro"));
       await feuer("knopf-senden");
       await new Promise((r) => setTimeout(r, 20));
-      return { ueber, fenster: geoeffnetZahl };
+      verweisKlick = null;
+      return { klicks, ablauf, fenster: geoeffnetZahl };
     };
     const mac = await fall(true, "MacIntel");
     const win = await fall(true, "Win32");
     const linux = await fall(true, "Linux x86_64");
-    const browser = await fall(undefined, "MacIntel");
-    const alt = await fall(false, "MacIntel");
+    const browser = await fall(false, "MacIntel");
     for (const [name, r] of [["macOS", mac], ["Windows", win]]) {
-      // Welcher Dienst gewaehlt ist, haengt von frueheren Punkten ab; es
-      // zaehlt, dass genau eine https-Adresse an die Anwendung geht.
-      pruefe(r.ueber.length === 1 && /^https:\/\/[\w.-]+\//.test(r.ueber[0]),
-             `${name}: der Dienst wurde nicht ueber die Anwendung geoeffnet: ${JSON.stringify(r.ueber)}`);
+      pruefe(r.klicks.length === 1 && /^https:\/\/[\w.-]+\//.test(r.klicks[0].href),
+             `${name}: kein einzelner Verweis angeklickt: ${JSON.stringify(r.klicks)}`);
+      pruefe(r.klicks[0] && r.klicks[0].target === "_blank"
+             && /noopener/.test(r.klicks[0].rel || ""),
+             `${name}: der Verweis ist kein <a target="_blank" rel="noopener …">`);
       pruefe(r.fenster === 0,
              `${name}: zusaetzlich window.open aufgerufen (${r.fenster}x) — Dienst doppelt`);
+      pruefe(JSON.stringify(r.ablauf.slice(0, 3)) === JSON.stringify(["kopieren", "verweis", "mikro"]),
+             `${name}: Reihenfolge ${JSON.stringify(r.ablauf)} statt kopieren, verweis, (erst dann) mikro — ` +
+             "der Verweis kommt nach einem await, und dann ist die Nutzergeste verbraucht");
+      pruefe(letztKopiert && letztKopiert.length > 0, `${name}: nichts kopiert`);
     }
-    pruefe(linux.ueber.length === 0 && linux.fenster === 1,
-           "Linux: window.open sollte bleiben, die Anwendung nicht gerufen werden");
-    pruefe(browser.ueber.length === 0 && browser.fenster === 1,
-           "im Browser: window.open sollte bleiben");
-    pruefe(alt.ueber.length === 0 && alt.fenster === 1,
-           "ohne oeffne_dienst in der Bruecke (aeltere Anwendung): kein Rueckfall auf window.open");
+    pruefe(linux.klicks.length === 0 && linux.fenster === 1,
+           "Linux: window.open sollte bleiben, kein Verweis angeklickt werden");
+    pruefe(browser.klicks.length === 0 && browser.fenster === 1,
+           "im Browser: window.open sollte bleiben, kein Verweis angeklickt werden");
+    navigator.clipboard.writeText = warSchreiben;
     window.pywebview = warFenster;
     navigator.platform = warPlattform;
     if (fehler === vorher) {
-      console.log("   OK   macOS und Windows ueber die Anwendung, Linux und Browser wie bisher");
+      console.log("   OK   macOS und Windows: Kopieren gestartet, Verweis sofort angeklickt; Linux und Browser wie bisher");
+    }
+  }
+
+  console.log("82. Die Dienste stehen alphabetisch, im Menue und in den Einstellungen");
+  // Mistral fehlte in der Vorgabe des Servers (die Oberflaeche kannte es, der
+  // Server nicht — und die Liste kommt vom Server). Jetzt steht die ganze Liste
+  // alphabetisch da, gewaehlt bleibt trotzdem Claude. Ein Eintrag ohne Namen
+  // (gerade angelegt) steht ZULETZT, damit er beim Tippen nicht davonspringt.
+  {
+    const vorher = fehler;
+    const warDienste = M.zustand.dienste;
+    const warDienst = M.zustand.dienst;
+    M.zustand.dienste = [
+      { id: "z", name: "Zeta", url: "https://z.example/" },
+      { id: "n", name: "", url: "" },
+      { id: "a", name: "alpha", url: "https://a.example/" },
+      { id: "b", name: "Beta", url: "https://b.example/" },
+    ];
+    M.zustand.dienst = "z";
+    M.zeichne();
+    const menu = document.getElementById("dienstmenu");
+    const menueNamen = menu._kinder.map((k) => text(k));
+    pruefe(JSON.stringify(menueNamen) === JSON.stringify(["alpha", "Beta", "Zeta", ""]),
+           `das Dienstmenue ist nicht alphabetisch: ${JSON.stringify(menueNamen)}`);
+    M.zeichneDienstliste();
+    const zeilen = document.getElementById("einst-dienste")._kinder;
+    const listeNamen = zeilen.map((zl) => zl._kinder[0].value);
+    pruefe(JSON.stringify(listeNamen) === JSON.stringify(["alpha", "Beta", "Zeta", ""]),
+           `die Einstellungen sind nicht alphabetisch: ${JSON.stringify(listeNamen)}`);
+    // Entfernen trifft den RICHTIGEN Eintrag, auch wenn die Anzeige sortiert ist
+    // (vorher wurde ueber den Platz in der Anzeige gestrichen).
+    const weg = zeilen[1]._kinder[2];             // «Beta»: Platz 1 in der Anzeige, 3 in der Liste
+    for (const f of weg._h["click"] || []) f({});
+    pruefe(M.zustand.dienste.map((d) => d.name).sort().join(",") === ",Zeta,alpha",
+           `Entfernen traf den falschen Eintrag: ${M.zustand.dienste.map((d) => d.name)}`);
+    M.zustand.dienste = warDienste;
+    M.zustand.dienst = warDienst;
+    M.zeichne();
+    M.zeichneDienstliste();
+    if (fehler === vorher) {
+      console.log("   OK   Menue und Einstellungen alphabetisch, ohne Namen zuletzt, Entfernen trifft den richtigen");
     }
   }
 

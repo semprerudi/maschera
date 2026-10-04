@@ -78,7 +78,7 @@ from filter_document import Mitschreiber  # noqa: E402
 # hier heraus. `tests/test_fenster.py` Punkt 7 prueft, dass es bei dieser
 # einen Stelle bleibt. In einem Fehlerbericht sagt sie, welcher Stand
 # gemeint ist.
-VERSION = "1.0.2"
+VERSION = "1.0.3"
 
 # Mehr nimmt der Server nicht an. Ein Dokument ist laut Messung 1500 bis 4500
 # Zeichen; 10 MB fangen auch ein PDF mit Bildern ab, ohne dass ein

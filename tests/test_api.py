@@ -557,6 +557,17 @@ d = c.get("/api/einstellungen").get_json()
 check(d["adresse"] == "127.0.0.1", "Vorgabeadresse fehlt")
 check(d["port"] == 4141, f"Vorgabeport {d['port']}")
 check(any(x["id"] == "claude" for x in d["dienste"]), "Claude fehlt")
+# Die Vorgabe der Dienste: alphabetisch nach Name, Mistral dabei, gewaehlt bleibt
+# Claude. Mistral fehlte bis 1.0.2 — die Oberflaeche kannte es, der Server nicht,
+# und die Liste kommt vom Server.
+_namen = [x["name"] for x in d["dienste"]]
+check(_namen == sorted(_namen, key=str.lower),
+      f"die Vorgabe der Dienste ist nicht alphabetisch: {_namen}")
+check("Mistral" in _namen and any(x["url"] == "https://chat.mistral.ai/chat"
+                                  for x in d["dienste"]),
+      f"Mistral fehlt in der Vorgabe: {_namen}")
+check(d.get("dienst") == "claude",
+      f"gewaehlt ist nicht Claude, sondern {d.get('dienst')!r}")
 check(d["schriftgroesse"] == 100 and d["schriftart"] == "werk",
       "Schriftvorgabe fehlt")
 

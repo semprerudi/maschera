@@ -79,6 +79,10 @@ jobs:
           done
           echo "--- Protokoll der App (letzte 80 Zeilen)"
           tail -80 rauchtest.log || true
+          # Der Hilfsprozess von multiprocessing darf keine Fehlzeile mehr melden.
+          if grep -q "unrecognized arguments" rauchtest.log; then
+            echo "::warning title=Rauchtest::fenster.py meldet noch unbekannte Argumente (resource_tracker)"
+          fi
           if kill -0 "$PID" 2>/dev/null; then echo "--- Prozess laeuft noch"; else echo "--- Prozess beendet"; fi
           if [ "$ok" != 1 ]; then
             echo "::warning title=Rauchtest::Der Server auf Port 4141 hat nicht geantwortet"

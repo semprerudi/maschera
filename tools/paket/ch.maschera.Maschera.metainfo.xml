@@ -93,6 +93,14 @@
   -->
 
   <releases>
+    <release version="1.0.3" date="2026-10-04">
+      <description>
+        <p>The button that copies the prompt and opens the AI service now
+        opens it like a menu link on macOS and Windows. The list of services
+        is alphabetical and includes Mistral by default. Quieter start on
+        macOS.</p>
+      </description>
+    </release>
     <release version="1.0.2" date="2026-10-03">
       <description>
         <p>Fixes found while testing on macOS: the button that copies the

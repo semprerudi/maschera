@@ -1384,32 +1384,7 @@ check(not [n for n in vars(_k) if not n.startswith("_")],
       "die kleine Bruecke traegt oeffentliche Felder")
 _km = sorted(n for n in dir(_k)
              if not n.startswith("_") and callable(getattr(_k, n)))
-check(_km == ["neustart", "oeffne_dienst"],
-      f"die kleine Bruecke bietet {_km} an, erwartet neustart, oeffne_dienst")
-
-# `oeffne_dienst` oeffnet NUR eine Adresse aus den eigenen Diensten. Eine
-# Methode, die jede Adresse oeffnete, liesse die Seite den Browser des
-# Anwenders steuern. Geprueft am echten Aufruf, mit eingesetztem Oeffner.
-_dienste = {"https://claude.ai/new", "https://chatgpt.com/"}
-_geoeffnet = []
-_oeff = lambda u: _geoeffnet.append(u) or True                    # noqa: E731
-check(fenster.dienst_oeffnen("https://claude.ai/new", _dienste, _oeff) is True
-      and _geoeffnet == ["https://claude.ai/new"],
-      "ein eigener Dienst wird nicht geoeffnet")
-for _fremd in ("https://boese.example/", "javascript:alert(1)",
-               "file:///etc/passwd", "claude.ai", "", None, 5,
-               "https://claude.ai/new#x", "http://claude.ai/new"):
-    _geoeffnet.clear()
-    check(fenster.dienst_oeffnen(_fremd, _dienste, _oeff) is False
-          and not _geoeffnet,
-          f"eine fremde Adresse wurde geoeffnet: {_fremd!r}")
-# Auch eine Adresse in der Liste, die kein http(s) ist, geht nicht.
-_geoeffnet.clear()
-check(fenster.dienst_oeffnen("file:///x", {"file:///x"}, _oeff) is False
-      and not _geoeffnet, "ein file:// aus der Liste wurde geoeffnet")
-# Ohne eigene Liste gilt die gespeicherte: ein fremder Eintrag bleibt zu.
-check(fenster.dienst_oeffnen("https://boese.example/", None, _oeff) is False,
-      "die Vorgabeliste laesst eine fremde Adresse zu")
+check(_km == ["neustart"], f"die kleine Bruecke bietet {_km} an")
 
 # Der Nachfolger startet auf demselben Weg — und wartet auf den Vorgaenger.
 _nb = fenster.neustart_befehl
@@ -1568,6 +1543,42 @@ with _tf.TemporaryDirectory() as _tmp25:
           f"der Windows-Modellordner enthaelt {_drin25}")
 if not failures:
     print("   OK   Docker, AppImage und Windows lassen Pickle und Checkpoints weg")
+
+print("\n28. Der Hilfsprozess der Standardbibliothek wird erkannt, fremder Code nicht")
+# ⚠️ Unter macOS stand beim Start `fenster.py: error: unrecognized arguments: -B
+# -S -I -c from multiprocessing.resource_tracker import main;main(5)`:
+# `multiprocessing` startet seinen Tracker ueber die eigene Programmdatei, und
+# im eingefrorenen Programm kommen die Argumente bei `fenster.py` an. Erkannt
+# wird GENAU dieser eine Aufruf; er wird aufgerufen, nicht als Text ausgefuehrt.
+# Wer die Programmdatei mit eigenem Code in `-c` startet, bekommt ihn nicht
+# ausgefuehrt — das waere ein Weg, Namen und Rechte dieser App zu borgen.
+import importlib.util as _ilu28                                    # noqa: E402
+_sp28 = _ilu28.spec_from_file_location(
+    "_windows_start", WURZEL / "tools/paket/windows_start.py")
+_ws = _ilu28.module_from_spec(_sp28)
+_sp28.loader.exec_module(_ws)      # startet NICHT: nur als Hauptprogramm
+_aufrufe = []
+_ok = _ws.hilfsprozess(["x", "-B", "-S", "-I", "-c",
+                        "from multiprocessing.resource_tracker import main;main(5)"],
+                       tracker=_aufrufe.append)
+check(_ok is True and _aufrufe == [5],
+      f"der Tracker-Aufruf wird nicht erkannt: {_ok}, {_aufrufe}")
+for _fremd in (
+        ["x", "-B", "-S", "-I", "-c", "import os;os.system('echo boese')"],
+        ["x", "-B", "-S", "-I", "-c",
+         "from multiprocessing.resource_tracker import main;main(5);import os"],
+        ["x", "-B", "-S", "-I", "-c",
+         "from multiprocessing.resource_tracker import main;main(__import__('os'))"],
+        ["x", "-c", "from multiprocessing.resource_tracker import main;main(5)"],
+        ["x"], ["x", "--model", "m"], []):
+    _aufrufe.clear()
+    check(_ws.hilfsprozess(_fremd, tracker=_aufrufe.append) is False
+          and not _aufrufe, f"ein fremder Aufruf wurde angenommen: {_fremd}")
+_q = (WURZEL / "tools/paket/windows_start.py").read_text(encoding="utf-8")
+check("exec(" not in ohne_kommentare(_q) and "eval(" not in ohne_kommentare(_q),
+      "windows_start.py fuehrt Text aus (exec/eval)")
+if not failures:
+    print("   OK   genau der Tracker-Aufruf, nichts anderes, kein exec")
 
 print("\n27. Was das AppRun an fenster.py weitergibt, kennt fenster.py")
 # ⚠️ Bis 1.0.1 gab das `AppRun` `MASCHERA_PORT` als `--port` weiter — eine

@@ -1051,40 +1051,11 @@ def port_uebersteuerung(umgebung=None) -> int | None:
     return port
 
 
-def dienst_oeffnen(url, erlaubt=None, oeffner=None) -> bool:
-    """Eine Dienstadresse im Standardbrowser oeffnen — und nur eine, die der
-    Anwender selbst eingetragen hat.
-
-    ⚠️ Warum es das gibt: «Kopieren und … oeffnen» rief `window.open` NACH
-    einem `await` auf. Unter macOS (WKWebView) verfaellt die Nutzergeste dabei,
-    und pywebview faengt Popup-Fenster dort nicht ab — der Knopf tat gar
-    nichts. Unter Linux ging es nur, weil QtWebEngine das Popup selbst baut.
-    Die Menue-Links gingen immer, weil sie normale Verweise sind.
-
-    ⚠️ Warum eine Liste: die Seite darf diese Bruecke aufrufen, und eine
-    Methode, die JEDE Adresse oeffnet, waere ein Weg, den Browser des
-    Anwenders von der Seite aus zu steuern. Erlaubt ist, was in den
-    Einstellungen unter `dienste` steht (Vorgabe: Claude, ChatGPT, Gemini,
-    Copilot) — und nur mit `https://` oder `http://`.
-    """
-    if not isinstance(url, str):
-        return False
-    if erlaubt is None:
-        from core import einstellungen as est
-        erlaubt = {d["url"] for d in est.lade()["dienste"]}
-    if url not in erlaubt or not url.lower().startswith(("https://", "http://")):
-        return False
-    if oeffner is None:
-        import webbrowser
-        oeffner = webbrowser.open
-    return bool(oeffner(url))
-
-
 class Bruecke:
     """Die Bruecke der laufenden Oberflaeche, wenn es kein Onboarding gibt.
 
-    ZWEI Methoden: `neustart` und `oeffne_dienst`. Was hier steht, darf die
-    Seite ausloesen — und sonst nichts. Keine oeffentlichen Felder: pywebview steigt in jedes hinein
+    EINE Methode. Was hier steht, darf die Seite ausloesen — und sonst
+    nichts. Keine oeffentlichen Felder: pywebview steigt in jedes hinein
     (siehe `Onboarding`), unter Windows endlos. `tests/test_fenster.py`
     Punkt 23 haelt beides fest.
     """
@@ -1094,9 +1065,6 @@ class Bruecke:
 
     def neustart(self) -> None:
         neustart_ausloesen(self._fenster)
-
-    def oeffne_dienst(self, url: str) -> bool:
-        return dienst_oeffnen(url)
 
 
 def neu_starten() -> None:

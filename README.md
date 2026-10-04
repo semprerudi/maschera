@@ -216,7 +216,9 @@ once, in *Terminal*:
 xattr -dr com.apple.quarantine /Applications/MASCHERA.app
 ```
 
-The macOS build is new and has been tested on one Mac so far.
+The macOS build is new and has been tested on one Mac so far. In the app, the
+button "Copy and open …" is not confirmed to open the service there; if
+nothing opens, open the service by hand — the text is in the clipboard.
 
 ### Docker
 
@@ -224,7 +226,7 @@ A ready-made image, about 4.2 GB, the model included:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:1.0.2
+    ghcr.io/semprerudi/maschera:1.0.3
 ```
 
 Then open `http://127.0.0.1:4141` in the browser. The server keeps
@@ -250,7 +252,7 @@ from 1.0.2 on; 1.0.1 is not. The signature is tied to the GitHub account's
 `noreply` address, the same one that appears on the commits:
 
 ```fish
-cosign verify ghcr.io/semprerudi/maschera:1.0.2 \
+cosign verify ghcr.io/semprerudi/maschera:latest \
     --certificate-identity 30689933+semprerudi@users.noreply.github.com \
     --certificate-oidc-issuer https://github.com/login/oauth
 ```

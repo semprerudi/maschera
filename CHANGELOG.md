@@ -12,6 +12,12 @@
   Erkannt und aufgerufen wird genau dieser eine Aufruf der Standardbibliothek;
   Text aus den Startargumenten wird nie ausgeführt.
 
+### Bekannt
+- macOS, in der App: ob «Kopieren und … öffnen» den Dienst öffnet, ist auch
+  mit dieser Änderung **nicht bestätigt** (im Server-/Browserbetrieb geht es). Der
+  Text liegt in jedem Fall in der Zwischenablage; der Dienst lässt sich von Hand
+  öffnen.
+
 ### Geändert
 - Die Dienste stehen alphabetisch (ChatGPT, Claude, Copilot, Gemini, Mistral),
   im Pulldown und in den Einstellungen. **Mistral** ist neu in der Vorgabe.

@@ -220,7 +220,9 @@ Quarantäne-Markierung entfernen:
 xattr -dr com.apple.quarantine /Applications/MASCHERA.app
 ```
 
-Der macOS-Bau ist neu und bisher auf einem Mac getestet.
+Der macOS-Bau ist neu und bisher auf einem Mac getestet. In der App ist nicht
+bestätigt, dass der Knopf «Kopieren und … öffnen» den Dienst dort öffnet; falls
+nichts aufgeht, den Dienst von Hand öffnen — der Text liegt in der Zwischenablage.
 
 ### Docker
 
@@ -228,7 +230,7 @@ Ein fertiges Abbild, rund 4,2 GB, das Modell fährt mit:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:1.0.2
+    ghcr.io/semprerudi/maschera:1.0.3
 ```
 
 Danach im Browser `http://127.0.0.1:4141` öffnen. Der Server speichert
@@ -255,7 +257,7 @@ Das Docker-Abbild ist ab 1.0.2 signiert (ohne eigenen Schlüssel, mit
 gehört zur `noreply`-Adresse des GitHub-Kontos, derselben wie auf den Commits:
 
 ```fish
-cosign verify ghcr.io/semprerudi/maschera:1.0.2 \
+cosign verify ghcr.io/semprerudi/maschera:latest \
     --certificate-identity 30689933+semprerudi@users.noreply.github.com \
     --certificate-oidc-issuer https://github.com/login/oauth
 ```

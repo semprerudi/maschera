@@ -216,9 +216,9 @@ once, in *Terminal*:
 xattr -dr com.apple.quarantine /Applications/MASCHERA.app
 ```
 
-The macOS build is new and has been tested on one Mac so far. In the app, the
-button "Copy and open …" is not confirmed to open the service there; if
-nothing opens, open the service by hand — the text is in the clipboard.
+The macOS build is new and has been tested on one Mac so far, including
+"Copy and open …". Messages from Apple Mail cannot be dragged straight into
+the window (Mail hands over no file); drag them to the desktop first, then in.
 
 ### Docker
 
@@ -226,7 +226,7 @@ A ready-made image, about 4.2 GB, the model included:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:1.0.3
+    ghcr.io/semprerudi/maschera:1.0.4
 ```
 
 Then open `http://127.0.0.1:4141` in the browser. The server keeps
@@ -277,7 +277,7 @@ fish tools/paket/bauen.fish                   # Docker
 `tools/paket/LIESMICH.md` (German) describes each path and the decisions
 behind it, including how to fetch the model for the AppImage and Docker
 builds. `WINDOWS.md` (German) describes the Windows build as it was run;
-`MACOS.md` describes the macOS build, which runs on GitHub (workflow `macOS-Bau`, started by hand).
+`MACOS.md` describes the macOS build, which runs on GitHub (workflow `Pakete bauen`, started by hand).
 
 ## Get started
 

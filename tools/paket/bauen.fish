@@ -17,7 +17,11 @@ set -l FASSUNG (fish $STAMM/tools/paket/fassung.fish)
 or exit 1
 
 echo "MASCHERA $FASSUNG"
-docker build -f tools/paket/Dockerfile -t maschera:$FASSUNG .
+# `--pull`: das Grundbild `python:3.13-slim` jedes Mal frisch holen. Ohne
+# bleibt der Bau beim Python, das zufaellig schon auf dem Server liegt —
+# und eine behobene Luecke der Standardbibliothek (z. B. `zipfile` in
+# 3.13.16) kaeme nie im Abbild an.
+docker build --pull -f tools/paket/Dockerfile -t maschera:$FASSUNG .
 or exit 1
 
 # `docker compose` liest `.env` aus dem Verzeichnis der Compose-Datei.

@@ -4201,6 +4201,26 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     }
   }
 
+  console.log("83. Ein Ablegen ohne Datei (Apple Mail) meldet sich, statt zu schweigen");
+  {
+    const vorher = fehler;
+    const o = document.getElementById("ablage");
+    const f = document.getElementById("fehler");
+    f.replaceChildren();
+    for (const h of o._h["drop"] || []) {
+      await h({ preventDefault() {}, stopPropagation() {}, target: o, currentTarget: o,
+                dataTransfer: { files: [], types: ["com.apple.mail.PasteboardTypeMessageTransfer", "text/uri-list"] } });
+    }
+    const z83 = text(f);
+    pruefe(z83.includes(M.I18N.de.drop_ohne_datei), `keine Meldung beim Ablegen ohne Datei: «${z83}»`);
+    pruefe(z83.includes("text/uri-list"), "die Typen der Quelle fehlen in der Meldung");
+    for (const sp of ["de", "fr", "it", "en"]) {
+      pruefe(typeof M.I18N[sp].drop_ohne_datei === "string" && M.I18N[sp].drop_ohne_datei.length > 20,
+             `drop_ohne_datei fehlt in ${sp}`);
+    }
+    if (fehler === vorher) console.log("   OK   Meldung in vier Sprachen, mit den Typen der Quelle");
+  }
+
   console.log("");
   amEnde = true;
   if (fehler) {

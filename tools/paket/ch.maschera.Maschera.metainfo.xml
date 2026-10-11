@@ -93,6 +93,14 @@
   -->
 
   <releases>
+    <release version="1.0.4" date="2026-10-11">
+      <description>
+        <p>Security update: Werkzeug 3.1.9 (a request could hang the Windows
+        version) and the newest Python 3.13 in every build. Dropping
+        something that is not a file, such as a message straight from Apple
+        Mail, now explains what to do instead of doing nothing.</p>
+      </description>
+    </release>
     <release version="1.0.3" date="2026-10-04">
       <description>
         <p>The button that copies the prompt and opens the AI service now

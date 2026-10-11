@@ -1661,9 +1661,9 @@ else:
             check(re.fullmatch(r"[\w./-]+@[0-9a-f]{40}", _u) is not None,
                   f"{_wf.name}: Action nicht auf einen Commit festgenagelt: "
                   f"{_u}")
-        if _wf.name == "macos.yml":
+        if _wf.name == "pakete.yml":
             check(_ausl == {"workflow_dispatch"},
-                  f"der macOS-Workflow startet nicht nur von Hand: {_aus}")
+                  f"der Paket-Workflow startet nicht nur von Hand: {_aus}")
         if _wf.name == "tests.yml":
             check(_ausl <= {"push", "pull_request"} and _ausl,
                   f"der Testlauf startet bei etwas anderem als Push und "
@@ -1686,6 +1686,20 @@ if _dep.is_file():
 if not failures:
     print(f"   OK   gemeinsame Listen; {len(_wfs)} Workflows: nur lesen, "
           "Actions gepinnt, richtige Ausloeser")
+
+print("\n29. Die Bauten holen das neueste Python, nicht das, was gerade daliegt")
+# Docker und AppImage bauen auf einer Python-Fassung, die nicht aus den
+# Requirements kommt. Ohne `--pull` bzw. `uv python upgrade` bleibt jeder
+# Bau beim zuletzt geholten Stand — 1.0.3 lag als AppImage auf 3.13.15,
+# als die Luecke in `zipfile` schon in 3.13.16 behoben war (11.10.2026).
+_bauen29 = (WURZEL / "tools" / "paket" / "bauen.fish").read_text(encoding="utf-8")
+check(re.search(r"^docker build [^\n]*--pull", _bauen29, re.M) is not None,
+      "bauen.fish: `docker build` ohne `--pull`")
+_app29 = (WURZEL / "tools" / "paket" / "appimage_bauen.fish").read_text(encoding="utf-8")
+check(re.search(r"^uv python upgrade ", _app29, re.M) is not None,
+      "appimage_bauen.fish: kein `uv python upgrade`")
+if not failures:
+    print("   OK   docker build --pull, uv python upgrade")
 
 print()
 if failures:

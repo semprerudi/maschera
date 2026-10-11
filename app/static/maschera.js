@@ -244,6 +244,7 @@ const I18N = {
         schriftMono: "Feste Breite",
         herunterladen: "Herunterladen", einfuegen: "Einfügen",
         einfuegenHinweis: "Zwischenablage gesperrt — bitte Ctrl+V drücken.",
+        drop_ohne_datei: "Aus diesem Programm kommt keine Datei an. Ziehe die Nachricht zuerst auf den Schreibtisch und dann hierher.",
         kAusschneiden: "Ausschneiden", kKopieren: "Kopieren", kEinfuegen: "Einfügen",
         menu: "Menü",
         mBrowser: "Im Browser öffnen", mHilfe: "Hilfe",
@@ -509,6 +510,7 @@ const I18N = {
         schriftMono: "Largeur fixe",
         herunterladen: "Télécharger", einfuegen: "Coller",
         einfuegenHinweis: "Presse-papiers bloqué — utilise Ctrl+V.",
+        drop_ohne_datei: "Ce programme ne fournit aucun fichier. Glisse d’abord le message sur le bureau, puis ici.",
         kAusschneiden: "Couper", kKopieren: "Copier", kEinfuegen: "Coller",
         menu: "Menu",
         mBrowser: "Ouvrir dans le navigateur", mHilfe: "Aide",
@@ -765,6 +767,7 @@ const I18N = {
         schriftMono: "Larghezza fissa",
         herunterladen: "Scarica", einfuegen: "Incolla",
         einfuegenHinweis: "Appunti bloccati — usa Ctrl+V.",
+        drop_ohne_datei: "Da questo programma non arriva alcun file. Trascina prima il messaggio sulla scrivania, poi qui.",
         kAusschneiden: "Taglia", kKopieren: "Copia", kEinfuegen: "Incolla",
         menu: "Menu",
         mBrowser: "Apri nel browser", mHilfe: "Aiuto",
@@ -1020,6 +1023,7 @@ const I18N = {
         schriftMono: "Monospace",
         herunterladen: "Download", einfuegen: "Paste",
         einfuegenHinweis: "Clipboard blocked — press Ctrl+V.",
+        drop_ohne_datei: "This program does not hand over a file. Drag the message to the desktop first, then here.",
         kAusschneiden: "Cut", kKopieren: "Copy", kEinfuegen: "Paste",
         menu: "Menu",
         mBrowser: "Open in browser", mHilfe: "Help",
@@ -3854,7 +3858,17 @@ function verbinde() {
     schleierAus();
     const d = e.dataTransfer && e.dataTransfer.files &&
               e.dataTransfer.files[0];
-    if (d && (await verwerfenOk())) ablegen(d);
+    if (d) {
+      if (await verwerfenOk()) ablegen(d);
+      return;
+    }
+    // Apple Mail & Co. liefern ein Versprechen statt einer Datei. Kein
+    // stilles Nichts: sagen, was zu tun ist, und die Typen nennen, damit ein
+    // Fehlerbericht zeigt, was die Quelle wirklich mitbrachte.
+    const typen = Array.prototype.slice.call(
+      (e.dataTransfer && e.dataTransfer.types) || []).join(", ");
+    $("fehler").replaceChildren(
+      el("p", "fehler-text", t().drop_ohne_datei + (typen ? " (" + typen + ")" : "")));
   });
 
   // ZWEI Dinge auf der ganzen Seite, nicht nur auf der Flaeche.

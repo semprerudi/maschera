@@ -4,7 +4,7 @@ Wie aus diesem Baum eine `.app` und ein `.dmg` werden. Das Gegenstück zu
 `appimage_bauen.fish` für Linux und zu `WINDOWS.md`.
 
 ✅ **Diesen Bau gibt es seit dem 3.10.2026**, und er läuft auf GitHub, nicht auf
-einem eigenen Mac: `.github/workflows/macos.yml` (nur von Hand zu starten),
+einem eigenen Mac: `.github/workflows/pakete.yml` (nur von Hand zu starten),
 Bauskript `tools/paket/macos_bauen.py`, Symbol `macos-symbol-1024.png`. Das
 Ergebnis ist ein Artefakt des Laufs, `MASCHERA-<fassung>-arm64.dmg`.
 

@@ -28,8 +28,8 @@ pyyaml>=6.0               # steht auch in der Laufzeit, hier fuer Werkzeuge
 # `tests/test_schriften.py` Punkt 5 liest die Schriften. Ohne `fonttools`
 # bleibt er aus und sagt es; ohne `brotli` scheitert er an JEDER Datei,
 # weil alle `.woff2` sind.
-fonttools>=4.40
-brotli>=1.0               # WOFF2 entpacken
+fonttools>=4.60.2
+brotli>=1.2.0               # WOFF2 entpacken
 
 # --- Bildschirmfotos der Projektseite (tools/schirmbilder.py) ---------
 # Danach einmal: python3 -m playwright install chromium

@@ -1,5 +1,27 @@
 # Änderungen
 
+## 1.0.4 – 2026-10-11
+
+### Sicherheit
+- Werkzeug ≥ 3.1.9 (CVE-2026-102598): unter **Windows** liess sich eine
+  Anfrage mit einem Gerätenamen wie `NUL:` endlos hängen (lokaler DoS). Linux,
+  macOS und Docker waren nicht betroffen.
+- Die Bauten holen jetzt jedes Mal das neueste Python 3.13: Docker mit
+  `--pull`, das AppImage mit `uv python upgrade`. Das AppImage 1.0.3 lief noch
+  auf 3.13.15; 3.13.16 behebt eine Lücke in `zipfile` (CVE-2026-15310), das
+  beim Lesen von Word-Dateien gebraucht wird.
+
+### Geändert
+- Was sich nicht als Datei ablegen lässt — etwa eine Nachricht direkt aus
+  Apple Mail —, meldet sich jetzt in vier Sprachen, statt still nichts zu tun:
+  zuerst auf den Schreibtisch ziehen, dann hierher.
+- Der Windows-Installer wird jetzt wie das macOS-Paket auf GitHub gebaut
+  (`.github/workflows/pakete.yml`), aus einer frischen Umgebung.
+
+### Bestätigt
+- macOS: «Kopieren und … öffnen» öffnet den Dienst auch in der App (getestet
+  mit 1.0.3 am 4.10.2026).
+
 ## 1.0.3 – 2026-10-04
 
 ### Behoben

@@ -53,6 +53,10 @@ mkdir -p $BAU/usr/lib/maschera $BAU/usr/lib/python
 echo "── 2. Eigenstaendiges Python $PYFASSUNG"
 uv python install $PYFASSUNG
 or exit 1
+# `install` laesst eine schon vorhandene 3.13.x stehen; erst `upgrade` holt
+# die neueste Patch-Fassung. 1.0.3 kam so mit 3.13.15 statt 3.13.16 heraus.
+uv python upgrade $PYFASSUNG
+or exit 1
 set -l PYQUELLE (uv python find $PYFASSUNG)
 or exit 1
 # Zwei Ebenen hoch: .../bin/python3 -> die Wurzel der Installation

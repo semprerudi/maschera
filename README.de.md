@@ -220,9 +220,9 @@ Quarantäne-Markierung entfernen:
 xattr -dr com.apple.quarantine /Applications/MASCHERA.app
 ```
 
-Der macOS-Bau ist neu und bisher auf einem Mac getestet. In der App ist nicht
-bestätigt, dass der Knopf «Kopieren und … öffnen» den Dienst dort öffnet; falls
-nichts aufgeht, den Dienst von Hand öffnen — der Text liegt in der Zwischenablage.
+Der macOS-Bau ist neu und bisher auf einem Mac getestet, auch «Kopieren und …
+öffnen». Nachrichten aus Apple Mail lassen sich nicht direkt ins Fenster ziehen
+(Mail übergibt keine Datei); zuerst auf den Schreibtisch ziehen, dann hinein.
 
 ### Docker
 
@@ -230,7 +230,7 @@ Ein fertiges Abbild, rund 4,2 GB, das Modell fährt mit:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:1.0.3
+    ghcr.io/semprerudi/maschera:1.0.4
 ```
 
 Danach im Browser `http://127.0.0.1:4141` öffnen. Der Server speichert
@@ -282,7 +282,7 @@ fish tools/paket/bauen.fish                   # Docker
 `tools/paket/LIESMICH.md` beschreibt jeden Weg samt den Entscheiden
 dahinter, auch wie das Modell für AppImage und Docker geholt wird.
 `WINDOWS.md` beschreibt den Windows-Bau, wie er gelaufen ist; `MACOS.md`
-beschreibt den macOS-Bau, der auf GitHub läuft (Workflow `macOS-Bau`, von Hand gestartet).
+beschreibt den macOS-Bau, der auf GitHub läuft (Workflow `Pakete bauen`, von Hand gestartet).
 
 ## Sofort loslegen
 

@@ -1462,7 +1462,13 @@ table.vokabular td {
   border-bottom: 1px solid var(--color-neutral-300);
 }
 table.vokabular td:first-child { width: 32%; }
-table.vokabular td:last-child { padding-right: 0; width: 1%; }
+table.vokabular td:nth-child(3) { width: 1%; }
+table.vokabular td:last-child { padding-right: 0; width: 1%; text-align: center; }
+table.vokabular th.vok-weg-kopf { padding-right: 0; text-align: center; }
+/* Das Zeichen kommt aus `zeichenSinnbild` OHNE width/height-Attribut (die
+ * Knoepfe im HTML tragen 12) — ohne diese Zeile hat es keine Groesse und der
+ * Knopf steht leer da. Gemessen am ersten Bildschirmfoto, 16.10.2026. */
+.vok-weg svg { width: 0.75rem; height: 0.75rem; }
 table.vokabular input {
   width: 100%; box-sizing: border-box; border: 1px solid var(--color-neutral-300);
   background: var(--papier); padding: 0.25rem 0.4375rem; font-size: 0.7812rem;
@@ -2616,6 +2622,11 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
    * Damit wandert der Roller; `maschera.js` fragt `rollBehaelter()`.
    */
   main.raster { display: flex; flex-direction: column; overflow: visible; }
+  /* DICKERE TRENNLINIEN, NUR HIER (16.10.2026). Die Linie zwischen den
+     Kaesten ist kein Rahmen, sondern der Spalt auf grauem Grund. Dreispaltig
+     genuegt 1px und stoert nicht; untereinander, zwischen Kaesten von zwei
+     Dritteln Schirmhoehe, war sie kaum zu sehen. `test_oberflaeche` Punkt 86. */
+  main.raster { gap: 0.375rem; }
   main.raster > .spalte { display: contents; }
   main.raster > .spalte > .bereich { flex: none; }
 

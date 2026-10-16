@@ -1,5 +1,35 @@
 # Änderungen
 
+## 1.0.5 – 2026-10-16
+
+### Neu
+- **Entfernen im Vokabular:** jede Zeile hat ein rotes ×. Ein Klick nimmt den
+  Platzhalter im ganzen Dokument zurück — bei langen Dokumenten mit viel
+  Übermaskierung schneller als über das Klappmenü im Text.
+- **«Nach Updates suchen»** im Menü: fragt GitHub einmal nach der neuesten
+  Fassungsnummer, nur auf Klick, über den eigenen Server. Mitgeschickt wird
+  nichts. Im Docker-Betrieb (ohne Netz nach aussen) sagt es das und zeigt den
+  Weg zur Download-Seite.
+
+### Geändert
+- Schmale Fenster: die Trennlinien zwischen den Bereichen sind deutlich
+  dicker; nebeneinander bleiben sie dünn.
+
+### Sicherheit (Prüfung mit einem lokalen Modell, am Code nachgeprüft)
+- Das Modell wird von einem festen Commit auf Hugging Face geholt, nicht
+  von `main`.
+- Der Name einer hochgeladenen Datei wird nie zum Pfad (unter Windows sind
+  `con.txt` oder `aux.pdf` Geräte).
+- Laute Warnung beim Start, wenn `MASCHERA_WIRT=*` die Namensprüfung abschaltet.
+- Kein `exec`/`eval` mehr im Projekt, mit einer Wache dagegen.
+
+### Behoben
+- Ein Zeichen ohne eigene Grössenregel stand leer da; jedes Zeichen hat jetzt
+  eine Grundgrösse.
+
+### Bekannt
+- Der Windows-Installer und die macOS-App sind weiter **nicht signiert**.
+
 ## 1.0.4 – 2026-10-11
 
 ### Sicherheit

@@ -37,6 +37,9 @@ const HILFE_DE = [
       + "Schriften, keine Symbole und keine Statistik. Ohne "
       + "Netzverbindung funktioniert alles ausser dem Öffnen des "
       + "KI-Dienstes."],
+  ["p", "Eine Ausnahme wählst du selbst: «Nach Updates suchen» im Menü fragt "
+      + "GitHub einmal nach der neuesten Fassungsnummer. Mitgeschickt wird "
+      + "nichts, und ohne diesen Klick fragt MASCHERA nie."],
   ["p", "Je nach Paket liegt das Modell schon darin, oder es wird einmal "
       + "beim ersten Start geholt — aus einer benannten Quelle, mit "
       + "Prüfsumme, und erst nachdem du zugestimmt hast. Du kannst auch "
@@ -135,6 +138,10 @@ const HILFE_FR = [
       + "fonctionnement, rien n’est téléchargé et rien n’est envoyé — ni "
       + "polices, ni icônes, ni statistiques. Sans connexion réseau, tout "
       + "fonctionne, sauf l’ouverture du service IA."],
+  ["p", "Une exception, c’est toi qui la choisis : « Rechercher des mises à "
+      + "jour » dans le menu demande une fois à GitHub le numéro de la "
+      + "version la plus récente. Rien n’est envoyé, et sans ce clic "
+      + "MASCHERA ne demande jamais."],
   ["p", "Selon le paquet, le modèle y est déjà, ou il est récupéré une "
       + "seule fois au premier démarrage — d’une source nommée, avec une "
       + "somme de contrôle, et seulement après ton accord. Tu peux aussi "
@@ -232,6 +239,9 @@ const HILFE_IT = [
       + "Durante l’uso non viene scaricato né inviato nulla — nemmeno "
       + "caratteri, icone o statistiche. Senza connessione di rete "
       + "funziona tutto, tranne l’apertura del servizio IA."],
+  ["p", "Un’eccezione la scegli tu: «Cerca aggiornamenti» nel menu chiede una "
+      + "volta a GitHub il numero della versione più recente. Non viene "
+      + "inviato nulla, e senza questo clic MASCHERA non chiede mai."],
   ["p", "A seconda del pacchetto il modello è già incluso, oppure viene "
       + "scaricato una sola volta al primo avvio — da una fonte indicata, "
       + "con somma di controllo, e solo dopo il tuo consenso. Puoi anche "
@@ -329,6 +339,9 @@ const HILFE_EN = [
       + "is fetched and nothing is sent — no fonts, no icons, no "
       + "statistics. Without a network connection everything works except "
       + "opening the AI service."],
+  ["p", "One exception is yours to choose: “Check for updates” in the menu "
+      + "asks GitHub once for the newest version number. Nothing is sent "
+      + "along, and without that click MASCHERA never asks."],
   ["p", "Depending on the package the model is already inside, or it is "
       + "fetched once on first start — from a named source, with a "
       + "checksum, and only after you agree. You can also decline and do "

@@ -2,8 +2,9 @@
 
 [English](README.md) · **Deutsch**
 
-**Personendaten aus Schweizer Dokumenten maskieren — auf dem eigenen
-Gerät, im Betrieb ohne Netz.** Vier Sprachen: Deutsch, Französisch,
+**Freie Open-Source-Software, die Personendaten (PII) in Schweizer
+Dokumenten maskiert — auf dem eigenen Gerät, auf der CPU, ohne GPU und
+im Betrieb ohne Netz.** Vier Sprachen: Deutsch, Französisch,
 Italienisch, Englisch.
 
 Du hast ein Schreiben, einen Mailverlauf oder ein PDF und willst ein
@@ -19,7 +20,9 @@ zurück ein, und MASCHERA setzt die echten Werte wieder ein.
 
 Gedacht für alle, die mit Schweizer Dokumenten arbeiten: Verwaltungen von
 Bund, Kantonen und Gemeinden, Unternehmen, Kanzleien, Vereine und
-Privatpersonen.
+Privatpersonen. Nützlich überall, wo das Datenschutzgesetz (DSG/revDSG)
+oder die DSGVO gilt: Personendaten bleiben aus dem Text, den du
+weitergibst. Die eigene Kontrolle ersetzt das nicht.
 
 **Die Erkennung läuft vollständig auf deinem Gerät.** Im Betrieb wird
 nichts nachgeladen und nichts gesendet — auch keine Schriften, keine
@@ -185,7 +188,9 @@ Start geholt?**
 
 Wird das Modell geholt, **fragt der erste Start vorher**: er nennt
 Quelle, Grösse und Ziel, und «Später» schliesst die Anwendung wieder,
-ohne etwas zu laden. Danach läuft alles ohne Netz.
+ohne etwas zu laden. Danach läuft alles ohne Netz. Die eine Ausnahme
+wählst du selbst: «Nach Updates suchen» im Menü fragt GitHub einmal nach
+der neuesten Fassungsnummer — sonst nichts, und nie ohne diesen Klick.
 
 AppImage und Flatpak bringen ihre eigenen Bibliotheken mit und sind
 dadurch unabhängig davon, was auf dem System sonst installiert ist.
@@ -230,7 +235,7 @@ Ein fertiges Abbild, rund 4,2 GB, das Modell fährt mit:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:1.0.4
+    ghcr.io/semprerudi/maschera:1.0.5
 ```
 
 Danach im Browser `http://127.0.0.1:4141` öffnen. Der Server speichert

@@ -11,8 +11,144 @@
 })();
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MASCHERA: Personendaten maskieren, auf deinem Gerät</title>
-<meta name="description" content="MASCHERA maskiert Personendaten in Schweizer Dokumenten, lokal auf deinem Gerät und ohne Netzwerkverbindung.">
+<title>Schweizer Dokumente maskieren & anonymisieren – Open Source</title>
+<meta name="description" content="Freie Open-Source-Software: maskiert und anonymisiert Personendaten in Schweizer Dokumenten, bevor du sie mit ChatGPT & Co. teilst. Lokal, ohne GPU.">
+<link rel="canonical" href="https://www.maschera.ch/">
+<link rel="alternate" hreflang="de" href="https://www.maschera.ch/">
+<link rel="alternate" hreflang="fr" href="https://www.maschera.ch/fr/">
+<link rel="alternate" hreflang="it" href="https://www.maschera.ch/it/">
+<link rel="alternate" hreflang="en" href="https://www.maschera.ch/en/">
+<link rel="alternate" hreflang="x-default" href="https://www.maschera.ch/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MASCHERA">
+<meta property="og:url" content="https://www.maschera.ch/">
+<meta property="og:title" content="Schweizer Dokumente maskieren & anonymisieren – Open Source">
+<meta property="og:description" content="Freie Open-Source-Software: maskiert und anonymisiert Personendaten in Schweizer Dokumenten, bevor du sie mit ChatGPT & Co. teilst. Lokal, ohne GPU.">
+<meta property="og:image" content="https://www.maschera.ch/bilder/de/hero.png">
+<meta property="og:image:width" content="2000">
+<meta property="og:image:height" content="1178">
+<meta property="og:locale" content="de_CH">
+<meta property="og:locale:alternate" content="fr_CH">
+<meta property="og:locale:alternate" content="it_CH">
+<meta property="og:locale:alternate" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "MASCHERA",
+ "alternateName": "MASCHERA PII-Maskierung",
+ "description": "Open-source PII masking and anonymisation for Swiss documents: detects and pseudonymises or anonymises personal data (names, AHV numbers, addresses) locally on the CPU before text goes to an AI service. Free software, no GPU, no cloud.",
+ "url": "https://www.maschera.ch/",
+ "applicationCategory": "SecurityApplication",
+ "operatingSystem": "Windows 11, macOS (Apple silicon), Linux",
+ "inLanguage": [
+  "de",
+  "fr",
+  "it",
+  "en"
+ ],
+ "isAccessibleForFree": true,
+ "license": "https://github.com/semprerudi/maschera/blob/main/LIZENZ.md",
+ "offers": {
+  "@type": "Offer",
+  "price": "0",
+  "priceCurrency": "CHF"
+ },
+ "downloadUrl": "https://github.com/semprerudi/maschera/releases/latest",
+ "codeRepository": "https://github.com/semprerudi/maschera",
+ "sameAs": [
+  "https://github.com/semprerudi/maschera",
+  "https://huggingface.co/semprerudi/maschera-ch-v63b"
+ ],
+ "image": "https://www.maschera.ch/bilder/de/hero.png",
+ "countriesSupported": "CH",
+ "datePublished": "2026-09-26",
+ "dateModified": "2026-10-15",
+ "author": {
+  "@type": "Person",
+  "name": "Rodolfo Semprevivo",
+  "url": "https://github.com/semprerudi",
+  "address": {"@type": "PostalAddress", "addressCountry": "CH"}
+ },
+ "screenshot": "https://www.maschera.ch/bilder/de/hero.png",
+ "featureList": [
+  "Detects and masks 45 types of personal data in German, French, Italian and English",
+  "Swiss identifiers with checksum: AHV number, UID, IBAN, QR reference, EGID/EWID, ZSR number",
+  "Reversible pseudonymisation: paste the AI answer back and the real values return",
+  "Runs entirely on the local CPU: no GPU, no cloud, nothing sent while it runs",
+  "Reads PDF, DOCX, EML, MSG, MBOX, TXT, MD, CSV and JSON"
+ ],
+ "keywords": "PII, Anonymisierung, Pseudonymisierung, Datenschutz, DSG, revDSG, nDSG, Schweiz, Open Source, lokal, CPU, KI, ChatGPT"
+}
+</script>
+<!-- faq-ld -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "inLanguage": "de",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Wie maskiere oder anonymisiere ich Personendaten in einem Dokument, bevor ich ChatGPT oder Claude frage?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Öffne das Dokument in MASCHERA oder füge den Text ein und klicke auf «Maskieren». Namen, AHV-Nummern, Adressen und weitere Personendaten werden durch Platzhalter wie [FULLNAME_1] ersetzt. Du prüfst das Ergebnis, kopierst es in den Dienst deiner Wahl und fügst die Antwort zurück ein: MASCHERA setzt die echten Werte wieder ein."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Braucht MASCHERA eine Grafikkarte oder eine Internetverbindung?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Nein. Die Erkennung läuft auf einer gewöhnlichen CPU, ohne GPU. Im Betrieb wird nichts nachgeladen und nichts gesendet, ausser du klickst auf «Nach Updates suchen». Die AppImage, der Windows-Installer und das macOS-Abbild bringen das Modell mit; das Flatpak holt es einmal beim ersten Start, nach deiner Zustimmung."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Welche Schweizer Kennungen erkennt MASCHERA?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "AHV-Nummer, UID, IBAN, QR-Referenz, Gebäude- und Wohnungsidentifikator (EGID/EWID), Ausweiskategorie, Kontrollschild und ZSR-Nummer, jeweils mit der zugehörigen Prüfsumme, wo es eine gibt. Insgesamt sind es 45 Arten von Personendaten, in Deutsch, Französisch, Italienisch und Englisch."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Ist das Anonymisierung im Sinne des Datenschutzgesetzes?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Nein, und das ist Absicht. Solange das Wörterbuch besteht, lässt sich der Vorgang umkehren; nach dem revDSG bleiben die Daten dann Personendaten. Das heisst Pseudonymisierung. Für einen Text, der endgültig weitergeht, maskierst du ohne Wörterbuch: dann ist der Vorgang nicht mehr umkehrbar."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Welche Dateien kann MASCHERA lesen?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "PDF mit Textebene, Word (DOCX), E-Mails (EML, MSG aus Outlook, MBOX), TXT, MD, CSV und JSON. Ein gescanntes PDF ohne Textebene ergibt einen Fehler mit Begründung, nicht «keine Personendaten gefunden»."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Wie unterscheidet sich MASCHERA von Microsoft Presidio?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Presidio ist ein offenes Rahmenwerk für Entwickler, das Personendaten erkennt und maskiert. Es kennt Kennungen aus über zwanzig Ländern, aber keine aus der Schweiz; die müsste man selbst ergänzen. MASCHERA ist eine fertige Anwendung für Schweizer Dokumente, mit einer Oberfläche zum Prüfen und Zurückwandeln."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Kann ich ein Dokument auch endgültig anonymisieren?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Ja. Standardmässig maskiert MASCHERA umkehrbar: Mit dem Wörterbuch kommen die echten Werte wieder herein. Für einen Text, der weitergegeben oder veröffentlicht wird, maskierst du ohne Wörterbuch; dann ist der Vorgang nicht mehr umkehrbar. Prüfe trotzdem, ob indirekte Hinweise auf eine Person im Text stehen bleiben."
+   }
+  }
+ ]
+}
+</script>
+<!-- /faq-ld -->
 <link rel="icon" href="bilder/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="bilder/favicon.png">
 <link rel="stylesheet" href="stil.css">
@@ -22,7 +158,7 @@
 <header class="kopf">
   <div class="kopf-inhalt">
     <a class="marke" href="#oben">
-      <img src="bilder/maske-icon.png" alt="">
+      <img src="bilder/maske-icon.png" width="256" height="256" alt="MASCHERA">
       <span class="wortmarke">MAS<span class="che">CH</span>ERA</span>
     </a>
     <nav class="kopf-navi" aria-label="Seitenabschnitte">
@@ -48,8 +184,8 @@
 
 <!-- 1 · Kopf ─────────────────────────────────────────────────────────── -->
 <section class="bereich" style="padding-top:var(--s16)">
-  <p class="kicker" data-i18n="hero.kicker">Freie Software · Open Source · läuft ohne Netz</p>
-  <h1 data-i18n-html="hero.titel" style="font-size: 40px">MASCHERA maskiert Personendaten in Schweizer Dokumenten<span style="display:block; font-size:0.75em; line-height:1.3; margin-top:0.3em">Das geschieht auf deinem Gerät, immer lokal, ohne Netzwerkverbindung!</span></h1>
+  <p class="kicker" data-i18n="hero.kicker">Freie Software · Open Source · lokal auf der CPU, ohne GPU und ohne Netz</p>
+  <h1 data-i18n-html="hero.titel" style="font-size: 40px">MASCHERA maskiert und anonymisiert Personendaten in Schweizer Dokumenten<span style="display:block; font-size:0.75em; line-height:1.3; margin-top:0.3em">Das geschieht auf deinem Gerät, immer lokal, ohne Netzwerkverbindung!</span></h1>
   <p class="fuehrung" data-i18n="hero.lead">Du hast ein Schreiben, einen Mailverlauf oder ein PDF und willst ein KI-Werkzeug dazu befragen. Die Namen, AHV-Nummern und Adressen sollen dabei aber nicht mitgehen.</p>
   <p style="display:flex;gap:var(--s4);flex-wrap:wrap;margin-top:var(--s8)">
     <a class="knopf" href="#herunterladen" data-i18n="hero.knopf1">Herunterladen</a>
@@ -77,7 +213,7 @@
 <!-- 3 · Schirmbild ───────────────────────────────────────────────────── -->
 <section class="bereich" style="border-top:0;padding-top:0">
   <figure class="rahmen" style="margin:0">
-    <img class="schirm nur-hell" src="bilder/de/hero.png" data-bild="hero" alt="" data-i18n-attr="alt:bild.gross"><img class="schirm nur-dunkel" src="bilder/de/hero-dunkel.png" data-bild="hero-dunkel" alt="" data-i18n-attr="alt:bild.gross" loading="lazy">
+    <img data-i18n-attr="alt:bild.gross" class="schirm nur-hell" src="bilder/de/hero.png" width="2000" height="1178" data-bild="hero" alt="MASCHERA mit einem maskierten Brief: Namen, AHV-Nummer und Adresse sind durch farbige Platzhalter ersetzt"><img data-i18n-attr="alt:bild.gross" class="schirm nur-dunkel" src="bilder/de/hero-dunkel.png" width="2000" height="1178" data-bild="hero-dunkel" alt="MASCHERA mit einem maskierten Brief: Namen, AHV-Nummer und Adresse sind durch farbige Platzhalter ersetzt" loading="lazy">
   </figure>
 </section>
 
@@ -89,7 +225,7 @@
     <div class="merkmal">
       <span class="nr">01</span>
       <h3 data-i18n="m1.titel">Es läuft auf deinem Gerät</h3>
-      <p data-i18n-html="m1.text">Die ganze Erkennung läuft lokal. Im Betrieb wird <strong>nichts</strong> nachgeladen und <strong>nichts</strong> gesendet: keine Schriften, keine Symbole, keine Statistik. Einen Endpunkt, der Text verschickt, gibt es nicht und wird es nicht geben. Der Weg nach draussen führt immer über deine Zwischenablage.</p>
+      <p data-i18n-html="m1.text">Die ganze Erkennung läuft lokal. Im Betrieb wird <strong>nichts</strong> nachgeladen und <strong>nichts</strong> gesendet: keine Schriften, keine Symbole, keine Statistik. Einen Endpunkt, der Text verschickt, gibt es nicht und wird es nicht geben. Der Weg nach draussen führt immer über deine Zwischenablage. Die eine Ausnahme wählst du selbst: «Nach Updates suchen» im Menü fragt GitHub einmal nach der neuesten Fassungsnummer.</p>
     </div>
     <div class="merkmal">
       <span class="nr">02</span>
@@ -117,32 +253,32 @@
     <div class="schritt">
       <span class="nr">1</span>
       <h3 data-i18n="s1.titel">Dokument öffnen bzw. reinziehen oder Text einfügen</h3>
-      <p data-i18n="s1.text">Gelesen werden .pdf, .docx, .eml, .msg (Outlook), .mbox, .txt, .md, .csv, .json.</p>
-      <img class="schirm nur-hell" src="bilder/de/schritt1.png" data-bild="schritt1" alt=""><img class="schirm nur-dunkel" src="bilder/de/schritt1-dunkel.png" data-bild="schritt1-dunkel" alt="" loading="lazy">
+      <p data-i18n="s1.text">Gelesen werden .pdf, .docx, .eml, .msg (Outlook), .mbox, .txt, .md, .csv, .json. Oder direkt aus dem Mailprogramm hineinziehen.</p>
+      <img data-i18n-attr="alt:bild.s1" class="schirm nur-hell" src="bilder/de/schritt1.png" width="665" height="590" data-bild="schritt1" alt="Schritt 1: ein Dokument in MASCHERA ablegen oder Text einfügen"><img data-i18n-attr="alt:bild.s1" class="schirm nur-dunkel" src="bilder/de/schritt1-dunkel.png" width="665" height="590" data-bild="schritt1-dunkel" alt="Schritt 1: ein Dokument in MASCHERA ablegen oder Text einfügen" loading="lazy">
     </div>
     <div class="schritt">
       <span class="nr">2</span>
       <h3 data-i18n="s2.titel">Maskieren</h3>
       <p data-i18n="s2.text">Jede Fundstelle wird farbig angezeigt, zusammen mit ihrer Herkunft: Prüfsumme, Muster oder Modell.</p>
-      <img class="schirm nur-hell" src="bilder/de/schritt2.png" data-bild="schritt2" alt=""><img class="schirm nur-dunkel" src="bilder/de/schritt2-dunkel.png" data-bild="schritt2-dunkel" alt="" loading="lazy">
+      <img data-i18n-attr="alt:bild.s2" class="schirm nur-hell" src="bilder/de/schritt2.png" width="666" height="590" data-bild="schritt2" alt="Schritt 2: der Text ist maskiert, die Personendaten stehen als Platzhalter"><img data-i18n-attr="alt:bild.s2" class="schirm nur-dunkel" src="bilder/de/schritt2-dunkel.png" width="666" height="590" data-bild="schritt2-dunkel" alt="Schritt 2: der Text ist maskiert, die Personendaten stehen als Platzhalter" loading="lazy">
     </div>
     <div class="schritt">
       <span class="nr">3</span>
       <h3 data-i18n="s3.titel">Prüfen</h3>
       <p data-i18n="s3.text">Du siehst, was ersetzt wurde, bevor der Text irgendwohin geht.</p>
-      <img class="schirm nur-hell" src="bilder/de/schritt3.png" data-bild="schritt3" alt=""><img class="schirm nur-dunkel" src="bilder/de/schritt3-dunkel.png" data-bild="schritt3-dunkel" alt="" loading="lazy">
+      <img data-i18n-attr="alt:bild.s3" class="schirm nur-hell" src="bilder/de/schritt3.png" width="666" height="473" data-bild="schritt3" alt="Schritt 3: die Fundstellen prüfen und bei Bedarf ergänzen"><img data-i18n-attr="alt:bild.s3" class="schirm nur-dunkel" src="bilder/de/schritt3-dunkel.png" width="666" height="473" data-bild="schritt3-dunkel" alt="Schritt 3: die Fundstellen prüfen und bei Bedarf ergänzen" loading="lazy">
     </div>
     <div class="schritt">
       <span class="nr">4</span>
       <h3 data-i18n="s4.titel">Kopieren und einfügen</h3>
       <p data-i18n="s4.text">Beim Dienst deiner Wahl, von Hand. Das Werkzeug schickt nichts selbst.</p>
-      <img class="schirm nur-hell" src="bilder/de/schritt4.png" data-bild="schritt4" alt=""><img class="schirm nur-dunkel" src="bilder/de/schritt4-dunkel.png" data-bild="schritt4-dunkel" alt="" loading="lazy"><img class="schirm zusatz nur-hell" src="bilder/de/schritt4-auswahl.png" data-bild="schritt4-auswahl" alt=""><img class="schirm zusatz nur-dunkel" src="bilder/de/schritt4-auswahl-dunkel.png" data-bild="schritt4-auswahl-dunkel" alt="" loading="lazy">
+      <img data-i18n-attr="alt:bild.s4" class="schirm nur-hell" src="bilder/de/schritt4.png" width="664" height="590" data-bild="schritt4" alt="Schritt 4: den maskierten Text kopieren und im KI-Dienst einfügen"><img data-i18n-attr="alt:bild.s4" class="schirm nur-dunkel" src="bilder/de/schritt4-dunkel.png" width="664" height="590" data-bild="schritt4-dunkel" alt="Schritt 4: den maskierten Text kopieren und im KI-Dienst einfügen" loading="lazy"><img data-i18n-attr="alt:bild.s4a" class="schirm zusatz nur-hell" src="bilder/de/schritt4-auswahl.png" width="1082" height="1122" data-bild="schritt4-auswahl" alt="Auswahl des KI-Dienstes: ChatGPT, Claude, Copilot, Gemini oder Mistral"><img data-i18n-attr="alt:bild.s4a" class="schirm zusatz nur-dunkel" src="bilder/de/schritt4-auswahl-dunkel.png" width="1082" height="1122" data-bild="schritt4-auswahl-dunkel" alt="Auswahl des KI-Dienstes: ChatGPT, Claude, Copilot, Gemini oder Mistral" loading="lazy">
     </div>
     <div class="schritt">
       <span class="nr">5</span>
       <h3 data-i18n="s5.titel">Antwort zurück einfügen</h3>
       <p data-i18n="s5.text">Die echten Werte kommen wieder herein.</p>
-      <img class="schirm nur-hell" src="bilder/de/schritt5.png" data-bild="schritt5" alt=""><img class="schirm nur-dunkel" src="bilder/de/schritt5-dunkel.png" data-bild="schritt5-dunkel" alt="" loading="lazy">
+      <img data-i18n-attr="alt:bild.s5" class="schirm nur-hell" src="bilder/de/schritt5.png" width="665" height="473" data-bild="schritt5" alt="Schritt 5: die Antwort einfügen, MASCHERA setzt die echten Werte wieder ein"><img data-i18n-attr="alt:bild.s5" class="schirm nur-dunkel" src="bilder/de/schritt5-dunkel.png" width="665" height="473" data-bild="schritt5-dunkel" alt="Schritt 5: die Antwort einfügen, MASCHERA setzt die echten Werte wieder ein" loading="lazy">
     </div>
   </div>
 
@@ -167,6 +303,32 @@
   </div>
 </section>
 
+<!-- 6b · Im Alltag ─────────────────────────────────────────────────── -->
+<section class="bereich" id="alltag">
+  <p class="kicker" data-i18n="alltag.kicker">Drei Dinge, die den Alltag leichter machen</p>
+  <h2 data-i18n="alltag.titel">Gebaut für die tägliche Arbeit</h2>
+  <div class="raster-3" style="margin-top:var(--s12)">
+    <div class="merkmal">
+      <h3 data-i18n="a1.titel">Passt sich dem Fenster an und wartet im Hintergrund</h3>
+      <p data-i18n-html="a1.text">Ist das Fenster schmal, etwa halb so breit wie der Bildschirm oder auf einem kleinen Laptop, stellt MASCHERA die sechs Bereiche untereinander, in der Reihenfolge der Arbeit: Original, maskiert, Vokabular, Prompt, Antwort, finaler Text. Unter <strong>Windows und Linux</strong> schliesst das X das Fenster nicht, sondern legt MASCHERA als Symbol neben die Uhr. Das Modell bleibt geladen, und beim nächsten Dokument ist das Fenster mit einem Klick zurück, ohne Wartezeit.</p>
+      <p class="klein leise" data-i18n="a1.klein">Unter GNOME erscheint das Symbol nur mit der Erweiterung «AppIndicator». Fehlt sie, schliesst das X wie gewohnt.</p>
+      <figure class="rahmen" style="margin:var(--s4) 0 0"><img data-i18n-attr="alt:bild.einspaltig" class="schirm nur-hell" src="bilder/de/einspaltig.png" width="912" height="882" data-bild="einspaltig" alt="MASCHERA in einem schmalen Fenster: die Bereiche stehen untereinander, getrennt durch deutliche Linien" loading="lazy"><img data-i18n-attr="alt:bild.einspaltig" class="schirm nur-dunkel" src="bilder/de/einspaltig-dunkel.png" width="912" height="882" data-bild="einspaltig-dunkel" alt="MASCHERA in einem schmalen Fenster: die Bereiche stehen untereinander, getrennt durch deutliche Linien" loading="lazy"></figure>
+    </div>
+    <div class="merkmal">
+      <h3 data-i18n="a2.titel">Zu viel maskiert? Mit einem Klick zurück</h3>
+      <p data-i18n-html="a2.text">Im Zweifel maskiert MASCHERA lieber ein Wort zu viel als eines zu wenig. Bei langen Dokumenten wird so auch ein Firmenname oder ein Ort ersetzt, den du stehen lassen willst. <strong>Im Text:</strong> Ein Rechtsklick auf einen Platzhalter zeigt den Originalwert und seine Herkunft; dort entfernst du die Maske oder wählst eine andere Merkmalsart. <strong>Im Vokabular:</strong> Jede Zeile hat ein rotes ×. Ein Klick nimmt den Platzhalter im ganzen Dokument zurück: Steht [ORG_1] fünfmal im Text, ist danach überall wieder der Firmenname zu lesen.</p>
+      <p class="klein leise" data-i18n="a2.klein">Umgekehrt geht es auch: ein Wort markieren, mit Rechtsklick eine Merkmalsart wählen, und es ist überall maskiert. Was immer im Klartext bleiben soll, etwa Ortschaften, stellst du einmal in den Einstellungen ein.</p>
+      <figure class="rahmen" style="margin:var(--s4) 0 0"><img data-i18n-attr="alt:bild.entfernen" class="schirm nur-hell" src="bilder/de/schritt3.png" width="665" height="474" data-bild="schritt3" alt="Das Vokabular mit der Spalte «Entfernen»: ein rotes × je Platzhalter" loading="lazy"><img data-i18n-attr="alt:bild.entfernen" class="schirm nur-dunkel" src="bilder/de/schritt3-dunkel.png" width="665" height="474" data-bild="schritt3-dunkel" alt="Das Vokabular mit der Spalte «Entfernen»: ein rotes × je Platzhalter" loading="lazy"></figure>
+    </div>
+    <div class="merkmal">
+      <h3 data-i18n="a3.titel">Einfach hineinziehen, auch E-Mails</h3>
+      <p data-i18n-html="a3.text">PDF, Word (.docx), Outlook-Nachrichten (.msg), E-Mails (.eml), ganze Postfächer (.mbox) und Textdateien ziehst du direkt auf das Fenster. MASCHERA liest sie und zeigt den Text; maskiert wird erst auf deinen Klick. Aus dem Mailprogramm geht es oft sogar direkt: eine Nachricht aus <strong>Thunderbird</strong> oder aus <strong>Outlook unter Windows</strong> hineinziehen, fertig. <strong>Apple Mail</strong> gibt beim Ziehen keine Datei heraus: dort die Nachricht zuerst auf den Schreibtisch ziehen und dann ins Fenster. MASCHERA sagt das auch selbst.</p>
+      <p class="klein leise" data-i18n="a3.klein">Ein gescanntes PDF ohne Textebene ergibt eine klare Meldung, nicht «nichts gefunden».</p>
+      <figure class="rahmen" style="margin:var(--s4) 0 0"><img data-i18n-attr="alt:bild.ziehen" class="schirm nur-hell" src="bilder/de/ziehen.png" width="1000" height="495" data-bild="ziehen" alt="Eine Datei wird ins Fenster gezogen: die Seite dunkelt ab, die Ablagefläche bleibt hell" loading="lazy"><img data-i18n-attr="alt:bild.ziehen" class="schirm nur-dunkel" src="bilder/de/ziehen-dunkel.png" width="1000" height="495" data-bild="ziehen-dunkel" alt="Eine Datei wird ins Fenster gezogen: die Seite dunkelt ab, die Ablagefläche bleibt hell" loading="lazy"></figure>
+    </div>
+  </div>
+</section>
+
 <!-- 7 · Du prüfst nach ───────────────────────────────────────────────── -->
 <section class="bereich" id="pruefen">
   <p class="kicker" data-i18n="pruefen.kicker">Der wichtigste Abschnitt</p>
@@ -179,7 +341,7 @@
       <h3 data-i18n="herkunft.titel">Was «Herkunft» heisst</h3>
       <p data-i18n="herkunft.text">Jede Fundstelle zeigt, woher sie stammt: aus einer geprüften Nummer, aus einem Muster mit Kontext, oder aus dem Sprachmodell. Eine AHV-Nummer mit gültiger Prüfsumme ist sicher richtig erkannt, eine Modellvermutung verdient den zweiten Blick.</p>
       <figure class="rahmen" style="margin:var(--s6) 0 0">
-        <img class="schirm nur-hell" src="bilder/de/herkunft-menu.png" data-bild="herkunft-menu" alt="" data-i18n-attr="alt:bild.herkunft"><img class="schirm nur-dunkel" src="bilder/de/herkunft-menu-dunkel.png" data-bild="herkunft-menu-dunkel" alt="" data-i18n-attr="alt:bild.herkunft" loading="lazy">
+        <img data-i18n-attr="alt:bild.herkunft" class="schirm nur-hell" src="bilder/de/herkunft-menu.png" width="855" height="946" data-bild="herkunft-menu" alt="Eine Fundstelle mit ihrer Herkunft: Modell, Muster oder Prüfsumme"><img data-i18n-attr="alt:bild.herkunft" class="schirm nur-dunkel" src="bilder/de/herkunft-menu-dunkel.png" width="855" height="946" data-bild="herkunft-menu-dunkel" alt="Eine Fundstelle mit ihrer Herkunft: Modell, Muster oder Prüfsumme" loading="lazy">
       </figure>
       <p style="margin-top:var(--s4)" data-i18n="herkunft.menu">Mit einem Rechtsklick auf eine Fundstelle änderst du die Markierung: Du wählst eine andere Merkmalsart oder entfernst die Maske.</p>
     </div>
@@ -251,6 +413,55 @@
   </div>
 </section>
 
+<!-- 8b · Fragen und Antworten ───────────────────────────────────────── -->
+<section class="bereich" id="fragen">
+  <p class="kicker" data-i18n="faq.kicker">Häufige Fragen</p>
+  <h2 data-i18n="faq.titel">Fragen und Antworten</h2>
+  <div class="raster-2" style="margin-top:var(--s8); gap:var(--s8) var(--s12)">
+    <div>
+      <h3 data-i18n="faq.f1">Wie maskiere oder anonymisiere ich Personendaten in einem Dokument, bevor ich ChatGPT oder Claude frage?</h3>
+      <p data-i18n="faq.a1">Öffne das Dokument in MASCHERA oder füge den Text ein und klicke auf «Maskieren». Namen, AHV-Nummern, Adressen und weitere Personendaten werden durch Platzhalter wie [FULLNAME_1] ersetzt. Du prüfst das Ergebnis, kopierst es in den Dienst deiner Wahl und fügst die Antwort zurück ein: MASCHERA setzt die echten Werte wieder ein.</p>
+    </div>
+    <div>
+      <h3 data-i18n="faq.f2">Braucht MASCHERA eine Grafikkarte oder eine Internetverbindung?</h3>
+      <p data-i18n="faq.a2">Nein. Die Erkennung läuft auf einer gewöhnlichen CPU, ohne GPU. Im Betrieb wird nichts nachgeladen und nichts gesendet, ausser du klickst auf «Nach Updates suchen». Die AppImage, der Windows-Installer und das macOS-Abbild bringen das Modell mit; das Flatpak holt es einmal beim ersten Start, nach deiner Zustimmung.</p>
+    </div>
+    <div>
+      <h3 data-i18n="faq.f3">Welche Schweizer Kennungen erkennt MASCHERA?</h3>
+      <p data-i18n="faq.a3">AHV-Nummer, UID, IBAN, QR-Referenz, Gebäude- und Wohnungsidentifikator (EGID/EWID), Ausweiskategorie, Kontrollschild und ZSR-Nummer, jeweils mit der zugehörigen Prüfsumme, wo es eine gibt. Insgesamt sind es 45 Arten von Personendaten, in Deutsch, Französisch, Italienisch und Englisch.</p>
+    </div>
+    <div>
+      <h3 data-i18n="faq.f4">Ist das Anonymisierung im Sinne des Datenschutzgesetzes?</h3>
+      <p data-i18n="faq.a4">Nein, und das ist Absicht. Solange das Wörterbuch besteht, lässt sich der Vorgang umkehren; nach dem revDSG bleiben die Daten dann Personendaten. Das heisst Pseudonymisierung. Für einen Text, der endgültig weitergeht, maskierst du ohne Wörterbuch: dann ist der Vorgang nicht mehr umkehrbar.</p>
+    </div>
+    <div>
+      <h3 data-i18n="faq.f5">Welche Dateien kann MASCHERA lesen?</h3>
+      <p data-i18n="faq.a5">PDF mit Textebene, Word (DOCX), E-Mails (EML, MSG aus Outlook, MBOX), TXT, MD, CSV und JSON. Ein gescanntes PDF ohne Textebene ergibt einen Fehler mit Begründung, nicht «keine Personendaten gefunden».</p>
+    </div>
+    <div>
+      <h3 data-i18n="faq.f6">Wie unterscheidet sich MASCHERA von Microsoft Presidio?</h3>
+      <p data-i18n="faq.a6">Presidio ist ein offenes Rahmenwerk für Entwickler, das Personendaten erkennt und maskiert. Es kennt Kennungen aus über zwanzig Ländern, aber keine aus der Schweiz; die müsste man selbst ergänzen. MASCHERA ist eine fertige Anwendung für Schweizer Dokumente, mit einer Oberfläche zum Prüfen und Zurückwandeln.</p>
+    </div>
+    <div>
+      <h3 data-i18n="faq.f7">Kann ich ein Dokument auch endgültig anonymisieren?</h3>
+      <p data-i18n="faq.a7">Ja. Standardmässig maskiert MASCHERA umkehrbar: Mit dem Wörterbuch kommen die echten Werte wieder herein. Für einen Text, der weitergegeben oder veröffentlicht wird, maskierst du ohne Wörterbuch; dann ist der Vorgang nicht mehr umkehrbar. Prüfe trotzdem, ob indirekte Hinweise auf eine Person im Text stehen bleiben.</p>
+    </div>
+  </div>
+  <table style="margin-top:var(--s12)">
+    <thead>
+      <tr><th></th><th>MASCHERA</th><th>Microsoft Presidio</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="moegl" data-i18n="vgl.1t">Gebaut für</td><td data-i18n="vgl.1m">Schweizer Dokumente</td><td data-i18n="vgl.1p">Allgemeine Texte, erweiterbar</td></tr>
+      <tr><td class="moegl" data-i18n="vgl.2t">Schweizer Kennungen</td><td data-i18n="vgl.2m">Eingebaut, mit Prüfsumme</td><td data-i18n="vgl.2p">Keine in der Liste der unterstützten Typen</td></tr>
+      <tr><td class="moegl" data-i18n="vgl.3t">Form</td><td data-i18n="vgl.3m">Anwendung für Windows, macOS, Linux und Docker</td><td data-i18n="vgl.3p">Python-Bibliothek und Dienst für eigene Programme</td></tr>
+      <tr><td class="moegl" data-i18n="vgl.4t">Läuft lokal</td><td data-i18n="vgl.4m">Ja</td><td data-i18n="vgl.4p">Ja</td></tr>
+      <tr><td class="moegl" data-i18n="vgl.5t">Lizenz</td><td data-i18n="vgl.5m">MIT (Quellcode)</td><td data-i18n="vgl.5p">MIT</td></tr>
+    </tbody>
+  </table>
+  <p class="klein leise" style="margin-top:var(--s4); max-width:70ch" data-i18n="vgl.quelle">Stand Oktober 2026, nach der Liste der unterstützten Typen in der Dokumentation von Presidio.</p>
+</section>
+
 <!-- 9 · Verweise ─────────────────────────────────────────────────────── -->
 <section class="bereich" id="verweise">
   <p class="kicker" data-i18n="verweise.kicker">Wo alles andere steht</p>
@@ -293,7 +504,7 @@
       </div>
       <div>
         <h3 data-i18n="imp.siteT" style="font-size:18px; margin-bottom:var(--s2)">Diese Website</h3>
-        <p data-i18n="imp.site" class="klein" style="margin:0; max-width:62ch">Die Website wird über GitHub Pages ausgeliefert (GitHub, Inc., USA). Beim Aufruf verarbeitet GitHub technisch nötige Angaben wie die IP-Adresse in seinen Serverprotokollen; Einzelheiten stehen in der Datenschutzerklärung von GitHub. Die Website selbst setzt keine Cookies, erhebt keine Statistik und lädt nichts von fremden Servern. Die Dateien zum Herunterladen liegen ebenfalls bei GitHub.</p>
+        <p data-i18n="imp.site" class="klein" style="margin:0; max-width:62ch">Die Website liegt bei Hostpoint AG in der Schweiz. Beim Aufruf verarbeitet Hostpoint technisch nötige Angaben wie die IP-Adresse in seinen Serverprotokollen; Einzelheiten stehen in der Datenschutzerklärung von Hostpoint. Die Website selbst setzt keine Cookies, erhebt keine Statistik und lädt nichts von fremden Servern. Die Dateien zum Herunterladen liegen bei GitHub (GitHub, Inc., USA).</p>
       </div>
       <div>
         <h3 data-i18n="imp.appT" style="font-size:18px; margin-bottom:var(--s2)">Die Anwendung</h3>

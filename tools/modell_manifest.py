@@ -34,7 +34,12 @@ from core.modell import PFLICHT, _pruefsumme                    # noqa: E402
 
 # Die Adresse, unter der Hugging Face eine Datei eines Repositoriums
 # ausliefert. `{datei}` fuellt `core.modell.hole()` ein.
-VORLAGE = "https://huggingface.co/{repo}/resolve/main/{{datei}}"
+# ⚠️ Ein fester COMMIT, nicht `main` (Sicherheitspruefung 16.10.2026, E1).
+# Die Pruefsummen sichern den Inhalt ohnehin; der Commit sichert, dass die
+# Adresse immer DIESELBEN Dateien meint — auch wenn auf Hugging Face spaeter
+# ein neues Modell unter `main` liegt. Dann bekaeme ein alter Bau sonst
+# «Pruefsumme falsch» statt seines Modells. `tests/test_modell.py` Punkt 8.
+VORLAGE = "https://huggingface.co/{repo}/resolve/{rev}/{{datei}}"
 
 
 def main() -> int:
@@ -44,10 +49,14 @@ def main() -> int:
                     help="Verzeichnis mit dem fertigen Modell")
     ap.add_argument("--repo", required=True,
                     help="z. B. benutzer/maschera-ch-v63b")
+    ap.add_argument("--rev", required=True,
+                    help="Commit auf Hugging Face, 40 Hexzeichen (nicht main)")
     ap.add_argument("--trocken", action="store_true",
                     help="nur anzeigen, nichts schreiben")
     args = ap.parse_args()
 
+    if not __import__("re").fullmatch(r"[0-9a-f]{40}", args.rev):
+        raise SystemExit(f"--rev {args.rev!r} ist kein Commit (40 Hexzeichen).")
     quelle = Path(args.aus).resolve()
     if not quelle.is_dir():
         raise SystemExit(f"{quelle} ist kein Verzeichnis.")
@@ -70,7 +79,7 @@ def main() -> int:
 
     manifest = {
         "name": quelle.name,
-        "quelle": VORLAGE.format(repo=args.repo),
+        "quelle": VORLAGE.format(repo=args.repo, rev=args.rev),
         "bytes": sum(d["bytes"] for d in dateien.values()),
         "dateien": dateien,
     }

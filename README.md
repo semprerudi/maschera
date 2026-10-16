@@ -2,9 +2,9 @@
 
 **English** · [Deutsch](README.de.md)
 
-**Mask personal data in Swiss documents — on your own device, with no
-network while it runs.** Four languages: German, French, Italian,
-English.
+**Free, open-source PII masking for Swiss documents — on your own
+device, on the CPU, with no GPU and no network while it runs.** Four
+languages: German, French, Italian, English.
 
 You have a letter, an email thread or a PDF and want to ask an AI tool
 about it — but the names, social security numbers and addresses should
@@ -19,7 +19,9 @@ back, and MASCHERA puts the real values in again.
 
 Made for everyone who works with Swiss documents: federal, cantonal and
 municipal administrations, companies, law firms, associations and private
-individuals.
+individuals. Useful wherever the Swiss Federal Act on Data Protection
+(FADP/revDSG) or the GDPR applies: personal data stays out of the text
+you share. It does not replace your own check.
 
 **Detection runs entirely on your device.** While it runs, nothing is
 downloaded and nothing is sent — no fonts, no icons, no analytics. There
@@ -182,7 +184,9 @@ first start?**
 
 If the model is fetched, **the first start asks first**: it names source,
 size and destination, and "Later" closes the application without
-downloading anything. After that everything runs offline.
+downloading anything. After that everything runs offline. The one exception
+is yours to choose: "Check for updates" in the menu asks GitHub once for the
+newest version number — nothing else, and never without that click.
 
 AppImage and Flatpak bring their own libraries and do not depend on what
 else is installed on the system.
@@ -226,7 +230,7 @@ A ready-made image, about 4.2 GB, the model included:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:1.0.4
+    ghcr.io/semprerudi/maschera:1.0.5
 ```
 
 Then open `http://127.0.0.1:4141` in the browser. The server keeps

@@ -63,6 +63,9 @@ AGENT = "maschera-seite/1.0"
 # Dateien, die Apache nie ueber HTTP ausliefert: sie lassen sich nur per FTP
 # vergleichen und nachpruefen.
 NUR_PER_FTP = {".htaccess"}
+# Dateien, die keine Seite verlinkt, die aber Suchmaschinen an fester Stelle
+# suchen. Ohne diese Liste fände `entdecke` sie nie, und sie kämen nie hoch.
+FUER_SUCHMASCHINEN = {"robots.txt", "sitemap.xml", "llms.txt"}
 
 
 # ---------------------------------------------------------------- Entdecken
@@ -82,7 +85,11 @@ def entdecke(html: str, css: str, js: str) -> set[str]:
     css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
     js = re.sub(r"/\*.*?\*/", "", js, flags=re.S)
     js = re.sub(r"(?m)^\s*//.*$", "", js)
-    pfade = {"index.html"}
+    pfade = {"index.html"} | FUER_SUCHMASCHINEN
+    # Die Sprachseiten (seit 12.10.2026, `tools/seite_sprachen.py`): die
+    # deutsche Seite verlinkt sie nur ueber hreflang, also absolut — ohne
+    # diese Zeile kaemen sie nie hoch.
+    pfade |= {f"{s}/index.html" for s in SPRACHEN if s != "de"}
     for u in re.findall(r'(?:src|srcset|href)="([^"#?]+)"', html):
         if re.match(r"(?:[a-z]+:)?//|mailto:|tel:|data:", u):
             continue

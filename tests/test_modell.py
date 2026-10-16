@@ -178,6 +178,10 @@ check(_m8["dateien"].keys() >= set(PFLICHT),
       f"das Manifest kennt nicht alle Pflichtdateien: {sorted(_m8['dateien'])}")
 check("{datei}" in _m8["quelle"],
       f"die Quelle hat keine Stelle fuer den Dateinamen: {_m8['quelle']}")
+# E1 (16.10.2026): ein fester Commit, nicht `main`.
+import re as _re8  # noqa: E402
+check(_re8.search(r"/resolve/[0-9a-f]{40}/\{datei\}$", _m8["quelle"]) is not None,
+      f"die Quelle zeigt nicht auf einen festen Commit: {_m8['quelle']}")
 check(modell.groesse(_m8) > 1_000_000_000,
       f"das Manifest meldet {modell.groesse(_m8)} Bytes — das ist kein "
       f"Modell dieser Bauart")

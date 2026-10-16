@@ -4221,6 +4221,120 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     if (fehler === vorher) console.log("   OK   Meldung in vier Sprachen, mit den Typen der Quelle");
   }
 
+  console.log("84. «Nach Updates suchen» fragt nur auf Klick und zeigt das Ergebnis im Fenster");
+  // Die zweite Tuer nach aussen (`core/neueste.py`). Die Oberflaeche fragt den
+  // EIGENEN Server, nie GitHub selbst, und nur aus `neuesteZeigen`.
+  {
+    const vorher = fehler;
+    const js84 = fs.readFileSync(path.join(WURZEL, "app/static/maschera.js"), "utf8");
+    const stellen = js84.split("fetch(\"/api/neueste\"").length - 1;
+    pruefe(stellen === 1, `fetch(/api/neueste) steht ${stellen}-mal in maschera.js statt einmal`);
+    pruefe(!/api\.github\.com/.test(js84), "die Oberflaeche fragt GitHub selbst");
+    const echt = global.fetch;
+    let rufe = [];
+    let antwort = null;
+    global.fetch = async (url, opt) => {
+      if (String(url).includes("/api/neueste")) {
+        rufe.push({ url: String(url), methode: (opt || {}).method });
+        return antwort;
+      }
+      return echt(url, opt);
+    };
+    const SEITE = "https://github.com/semprerudi/maschera/releases/latest";
+    // Das Menue zeichnen fragt NICHT.
+    M.zeichneBurger();
+    pruefe(rufe.length === 0, "schon das Zeichnen des Menues fragt GitHub");
+    // Neuere Fassung
+    antwort = { ok: true, status: 200,
+                json: async () => ({ aktuell: "0.0.1", neueste: "0.0.2", neuer: true }) };
+    await M.neuesteZeigen(SEITE);
+    const rumpf = document.getElementById("seite-rumpf");
+    let txt = text(rumpf);
+    pruefe(rufe.length === 1 && rufe[0].methode === "POST",
+           `gefragt wurde nicht genau einmal per POST: ${JSON.stringify(rufe)}`);
+    pruefe(txt.includes(M.I18N.de.neuesteNeu.replace("{neueste}", "0.0.2")
+                        .replace("{aktuell}", "0.0.1")),
+           `keine Meldung «neuere Fassung»: «${txt}»`);
+    const verweise = rumpf._kinder.filter((k) => k.id === "_neu_a");
+    pruefe(verweise.length === 1 && verweise[0].href === SEITE
+           && verweise[0].target === "_blank",
+           "der Verweis zur Download-Seite fehlt oder ist kein echter Link");
+    // Gleiche Fassung
+    antwort = { ok: true, status: 200,
+                json: async () => ({ aktuell: "0.0.2", neueste: "0.0.2", neuer: false }) };
+    await M.neuesteZeigen(SEITE);
+    txt = text(rumpf);
+    pruefe(txt.includes(M.I18N.de.neuesteAktuell.replace("{aktuell}", "0.0.2")),
+           `keine Meldung «neueste Fassung»: «${txt}»`);
+    // Nicht erreichbar: Meldung in der Sprache UND trotzdem der Verweis
+    antwort = { ok: false, status: 503, json: async () => ({
+      fehler: "GitHub ist nicht erreichbar.", fehler_schluessel: "neueste_nicht_erreichbar",
+      fehler_werte: {} }) };
+    await M.neuesteZeigen(SEITE);
+    txt = text(rumpf);
+    pruefe(txt.includes(M.I18N.de.meldungen.neueste_nicht_erreichbar),
+           `ohne Netz keine verstaendliche Meldung: «${txt}»`);
+    pruefe(rumpf._kinder.some((k) => k.id === "_neu_a" && k.href === SEITE),
+           "ohne Netz fehlt der Verweis zur Download-Seite");
+    global.fetch = echt;
+    M.seiteSchliessen && M.seiteSchliessen();
+    if (fehler === vorher) {
+      console.log("   OK   nur auf Klick, POST an den eigenen Server, drei Ausgaenge, Verweis immer da");
+    }
+  }
+
+  console.log("85. Das Vokabular entfernt eine Maske im ganzen Dokument");
+  // Spalte «Entfernen» (16.10.2026): bei grossen Dokumenten ist die Tabelle
+  // der Ort, an dem man Uebermaskierung sieht. Ein Klick nimmt den
+  // Platzhalter UEBERALL heraus, wie «Maske entfernen» im Klappmenue.
+  {
+    const vorher = fehler;
+    const war = M.zustand.antwort;
+    M.zustand.antwort = {
+      maskiert: "Die [ORG_1] bestaetigt. [ORG_1] zahlt. Frau [FULLNAME_1].",
+      woerterbuch: { "[ORG_1]": "Maschera Immobilien AG", "[FULLNAME_1]": "Bruelhart" },
+      spans: [{ tag: "ORG", platzhalter: "[ORG_1]" }, { tag: "ORG", platzhalter: "[ORG_1]" },
+              { tag: "FULLNAME", platzhalter: "[FULLNAME_1]" }],
+      hinweise: [], kennzahlen: {},
+    };
+    M.zeichne();
+    const inhalt = document.getElementById("vokabular-inhalt");
+    const tab = inhalt._kinder.find((k) => k.id === "_neu_table");
+    const kopfZeile = tab && tab._kinder[0]._kinder[0];
+    const spalten = kopfZeile ? kopfZeile._kinder.map((k) => text(k)) : [];
+    pruefe(spalten.length === 4 && spalten[3] === M.I18N.de.entfernen,
+           `Kopf der Tabelle: ${JSON.stringify(spalten)}`);
+    const zeilen = tab ? tab._kinder[1]._kinder : [];
+    const orgZeile = zeilen.find((r) => text(r._kinder[0]).includes("[ORG_1]"));
+    const knopf = orgZeile && orgZeile._kinder[3] && orgZeile._kinder[3]._kinder[0];
+    pruefe(knopf && knopf.id === "_neu_button", "keine Taste «Entfernen» in der Zeile [ORG_1]");
+    for (const f of (knopf && knopf._h["click"]) || []) f({});
+    const a = M.zustand.antwort;
+    pruefe(!a.maskiert.includes("[ORG_1]")
+           && a.maskiert.split("Maschera Immobilien AG").length === 3,
+           `nicht ueberall entfernt: ${a.maskiert}`);
+    pruefe(!("[ORG_1]" in a.woerterbuch) && "[FULLNAME_1]" in a.woerterbuch,
+           `Woerterbuch falsch: ${JSON.stringify(a.woerterbuch)}`);
+    pruefe(a.maskiert.includes("[FULLNAME_1]"), "eine ANDERE Maske ging mit weg");
+    M.zustand.antwort = war;
+    M.zeichne();
+    if (fehler === vorher) console.log("   OK   vier Spalten, ein Klick entfernt [ORG_1] an beiden Stellen, [FULLNAME_1] bleibt");
+  }
+
+  console.log("86. Trennlinien: dreispaltig duenn, untereinander deutlich");
+  {
+    const vorher = fehler;
+    const css86 = fs.readFileSync(path.join(WURZEL, "app/static/maschera.css"), "utf8")
+      .replace(/\/\*[\s\S]*?\*\//g, "");
+    const grund = css86.match(/main\.raster\s*\{[^}]*\bgap:\s*([^;]+);/);
+    pruefe(grund && grund[1].trim() === "1px", `dreispaltig gap ${grund && grund[1]} statt 1px`);
+    const stapel = css86.slice(css86.indexOf("@media (max-width: 59.99em)"));
+    const dick = stapel.match(/main\.raster\s*\{\s*gap:\s*([\d.]+)rem/);
+    pruefe(dick && parseFloat(dick[1]) >= 0.25,
+           `gestapelt keine dickere Linie in rem: ${dick && dick[0]}`);
+    if (fehler === vorher) console.log(`   OK   1px dreispaltig, ${dick[1]}rem gestapelt`);
+  }
+
   console.log("");
   amEnde = true;
   if (fehler) {

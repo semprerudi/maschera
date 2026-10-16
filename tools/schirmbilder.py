@@ -61,6 +61,16 @@ THEMEN = (("", "light"), ("-dunkel", "dark"))
 # 33 Pixeln, die hier fehlt). Unter 44em Hoehe stapelt die Oberflaeche die
 # Bereiche untereinander — 982 Punkte liegen weit darueber.
 FENSTER = {"width": 1667, "height": 982}
+
+# Ein Fenster, halb so breit wie der Bildschirm: unter 60em stapelt die
+# Oberflaeche. 760×980 Punkte ergeben bei 1,2 rund 912×1176 Pixel.
+SCHMAL = {"width": 760, "height": 980}
+
+# Die Kaesten, die die Projektseite als «Schritt» zeigt, und ihre Namen dort.
+# 04 (Antwort) zeigt die Seite nicht; das Vokabular ist Schritt 3.
+SEITE_KAESTEN = (("#b01", "schritt1"), ("#b02", "schritt2"),
+                 ("#bvok", "schritt3"), ("#b03", "schritt4"),
+                 ("#b05", "schritt5"))
 HAUPT_DICHTE = 1.2
 
 # Bildsorte 2: Spalte 02. Die Vorlagen sind gegenueber der Hauptansicht um
@@ -334,6 +344,17 @@ def aufnehmen(browser, adresse: str, ordner: Path, sprache: str,
     # 1. Die ganze Oberflaeche nach dem Ablauf.
     kontext, seite, _ = durchgang(HAUPT_DICHTE, "final")
     seite.screenshot(path=str(ordner / f"hauptansicht-{sprache}{zusatz}.png"))
+    # Dazu die Kaesten einzeln, in den Namen der Projektseite
+    # (`site/bilder/<sprache>/`). Bis zum 16.10.2026 kamen sie von Hand aus
+    # Claude Design; jetzt aus demselben Lauf, damit eine neue Funktion — wie
+    # die Spalte «Entfernen» im Vokabular — mit EINEM Aufruf auf der Seite ist.
+    seite_ordner = ordner / "seite" / sprache
+    seite_ordner.mkdir(parents=True, exist_ok=True)
+    for kasten_id, name in SEITE_KAESTEN:
+        seite.locator(kasten_id).screenshot(
+            path=str(seite_ordner / f"{name}{zusatz}.png"))
+    shutil.copy(ordner / f"hauptansicht-{sprache}{zusatz}.png",
+                seite_ordner / f"hero{zusatz}.png")
     kontext.close()
 
     # 3. Das Dienstmenue am Knopf «Kopieren und … oeffnen».
@@ -347,6 +368,58 @@ def aufnehmen(browser, adresse: str, ordner: Path, sprache: str,
                            "width": KI_FLAECHE[0],
                            "height": KI_FLAECHE[1]})
     kontext.close()
+
+    # 4. Beim Hineinziehen: die Seite dunkelt ab, die Ablageflaeche bleibt hell.
+    # Der Schleier wird gesetzt, wie ihn `dragover` setzt — ein echtes Ziehen
+    # aus dem Dateimanager kann ein Browser ohne Fenster nicht.
+    kontext = browser.new_context(viewport=FENSTER, color_scheme=schema,
+                                  device_scale_factor=HAUPT_DICHTE)
+    seite = kontext.new_page()
+    seite.goto(adresse)
+    seite.wait_for_selector("#knopf-beispiel")
+    seite.click(f"[data-sprache='{sprache}']")
+    seite.evaluate("document.getElementById('ziehschleier').hidden = false;"
+                   "document.body.classList.add('zieht');"
+                   "document.getElementById('ablage').classList.add('drueber')")
+    seite.mouse.move(5, 5)
+    # Nur der linke obere Teil: im ganzen Fenster war die helle Flaeche auf
+    # der Seite zu klein, um sie zu erkennen.
+    seite.screenshot(path=str(seite_ordner / f"ziehen{zusatz}.png"),
+                     clip={"x": 0, "y": 0, "width": FENSTER["width"] * 0.5,
+                           "height": FENSTER["height"] * 0.42})
+    kontext.close()
+
+    # 5. Schmales Fenster: die Kaesten untereinander, mit den dickeren
+    # Trennlinien. Ausschnitt um 02 und das Vokabular darunter.
+    kontext = browser.new_context(viewport=SCHMAL, color_scheme=schema,
+                                  device_scale_factor=HAUPT_DICHTE)
+    seite = kontext.new_page()
+    seite.goto(adresse)
+    seite.wait_for_selector("#knopf-beispiel")
+    seite.click(f"[data-sprache='{sprache}']")
+    seite.click("#knopf-beispiel")
+    seite.wait_for_selector("#knopf-maskieren:not([disabled])")
+    seite.click("#knopf-maskieren")
+    seite.wait_for_selector("#knopf-uebernahme:not([disabled])",
+                            timeout=180_000)
+    seite.evaluate("document.querySelectorAll('textarea')"
+                   ".forEach(t => { t.scrollTop = 0; })")
+    oben = seite.locator("#b02").bounding_box()["y"]
+    # `instant`: mit sanftem Rollen fing das Bild die Kopfzeile mitten im
+    # Weg ein — oben stand ein grauer Balken.
+    seite.evaluate(f"window.scrollTo({{top: {oben} - 0.28 * {SCHMAL['height']},"
+                   f" behavior: 'instant'}})")
+    seite.wait_for_timeout(400)
+    seite.mouse.move(5, 5)
+    seite.screenshot(path=str(seite_ordner / f"einspaltig{zusatz}.png"),
+                     clip={"x": 0, "y": 0, "width": SCHMAL["width"],
+                           "height": SCHMAL["height"] * 0.75})
+    kontext.close()
+
+    shutil.copy(ordner / f"maskierung-{sprache}{zusatz}.png",
+                seite_ordner / f"herkunft-menu{zusatz}.png")
+    shutil.copy(ordner / f"ki-menue-{sprache}{zusatz}.png",
+                seite_ordner / f"schritt4-auswahl{zusatz}.png")
 
 
 def packen(ordner: Path, zip_pfad: Path) -> None:
@@ -380,6 +453,7 @@ def main() -> int:
     ordner.mkdir(parents=True, exist_ok=True)
     for alt in ordner.glob("*.png"):
         alt.unlink()
+    shutil.rmtree(ordner / "seite", ignore_errors=True)
     with tempfile.TemporaryDirectory() as leer:
         umgebung = {**os.environ, "XDG_CONFIG_HOME": leer,
                     "PYTHONUNBUFFERED": "1"}

@@ -434,6 +434,30 @@ Antwort von `/api/anonymisieren` trägt in `hinweise` den Schlüssel
 `ohne_modell`. Ein Server, der still ohne Modell läuft, wäre eine
 Leckquelle mit grüner Anzeige.
 
+### `POST /api/neueste`
+
+Gibt es eine neuere Fassung? Der Server fragt **einmal** bei GitHub nach dem
+neuesten Release und liest daraus nur die Fassungsnummer.
+
+```jsonc
+{ "aktuell": "x.y.z", "neueste": "x.y.z", "neuer": false }
+```
+
+Kein Körper nötig; was mitkommt, wird nicht gelesen. Die Adresse steht fest im
+Server (`core/neueste.py`) — die Anfrage kann keine eigene vorgeben.
+
+| Status | `fehler_schluessel` | Wann |
+|---|---|---|
+| 503 | `neueste_nicht_erreichbar` | kein Netz, oder der Server darf nicht hinaus (Docker) |
+| 502 | `neueste_unlesbar` | GitHub antwortet ohne lesbare Fassungsnummer |
+
+⚠️ **Die zweite benannte Ausnahme von «kein Nachladen von aussen»** (die erste
+ist das Modell im Flatpak, nach Zustimmung). Sie läuft **nur** auf Klick im
+Burgermenü («Nach Updates suchen»), nie beim Start und nie im Hintergrund.
+POST statt GET, damit kein `<img>` einer fremden Seite sie auslöst. Die
+Oberfläche bleibt bei `connect-src` auf Loopback; gefragt wird über den
+eigenen Server.
+
 ### `POST /api/senden` — gibt es nicht
 
 **Es wird ihn nicht geben.** Statt zu senden, legt die Oberfläche Prompt und

@@ -19,6 +19,7 @@ Arbeitsverzeichnis liegen — das Werkzeug nimmt nur mit, was mit darf.
 from __future__ import annotations
 
 import argparse
+import ast
 import os
 import shutil
 import subprocess
@@ -181,13 +182,15 @@ def pruefe(ziel: Path) -> list[str]:
     # Listen in zwei Dateien mit zwei Begruendungen — wer eine aendert,
     # faellt der anderen auf.
     try:
-        raum: dict = {}
         quelle = (WURZEL / "tests" / "test_veroeffentlichung.py").read_text(
             encoding="utf-8")
         anfang = quelle.index("NUR_INTERN = {")
         ende = quelle.index("}", anfang) + 1
-        exec(quelle[anfang:ende], raum)          # noqa: S102
-        for name in raum.get("NUR_INTERN", {}):
+        # `ast.literal_eval` und nicht `exec`: gelesen wird ein Woerterbuch,
+        # und nur ein Woerterbuch aus Zeichenketten darf es sein. `exec` fuehrte
+        # aus, was immer dort stuende (Sicherheitspruefung 16.10.2026, E3).
+        nur_intern = ast.literal_eval(quelle[quelle.index("{", anfang):ende])
+        for name in nur_intern:
             if (ziel / name).exists():
                 fehler.append(
                     f"{name} ist im Paket — es traegt Rechner- oder "

@@ -1229,6 +1229,139 @@ if not failures:
           "vier Lesewege")
 
 
+print("\n23. Nach Updates suchen: eine feste Adresse, nur die Nummer, nur auf POST")
+# ⚠️ Die zweite Tuer nach aussen. Geprueft wird, was sie eng haelt — ohne
+# Netz: `NEUESTE_HOLEN` ersetzt den Abruf.
+from core import neueste as _neu  # noqa: E402
+import json as _json21  # noqa: E402
+_gefragt = []
+
+
+def _holen21(antwort):
+    def holen(adresse):
+        _gefragt.append(adresse)
+        if isinstance(antwort, Exception):
+            raise antwort
+        return antwort
+    return holen
+
+
+def _frage21(antwort, **kw):
+    app.config["NEUESTE_HOLEN"] = _holen21(antwort)
+    try:
+        return c.post("/api/neueste", **kw)
+    finally:
+        app.config.pop("NEUESTE_HOLEN", None)
+
+
+_r = _frage21(_json21.dumps({"tag_name": "v999.0.0",
+                             "html_url": "https://boese.example/"}).encode())
+_d = _r.get_json() or {}
+check(_r.status_code == 200 and _d.get("neueste") == "999.0.0"
+      and _d.get("neuer") is True,
+      f"neuere Fassung nicht erkannt: {_r.status_code} {_d}")
+check("boese" not in _r.get_data(as_text=True),
+      "die Antwort reicht eine Adresse von GitHub weiter")
+from serve import VERSION as _V21  # noqa: E402
+_r = _frage21(_json21.dumps({"tag_name": "v" + _V21}).encode())
+_d = _r.get_json() or {}
+check(_r.status_code == 200 and _d.get("neuer") is False
+      and _d.get("aktuell") == _V21,
+      f"gleiche Fassung gilt als neuer: {_d}")
+_r = _frage21(_json21.dumps({"tag_name": "v0.0.1"}).encode())
+check((_r.get_json() or {}).get("neuer") is False,
+      "eine AELTERE Fassung gilt als neuer")
+_r = _frage21(OSError("kein Netz"))
+check(_r.status_code == 503 and (_r.get_json() or {}).get(
+          "fehler_schluessel") == "neueste_nicht_erreichbar",
+      f"ohne Netz kein 503 mit Schluessel: {_r.status_code}")
+for _roh in (b"<html>", _json21.dumps({"tag_name": "neueste"}).encode(),
+             _json21.dumps(["v1.2.3"]).encode(),
+             b"x" * (_neu.HOECHSTENS + 2)):
+    _r = _frage21(_roh)
+    check(_r.status_code == 502 and (_r.get_json() or {}).get(
+              "fehler_schluessel") == "neueste_unlesbar",
+          f"unlesbare Antwort {_roh[:20]!r} nicht abgewiesen: {_r.status_code}")
+# Die Anfrage kann KEINE Adresse vorgeben.
+_gefragt.clear()
+_frage21(b'{"tag_name": "v1.0.0"}',
+         json={"adresse": "http://169.254.169.254/", "url": "http://x/"})
+check(_gefragt == [_neu.ADRESSE],
+      f"gefragt wurde nicht die feste Adresse: {_gefragt}")
+check(_neu.ADRESSE.startswith("https://api.github.com/repos/"),
+      f"feste Adresse unerwartet: {_neu.ADRESSE}")
+# GET loest nichts aus (kein <img> einer fremden Seite).
+_gefragt.clear()
+app.config["NEUESTE_HOLEN"] = _holen21(b'{"tag_name": "v1.0.0"}')
+_r = c.get("/api/neueste")
+app.config.pop("NEUESTE_HOLEN", None)
+check(_r.status_code == 405 and not _gefragt,
+      f"GET /api/neueste antwortet {_r.status_code}, gefragt: {_gefragt}")
+# Der Menueeintrag zeigt auf DASSELBE Repository.
+_adr = _json21.loads((WURZEL / "app" / "static" / "adressen.json")
+                     .read_text(encoding="utf-8"))
+_ein = [e for e in _adr["eintraege"] if e.get("aktion") == "neueste"]
+check(len(_ein) == 1 and _ein[0].get("url", "").startswith(
+          f"https://github.com/{_neu.REPO}/releases"),
+      f"adressen.json: Eintrag «neueste» fehlt oder zeigt woanders hin: {_ein}")
+# Die Oberflaeche bleibt bei Loopback.
+_csp = c.get("/").headers.get("Content-Security-Policy", "")
+check("github" not in _csp, f"die CSP oeffnet GitHub fuer das Fenster: {_csp}")
+if not failures:
+    print("   OK   neuer/gleich/aelter, 503 und 502 mit Schluessel, feste "
+          "Adresse, kein GET, CSP unveraendert")
+
+
+print("\n24. Jeder Endpunkt des Servers steht im Vertrag")
+# Gefunden beim Bau von `/api/neueste`: der Vertrag haette einen neuen
+# Endpunkt nicht vermisst. Jetzt geht es umgekehrt — vom Server zum Text.
+_routen = sorted({r.rule for r in app.url_map.iter_rules()
+                  if r.rule.startswith("/api/")})
+_fehlt22 = [r for r in _routen if f"/api/{r[5:]}`" not in _vertrag
+            and f"{r}`" not in _vertrag]
+check(not _fehlt22, f"nicht in API_OBERFLAECHE.md: {_fehlt22}")
+if not failures:
+    print(f"   OK   {len(_routen)} Endpunkte, alle beschrieben")
+
+
+print("\n25. MASCHERA_WIRT=* meldet sich laut, auf allen drei Startwegen")
+# Sicherheitspruefung 16.10.2026 (E6). Fehlt die Variable, gab es schon eine
+# Warnung — schaltete `*` die Pruefung ganz ab, sagte niemand etwas.
+import os  # noqa: E402
+from serve import wirt_warnung as _ww  # noqa: E402
+_alt25 = os.environ.get("MASCHERA_WIRT")
+os.environ["MASCHERA_WIRT"] = "*"
+check(bool(_ww()) and "AUS" in _ww(), "MASCHERA_WIRT=* warnt nicht")
+os.environ["MASCHERA_WIRT"] = "maschera.example"
+check(_ww() is None, "ein benannter Wirt loest die Warnung aus")
+os.environ.pop("MASCHERA_WIRT", None)
+check(_ww() is None, "ohne Variable warnt wirt_warnung (dafuer gibt es die andere)")
+if _alt25 is not None:
+    os.environ["MASCHERA_WIRT"] = _alt25
+for _start in ("app/app.py", "app/serve.py", "app/wsgi.py"):
+    _q25 = (WURZEL / _start).read_text(encoding="utf-8")
+    check("print(wirt_warnung()" in _q25, f"{_start} gibt die Warnung nicht aus")
+if not failures:
+    print("   OK   * warnt, benannt und leer nicht; app, serve, wsgi geben sie aus")
+
+
+print("\n26. Der Name einer hochgeladenen Datei wird nie zum Pfad")
+# E7: unter Windows sind `con.txt` und `aux.pdf` Geraete. Die temporaere Kopie
+# heisst deshalb immer `eingabe.<endung>`.
+import io as _io26  # noqa: E402
+_q26 = (WURZEL / "app" / "serve.py").read_text(encoding="utf-8")
+check('Path(ordner) / ("eingabe" + endung)' in _q26
+      and "Path(ordner) / name" not in _q26,
+      "die temporaere Datei traegt wieder den Namen des Anwenders")
+for _n26 in ("con.txt", "AUX.txt", "nul.eml"):
+    _r26 = c.post("/api/lesen", data={"datei": (_io26.BytesIO(
+        "Sehr geehrte Frau Muster".encode()), _n26)},
+        content_type="multipart/form-data")
+    check(_r26.status_code == 200, f"{_n26}: {_r26.status_code}")
+if not failures:
+    print("   OK   fester Name eingabe.<endung>; con.txt, AUX.txt, nul.eml lesbar")
+
+
 print()
 if failures:
     print(f"{len(failures)} Pruefung(en) fehlgeschlagen.")

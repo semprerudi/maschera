@@ -14,22 +14,41 @@
       "nav.pruefen": "Contrôle",
       "thema.label": "Basculer clair/sombre",
       "nav.download": "Télécharger",
-      "hero.kicker": "Logiciel libre · Open Source · fonctionne sans réseau",
-      "hero.titel": "MASCHERA masque les données personnelles<br>dans les documents suisses<span style=\"display:block; font-size:0.75em; line-height:1.3; margin-top:0.3em\">Cela se fait sur ton appareil, toujours en local,<br>sans connexion réseau !</span>",
+      "hero.kicker": "Logiciel libre · Open Source · en local sur le CPU, sans GPU ni réseau",
+      "hero.titel": "MASCHERA masque et anonymise les données personnelles<br>dans les documents suisses<span style=\"display:block; font-size:0.75em; line-height:1.3; margin-top:0.3em\">Cela se fait sur ton appareil, toujours en local,<br>sans connexion réseau !</span>",
       "hero.lead": "Tu as une lettre, un fil de courriels ou un PDF et tu veux interroger un outil d’IA à son sujet. Les noms, numéros AVS et adresses ne doivent toutefois pas partir avec.",
       "hero.knopf1": "Télécharger",
       "hero.knopf2": "Comment ça marche",
       "bsp.vorher": "Avant",
       "bsp.nachher": "Après",
       "bsp.unten": "Tu transmets le texte masqué au service de ton choix. Tu recolles la réponse, et MASCHERA rétablit les valeurs réelles.",
+      "bild.gross": "MASCHERA avec une lettre masquée : noms, numéro AVS et adresse remplacés par des marqueurs en couleur",
+      "bild.s1": "Étape 1 : déposer un document dans MASCHERA ou coller du texte",
+      "bild.s2": "Étape 2 : le texte est masqué, les données personnelles sont remplacées par des marqueurs",
+      "bild.s3": "Étape 3 : vérifier les occurrences et compléter si nécessaire",
+      "bild.s4": "Étape 4 : copier le texte masqué et le coller dans le service d’IA",
+      "bild.s4a": "Choix du service d’IA : ChatGPT, Claude, Copilot, Gemini ou Mistral",
+      "bild.s5": "Étape 5 : coller la réponse, MASCHERA rétablit les valeurs réelles",
+      "bild.herkunft": "Une occurrence et son origine : modèle, motif ou somme de contrôle",
+      "alltag.kicker": "Trois choses qui facilitent le quotidien",
+      "alltag.titel": "Conçu pour le travail de tous les jours",
+      "a1.titel": "S’adapte à la fenêtre et attend en arrière-plan",
+      "a1.text": "Si la fenêtre est étroite, environ la moitié de l’écran ou sur un petit portable, MASCHERA place les six zones les unes sous les autres, dans l’ordre du travail : original, masqué, vocabulaire, prompt, réponse, texte final. Sous <strong>Windows et Linux</strong>, le X ne ferme pas la fenêtre : MASCHERA se range en icône près de l’horloge. Le modèle reste chargé, et au prochain document la fenêtre revient en un clic, sans attente.",
+      "a1.klein": "Sous GNOME, l’icône n’apparaît qu’avec l’extension « AppIndicator ». Sans elle, le X ferme comme d’habitude.",
+      "a2.titel": "Trop masqué ? Retour en un clic",
+      "a2.text": "Dans le doute, MASCHERA masque plutôt un mot de trop qu’un mot de moins. Dans un long document, un nom d’entreprise ou un lieu que tu veux garder peut ainsi être remplacé. <strong>Dans le texte :</strong> un clic droit sur un marqueur montre la valeur d’origine et sa provenance ; tu y retires le masque ou choisis une autre catégorie. <strong>Dans le vocabulaire :</strong> chaque ligne a un × rouge. Un clic retire le marqueur dans tout le document : si [ORG_1] figure cinq fois dans le texte, le nom de l’entreprise réapparaît partout.",
+      "a2.klein": "L’inverse fonctionne aussi : sélectionner un mot, choisir une catégorie d’un clic droit, et il est masqué partout. Ce qui doit toujours rester en clair, par exemple les localités, se règle une fois dans les paramètres.",
+      "a3.titel": "Glisser-déposer, même des e-mails",
+      "a3.text": "PDF, Word (.docx), messages Outlook (.msg), e-mails (.eml), boîtes entières (.mbox) et fichiers texte se glissent directement sur la fenêtre. MASCHERA les lit et affiche le texte ; le masquage n’a lieu qu’à ton clic. Depuis le logiciel de messagerie, c’est souvent direct : glisser un message depuis <strong>Thunderbird</strong> ou <strong>Outlook sous Windows</strong>, c’est tout. <strong>Apple Mail</strong> ne fournit pas de fichier en glissant : glisse d’abord le message sur le bureau, puis dans la fenêtre. MASCHERA te le dit aussi.",
+      "a3.klein": "Un PDF scanné sans couche de texte donne un message clair, pas « rien trouvé ».",
+      "bild.einspaltig": "MASCHERA dans une fenêtre étroite : les zones sont les unes sous les autres, séparées par des lignes nettes",
+      "bild.ziehen": "Un fichier est glissé dans la fenêtre : la page s’assombrit, la zone de dépôt reste claire",
+      "bild.entfernen": "Le vocabulaire avec la colonne « Supprimer » : un × rouge par marqueur",
       "bild.platzhalter": "Emplacement réservé",
-      "bild.gross": "Capture de l’application avec le texte masqué et les occurrences en couleur · 1600 × 1000",
-      "bild.schritt": "Capture · 800 × 600",
-      "bild.herkunft": "Une occurrence et son origine · 1200 × 675",
       "merkmale.kicker": "Quatre caractéristiques",
       "merkmale.titel": "Ce qui fait cet outil",
       "m1.titel": "Il fonctionne sur ton appareil",
-      "m1.text": "Toute la détection est locale. En fonctionnement, <strong>rien</strong> n’est téléchargé et <strong>rien</strong> n’est envoyé : ni polices, ni icônes, ni statistiques. Un point de terminaison qui expédierait du texte n’existe pas et n’existera pas. La sortie passe toujours par ton presse-papiers.",
+      "m1.text": "Toute la détection est locale. En fonctionnement, <strong>rien</strong> n’est téléchargé et <strong>rien</strong> n’est envoyé : ni polices, ni icônes, ni statistiques. Un point de terminaison qui expédierait du texte n’existe pas et n’existera pas. La sortie passe toujours par ton presse-papiers. La seule exception, c’est toi qui la choisis : « Rechercher des mises à jour » dans le menu demande une fois à GitHub le numéro de la version la plus récente.",
       "m2.titel": "Il n’écrit rien",
       "m2.text": "Seuls tes propres réglages sont enregistrés, c’est-à-dire les règles, modèles de texte et préférences. Eux aussi ne le sont que sur ordre explicite. Aucun contenu de document, aucun dictionnaire, aucun journal.",
       "m3.titel": "Réversible, et c’est le but",
@@ -39,7 +58,7 @@
       "ablauf.kicker": "Le déroulement",
       "ablauf.titel": "Cinq étapes",
       "s1.titel": "Ouvrir ou glisser un document, ou coller du texte",
-      "s1.text": "Formats lus : .pdf, .docx, .eml, .msg (Outlook), .mbox, .txt, .md, .csv, .json.",
+      "s1.text": "Formats lus : .pdf, .docx, .eml, .msg (Outlook), .mbox, .txt, .md, .csv, .json. Ou glisser directement depuis la messagerie.",
       "s2.titel": "Masquer",
       "s2.text": "Chaque occurrence est affichée en couleur, avec son origine : somme de contrôle, motif ou modèle.",
       "s3.titel": "Vérifier",
@@ -113,7 +132,7 @@
       "imp.zweckT": "But",
       "imp.zweck": "MASCHERA est un outil de masquage local de données personnelles dans des documents suisses. Il est mis à disposition en tant que logiciel ouvert.",
       "imp.siteT": "Ce site",
-      "imp.site": "Ce site est servi par GitHub Pages (GitHub, Inc., États-Unis). Lors de la consultation, GitHub traite des données techniquement nécessaires, comme l’adresse IP, dans ses journaux de serveur ; les détails figurent dans la déclaration de confidentialité de GitHub. Le site lui-même ne dépose aucun cookie, ne collecte aucune statistique et ne charge rien depuis des serveurs tiers. Les fichiers à télécharger se trouvent également chez GitHub.",
+      "imp.site": "Ce site est hébergé par Hostpoint AG en Suisse. Lors de la consultation, Hostpoint traite les données techniquement nécessaires, comme l’adresse IP, dans ses journaux de serveur ; les détails figurent dans la déclaration de confidentialité de Hostpoint. Le site lui-même ne pose aucun cookie, ne collecte aucune statistique et ne charge rien depuis des serveurs tiers. Les fichiers à télécharger se trouvent sur GitHub (GitHub, Inc., États-Unis).",
       "imp.appT": "L’application",
       "imp.app": "MASCHERA traite tes documents exclusivement sur ton propre appareil. Aucun contenu n’est transmis à l’éditeur ou à des tiers, aucune donnée d’utilisation n’est collectée et aucun cookie n’est déposé. L’éditeur n’a de ce fait aucune connaissance des données traitées et n’en est pas responsable au sens de la LPD. La responsabilité des données t’incombe. Dès que tu colles un texte masqué dans un outil IA, les conditions de ce fournisseur s’appliquent.",
       "imp.haftT": "Responsabilité",
@@ -122,7 +141,39 @@
       "imp.liz": "Code source MIT, paquets livrés AGPL-3.0, modèle MIT. Le code source et les œuvres de tiers utilisées, avec leurs licences, se trouvent sur <a href=\"https://github.com/semprerudi/maschera\" rel=\"noopener noreferrer\">GitHub</a>.",
       "fuss.impressum": "Mentions légales",
       "fuss.name": "<em>maschera</em> veut dire masque en italien et porte l’indicatif de pays CH en son milieu.",
-      "fuss.lizenz": "Licence MIT"
+      "fuss.lizenz": "Licence MIT",
+      "faq.kicker": "Questions fréquentes",
+      "faq.titel": "Questions et réponses",
+      "faq.f1": "Comment masquer ou anonymiser les données personnelles d’un document avant d’interroger ChatGPT ou Claude ?",
+      "faq.a1": "Ouvre le document dans MASCHERA ou colle le texte, puis clique sur « Masquer ». Les noms, numéros AVS, adresses et autres données personnelles sont remplacés par des marqueurs comme [FULLNAME_1]. Tu vérifies le résultat, tu le copies dans le service de ton choix et tu recolles la réponse : MASCHERA y remet les vraies valeurs.",
+      "faq.f2": "MASCHERA a-t-il besoin d’une carte graphique ou d’une connexion Internet ?",
+      "faq.a2": "Non. La détection tourne sur un CPU ordinaire, sans GPU. En fonctionnement, rien n’est téléchargé et rien n’est envoyé, sauf si tu cliques sur « Rechercher des mises à jour ». L’AppImage, l’installateur Windows et l’image macOS contiennent le modèle ; le Flatpak le télécharge une fois au premier démarrage, après ton accord.",
+      "faq.f3": "Quels identifiants suisses MASCHERA reconnaît-il ?",
+      "faq.a3": "Le numéro AVS, l’IDE, l’IBAN, la référence QR, les identificateurs de bâtiment et de logement (EGID/EWID), la catégorie de permis, la plaque de contrôle et le numéro RCC, chacun avec sa somme de contrôle lorsqu’elle existe. Au total, 45 types de données personnelles, en allemand, français, italien et anglais.",
+      "faq.f4": "Est-ce une anonymisation au sens de la loi sur la protection des données ?",
+      "faq.a4": "Non, et c’est voulu. Tant que le dictionnaire existe, l’opération est réversible ; selon la nLPD, les données restent alors des données personnelles. C’est une pseudonymisation. Pour un texte transmis définitivement, tu masques sans dictionnaire : l’opération n’est alors plus réversible.",
+      "faq.f5": "Quels fichiers MASCHERA peut-il lire ?",
+      "faq.a5": "PDF avec couche de texte, Word (DOCX), e-mails (EML, MSG d’Outlook, MBOX), TXT, MD, CSV et JSON. Un PDF scanné sans couche de texte produit une erreur motivée, et non « aucune donnée personnelle trouvée ».",
+      "faq.f6": "En quoi MASCHERA diffère-t-il de Microsoft Presidio ?",
+      "faq.a6": "Presidio est un cadre ouvert pour développeurs qui détecte et masque les données personnelles. Il connaît des identifiants de plus de vingt pays, mais aucun de Suisse ; il faudrait les ajouter soi-même. MASCHERA est une application prête à l’emploi pour les documents suisses, avec une interface pour vérifier et rétablir les valeurs.",
+      "faq.f7": "Puis-je aussi anonymiser un document définitivement ?",
+      "faq.a7": "Oui. Par défaut, MASCHERA masque de façon réversible : avec le dictionnaire, les vraies valeurs reviennent. Pour un texte transmis ou publié, tu masques sans dictionnaire ; l’opération n’est alors plus réversible. Vérifie quand même si des indices indirects sur une personne restent dans le texte.",
+      "vgl.1t": "Conçu pour",
+      "vgl.1m": "Documents suisses",
+      "vgl.1p": "Textes généraux, extensible",
+      "vgl.2t": "Identifiants suisses",
+      "vgl.2m": "Intégrés, avec somme de contrôle",
+      "vgl.2p": "Aucun dans la liste des types pris en charge",
+      "vgl.3t": "Forme",
+      "vgl.3m": "Application pour Windows, macOS, Linux et Docker",
+      "vgl.3p": "Bibliothèque Python et service à intégrer dans d’autres programmes",
+      "vgl.4t": "Fonctionne en local",
+      "vgl.4m": "Oui",
+      "vgl.4p": "Oui",
+      "vgl.5t": "Licence",
+      "vgl.5m": "MIT (code source)",
+      "vgl.5p": "MIT",
+      "vgl.quelle": "État en octobre 2026, d’après la liste des types pris en charge dans la documentation de Presidio."
     },
 
     it: {
@@ -131,32 +182,51 @@
       "nav.pruefen": "Controllo",
       "thema.label": "Alternare chiaro/scuro",
       "nav.download": "Scaricare",
-      "hero.kicker": "Software libero · Open Source · funziona senza rete",
-      "hero.titel": "MASCHERA maschera i dati personali nei documenti svizzeri<span style=\"display:block; font-size:0.75em; line-height:1.3; margin-top:0.3em\">Lo fa sul tuo dispositivo, sempre in locale,<br>senza connessione di rete!</span>",
+      "hero.kicker": "Software libero · Open Source · in locale sulla CPU, senza GPU e senza rete",
+      "hero.titel": "MASCHERA maschera e anonimizza i dati personali nei documenti svizzeri<span style=\"display:block; font-size:0.75em; line-height:1.3; margin-top:0.3em\">Lo fa sul tuo dispositivo, sempre in locale,<br>senza connessione di rete!</span>",
       "hero.lead": "Hai una lettera, uno scambio di e-mail o un PDF e vuoi interrogarci uno strumento di IA. Nomi, numeri AVS e indirizzi però non devono partire con esso.",
       "hero.knopf1": "Scaricare",
       "hero.knopf2": "Come funziona",
       "bsp.vorher": "Prima",
       "bsp.nachher": "Dopo",
       "bsp.unten": "Il testo mascherato lo consegni al servizio che preferisci. La risposta la incolli indietro, e MASCHERA reinserisce i valori reali.",
+      "bild.gross": "MASCHERA con una lettera mascherata: nomi, numero AVS e indirizzo sostituiti da segnaposto colorati",
+      "bild.s1": "Passo 1: depositare un documento in MASCHERA o incollare del testo",
+      "bild.s2": "Passo 2: il testo è mascherato, i dati personali sono sostituiti da segnaposto",
+      "bild.s3": "Passo 3: verificare le occorrenze e completarle se necessario",
+      "bild.s4": "Passo 4: copiare il testo mascherato e incollarlo nel servizio di IA",
+      "bild.s4a": "Scelta del servizio di IA: ChatGPT, Claude, Copilot, Gemini o Mistral",
+      "bild.s5": "Passo 5: incollare la risposta, MASCHERA reinserisce i valori reali",
+      "bild.herkunft": "Un’occorrenza con la sua provenienza: modello, schema o cifra di controllo",
+      "alltag.kicker": "Tre cose che semplificano il lavoro",
+      "alltag.titel": "Pensato per il lavoro di tutti i giorni",
+      "a1.titel": "Si adatta alla finestra e attende in background",
+      "a1.text": "Se la finestra è stretta, circa metà dello schermo o su un portatile compatto, MASCHERA dispone le sei aree una sotto l’altra, nell’ordine del lavoro: originale, mascherato, vocabolario, prompt, risposta, testo finale. Su <strong>Windows e Linux</strong> la X non chiude la finestra: MASCHERA si riduce a icona accanto all’orologio. Il modello resta caricato e al prossimo documento la finestra torna con un clic, senza attesa.",
+      "a1.klein": "Con GNOME l’icona appare solo con l’estensione «AppIndicator». Senza, la X chiude come al solito.",
+      "a2.titel": "Troppo mascherato? Si torna indietro con un clic",
+      "a2.text": "Nel dubbio MASCHERA maschera piuttosto una parola in più che una in meno. In un documento lungo può quindi sostituire anche il nome di un’azienda o un luogo che vuoi lasciare. <strong>Nel testo:</strong> un clic destro su un segnaposto mostra il valore originale e la sua provenienza; lì rimuovi la maschera o scegli un’altra categoria. <strong>Nel vocabolario:</strong> ogni riga ha una × rossa. Un clic toglie il segnaposto in tutto il documento: se [ORG_1] compare cinque volte, il nome dell’azienda torna leggibile ovunque.",
+      "a2.klein": "Funziona anche al contrario: seleziona una parola, scegli una categoria con il clic destro, ed è mascherata ovunque. Ciò che deve restare sempre in chiaro, per esempio le località, si imposta una volta nelle impostazioni.",
+      "a3.titel": "Basta trascinare, anche le e-mail",
+      "a3.text": "PDF, Word (.docx), messaggi Outlook (.msg), e-mail (.eml), intere caselle (.mbox) e file di testo si trascinano direttamente sulla finestra. MASCHERA li legge e mostra il testo; si maschera solo al tuo clic. Dal programma di posta spesso funziona direttamente: trascina un messaggio da <strong>Thunderbird</strong> o da <strong>Outlook su Windows</strong>, fatto. <strong>Apple Mail</strong> non consegna un file trascinando: prima trascina il messaggio sulla scrivania e poi nella finestra. MASCHERA te lo dice anche.",
+      "a3.klein": "Un PDF scansionato senza livello di testo dà un messaggio chiaro, non «nulla trovato».",
+      "bild.einspaltig": "MASCHERA in una finestra stretta: le aree stanno una sotto l’altra, separate da linee ben visibili",
+      "bild.ziehen": "Un file viene trascinato nella finestra: la pagina si scurisce, l’area di deposito resta chiara",
+      "bild.entfernen": "Il vocabolario con la colonna «Rimuovi»: una × rossa per segnaposto",
       "bild.platzhalter": "Segnaposto",
-      "bild.gross": "Schermata dell’applicazione con testo mascherato e occorrenze colorate · 1600 × 1000",
-      "bild.schritt": "Schermata · 800 × 600",
-      "bild.herkunft": "Un’occorrenza con la sua provenienza · 1200 × 675",
       "merkmale.kicker": "Quattro caratteristiche",
       "merkmale.titel": "Che cosa distingue lo strumento",
       "m1.titel": "Funziona sul tuo dispositivo",
-      "m1.text": "Tutto il riconoscimento avviene in locale. In esercizio <strong>nulla</strong> viene scaricato e <strong>nulla</strong> viene inviato: né caratteri, né icone, né statistiche. Un endpoint che spedisca testo non esiste e non esisterà. La via verso l’esterno passa sempre dagli appunti.",
+      "m1.text": "Tutto il riconoscimento avviene in locale. In esercizio <strong>nulla</strong> viene scaricato e <strong>nulla</strong> viene inviato: né caratteri, né icone, né statistiche. Un endpoint che spedisca testo non esiste e non esisterà. La via verso l’esterno passa sempre dagli appunti. L’unica eccezione la scegli tu: «Cerca aggiornamenti» nel menu chiede una volta a GitHub il numero della versione più recente.",
       "m2.titel": "Non annota nulla",
       "m2.text": "Vengono salvate solo le tue impostazioni, cioè regole, modelli e preferenze. Anche queste vengono salvate solo su comando esplicito. Nessun contenuto di documento, nessun dizionario, nessun registro.",
       "m3.titel": "Reversibile, ed è questo il senso",
       "m3.text": "Maschera, chiedi e incolli indietro la risposta: MASCHERA reinserisce i valori reali. Per questo si chiama <strong>pseudonimizzazione</strong> e non anonimizzazione. Finché il dizionario esiste il procedimento è reversibile, e i dati restano dati personali ai sensi della revLPD.",
       "m4.titel": "Costruito per documenti svizzeri",
-      "m4.text": "Vengono riconosciuti numero AVS, IDI, IBAN, riferimento QR, identificatore di edificio e abitazione, categoria di licenza, targa e numero RCC, ciascuno con la sua cifra di controllo. <strong><br>45 tipi di dati</strong> in totale. Quattro lingue: tedesco, francese, italiano e inglese.",
+      "m4.text": "Vengono riconosciuti numero AVS, IDI, IBAN, riferimento QR, identificatore di edificio e abitazione, categoria di permesso, targa e numero RCC, ciascuno con la sua cifra di controllo. <strong><br>45 tipi di dati</strong> in totale. Quattro lingue: tedesco, francese, italiano e inglese.",
       "ablauf.kicker": "La procedura",
       "ablauf.titel": "Cinque passi",
       "s1.titel": "Aprire o trascinare un documento, oppure incollare del testo",
-      "s1.text": "Vengono letti .pdf, .docx, .eml, .msg (Outlook), .mbox, .txt, .md, .csv, .json.",
+      "s1.text": "Vengono letti .pdf, .docx, .eml, .msg (Outlook), .mbox, .txt, .md, .csv, .json. Oppure trascinare direttamente dal programma di posta.",
       "s2.titel": "Mascherare",
       "s2.text": "Ogni occorrenza è mostrata a colori, con la sua provenienza: cifra di controllo, schema o modello.",
       "s3.titel": "Verificare",
@@ -172,7 +242,7 @@
       "stufen.1t": "1 · Cifre di controllo",
       "stufen.1b": "Numero AVS, IDI, IBAN, riferimento QR, carta di credito, GLN. Cifra valida → mascherare, anche se il modello tace. Non valida → scartare, anche se il modello segnala.",
       "stufen.2t": "2 · Schemi con àncora di contesto",
-      "stufen.2b": "Numero di telefono, NPA, targa, categoria di licenza, numero di pratica e altri. Vengono riconosciuti tramite parole d’àncora in quattro lingue e non hanno precedenza sul modello. Si aggiungono le tue regole personali: parole e schemi che definisci tu. Funzionano come gli schemi integrati. Per esempio un n. di caso interno o un n. di dossier interno.",
+      "stufen.2b": "Numero di telefono, NPA, targa, categoria di permesso, numero di pratica e altri. Vengono riconosciuti tramite parole d’àncora in quattro lingue e non hanno precedenza sul modello. Si aggiungono le tue regole personali: parole e schemi che definisci tu. Funzionano come gli schemi integrati. Per esempio un n. di caso interno o un n. di dossier interno.",
       "stufen.3t": "3 · Modello linguistico",
       "stufen.3b": "Nomi, indirizzi, professioni, organizzazioni e date, cioè tutto ciò che non ha uno schema.",
       "stufen.modell": "Il modello è grande <strong>1,2 GB</strong> ed è stato addestrato su dati <strong>sintetici</strong>. Non ha mai visto un documento reale. <a href=\"#verweise\">Indicazioni tecniche sul modello</a>.",
@@ -230,7 +300,7 @@
       "imp.zweckT": "Scopo",
       "imp.zweck": "MASCHERA è uno strumento per la mascheratura locale di dati personali in documenti svizzeri. È messo a disposizione come software aperto.",
       "imp.siteT": "Questo sito",
-      "imp.site": "Il sito è servito tramite GitHub Pages (GitHub, Inc., USA). Alla consultazione GitHub tratta dati tecnicamente necessari, come l’indirizzo IP, nei propri registri del server; i dettagli si trovano nell’informativa sulla privacy di GitHub. Il sito stesso non imposta cookie, non raccoglie statistiche e non carica nulla da server di terzi. Anche i file da scaricare si trovano su GitHub.",
+      "imp.site": "Il sito è ospitato da Hostpoint AG in Svizzera. Alla consultazione Hostpoint tratta i dati tecnicamente necessari, come l’indirizzo IP, nei suoi log del server; i dettagli si trovano nell’informativa sulla privacy di Hostpoint. Il sito stesso non imposta cookie, non raccoglie statistiche e non carica nulla da server di terzi. I file da scaricare si trovano su GitHub (GitHub, Inc., USA).",
       "imp.appT": "L’applicazione",
       "imp.app": "MASCHERA elabora i tuoi documenti esclusivamente sul tuo dispositivo. Nessun contenuto viene trasmesso all’editore o a terzi, non vengono raccolti dati d’uso e non vengono impostati cookie. L’editore non ha quindi conoscenza dei dati trattati e non ne è responsabile ai sensi della LPD. La responsabilità dei dati resta tua. Non appena incolli un testo mascherato in uno strumento IA, valgono le condizioni di quel fornitore.",
       "imp.haftT": "Responsabilità",
@@ -239,7 +309,39 @@
       "imp.liz": "Codice sorgente MIT, pacchetti distribuiti AGPL-3.0, modello MIT. Il codice sorgente e le opere di terzi utilizzate, con le rispettive licenze, si trovano su <a href=\"https://github.com/semprerudi/maschera\" rel=\"noopener noreferrer\">GitHub</a>.",
       "fuss.impressum": "Note legali",
       "fuss.name": "<em>MASCHERA</em> non ha bisogno di spiegazioni e porta la sigla nazionale CH nel mezzo.",
-      "fuss.lizenz": "Licenza MIT"
+      "fuss.lizenz": "Licenza MIT",
+      "faq.kicker": "Domande frequenti",
+      "faq.titel": "Domande e risposte",
+      "faq.f1": "Come maschero o anonimizzo i dati personali di un documento prima di chiedere a ChatGPT o Claude?",
+      "faq.a1": "Apri il documento in MASCHERA o incolla il testo e clicca su «Mascherare». Nomi, numeri AVS, indirizzi e altri dati personali vengono sostituiti da segnaposto come [FULLNAME_1]. Controlli il risultato, lo copi nel servizio che preferisci e incolli di nuovo la risposta: MASCHERA reinserisce i valori reali.",
+      "faq.f2": "MASCHERA ha bisogno di una scheda grafica o di una connessione Internet?",
+      "faq.a2": "No. Il riconoscimento gira su una normale CPU, senza GPU. Durante l’uso non viene scaricato né inviato nulla, salvo se clicchi su «Cerca aggiornamenti». L’AppImage, il programma d’installazione per Windows e l’immagine macOS contengono il modello; il Flatpak lo scarica una volta al primo avvio, dopo il tuo consenso.",
+      "faq.f3": "Quali identificativi svizzeri riconosce MASCHERA?",
+      "faq.a3": "Il numero AVS, l’IDI, l’IBAN, il riferimento QR, gli identificatori di edificio e di abitazione (EGID/EWID), la categoria di permesso, la targa e il numero RCC, ciascuno con la relativa cifra di controllo, se esiste. In tutto sono 45 tipi di dati personali, in tedesco, francese, italiano e inglese.",
+      "faq.f4": "È un’anonimizzazione ai sensi della legge sulla protezione dei dati?",
+      "faq.a4": "No, ed è voluto. Finché il dizionario esiste, l’operazione è reversibile; secondo la nLPD i dati restano quindi dati personali. Si tratta di pseudonimizzazione. Per un testo che viene trasmesso definitivamente, mascheri senza dizionario: allora l’operazione non è più reversibile.",
+      "faq.f5": "Quali file può leggere MASCHERA?",
+      "faq.a5": "PDF con livello di testo, Word (DOCX), e-mail (EML, MSG di Outlook, MBOX), TXT, MD, CSV e JSON. Un PDF scansionato senza livello di testo restituisce un errore motivato, non «nessun dato personale trovato».",
+      "faq.f6": "In che cosa MASCHERA si distingue da Microsoft Presidio?",
+      "faq.a6": "Presidio è un framework aperto per sviluppatori che riconosce e maschera i dati personali. Conosce identificativi di oltre venti Paesi, ma nessuno della Svizzera; andrebbero aggiunti da sé. MASCHERA è un’applicazione pronta all’uso per documenti svizzeri, con un’interfaccia per controllare e ripristinare i valori.",
+      "faq.f7": "Posso anche anonimizzare un documento in modo definitivo?",
+      "faq.a7": "Sì. Di norma MASCHERA maschera in modo reversibile: con il dizionario i valori reali tornano al loro posto. Per un testo che viene trasmesso o pubblicato, mascheri senza dizionario; allora l’operazione non è più reversibile. Controlla comunque se nel testo restano indizi indiretti su una persona.",
+      "vgl.1t": "Pensato per",
+      "vgl.1m": "Documenti svizzeri",
+      "vgl.1p": "Testi generici, estendibile",
+      "vgl.2t": "Identificativi svizzeri",
+      "vgl.2m": "Integrati, con cifra di controllo",
+      "vgl.2p": "Nessuno nell’elenco dei tipi supportati",
+      "vgl.3t": "Forma",
+      "vgl.3m": "Applicazione per Windows, macOS, Linux e Docker",
+      "vgl.3p": "Libreria Python e servizio da integrare in altri programmi",
+      "vgl.4t": "Funziona in locale",
+      "vgl.4m": "Sì",
+      "vgl.4p": "Sì",
+      "vgl.5t": "Licenza",
+      "vgl.5m": "MIT (codice sorgente)",
+      "vgl.5p": "MIT",
+      "vgl.quelle": "Stato a ottobre 2026, secondo l’elenco dei tipi supportati nella documentazione di Presidio."
     },
 
     en: {
@@ -248,32 +350,51 @@
       "nav.pruefen": "Review",
       "thema.label": "Toggle light/dark",
       "nav.download": "Download",
-      "hero.kicker": "Free software · Open Source · runs without a network",
-      "hero.titel": "MASCHERA masks personal data<br>in Swiss documents<span style=\"display:block; font-size:0.75em; line-height:1.3; margin-top:0.3em\">It does so on your device, always locally,<br>with no network connection!</span>",
+      "hero.kicker": "Free software · Open source · runs locally on the CPU, no GPU, no network",
+      "hero.titel": "MASCHERA masks and anonymises personal data<br>in Swiss documents<span style=\"display:block; font-size:0.75em; line-height:1.3; margin-top:0.3em\">It does so on your device, always locally,<br>with no network connection!</span>",
       "hero.lead": "You have a letter, an email thread or a PDF and want to ask an AI tool about it. The names, AHV numbers and addresses should stay behind, though.",
       "hero.knopf1": "Download",
       "hero.knopf2": "How it works",
       "bsp.vorher": "Before",
       "bsp.nachher": "After",
       "bsp.unten": "You hand the masked text to the service of your choice. You paste the answer back, and MASCHERA puts the real values in again.",
+      "bild.gross": "MASCHERA with a masked letter: names, AHV number and address replaced by coloured placeholders",
+      "bild.s1": "Step 1: drop a document into MASCHERA or paste text",
+      "bild.s2": "Step 2: the text is masked, personal data replaced by placeholders",
+      "bild.s3": "Step 3: check the findings and add to them if needed",
+      "bild.s4": "Step 4: copy the masked text and paste it into the AI service",
+      "bild.s4a": "Choosing the AI service: ChatGPT, Claude, Copilot, Gemini or Mistral",
+      "bild.s5": "Step 5: paste the answer back, MASCHERA restores the real values",
+      "bild.herkunft": "One finding with its origin: model, pattern or checksum",
+      "alltag.kicker": "Three things that make everyday work easier",
+      "alltag.titel": "Built for daily work",
+      "a1.titel": "Fits the window and waits in the background",
+      "a1.text": "When the window is narrow, about half the screen or on a small laptop, MASCHERA stacks the six areas in the order you work: original, masked, vocabulary, prompt, answer, final text. On <strong>Windows and Linux</strong> the X does not close the window; MASCHERA moves to an icon next to the clock. The model stays loaded, and for the next document the window is back with one click, without waiting.",
+      "a1.klein": "On GNOME the icon only appears with the “AppIndicator” extension. Without it, the X closes as usual.",
+      "a2.titel": "Masked too much? One click undoes it",
+      "a2.text": "When in doubt, MASCHERA masks one word too many rather than one too few. In a long document that can include a company name or a place you want to keep. <strong>In the text:</strong> a right-click on a placeholder shows the original value and where the finding came from; there you remove the mask or pick another category. <strong>In the vocabulary:</strong> every row has a red ×. One click takes the placeholder back in the whole document: if [ORG_1] appears five times, the company name is readable everywhere again.",
+      "a2.klein": "It works the other way round too: select a word, pick a category with a right-click, and it is masked everywhere. Whatever should always stay in plain text, such as place names, you set once in the settings.",
+      "a3.titel": "Just drag it in, e-mails too",
+      "a3.text": "PDF, Word (.docx), Outlook messages (.msg), e-mails (.eml), whole mailboxes (.mbox) and text files can be dragged straight onto the window. MASCHERA reads them and shows the text; masking only happens when you click. From the mail program it often works directly: drag a message from <strong>Thunderbird</strong> or from <strong>Outlook on Windows</strong>, done. <strong>Apple Mail</strong> does not hand over a file when dragging: drag the message to the desktop first, then into the window. MASCHERA tells you so as well.",
+      "a3.klein": "A scanned PDF without a text layer gives a clear message, not “nothing found”.",
+      "bild.einspaltig": "MASCHERA in a narrow window: the areas are stacked, separated by clear lines",
+      "bild.ziehen": "A file is dragged into the window: the page dims, the drop area stays bright",
+      "bild.entfernen": "The vocabulary with the “Remove” column: a red × per placeholder",
       "bild.platzhalter": "Placeholder",
-      "bild.gross": "Screenshot of the application with masked text and coloured findings · 1600 × 1000",
-      "bild.schritt": "Screenshot · 800 × 600",
-      "bild.herkunft": "One finding with its origin · 1200 × 675",
       "merkmale.kicker": "Four features",
       "merkmale.titel": "What defines the tool",
       "m1.titel": "It runs on your device",
-      "m1.text": "All detection happens locally. While it runs, <strong>nothing</strong> is fetched and <strong>nothing</strong> is sent: no fonts, no icons, no analytics. An endpoint that ships text out does not exist and will not exist. The way out always leads through your clipboard.",
+      "m1.text": "All detection happens locally. While it runs, <strong>nothing</strong> is fetched and <strong>nothing</strong> is sent: no fonts, no icons, no analytics. An endpoint that ships text out does not exist and will not exist. The way out always leads through your clipboard. The one exception is yours to choose: “Check for updates” in the menu asks GitHub once for the newest version number.",
       "m2.titel": "It writes nothing down",
       "m2.text": "Only your own settings are stored, meaning rules, templates and preferences. Even those are stored only on explicit command. No document content, no dictionary, no log.",
       "m3.titel": "Reversible, and that is the point",
       "m3.text": "You mask, you ask, you paste the answer back: MASCHERA puts the real values in again. That is why this is <strong>pseudonymisation</strong> and not anonymisation. As long as the dictionary exists the process is reversible, and under the revised FADP the data remain personal data.",
       "m4.titel": "Built for Swiss documents",
-      "m4.text": "It detects the AHV number, UID, IBAN, QR reference, building and dwelling identifier, licence category, number plate and ZSR number, each with its checksum. <strong><br>45 data types</strong> in all. Four languages: German, French, Italian and English.",
+      "m4.text": "It detects the AHV number, UID, IBAN, QR reference, building and dwelling identifier, permit category, number plate and ZSR number, each with its checksum. <strong><br>45 data types</strong> in all. Four languages: German, French, Italian and English.",
       "ablauf.kicker": "The process",
       "ablauf.titel": "Five steps",
       "s1.titel": "Open or drag in a document, or paste text",
-      "s1.text": "Read: .pdf, .docx, .eml, .msg (Outlook), .mbox, .txt, .md, .csv, .json.",
+      "s1.text": "Read: .pdf, .docx, .eml, .msg (Outlook), .mbox, .txt, .md, .csv, .json. Or drag straight from your mail program.",
       "s2.titel": "Mask",
       "s2.text": "Every finding is shown in colour, with its origin: checksum, pattern or model.",
       "s3.titel": "Check",
@@ -289,7 +410,7 @@
       "stufen.1t": "1 · Checksums",
       "stufen.1b": "AHV number, UID, IBAN, QR reference, credit card, GLN. Valid checksum → mask, even if the model stays silent. Invalid → discard, even if it fires.",
       "stufen.2t": "2 · Patterns with context anchors",
-      "stufen.2b": "Phone number, postcode, number plate, licence category, case number and more. They are detected by anchor words in four languages and take no precedence over the model. Your own rules come on top: words and patterns you define yourself. They run like the built-in patterns. For example an internal case no. or an internal file no.",
+      "stufen.2b": "Phone number, postcode, number plate, permit category, case number and more. They are detected by anchor words in four languages and take no precedence over the model. Your own rules come on top: words and patterns you define yourself. They run like the built-in patterns. For example an internal case no. or an internal file no.",
       "stufen.3t": "3 · Language model",
       "stufen.3b": "Names, addresses, occupations, organisations and dates, meaning everything without a pattern.",
       "stufen.modell": "The model is <strong>1.2 GB</strong> and was trained on <strong>synthetic</strong> data. It has never seen a real document. <a href=\"#verweise\">Technical details on the model</a>.",
@@ -347,7 +468,7 @@
       "imp.zweckT": "Purpose",
       "imp.zweck": "MASCHERA is a tool for masking personal data locally in Swiss documents. It is provided as open software.",
       "imp.siteT": "This website",
-      "imp.site": "This website is served through GitHub Pages (GitHub, Inc., USA). When you visit it, GitHub processes technically necessary data such as your IP address in its server logs; details are in GitHub’s privacy statement. The website itself sets no cookies, collects no statistics and loads nothing from third-party servers. The download files are hosted on GitHub as well.",
+      "imp.site": "This website is hosted by Hostpoint AG in Switzerland. When you visit it, Hostpoint processes technically necessary data such as your IP address in its server logs; details are in Hostpoint’s privacy statement. The website itself sets no cookies, collects no statistics and loads nothing from third-party servers. The download files are hosted on GitHub (GitHub, Inc., USA).",
       "imp.appT": "The application",
       "imp.app": "MASCHERA processes your documents exclusively on your own device. No content is transmitted to the publisher or to third parties, no usage data is collected and no cookies are set. The publisher therefore gains no knowledge of the processed data and is not its controller within the meaning of the FADP. Responsibility for the data remains yours. As soon as you paste a masked text into an AI tool, that provider’s terms apply.",
       "imp.haftT": "Liability",
@@ -356,76 +477,86 @@
       "imp.liz": "Source code MIT, shipped packages AGPL-3.0, model MIT. The source code and the third-party works used, with their licences, are on <a href=\"https://github.com/semprerudi/maschera\" rel=\"noopener noreferrer\">GitHub</a>.",
       "fuss.impressum": "Legal notice",
       "fuss.name": "<em>maschera</em> is Italian for mask and carries the country code CH in the middle.",
-      "fuss.lizenz": "MIT licence"
+      "fuss.lizenz": "MIT licence",
+      "faq.kicker": "Frequently asked questions",
+      "faq.titel": "Questions and answers",
+      "faq.f1": "How do I mask or anonymise personal data in a document before asking ChatGPT or Claude?",
+      "faq.a1": "Open the document in MASCHERA or paste the text, then click “Mask”. Names, AHV numbers, addresses and other personal data are replaced with placeholders such as [FULLNAME_1]. You check the result, copy it into the service of your choice and paste the answer back: MASCHERA puts the real values in again.",
+      "faq.f2": "Does MASCHERA need a graphics card or an internet connection?",
+      "faq.a2": "No. Detection runs on an ordinary CPU, with no GPU. While it runs, nothing is downloaded and nothing is sent, unless you click “Check for updates”. The AppImage, the Windows installer and the macOS image carry the model; the Flatpak fetches it once on first start, after you agree.",
+      "faq.f3": "Which Swiss identifiers does MASCHERA recognise?",
+      "faq.a3": "The AHV number, UID, IBAN, QR reference, building and dwelling identifiers (EGID/EWID), permit category, number plate and ZSR number, each with its checksum where one exists. In all, 45 types of personal data, in German, French, Italian and English.",
+      "faq.f4": "Is this anonymisation in the sense of data protection law?",
+      "faq.a4": "No, and that is deliberate. As long as the dictionary exists, the process can be reversed; under the Swiss FADP (revDSG) the data then remain personal data. That is pseudonymisation. For text that is passed on for good, you mask without a dictionary: then the process can no longer be reversed.",
+      "faq.f5": "Which files can MASCHERA read?",
+      "faq.a5": "PDF with a text layer, Word (DOCX), emails (EML, MSG from Outlook, MBOX), TXT, MD, CSV and JSON. A scanned PDF without a text layer returns an error with a reason, not “no personal data found”.",
+      "faq.f6": "How does MASCHERA differ from Microsoft Presidio?",
+      "faq.a6": "Presidio is an open framework for developers that detects and masks personal data. It knows identifiers from more than twenty countries, but none from Switzerland; you would have to add them yourself. MASCHERA is a ready-to-use application for Swiss documents, with an interface for checking and restoring the values.",
+      "faq.f7": "Can I also anonymise a document for good?",
+      "faq.a7": "Yes. By default MASCHERA masks reversibly: with the dictionary, the real values come back. For text that is passed on or published, you mask without a dictionary; then the process can no longer be reversed. Still check whether indirect clues to a person remain in the text.",
+      "vgl.1t": "Built for",
+      "vgl.1m": "Swiss documents",
+      "vgl.1p": "General text, extensible",
+      "vgl.2t": "Swiss identifiers",
+      "vgl.2m": "Built in, with checksum",
+      "vgl.2p": "None in the list of supported types",
+      "vgl.3t": "Form",
+      "vgl.3m": "Application for Windows, macOS, Linux and Docker",
+      "vgl.3p": "Python library and service for your own programs",
+      "vgl.4t": "Runs locally",
+      "vgl.4m": "Yes",
+      "vgl.4p": "Yes",
+      "vgl.5t": "Licence",
+      "vgl.5m": "MIT (source code)",
+      "vgl.5p": "MIT",
+      "vgl.quelle": "As of October 2026, according to the list of supported types in the Presidio documentation."
     }
   };
 
   var titel = {
-    de: "MASCHERA: Personendaten maskieren, auf deinem Gerät",
-    fr: "MASCHERA : masquer les données personnelles, sur ton appareil",
-    it: "MASCHERA: mascherare i dati personali, sul tuo dispositivo",
-    en: "MASCHERA: mask personal data, on your own device"
+    de: "Schweizer Dokumente maskieren & anonymisieren – Open Source",
+    fr: "Masquer et anonymiser des documents suisses – open source",
+    it: "Mascherare e anonimizzare documenti svizzeri – open source",
+    en: "Mask and anonymise PII in Swiss documents – open source"
   };
 
-  // Die deutsche Fassung aus dem HTML lesen, damit sie nicht doppelt gepflegt wird.
-  function deutschEinlesen() {
-    document.querySelectorAll("[data-i18n]").forEach(function (el) {
-      var k = el.getAttribute("data-i18n");
-      if (!(k in T.de)) T.de[k] = el.textContent;
-    });
-    document.querySelectorAll("[data-i18n-html]").forEach(function (el) {
-      var k = el.getAttribute("data-i18n-html");
-      if (!(k in T.de)) T.de[k] = el.innerHTML;
-    });
-    document.querySelectorAll("[data-i18n-attr]").forEach(function (el) {
-      var teile = el.getAttribute("data-i18n-attr").split(":");
-      if (!(teile[1] in T.de)) T.de[teile[1]] = el.getAttribute(teile[0]) || "";
-    });
+  // Die Beschreibung fuer Suchmaschinen und geteilte Links. Die deutsche steht
+  // im HTML; die anderen setzt `tools/seite_sprachen.py` in ihre Seite.
+  var beschreibung = {
+    fr: "Logiciel libre et open source : masque et anonymise les données personnelles des documents suisses avant ChatGPT & Cie. En local, sans GPU.",
+    it: "Software libero e open source: maschera e anonimizza i dati personali nei documenti svizzeri prima di ChatGPT & Co. In locale, senza GPU.",
+    en: "Free, open-source software that masks and anonymises personal data (PII) in Swiss documents before you share them with ChatGPT. Local, no GPU."
+  };
+
+  // Seit 12.10.2026 hat jede Sprache ihre eigene Seite: /, /fr/, /it/, /en/.
+  // `tools/seite_sprachen.py` erzeugt sie aus T, titel und beschreibung oben;
+  // vorher tauschte dieses Skript die Texte im Browser aus, und eine
+  // Suchmaschine sah nur eine Sprache. Hier bleibt nur noch der Weg dorthin.
+  var hier = document.documentElement.lang || "de";
+
+  function adresse(sprache) {
+    if (sprache === "de") return hier === "de" ? "./" : "../";
+    return (hier === "de" ? "" : "../") + sprache + "/";
   }
 
-  function setzen(sprache, merken) {
-    var w = T[sprache] || T.de;
-    document.documentElement.lang = sprache;
-    document.querySelectorAll("img[data-bild]").forEach(function (el) {
-      el.setAttribute("src", "bilder/" + (T[sprache] ? sprache : "de") + "/" + el.getAttribute("data-bild") + ".png");
-    });
-    document.title = titel[sprache] || titel.de;
-    document.querySelectorAll("[data-i18n]").forEach(function (el) {
-      var t = w[el.getAttribute("data-i18n")];
-      if (t != null) el.textContent = t;
-    });
-    document.querySelectorAll("[data-i18n-html]").forEach(function (el) {
-      var t = w[el.getAttribute("data-i18n-html")];
-      if (t != null) el.innerHTML = t;
-    });
-    document.querySelectorAll("[data-i18n-attr]").forEach(function (el) {
-      var teile = el.getAttribute("data-i18n-attr").split(":");
-      var t = w[teile[1]];
-      if (t != null) el.setAttribute(teile[0], t);
-    });
-    document.querySelectorAll("[data-sprache]").forEach(function (b) {
-      b.setAttribute("aria-pressed", b.getAttribute("data-sprache") === sprache ? "true" : "false");
-    });
-    if (merken) try { localStorage.setItem("maschera.sprache", sprache); } catch (e) {}
-  }
-
-  function startsprache() {
-    var gespeichert = null;
-    try { gespeichert = localStorage.getItem("maschera.sprache"); } catch (e) {}
-    if (gespeichert && T[gespeichert]) return gespeichert;
-    var liste = navigator.languages || [navigator.language || "de"];
-    for (var i = 0; i < liste.length; i++) {
-      var k = String(liste[i]).slice(0, 2).toLowerCase();
-      if (T[k]) return k;
+  // Wer eine Sprache gewaehlt hat, kommt auf der Startseite wieder dort an.
+  // Nach der BROWSERsprache wird nicht umgeleitet: Google raet davon ab, und
+  // ein Crawler mit englischer Browsersprache saehe die deutsche Seite nie.
+  if (hier === "de") {
+    var gewaehlt = null;
+    try { gewaehlt = localStorage.getItem("maschera.sprache"); } catch (e) {}
+    if (gewaehlt && gewaehlt !== "de" && T[gewaehlt]) {
+      location.replace(adresse(gewaehlt));
+      return;
     }
-    return "de";
   }
-
-  deutschEinlesen();
-  setzen(startsprache());
 
   document.querySelectorAll("[data-sprache]").forEach(function (b) {
-    b.addEventListener("click", function () { setzen(b.getAttribute("data-sprache"), true); });
+    b.addEventListener("click", function () {
+      var sprache = b.getAttribute("data-sprache");
+      try { localStorage.setItem("maschera.sprache", sprache); } catch (e) {}
+      if (sprache !== hier) location.href = adresse(sprache);
+    });
   });
 
   // Linux-Teilknopf

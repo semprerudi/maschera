@@ -10,3 +10,25 @@
     Header set Cache-Control "no-cache"
   </FilesMatch>
 </IfModule>
+
+# Eine Adresse, nicht zwei. `maschera.ch` und `www.maschera.ch` antworteten
+# beide mit derselben Seite; fuer Suchmaschinen ist das doppelter Inhalt, und
+# sie muessen raten, welche gilt. Alle Verweise (README, App, Hugging Face)
+# nennen `www` — die kurze Form leitet dauerhaft dorthin um.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^maschera\.ch$ [NC]
+  RewriteRule ^ https://www.maschera.ch%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# KI-Crawler zulassen, die Hostpoint serverweit sperrt. Seit 12.10.2026 gemessen:
+# GPTBot und ClaudeBot bekamen 403, auch fuer /robots.txt — die Sperre sitzt
+# nicht in dieser Datei, sondern setzt auf dem Server HOSTPOINT_AI_TRAINING_
+# BLOCKLIST. Hostpoint-Support (13.10.2026): die Variable je Bot hier wieder
+# entfernen, dazu ZWINGEND ein Crawl-delay in robots.txt. Bewusst nur diese
+# zwei: MASCHERA soll in die Modelle, die nach Schweizer Werkzeugen gefragt
+# werden; Bytespider u. a. bleiben gesperrt.
+<IfModule mod_setenvif.c>
+  BrowserMatch "GPTBot/" !HOSTPOINT_AI_TRAINING_BLOCKLIST
+  BrowserMatch "ClaudeBot/" !HOSTPOINT_AI_TRAINING_BLOCKLIST
+</IfModule>

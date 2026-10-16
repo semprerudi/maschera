@@ -40,7 +40,7 @@ sys.path.insert(0, str(WURZEL / "tools"))
 from flask import Flask, jsonify, send_from_directory  # noqa: E402
 
 from core import einstellungen  # noqa: E402
-from serve import VERSION, Zustand, baue  # noqa: E402
+from serve import VERSION, Zustand, baue, wirt_warnung  # noqa: E402
 
 OBERFLAECHE = Path(__file__).resolve().parent / "static"
 
@@ -148,6 +148,8 @@ def main() -> int:
             print("    ⚠ MASCHERA_WIRT ist nicht gesetzt — unter einem "
                   "anderen Namen als\n"
                   "      127.0.0.1 antwortet der Dienst mit 403.")
+    if wirt_warnung():
+        print(wirt_warnung())
     print(f"  http://{args.host}:{args.port}/")
 
     app.run(host=args.host, port=args.port, threaded=True, debug=False)

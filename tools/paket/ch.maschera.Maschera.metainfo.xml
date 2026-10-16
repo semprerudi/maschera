@@ -93,6 +93,15 @@
   -->
 
   <releases>
+    <release version="1.0.5" date="2026-10-16">
+      <description>
+        <p>Remove a mask from the vocabulary with one click, everywhere in
+        the document. "Check for updates" in the menu. Clearer separators
+        when the window is narrow. Security hardening: the model is fetched
+        from a fixed commit, uploaded file names never become paths, and a
+        loud warning when host checking is switched off.</p>
+      </description>
+    </release>
     <release version="1.0.4" date="2026-10-11">
       <description>
         <p>Security update: Werkzeug 3.1.9 (a request could hang the Windows

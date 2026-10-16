@@ -38,7 +38,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 # Ein `__init__.py` daneben machte es schlimmer: dann waere `app` sicher
 # das Paket und `app/app.py` nur noch ueber `app.app` erreichbar.
 from app.app import baue_mit_oberflaeche  # noqa: E402
-from serve import VERSION, Zustand  # noqa: E402
+from serve import VERSION, Zustand, wirt_warnung  # noqa: E402
 
 _modell = os.environ.get("MASCHERA_MODELL")
 _onnx = os.environ.get("MASCHERA_ONNX")
@@ -60,6 +60,8 @@ anwendung = baue_mit_oberflaeche(_zustand)
 
 print(f"MASCHERA {VERSION} unter gunicorn · "
       f"Modell {_zustand.modellname or 'KEINES'}", file=sys.stderr)
+if wirt_warnung():
+    print(wirt_warnung(), file=sys.stderr)
 if _zustand.ohne_modell:
     print("  ⚠ OHNE MODELL — Namen, Daten und Adressen bleiben im Klartext.",
           file=sys.stderr)

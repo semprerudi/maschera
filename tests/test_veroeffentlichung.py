@@ -901,6 +901,28 @@ check(not _kann,
 if not failures:
     print(f"   OK   {len(HOCHLADEN)} Wege geprueft, keiner im Baum")
 
+print("\nKein Python im Baum fuehrt Text als Code aus")
+# Sicherheitspruefung 16.10.2026 (E3): das einzige `exec` stand in
+# `oeffentlich_paket.py` und las eine Liste aus dieser Datei. Ersetzt durch
+# `ast.literal_eval`. Gesucht wird im SYNTAXBAUM, nicht im Text — so stoert
+# weder ein Kommentar noch eine Zeichenkette, die das Wort nur nennt.
+import ast as _ast  # noqa: E402
+_ausf = []
+for _p in dateien():
+    if _p.suffix != ".py":
+        continue
+    try:
+        _baum = _ast.parse(_p.read_text(encoding="utf-8", errors="replace"))
+    except SyntaxError:
+        continue
+    for _k in _ast.walk(_baum):
+        if (isinstance(_k, _ast.Call) and isinstance(_k.func, _ast.Name)
+                and _k.func.id in ("exec", "eval", "compile")):
+            _ausf.append(f"{_p.relative_to(WURZEL)}:{_k.lineno} {_k.func.id}()")
+check(not _ausf, f"Text wird als Code ausgefuehrt: {'; '.join(_ausf)}")
+if not failures:
+    print("   OK   kein exec(), eval() oder compile() im Baum")
+
 print("\nKeine Fernkopie zeigt nach draussen")
 # In der Arbeitsumgebung traegt die Git-Geschichte die internen Dokumente.
 # Sie darf nirgends hin, wo sie oeffentlich werden kann; das oeffentliche

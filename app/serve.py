@@ -63,6 +63,7 @@ from flask import Flask, jsonify, request  # noqa: E402
 
 from core import einstellungen, user_rules, vorlagen  # noqa: E402
 from core import vorlieben  # noqa: E402
+from core import neueste  # noqa: E402
 from core.hinweise import Abgelehnt, hinweis  # noqa: E402
 from core.inference import filter_text  # noqa: E402
 from core.masking import PLACEHOLDER_RE, restore  # noqa: E402
@@ -78,7 +79,7 @@ from filter_document import Mitschreiber  # noqa: E402
 # hier heraus. `tests/test_fenster.py` Punkt 7 prueft, dass es bei dieser
 # einen Stelle bleibt. In einem Fehlerbericht sagt sie, welcher Stand
 # gemeint ist.
-VERSION = "1.0.4"
+VERSION = "1.0.5"
 
 # Mehr nimmt der Server nicht an. Ein Dokument ist laut Messung 1500 bis 4500
 # Zeichen; 10 MB fangen auch ein PDF mit Bildern ab, ohne dass ein
@@ -115,6 +116,24 @@ def erlaubte_wirte() -> set[str] | None:
     namen = set(WIRTE_LOKAL)
     namen.update(w.strip().lower() for w in gesetzt.split(",") if w.strip())
     return namen
+
+
+def wirt_warnung() -> str | None:
+    """Die Warnung beim Start, wenn `MASCHERA_WIRT=*` die Pruefung abschaltet.
+
+    EINE Stelle fuer drei Startwege (`app.py`, `serve.py`, `wsgi.py`). Mit `*`
+    antwortet der Dienst unter JEDEM Namen — die Schranke gegen DNS-Rebinding
+    ist dann weg, und das gehoert beim Start laut dastehen, nicht nur in der
+    Doku (Sicherheitspruefung 16.10.2026, E6; `tests/test_api.py` Punkt 25).
+    """
+    if erlaubte_wirte() is not None:
+        return None
+    return ("  ⚠⚠ MASCHERA_WIRT=* — die Wirtspruefung ist AUS. Der Dienst "
+            "antwortet unter\n"
+            "     jedem Namen; eine fremde Webseite koennte ihn ueber "
+            "DNS-Rebinding erreichen.\n"
+            "     Nur hinter einem Proxy mit Anmeldung, der selbst den Namen "
+            "prueft.")
 
 
 def wirt_von(roh: str) -> str:
@@ -554,6 +573,36 @@ def baue(z: Zustand) -> Flask:
             "hinweise": _hinweise_ohne_modell() if z.ohne_modell else [],
         })
 
+    # -- Neueste Fassung ----------------------------------------------------
+
+    @app.post("/api/neueste")
+    def neueste_fassung():
+        """Gibt es eine neuere Fassung? Nur auf Klick im Burgermenue.
+
+        ⚠️ Die zweite benannte Ausnahme von «kein Nachladen von aussen»
+        (die erste ist das Modell im Flatpak). Was sie eng haelt, steht in
+        `core/neueste.py`: eine feste Adresse, nichts mitgeschickt, nur die
+        Nummer gelesen. POST und nicht GET, damit kein `<img>` einer fremden
+        Seite die Frage ausloesen kann.
+
+        Im Docker-Abbild darf der Container nicht hinaus — dann kommt 503 mit
+        Begruendung, und die Oberflaeche zeigt trotzdem den Weg zur
+        Download-Seite.
+        """
+        holen = app.config.get("NEUESTE_HOLEN") or neueste._holen
+        try:
+            fassung = neueste.nachsehen(holen)
+        except neueste.NichtErreichbar as e:
+            print(f"Nach Updates suchen: {e}", file=sys.stderr, flush=True)
+            return fehler("GitHub ist nicht erreichbar.", 503,
+                          schluessel="neueste_nicht_erreichbar")
+        except neueste.Unlesbar as e:
+            print(f"Nach Updates suchen: {e}", file=sys.stderr, flush=True)
+            return fehler("Die Antwort von GitHub war nicht lesbar.", 502,
+                          schluessel="neueste_unlesbar")
+        return jsonify({"aktuell": VERSION, "neueste": fassung,
+                        "neuer": neueste.ist_neuer(fassung, VERSION)})
+
     # -- Tags ---------------------------------------------------------------
 
     @app.get("/api/tags")
@@ -632,7 +681,14 @@ def baue(z: Zustand) -> Flask:
         # temporaeres Verzeichnis, das der `with`-Block samt Inhalt wieder loescht —
         # die Datei enthaelt Personendaten.
         with tempfile.TemporaryDirectory() as ordner:
-            pfad = Path(ordner) / name
+            # ⚠️ NICHT der Name des Anwenders, nur seine Endung. Unter Windows
+            # sind `con.txt`, `aux.pdf`, `nul.eml` keine Dateien, sondern
+            # Geraete — ein Upload mit so einem Namen schriebe dorthin oder
+            # haengte (dieselbe Klasse wie CVE-2026-102598 in Werkzeug).
+            # Eine Liste verbotener Namen kennte den naechsten nicht; ein
+            # fester Name hat keinen (Sicherheitspruefung 16.10.2026, E7;
+            # `tests/test_api.py` Punkt 26).
+            pfad = Path(ordner) / ("eingabe" + endung)
             datei.save(pfad)
             try:
                 dokumente = lies(pfad)
@@ -1099,6 +1155,8 @@ def main() -> int:
             print("    ⚠ MASCHERA_WIRT ist nicht gesetzt — unter einem "
                   "anderen Namen als\n"
                   "      127.0.0.1 antwortet der Dienst mit 403.")
+    if wirt_warnung():
+        print(wirt_warnung())
     print(f"  http://{args.host}:{args.port}/api/zustand")
 
     # `threaded=True`, damit `/api/zustand` waehrend eines Laufs antwortet.

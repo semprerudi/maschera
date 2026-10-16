@@ -314,7 +314,7 @@ function malen() {
   setzen("k_weiter", s.w_weiter);
   setzen("t_mtitel", s.m_titel);
   setzen("t_mtext", s.m_text.replace("{name}", ORTE.name).replace("{gb}", ORTE.gb));
-  /* ⚠️ NICHT DIE GANZE ADRESSE. `https://` und `/resolve/main` sagen dem
+  /* ⚠️ NICHT DIE GANZE ADRESSE. `https://` und `/resolve/<Stand>` sagen dem
      Leser nichts und kosten zwei Zeilen; was zaehlt, ist das
      Repositorium. Beim Ziel wird das Heimatverzeichnis zu `~` — dieselbe
      Angabe, halb so lang. Gekuerzt wird nur, was ohnehin jeder kennt. */
@@ -1374,7 +1374,9 @@ def naechster_freier(adresse: str, port: int, weite: int = 50) -> int | None:
 class Onboarding:
     """Was der Startbildschirm nach Python zurueckrufen darf.
 
-    Vier Methoden und sonst nichts. `js_api` macht jede oeffentliche Methode
+    Fuenf Methoden und sonst nichts — `tests/test_fenster.py` Punkt 23 zaehlt
+    sie (hier stand bis zum 16.10.2026 «Vier», seit `neustart` dazukam; die
+    Wache stimmte, der Satz nicht). `js_api` macht jede oeffentliche Methode
     dieser Klasse fuer die Seite aufrufbar; was hier steht, ist die ganze
     Angriffsflaeche. Deshalb keine Bequemlichkeitsmethoden und kein
     Durchreichen von Pfaden — die Seite nennt nichts, sie loest nur aus.
@@ -1608,8 +1610,10 @@ def main() -> int:
             # die lange bleibt dabei — wer sie braucht (Fehlersuche,
             # Fehlerbericht), soll sie nicht rekonstruieren muessen.
             _lang = _m["quelle"].split("{")[0].rstrip("/")
-            _kurz = (_lang.removeprefix("https://").removeprefix("http://")
-                          .removesuffix("/resolve/main"))
+            # `/resolve/<Stand>` faellt weg, gleich welcher Stand — seit
+            # 16.10.2026 ein fester Commit statt `main` (E1).
+            _kurz = re.sub(r"/resolve/[^/]+$", "", _lang.removeprefix("https://")
+                                    .removeprefix("http://"))
             _heim = str(Path.home())
             _zielkurz = str(_ziel)
             if _zielkurz.startswith(_heim + "/"):

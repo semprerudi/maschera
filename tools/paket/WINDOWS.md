@@ -7,6 +7,13 @@ Wie aus diesem Baum ein Windows-Installer wird. Das Gegenstück zu
 welche Maschine dafür benutzt wird und wie man drankommt, gehört nicht in
 das öffentliche Repository.
 
+**Seit dem 11.10.2026 baut GitHub den Installer** (`.github/workflows/pakete.yml`,
+von Hand gestartet): frische Umgebung, torch vom CPU-Index, Inno Setup über
+Chocolatey, Modell mit Prüfsumme. Erster Lauf am 11.10.2026: 9 Minuten,
+der eingefrorene Dienst meldet die richtige Fassung und antwortet. Das Rezept unten bleibt
+gültig — für einen Bau von Hand und als Beschreibung dessen, was der
+Workflow tut. Die Sichtprüfung aus Abschnitt 5 kann GitHub nicht.
+
 ---
 
 ## 0. Was am Ende dasteht

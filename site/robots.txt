@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+# Verlangt Hostpoint fuer die freigegebenen KI-Crawler (siehe .htaccess).
+Crawl-delay: 5
+
+Sitemap: https://www.maschera.ch/sitemap.xml

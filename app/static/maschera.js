@@ -245,6 +245,7 @@ const I18N = {
         herunterladen: "Herunterladen", einfuegen: "Einfügen",
         einfuegenHinweis: "Zwischenablage gesperrt — bitte Ctrl+V drücken.",
         drop_ohne_datei: "Aus diesem Programm kommt keine Datei an. Ziehe die Nachricht zuerst auf den Schreibtisch und dann hierher.",
+        mUpdate: "Nach Updates suchen", neuesteSucht: "Frage GitHub nach der neuesten Fassung …", neuesteAktuell: "Du hast {aktuell} — das ist die neueste Fassung.", neuesteNeu: "Fassung {neueste} ist da. Du hast {aktuell}.", neuesteSeite: "Zur Download-Seite",
         kAusschneiden: "Ausschneiden", kKopieren: "Kopieren", kEinfuegen: "Einfügen",
         menu: "Menü",
         mBrowser: "Im Browser öffnen", mHilfe: "Hilfe",
@@ -393,6 +394,8 @@ const I18N = {
           regeln_gelesen: "Wer die Regeln ändert, ändert das Messergebnis.",
           regeln_veraltete_schluessel: "Diese Regeldatei benutzt veraltete Schlüssel. Sie werden weiter gelesen oder übergangen: {umbenennungen}",
           regeln_gespeichert: "Gespeichert. Das Messergebnis ändert sich damit.",
+          neueste_nicht_erreichbar: "GitHub ist nicht erreichbar — ohne Netz, oder der Server darf nicht hinaus. Die neueste Fassung steht auf der Download-Seite.",
+          neueste_unlesbar: "GitHub hat geantwortet, aber ohne lesbare Fassungsnummer. Die neueste Fassung steht auf der Download-Seite.",
           regeln_unlesbar: "Regeln nicht lesbar — ein Feld hat die falsche Form.",
           schrift_ueberall_kein_wahrheitswert: "Feld `schrift_ueberall` ist kein Wahrheitswert.",
           tray_kein_wahrheitswert: "Feld `tray` ist kein Wahrheitswert.",
@@ -511,6 +514,7 @@ const I18N = {
         herunterladen: "Télécharger", einfuegen: "Coller",
         einfuegenHinweis: "Presse-papiers bloqué — utilise Ctrl+V.",
         drop_ohne_datei: "Ce programme ne fournit aucun fichier. Glisse d’abord le message sur le bureau, puis ici.",
+        mUpdate: "Rechercher des mises à jour", neuesteSucht: "Je demande à GitHub la version la plus récente …", neuesteAktuell: "Tu as la {aktuell} — c’est la version la plus récente.", neuesteNeu: "La version {neueste} est disponible. Tu as la {aktuell}.", neuesteSeite: "Vers la page de téléchargement",
         kAusschneiden: "Couper", kKopieren: "Copier", kEinfuegen: "Coller",
         menu: "Menu",
         mBrowser: "Ouvrir dans le navigateur", mHilfe: "Aide",
@@ -650,6 +654,8 @@ const I18N = {
           regeln_gelesen: "Modifier les règles, c’est modifier le résultat de mesure.",
           regeln_veraltete_schluessel: "Ce fichier de règles utilise des clés obsolètes. Elles restent lues ou sont ignorées : {umbenennungen}",
           regeln_gespeichert: "Enregistré. Le résultat de mesure change en conséquence.",
+          neueste_nicht_erreichbar: "GitHub est injoignable — pas de réseau, ou le serveur n’a pas le droit de sortir. La version la plus récente se trouve sur la page de téléchargement.",
+          neueste_unlesbar: "GitHub a répondu, mais sans numéro de version lisible. La version la plus récente se trouve sur la page de téléchargement.",
           regeln_unlesbar: "Règles illisibles — un champ n'a pas la bonne forme.",
           schrift_ueberall_kein_wahrheitswert: "Le champ `schrift_ueberall` n’est pas un booléen.",
           tray_kein_wahrheitswert: "Le champ `tray` n’est pas un booléen.",
@@ -768,6 +774,7 @@ const I18N = {
         herunterladen: "Scarica", einfuegen: "Incolla",
         einfuegenHinweis: "Appunti bloccati — usa Ctrl+V.",
         drop_ohne_datei: "Da questo programma non arriva alcun file. Trascina prima il messaggio sulla scrivania, poi qui.",
+        mUpdate: "Cerca aggiornamenti", neuesteSucht: "Chiedo a GitHub la versione più recente …", neuesteAktuell: "Hai la {aktuell} — è la versione più recente.", neuesteNeu: "È disponibile la versione {neueste}. Tu hai la {aktuell}.", neuesteSeite: "Alla pagina di download",
         kAusschneiden: "Taglia", kKopieren: "Copia", kEinfuegen: "Incolla",
         menu: "Menu",
         mBrowser: "Apri nel browser", mHilfe: "Aiuto",
@@ -906,6 +913,8 @@ const I18N = {
           regeln_gelesen: "Chi cambia le regole cambia il risultato della misurazione.",
           regeln_veraltete_schluessel: "Questo file di regole usa chiavi obsolete. Vengono ancora lette o ignorate: {umbenennungen}",
           regeln_gespeichert: "Salvato. Il risultato della misurazione cambia di conseguenza.",
+          neueste_nicht_erreichbar: "GitHub non è raggiungibile — niente rete, oppure il server non può uscire. La versione più recente è nella pagina di download.",
+          neueste_unlesbar: "GitHub ha risposto, ma senza un numero di versione leggibile. La versione più recente è nella pagina di download.",
           regeln_unlesbar: "Regole illeggibili — un campo ha la forma sbagliata.",
           schrift_ueberall_kein_wahrheitswert: "Il campo `schrift_ueberall` non è un valore booleano.",
           tray_kein_wahrheitswert: "Il campo `tray` non è un valore booleano.",
@@ -1024,6 +1033,7 @@ const I18N = {
         herunterladen: "Download", einfuegen: "Paste",
         einfuegenHinweis: "Clipboard blocked — press Ctrl+V.",
         drop_ohne_datei: "This program does not hand over a file. Drag the message to the desktop first, then here.",
+        mUpdate: "Check for updates", neuesteSucht: "Asking GitHub for the newest version …", neuesteAktuell: "You have {aktuell} — that is the newest version.", neuesteNeu: "Version {neueste} is out. You have {aktuell}.", neuesteSeite: "To the download page",
         kAusschneiden: "Cut", kKopieren: "Copy", kEinfuegen: "Paste",
         menu: "Menu",
         mBrowser: "Open in browser", mHilfe: "Help",
@@ -1162,6 +1172,8 @@ const I18N = {
           regeln_gelesen: "Changing the rules changes the measured result.",
           regeln_veraltete_schluessel: "This rule file uses outdated keys. They are still read or skipped: {umbenennungen}",
           regeln_gespeichert: "Saved. The measured result changes with it.",
+          neueste_nicht_erreichbar: "GitHub cannot be reached — no network, or the server may not go out. The newest version is on the download page.",
+          neueste_unlesbar: "GitHub answered, but without a readable version number. The newest version is on the download page.",
           regeln_unlesbar: "Rules not readable — a field has the wrong form.",
           schrift_ueberall_kein_wahrheitswert: "Field `schrift_ueberall` is not a boolean.",
           tray_kein_wahrheitswert: "Field `tray` is not a boolean.",
@@ -1876,6 +1888,8 @@ const MENUEBILDER = {
   // Briefumschlag
   brief: ["M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z",
           "m3 7 9 6 9-6"],
+  // Kreispfeil — «Nach Updates suchen»
+  kreispfeil: ["M21 12a9 9 0 1 1-2.6-6.4", "M21 3v6h-6"],
   // Kaefer — «Fehler melden». Rumpf, Fuehler, sechs Beine.
   kaefer: ["M12 20a6 6 0 0 0 6-6v-3a6 6 0 0 0-12 0v3a6 6 0 0 0 6 6Z",
            "M9 7V6a3 3 0 1 1 6 0v1", "M12 20v-9",
@@ -1936,6 +1950,12 @@ function zeichenSinnbild(name, karte) {
   const NS = "http://www.w3.org/2000/svg";
   const s = document.createElementNS(NS, "svg");
   s.setAttribute("viewBox", "0 0 24 24");
+  // Eine GRUNDGROESSE. Ohne sie hat das Zeichen nur, was eine CSS-Regel ihm
+  // gibt — und wo die fehlt, steht der Knopf leer da (so am 16.10.2026 bei
+  // «Entfernen» im Vokabular, erst auf dem Bildschirmfoto bemerkt). Eine
+  // Regel im Stilblatt gewinnt weiter gegen das Attribut.
+  s.setAttribute("width", "1em");
+  s.setAttribute("height", "1em");
   s.setAttribute("fill", "none");
   s.setAttribute("stroke", "currentColor");
   s.setAttribute("stroke-width", "2");
@@ -2405,7 +2425,7 @@ function zeichneVokabular() {
   const tab = el("table", "vokabular");
   const kopf = el("tr");
   kopf.append(el("th", null, s.spalteId), el("th", null, s.spalteWert),
-              el("th", null, s.spalteTyp));
+              el("th", null, s.spalteTyp), el("th", "vok-weg-kopf", s.entfernen));
   const thead = el("thead"); thead.append(kopf);
   const tbody = el("tbody");
 
@@ -2443,7 +2463,24 @@ function zeichneVokabular() {
     art.style.color = c[2];
     td3.append(art);
 
-    tr.append(td1, td2, td3);
+    // Entfernen von HIER aus, nicht nur ueber das Klappmenue in 02: bei einem
+    // grossen Dokument mit viel Uebermaskierung ist die Tabelle der Ort, an
+    // dem man sie sieht. Derselbe Weg wie «Maske entfernen» — der Platzhalter
+    // verschwindet im GANZEN Dokument, der Originalwert steht wieder da.
+    // Ohne Rueckfrage (Entscheid 16.10.2026): gesendet wird erst, wenn in 03
+    // von Hand kopiert wird, und ein Fehlklick ist im Text sichtbar.
+    const td4 = el("td");
+    const weg = el("button", "imfeld nurbild loeschen vok-weg");
+    weg.type = "button";
+    weg.title = ph + " · " + s.entfernen;
+    weg.setAttribute("aria-label", ph + " · " + s.entfernen);
+    weg.append(zeichenSinnbild("schliessen", KNOPFBILDER));
+    weg.addEventListener("click", () => {
+      if (maskeEntfernen(ph)) zeichne();
+    });
+    td4.append(weg);
+
+    tr.append(td1, td2, td3, td4);
     tbody.append(tr);
   }
   tab.append(thead, tbody);
@@ -3187,6 +3224,39 @@ function seiteZeigen(welche) {
 
 function seiteSchliessen() { $("seite").hidden = true; }
 
+/* «Nach Updates suchen»: fragt `POST /api/neueste` und zeigt das Ergebnis in
+ * derselben Huelle wie Hilfe und Impressum. Gefragt wird NUR hier, auf Klick.
+ * Der Verweis zur Download-Seite steht in jedem Fall da — auch wenn GitHub
+ * nicht erreichbar ist, ist der Weg zur neuesten Fassung bekannt.
+ */
+async function neuesteZeigen(seite) {
+  const st = t();
+  $("seite-titel").textContent = st.mUpdate;
+  const rumpf = $("seite-rumpf");
+  rumpf.replaceChildren();
+  rumpf.append(seitenKopf(st));
+  const zeile = el("p", "seite-p", st.neuesteSucht);
+  rumpf.append(zeile);
+  const verweis = el("a", "seite-p", st.neuesteSeite);
+  verweis.href = seite;
+  verweis.target = "_blank";
+  verweis.rel = "noopener noreferrer";
+  dialogVonOben($("seite"), rumpf);
+  try {
+    const a = await fetch("/api/neueste", { method: "POST" });
+    const d = await a.json().catch(() => ({}));
+    if (!a.ok) throw serverFehler(d, a.status);
+    const satz = (d.neuer ? st.neuesteNeu : st.neuesteAktuell)
+      .replace("{neueste}", String(d.neueste || ""))
+      .replace("{aktuell}", String(d.aktuell || ""));
+    zeile.textContent = satz;
+  } catch (e) {
+    zeile.className = "seite-p fehler-text";
+    zeile.textContent = fehlerText(e);
+  }
+  if (seite) rumpf.append(verweis);
+}
+
 function zeichneBurger() {
   const knopf = $("knopf-burger");
   const menu = $("burgermenu");
@@ -3217,6 +3287,20 @@ function zeichneBurger() {
       b.addEventListener("click", () => {
         burgerAuf(false);
         seiteZeigen(e.dialog);
+      });
+      menu.append(b);
+      continue;
+    }
+    // «Nach Updates suchen» fuehrt nicht hinaus, sondern fragt ueber den
+    // eigenen Server nach und zeigt das Ergebnis im Fenster.
+    if (e.aktion === "neueste") {
+      const b = el("button", null);
+      b.type = "button";
+      b.append(zeichenSinnbild(e.bild, MENUEBILDER),
+               document.createTextNode(wort));
+      b.addEventListener("click", () => {
+        burgerAuf(false);
+        neuesteZeigen(e.url || "");
       });
       menu.append(b);
       continue;
@@ -5285,7 +5369,7 @@ if (typeof module !== "undefined" && module.exports) {
     pruefeVokabular, uebernimmVokabular, vokabularDatei, VOK_PH_RE,
     vorlageNehmen, zeichneVorlagen, zeichneDienstmenu, zeichneDienstliste,
     vorlagenAuf,
-    zeichneBurger, burgerAuf, imEigenenFenster, finalText,
+    zeichneBurger, burgerAuf, imEigenenFenster, finalText, neuesteZeigen,
     SEITEN, seiteZeigen, seiteSchliessen,
     pruefePlatzhalter, zeichneMaskiert, meldeVok, ablagefachMoeglich,
     fehlerText, serverFehler, frage, eingabe, frageZeigen, frageErsetzen,

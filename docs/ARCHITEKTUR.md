@@ -237,7 +237,7 @@ warum das Werkzeug lokal überhaupt vertretbar ist.
 | **Nichts wird geschrieben** | ausser den Einstellungen des Anwenders — Regeln, Vorlieben, Vorlagen, Einstellungen — und auch die nur auf ausdrücklichen Befehl. Kein Dokumentinhalt, kein Wörterbuch, kein Protokoll |
 | **`/api/senden` gibt es nicht** | und wird es nicht geben. Wer den Text an einen Dienst geben will, kopiert ihn und fügt ihn von Hand ein. Eine Prüfung verlangt den 404 |
 | **Keine Erkennung im Browser** | die ganze Kette läuft im Server. Eine Prüfung hält das fest |
-| **Kein Nachladen von aussen** | genau eine benannte Ausnahme: die Portprüfung. Dazu eine Content Security Policy auf jeder Antwort |
+| **Kein Nachladen von aussen** | benannte Ausnahmen: die Portprüfung, das Modell im Flatpak (nach Zustimmung) und «Nach Updates suchen» (nur auf Klick, eine feste Adresse, nur die Fassungsnummer; `core/neueste.py`). Dazu eine Content Security Policy auf jeder Antwort, die das Fenster auf Loopback hält |
 | **Nie `innerHTML` mit Serverdaten** | ausnahmslos |
 | **Ein leerer Befund ist keine Entwarnung** | ein Scan ohne Textebene ergibt einen Fehler mit Begründung, nicht «nichts gefunden» |
 

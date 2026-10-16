@@ -182,6 +182,8 @@ mark.p-city   { background: #f8ecf8; border-color: #b968b9; color: #7d2a7d; }
   color: var(--leise); text-align: center; padding: var(--s6);
 }
 .schirm { display: block; width: 100%; height: auto; }
+/* Das Handybild ist hoch: schmal halten, sonst zieht es die Karte in die Laenge. */
+figure.rahmen.handy { max-width: 220px; }
 figure.rahmen .schirm { border: 0; }
 .schritt .schirm.zusatz { aspect-ratio: auto; object-fit: contain; margin-top: var(--s3); }
 .schirm.nur-dunkel { display: none; }

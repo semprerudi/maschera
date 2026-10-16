@@ -62,9 +62,12 @@ THEMEN = (("", "light"), ("-dunkel", "dark"))
 # Bereiche untereinander — 982 Punkte liegen weit darueber.
 FENSTER = {"width": 1667, "height": 982}
 
-# Ein Fenster, halb so breit wie der Bildschirm: unter 60em stapelt die
-# Oberflaeche. 760×980 Punkte ergeben bei 1,2 rund 912×1176 Pixel.
-SCHMAL = {"width": 760, "height": 980}
+# Handy-Format (Entscheid 16.10.2026): die gestapelte Oberflaeche in
+# Telefongroesse. 01 steht ganz da, darunter beginnt 02 — mindestens
+# anderthalb Bereiche und die dicke Linie dazwischen. 390×844 Punkte bei
+# doppelter Dichte ergeben 780×1688 Pixel.
+SCHMAL = {"width": 390, "height": 844}
+SCHMAL_DICHTE = 2
 
 # Die Kaesten, die die Projektseite als «Schritt» zeigt, und ihre Namen dort.
 # 04 (Antwort) zeigt die Seite nicht; das Vokabular ist Schritt 3.
@@ -389,10 +392,10 @@ def aufnehmen(browser, adresse: str, ordner: Path, sprache: str,
                            "height": FENSTER["height"] * 0.42})
     kontext.close()
 
-    # 5. Schmales Fenster: die Kaesten untereinander, mit den dickeren
-    # Trennlinien. Ausschnitt um 02 und das Vokabular darunter.
+    # 5. Handy-Format: die Kaesten untereinander, mit den dickeren
+    # Trennlinien. Von oben: 01 ganz, darunter der Anfang von 02.
     kontext = browser.new_context(viewport=SCHMAL, color_scheme=schema,
-                                  device_scale_factor=HAUPT_DICHTE)
+                                  device_scale_factor=SCHMAL_DICHTE)
     seite = kontext.new_page()
     seite.goto(adresse)
     seite.wait_for_selector("#knopf-beispiel")
@@ -404,16 +407,12 @@ def aufnehmen(browser, adresse: str, ordner: Path, sprache: str,
                             timeout=180_000)
     seite.evaluate("document.querySelectorAll('textarea')"
                    ".forEach(t => { t.scrollTop = 0; })")
-    oben = seite.locator("#b02").bounding_box()["y"]
     # `instant`: mit sanftem Rollen fing das Bild die Kopfzeile mitten im
     # Weg ein — oben stand ein grauer Balken.
-    seite.evaluate(f"window.scrollTo({{top: {oben} - 0.28 * {SCHMAL['height']},"
-                   f" behavior: 'instant'}})")
+    seite.evaluate("window.scrollTo({top: 0, behavior: 'instant'})")
     seite.wait_for_timeout(400)
     seite.mouse.move(5, 5)
-    seite.screenshot(path=str(seite_ordner / f"einspaltig{zusatz}.png"),
-                     clip={"x": 0, "y": 0, "width": SCHMAL["width"],
-                           "height": SCHMAL["height"] * 0.75})
+    seite.screenshot(path=str(seite_ordner / f"einspaltig{zusatz}.png"))
     kontext.close()
 
     shutil.copy(ordner / f"maskierung-{sprache}{zusatz}.png",

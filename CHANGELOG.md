@@ -1,6 +1,6 @@
 # Änderungen
 
-## 1.1.0 – in Arbeit (Datum beim Ausliefern setzen)
+## 1.1.0 – 2026-10-17
 
 Die erste Fassung mit Rückmeldungen von Testerinnen und Testern — danke!
 

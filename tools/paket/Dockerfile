@@ -29,12 +29,19 @@ RUN python -m venv /opt/venv \
  && /opt/venv/bin/pip install --no-cache-dir --upgrade pip \
  && /opt/venv/bin/pip install --no-cache-dir -r /bau/requirements.txt \
  && /opt/venv/bin/python -c "import torch, sys; v = torch.__version__; \
-print('torch', v); sys.exit(0 if '+cpu' in v else 1)" 
+print('torch', v); sys.exit(0 if '+cpu' in v else 1)" \
+ && /opt/venv/bin/python -m pip uninstall -y pip
 
 
 FROM python:3.13-slim
 
 COPY --from=bau /opt/venv /opt/venv
+# pip wird im Betrieb nie aufgerufen. Es bringt eigene Kopien von urllib3,
+# msgpack und setuptools mit, die Scanner melden (trivy, 17.10.2026:
+# 4 HIGH, alle nur in pip). Ohne pip keine Meldung und weniger Angriffsflaeche.
+RUN rm -rf /usr/local/lib/python3.13/site-packages/pip \
+           /usr/local/lib/python3.13/site-packages/pip-*.dist-info \
+           /usr/local/bin/pip /usr/local/bin/pip3*
 ENV PATH="/opt/venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \

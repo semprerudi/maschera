@@ -848,10 +848,10 @@ def tray_bauen(sichtbar, umschalten, beenden, sprache: str = "de"):
     # `core/symbol.py`, dieselbe fuer alle Stellen, an denen aus der Maske ein
     # Symbol wird.
     from qtpy.QtGui import QPixmap
-    from core.symbol import quadratisch
+    from core.symbol import symbol as _symbol
 
     _bild = QPixmap()
-    _bild.loadFromData(quadratisch(
+    _bild.loadFromData(_symbol(
         (Path(__file__).resolve().parent / "static" / "maske.svg"
          ).read_text(encoding="utf-8")).encode("utf-8"), "SVG")
     symbol = QIcon(_bild)
@@ -1232,8 +1232,15 @@ def symbol_richten() -> str:
         try:
             from qtpy.QtGui import QIcon
             from qtpy.QtWidgets import QApplication
+            from qtpy.QtGui import QPixmap
+            from core.symbol import symbol as _symbol
+            # Dasselbe Symbol wie Ablagefach und Pakete: quadratisch, mit
+            # hellem Rand (`core/symbol.py`). Vorher die rohe `maske.svg`.
             pfad = Path(__file__).resolve().parent / "static" / "maske.svg"
-            symbol = QIcon(str(pfad))
+            _bild = QPixmap()
+            _bild.loadFromData(_symbol(pfad.read_text(encoding="utf-8")
+                                       ).encode("utf-8"), "SVG")
+            symbol = QIcon(_bild)
             self.setWindowIcon(symbol)
             anwendung = QApplication.instance()
             if anwendung is not None:

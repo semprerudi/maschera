@@ -37,8 +37,8 @@ end
 
 # ⚠️ Die Maske ist 1278x1506 und damit NICHT quadratisch. Ein Symbol wird
 # quadratisch erwartet; verzerrt sieht das Gesicht falsch aus. Also mittig
-# in ein Quadrat einpassen und ringsum Luft lassen — dieselben Zahlen wie
-# im AppImage-Bau, auf die jeweilige Kantenlaenge hochgerechnet.
+# in ein Quadrat einpassen — die Rechnung steht in `core/symbol.py`, die
+# derselbe Weg fuer AppImage, Flatpak und Ablagefach ist (siehe unten).
 #
 # 16 bis 48 fuer den Tab, 64 bis 256 fuer die Verknuepfung auf dem
 # Schreibtisch — dort wird das Symbol gross angezeigt.
@@ -52,26 +52,24 @@ set -l KANTEN 256 128 64 48 32 16
 # bleiben unterscheidbar.
 set -l TEILE
 
-for K in $KANTEN
-    # Dieselben Verhaeltnisse wie oben: 400/512 breit, 472/512 hoch,
-    # 56/512 von links, 20/512 von oben.
-    set -l W (math "round($K * 400 / 512)")
-    set -l H (math "round($K * 472 / 512)")
-    set -l L (math "round($K * 56 / 512)")
-    set -l O (math "round($K * 20 / 512)")
+# ⚠️ SEIT 17.10.2026 AUS DEM SYMBOL, nicht aus der rohen Maske: quadratisch und
+# mit dem hellen Aussenrand aus `core/symbol.py` — dieselbe Fassung wie
+# AppImage, Flatpak und Ablagefach. Das `.ico` ist zugleich das Symbol der
+# Windows-Fassung, und dort steht es oft auf dunkler Taskleiste.
+python3 $STAMM/tools/paket/symbol_quadrat.py $QUELLE $TMP/symbol.svg >/dev/null
+or exit 1
 
+for K in $KANTEN
     if command -v rsvg-convert >/dev/null
-        rsvg-convert --page-width $K --page-height $K \
-            --width $W --height $H --left $L --top $O -a \
-            $QUELLE -o $TMP/k$K.png
+        rsvg-convert -w $K -h $K $TMP/symbol.svg -o $TMP/k$K.png
         or exit 1
     else
         # ⚠️ Rueckfall ohne rsvg-convert. magick zeichnet das SVG in einer
         # Groesse und rechnet herunter — genau der Weg, der bei 16 px
         # verwaescht. Er ist hier, damit der Bau nicht scheitert, nicht
         # weil er gleich gut waere.
-        magick -background none -density 600 $QUELLE \
-            -resize {$W}x{$H} -gravity center -extent {$K}x{$K} $TMP/k$K.png
+        magick -background none -density 600 $TMP/symbol.svg \
+            -resize {$K}x{$K} $TMP/k$K.png
         or exit 1
     end
     set TEILE $TEILE $TMP/k$K.png

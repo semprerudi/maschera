@@ -141,19 +141,23 @@ echo "── 5. Symbol und Eintrag"
 # Quadratisch, 256x256. Die Maske steht hochkant (1278x1506); ohne
 # Leinwand darum kaeme ein 218x256 grosses Bild heraus, und ein
 # Symbolthema, das quadratisch erwartet, verzieht es. Die Rechnung steht in
-# `core/symbol.py`.
+# `core/symbol.py` — seit 17.10.2026 samt hellem Aussenrand, damit die Maske auch
+# auf dunklem Grund ihren Umriss behaelt. Gezeichnet wird deshalb aus der
+# Fassung von `symbol_quadrat.py`, nicht aus der rohen `maske.svg`.
+set -l SYMBOL_SVG (mktemp --suffix=.svg)
+python3 tools/paket/symbol_quadrat.py app/static/maske.svg $SYMBOL_SVG >/dev/null
+or exit 1
 if command -v rsvg-convert >/dev/null
-    rsvg-convert --page-width 256 --page-height 256 \
-        --width 200 --height 236 --left 28 --top 10 -a \
-        app/static/maske.svg -o $BAU/maschera.png
+    rsvg-convert -w 256 -h 256 $SYMBOL_SVG -o $BAU/maschera.png
 else if command -v magick >/dev/null
-    magick -background none app/static/maske.svg \
-        -resize 256x256 -gravity center -extent 256x256 $BAU/maschera.png
+    magick -background none -density 300 $SYMBOL_SVG \
+        -resize 256x256 $BAU/maschera.png
 else
     echo "   ✖ Weder rsvg-convert noch magick — kein Symbol zu rechnen."
     echo "     paru -S librsvg     (oder imagemagick)"
     exit 1
 end
+rm -f $SYMBOL_SVG
 
 echo "── 6. AppRun und .desktop"
 cp tools/paket/AppRun $BAU/AppRun

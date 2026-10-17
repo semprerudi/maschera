@@ -21,7 +21,7 @@
 <div class="startbild" id="startbild">
   <div class="innen">
     <div class="zeile">
-      <img src="maske.svg" alt="">
+      <img class="maske" src="maske.svg" alt="">
       <div>
         <div class="marke">MAS<b>CH</b>ERA</div>
         <!-- Filled from spruch1/spruch2, four languages. -->
@@ -545,16 +545,6 @@
        aria-labelledby="einst-titel">
     <div class="einst-kopf">
       <h2 id="einst-titel">Einstellungen</h2>
-      <!-- Icon plus two text spans, so the label can shrink in two steps. -->
-      <button class="tat haupt" id="knopf-einst-zu">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round"><path
-          d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path
-          d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg><span
-          id="einst-zu-text">Speichern</span><span
-          id="einst-zu-rest"> &amp; schliessen</span>
-      </button>
     </div>
     <div class="einst-rumpf" id="einst-rumpf">
 
@@ -612,6 +602,7 @@
         <p class="einst-hilfe" id="einst-dienste-hilfe">Der Web-Link wird beim
           Kopieren geöffnet.</p>
         <div id="einst-dienste"></div>
+        <p class="einst-befund" id="einst-dienste-befund"></p>
         <!-- The window switch belongs with the services it applies to. -->
         <div class="einst-zeile">
           <button class="tat" id="knopf-dienst-neu">
@@ -713,6 +704,26 @@
         </div>
       </section>
 
+    </div>
+    <!-- Footer since 17.10.2026 (issue #11): cancel and save sit together at
+         the bottom, always visible; the head carries only the title. A
+         message that belongs to no section stands here, next to the
+         buttons. -->
+    <div class="einst-fuss">
+      <p class="einst-befund" id="einst-fuss-befund"></p>
+      <button class="tat" id="knopf-einst-abbrechen">
+        <span id="einst-abbrechen-text">Abbrechen</span>
+      </button>
+      <!-- Icon plus two text spans, so the label can shrink in two steps. -->
+      <button class="tat haupt" id="knopf-einst-zu">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round"><path
+          d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path
+          d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg><span
+          id="einst-zu-text">Speichern</span><span
+          id="einst-zu-rest"> &amp; schliessen</span>
+      </button>
     </div>
   </div>
 </div>

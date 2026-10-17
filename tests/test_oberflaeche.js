@@ -137,7 +137,13 @@ global.document = {
   // Oberflaeche die Breite des Rollbalkens MISST und als CSS-Variable
   // ablegt. Eine Attrappe ohne diese beiden liess `start()` mit einer
   // Ausnahme abbrechen — was immerhin auffiel, weil sie streng ist.
-  documentElement: { lang: "de", style: { setProperty() {} } },
+  // ⚠️ Mit Attributen, seit Punkt 87 das Abbrechen prueft: es stellt die
+  // Farbwahl wieder her, und `themaAnwenden()` setzt `data-thema` hier. Ohne
+  // die beiden lief die Funktion in KEINER Pruefung je durch.
+  documentElement: { lang: "de", style: { setProperty() {} }, _attr: {},
+    setAttribute(k, v) { this._attr[k] = String(v); },
+    removeAttribute(k) { delete this._attr[k]; },
+    getAttribute(k) { return k in this._attr ? this._attr[k] : null; } },
   // Der Roller der SEITE — gestapelt rollt sie und nicht das Raster.
   //
   // ⚠️ `getBoundingClientRect().top` ist `-scrollTop`, und das ist keine
@@ -365,12 +371,27 @@ global.fetch = async (url, opt) => {
   if (u.includes("/api/einstellungen")) {
     if ((opt || {}).method === "PUT") {
       const e = JSON.parse(opt.body);
-      const boese = (e.dienste || []).find(
-        (d) => !d.name.trim() || !/^https?:\/\//i.test(d.url));
+      // Wie `core/einstellungen.py`: mit Schluessel und Werten, denn die
+      // Oberflaeche ordnet den Fehler am SCHLUESSEL einem Abschnitt zu.
+      const liste = e.dienste || [];
+      if (!liste.length) {
+        return { ok: false, status: 400, json: async () => ({
+          fehler: "Mindestens ein Dienst ist noetig.",
+          fehler_schluessel: "dienste_leer" }) };
+      }
+      const i = liste.findIndex((d) => !d.name.trim());
+      if (i >= 0) {
+        return { ok: false, status: 400, json: async () => ({
+          fehler: "Dienst abgelehnt: ohne Namen",
+          fehler_schluessel: "dienst_ohne_namen",
+          fehler_werte: { nummer: i + 1 } }) };
+      }
+      const boese = liste.find((d) => !/^https?:\/\//i.test(d.url));
       if (boese) {
-        return { ok: false, status: 400,
-                 json: async () => ({ fehler: "Dienst abgelehnt: "
-                                              + (boese.name || "ohne Namen") }) };
+        return { ok: false, status: 400, json: async () => ({
+          fehler: "Dienst abgelehnt: " + boese.name,
+          fehler_schluessel: "dienst_ohne_adresse",
+          fehler_werte: { name: boese.name } }) };
       }
       einstellungen = { ...e, port: parseInt(e.port, 10) };
       return { ok: true, json: async () => einstellungen };
@@ -1043,13 +1064,20 @@ console.log("1. Alle Knoepfe sind verdrahtet");
   {
     await feuer("knopf-einstellungen");
     await new Promise((r) => setTimeout(r, 20));
-    // Der leere Dienst aus Pruefung 24 ist noch da — der Server weist ihn ab.
+    // Der leere Dienst aus Pruefung 24 ist noch da. Seit 17.10.2026 faellt eine
+    // GANZ leere Zeile still weg (Issue #11) — also bekommt er eine Adresse
+    // und keinen Namen: halb ausgefuellt, und das weist der Server ab.
+    const leer = M.zustand.dienste.find((d) => !d.name.trim());
+    leer.url = "https://halb.example";
     await feuer("knopf-einst-zu");
     await new Promise((r) => setTimeout(r, 20));
     pruefe(document.getElementById("einst").hidden === false,
            "Dialog schloss trotz abgelehnter Einstellungen");
-    pruefe(/abgelehnt/i.test(document.getElementById("einst-befund").textContent),
-           "kein Grund genannt");
+    pruefe(document.getElementById("einst-dienste-befund").textContent
+           === M.I18N[M.zustand.sprache].meldungen.dienst_ohne_namen
+             .replace("{nummer}", String(M.zustand.dienste.indexOf(leer) + 1)),
+           "kein Grund bei den Diensten: "
+           + document.getElementById("einst-dienste-befund").textContent);
     // Aufraeumen: den leeren Dienst wieder weg, dann geht das Schliessen.
     M.zustand.dienste = M.zustand.dienste.filter((d) => d.name.trim());
     await feuer("knopf-einst-zu");
@@ -3192,10 +3220,13 @@ console.log("1. Alle Knoepfe sind verdrahtet");
              `der Speichern-Knopf traegt ${spannen} Textstueck(e) statt `
              + "zwei — dann gibt es keine mittlere Stufe");
     }
-    pruefe(/\.einst-kopf\s*\{[^}]*container-type:\s*inline-size/.test(CSS),
-           "der Dialogkopf ist kein Behaelter — die Stufen greifen nicht");
+    // Seit 17.10.2026 in der FUSSZEILE (Issue #11), nicht mehr im Kopf.
+    pruefe(/\.einst-fuss\s*\{[^}]*container-type:\s*inline-size/.test(CSS),
+           "die Dialogfusszeile ist kein Behaelter — die Stufen greifen nicht");
+    pruefe(/<div class="einst-fuss">[\s\S]*id="knopf-einst-zu"/.test(HTML66),
+           "der Speichern-Knopf steht nicht in der Fusszeile");
     const stufen = [...CSS.matchAll(
-      /@container einstkopf \(max-width:\s*([\d.]+)rem\)/g)].map(
+      /@container einstfuss \(max-width:\s*([\d.]+)rem\)/g)].map(
       (m) => Number(m[1]));
     pruefe(stufen.length === 2,
            `${stufen.length} Stufe(n) statt zwei`);
@@ -3203,7 +3234,7 @@ console.log("1. Alle Knoepfe sind verdrahtet");
            `die Stufen stehen in der falschen Reihenfolge: ${stufen}`);
     // ⚠️ Und in `rem`, nicht in `px` — Punkt 28 verlangt es fuer alles,
     // was an `--skala` haengen soll.
-    pruefe(!/@container einstkopf \(max-width:\s*\d+px/.test(CSS),
+    pruefe(!/@container einst(kopf|fuss) \(max-width:\s*\d+px/.test(CSS),
            "eine Stufe steht in Pixeln statt in rem");
   }
   if (!fehler) console.log("   OK   Zeichen, zwei Textstuecke, zwei Stufen");
@@ -4333,6 +4364,115 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     pruefe(dick && parseFloat(dick[1]) >= 0.25,
            `gestapelt keine dickere Linie in rem: ${dick && dick[0]}`);
     if (fehler === vorher) console.log(`   OK   1px dreispaltig, ${dick[1]}rem gestapelt`);
+  }
+
+  console.log("87. Einstellungen: Abbrechen, Escape, Hintergrund — und der Fehler beim Abschnitt");
+  // Issue #11 (Tester, 16.10.2026): kein Abbrechen, auf dem Handy kaum
+  // Hintergrund zum Danebenklicken; alle Dienste weg, gespeichert, «es
+  // passiert nichts»; die Meldung zu den Diensten stand unter «Server».
+  {
+    const vorher = fehler;
+    const warte = () => new Promise((r) => setTimeout(r, 20));
+    const dlg = document.getElementById("einst");
+    const gespeichert = () => JSON.stringify(einstellungen);
+    document.getElementById("frage").hidden = true;
+
+    // Die Fusszeile traegt beide Knoepfe, der Kopf nur den Titel.
+    const kopf = /<div class="einst-kopf">([\s\S]*?)<\/div>/.exec(
+      HTML.slice(HTML.indexOf('id="einst"')));
+    pruefe(kopf && !/<button/.test(kopf[1]),
+           "im Kopf des Einstellungsdialogs steht noch ein Knopf");
+    const fuss = /<div class="einst-fuss">([\s\S]*?)\n    <\/div>/.exec(HTML);
+    pruefe(fuss && /knopf-einst-abbrechen/.test(fuss[1])
+           && /knopf-einst-zu/.test(fuss[1]),
+           "Abbrechen und Speichern stehen nicht zusammen in der Fusszeile");
+    pruefe(Object.keys(M.I18N).every((l) => M.I18N[l].einstAbbrechen),
+           "«Abbrechen» fehlt in einer Sprache");
+
+    // 1. Abbrechen nimmt zurueck, was nur im Dialog stand — und speichert nichts.
+    await feuer("knopf-einstellungen"); await warte();
+    const vorDienst = M.zustand.dienste[0].name;
+    const vorThema = M.zustand.thema;
+    const vorAdresse = document.getElementById("einst-adresse").value;
+    const vorServer = gespeichert();
+    M.zustand.dienste[0].name = "Geaendert";
+    M.zustand.thema = vorThema === "dunkel" ? "hell" : "dunkel";
+    document.getElementById("einst-adresse").value = "10.0.0.9";
+    await feuer("knopf-einst-abbrechen"); await warte();
+    pruefe(dlg.hidden === true, "Abbrechen schliesst den Dialog nicht");
+    pruefe(M.zustand.dienste[0].name === vorDienst,
+           "Abbrechen nimmt den geaenderten Dienstnamen nicht zurueck "
+           + "(flache Kopie?)");
+    pruefe(M.zustand.thema === vorThema, "Abbrechen laesst die Farbwahl stehen");
+    pruefe(document.getElementById("einst-adresse").value === vorAdresse,
+           "Abbrechen laesst die getippte Adresse stehen");
+    pruefe(gespeichert() === vorServer, "Abbrechen hat gespeichert");
+
+    // 2. Escape bricht ab — ausser die Rueckfrage darueber hat es genommen.
+    await feuer("knopf-einstellungen"); await warte();
+    M.zustand.dienste[0].name = "Escape";
+    for (const f of document._h["keydown"] || []) {
+      await f({ key: "Escape", defaultPrevented: true, target: document,
+                preventDefault() {} });
+    }
+    pruefe(dlg.hidden === false,
+           "Escape der Rueckfrage schliesst auch die Einstellungen");
+    for (const f of document._h["keydown"] || []) {
+      await f({ key: "Escape", target: document, preventDefault() {} });
+    }
+    pruefe(dlg.hidden === true, "Escape schliesst den Dialog nicht");
+    pruefe(M.zustand.dienste[0].name === vorDienst,
+           "Escape nimmt nicht zurueck");
+
+    // 3. Der Hintergrund: ein Nein, kein Speichern.
+    await feuer("knopf-einstellungen"); await warte();
+    M.zustand.dienste[0].name = "Hintergrund";
+    await feuer("einst"); await warte();
+    pruefe(dlg.hidden === true, "Klick auf den Hintergrund schliesst nicht");
+    pruefe(M.zustand.dienste[0].name === vorDienst && gespeichert() === vorServer,
+           "Klick auf den Hintergrund hat gespeichert statt abgebrochen");
+
+    // 4. Eine ganz leere Zeile faellt still weg.
+    await feuer("knopf-einstellungen"); await warte();
+    const anzahl = M.zustand.dienste.length;
+    M.zustand.dienste.push({ id: "", name: "", url: "" });
+    await feuer("knopf-einst-zu"); await warte();
+    pruefe(dlg.hidden === true, "eine leere Zeile verhindert das Speichern");
+    pruefe((einstellungen.dienste || []).length === anzahl,
+           "die leere Zeile ging mit zum Server");
+
+    // 5. Keine Dienste: Fehler BEI DEN DIENSTEN, gerollt — nicht unter Server.
+    await feuer("knopf-einstellungen"); await warte();
+    const befund = document.getElementById("einst-dienste-befund");
+    const gerollt = befund._gerollt.length;
+    M.zustand.dienste = [];
+    await feuer("knopf-einst-zu"); await warte();
+    pruefe(dlg.hidden === false, "ohne Dienst gespeichert und geschlossen");
+    pruefe(befund.textContent === M.I18N[M.zustand.sprache].meldungen.dienste_leer,
+           "kein Grund bei den Diensten: " + befund.textContent);
+    pruefe(document.getElementById("einst-befund").textContent === "",
+           "der Dienstfehler steht wieder unter Server");
+    pruefe(befund._gerollt.length === gerollt + 1,
+           "der Dialog rollt nicht zur Meldung");
+
+    // 6. Halb ausgefuellt: das Feld wird rot umrandet.
+    M.zustand.dienste = [{ id: "x", name: "Halb", url: "" }];
+    await feuer("knopf-einst-zu"); await warte();
+    const zeile = document.getElementById("einst-dienste")._kinder[0];
+    pruefe(zeile && zeile._kinder[1].classList.contains("falsch"),
+           "das leere Adressfeld ist nicht markiert");
+    pruefe(zeile && !zeile._kinder[0].classList.contains("falsch"),
+           "der Name ist markiert, obwohl er da ist");
+    await feuer("knopf-einst-abbrechen"); await warte();
+    pruefe(M.zustand.dienste.length === anzahl
+           && M.zustand.dienste[0].name === vorDienst,
+           "nach dem Abbrechen fehlen die Dienste");
+    pruefe(!M.zustand.dienste.some((d) => d.falsch),
+           "die Markierung bleibt nach dem Abbrechen haengen");
+    if (fehler === vorher) {
+      console.log("   OK   Fusszeile, Abbrechen/Escape/Hintergrund, leer weg, "
+                  + "Fehler bei den Diensten");
+    }
   }
 
   console.log("");

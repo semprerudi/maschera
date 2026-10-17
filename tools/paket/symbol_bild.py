@@ -16,7 +16,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
-from core.symbol import MASSE, quadratisch  # noqa: E402
+from core.symbol import MASSE, symbol  # noqa: E402
 
 BLAU = "#2f80ed"
 
@@ -46,7 +46,7 @@ def rahmen(x: float, y: float, kante: float) -> str:
 
 def main(quelle: Path, ziel: Path) -> int:
     text = quelle.read_text(encoding="utf-8")
-    quadrat = quadratisch(text)
+    quadrat = symbol(text)
     treffer = MASSE.search(quadrat)
     if not treffer or "</svg>" not in quadrat:
         print(f"{quelle.name} hat keine lesbare viewBox — nichts zu tun.")

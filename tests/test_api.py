@@ -1362,6 +1362,32 @@ if not failures:
     print("   OK   fester Name eingabe.<endung>; con.txt, AUX.txt, nul.eml lesbar")
 
 
+
+print("\n27. Ohne Dienst wird nicht gespeichert — aber eine alte Datei laedt")
+# Issue #11: alle Dienste entfernt, gespeichert, «es passiert nichts». Der
+# Server weist eine leere Liste beim SPEICHERN ab, mit Schluessel, damit die
+# Oberflaeche die Meldung bei den Diensten zeigt. Beim LADEN nicht: eine
+# Datei, die eine fruehere Fassung mit leerer Liste geschrieben hat, fiele sonst ganz auf die
+# Vorgabe zurueck, samt Schrift und Thema.
+_r27 = c.put("/api/einstellungen", json={**gut, "dienste": []})
+check(_r27.status_code == 400, f"leere Dienstliste gespeichert: {_r27.status_code}")
+check((_r27.get_json() or {}).get("fehler_schluessel") == "dienste_leer",
+      f"falscher Schluessel: {(_r27.get_json() or {}).get('fehler_schluessel')}")
+import json as _json27  # noqa: E402
+_alt27 = einstellungen.PFAD.read_text(encoding="utf-8") \
+    if einstellungen.PFAD.exists() else None
+einstellungen.PFAD.write_text(_json27.dumps(
+    {**gut, "dienste": [], "schriftgroesse": 125}), encoding="utf-8")
+_l27 = einstellungen.lade()
+check(_l27["schriftgroesse"] == 125,
+      "eine alte Datei mit leerer Dienstliste verliert beim Laden die Schrift")
+if _alt27 is None:
+    einstellungen.PFAD.unlink()
+else:
+    einstellungen.PFAD.write_text(_alt27, encoding="utf-8")
+if not failures:
+    print("   OK   PUT [] -> 400 dienste_leer; lade() behaelt die uebrigen Werte")
+
 print()
 if failures:
     print(f"{len(failures)} Pruefung(en) fehlgeschlagen.")

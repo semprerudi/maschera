@@ -29,10 +29,13 @@
   <project_license>AGPL-3.0-only</project_license>
 
   <!--
-    Als Entwickler steht das Projekt, nicht eine Person.
+    Als Entwickler steht das Projekt, nicht eine Person. «MASCHERA-Projekt»
+    und nicht «MASCHERA» (Entscheid 17.10.2026): der Software-Store zeigt
+    den Entwickler als Untertitel unter dem Namen, und dort stand zweimal
+    dasselbe Wort.
   -->
   <developer id="ch.maschera">
-    <name>MASCHERA</name>
+    <name>MASCHERA-Projekt</name>
   </developer>
 
   <launchable type="desktop-id">ch.maschera.Maschera.desktop</launchable>
@@ -87,12 +90,40 @@
   <content_rating type="oars-1.1" />
 
   <!--
-    ⚠️ SCHIRMBILDER FEHLEN, und Flathub verlangt mindestens eines. Sie
-    brauchen eine oeffentliche Adresse im Repository; der lokale Bau
-    laeuft ohne.
+    Bildschirmfotos (seit 17.10.2026) von der Projektseite, englisch und
+    hell — dieselben Bilder, die `tools/schirmbilder.py` fuer die Seite
+    rechnet. Flathub verlangt mindestens eines; ohne zeigte der
+    Software-Store «No Screenshots».
+    ⚠️ Die Adressen muessen erreichbar sein: neue Bilder erst hochladen
+    (`tools/seite.py`), dann den Bau ausliefern.
   -->
+  <screenshots>
+    <screenshot type="default">
+      <caption>A masked letter: names, AHV number and address replaced by coloured placeholders</caption>
+      <image>https://www.maschera.ch/bilder/en/hero.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Choosing the AI service: ChatGPT, Claude, Copilot, Gemini or Mistral</caption>
+      <image>https://www.maschera.ch/bilder/en/schritt4-auswahl.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>One finding with its origin: model, pattern or checksum</caption>
+      <image>https://www.maschera.ch/bilder/en/herkunft-menu.png</image>
+    </screenshot>
+  </screenshots>
+
 
   <releases>
+    <release version="1.1.0" date="2026-10-17">
+      <description>
+        <p>The first release with feedback from testers. Settings have a
+        footer with Cancel and Save; Escape and a click beside the dialog
+        cancel. An error when saving appears next to the section it belongs
+        to. The logo reads well on dark backgrounds, and the program icon has
+        a thin light edge. Screenshots for software stores. Security: the
+        Docker image no longer ships pip.</p>
+      </description>
+    </release>
     <release version="1.0.5" date="2026-10-16">
       <description>
         <p>Remove a mask from the vocabulary with one click, everywhere in

@@ -287,6 +287,15 @@ def lade() -> dict:
 
 def speichere(roh) -> dict:
     sauber = pruefe(roh)
+    # ⚠️ NUR BEIM SPEICHERN, nicht in `pruefe()`. Ohne Dienst weiss
+    # «Kopieren und oeffnen» nicht, wohin (Issue #11: alle entfernt,
+    # gespeichert, «es passiert nichts»). In `pruefe()` stuende die Regel
+    # auch in `lade()` — und eine Datei, die eine aeltere Fassung mit
+    # leerer Liste geschrieben hat, fiele dort GANZ auf die Vorgabe zurueck,
+    # samt Schrift, Thema und Adresse.
+    if not sauber["dienste"]:
+        raise Abgelehnt("Mindestens ein Dienst ist noetig.",
+                        schluessel="dienste_leer")
     PFAD.parent.mkdir(parents=True, exist_ok=True)
     PFAD.write_text(json.dumps(sauber, ensure_ascii=False, indent=2) + "\n",
                     encoding="utf-8")

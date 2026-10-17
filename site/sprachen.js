@@ -534,9 +534,15 @@
   // Suchmaschine sah nur eine Sprache. Hier bleibt nur noch der Weg dorthin.
   var hier = document.documentElement.lang || "de";
 
+  // Feste Ziele: was aus localStorage oder `data-sprache` kommt, waehlt nur
+  // noch einen Eintrag aus und wird nie selbst Teil der Adresse
+  // (CodeQL js/xss-through-dom, Alerts #10 und #11).
+  var ZIEL = hier === "de"
+    ? { de: "./", fr: "fr/", it: "it/", en: "en/" }
+    : { de: "../", fr: "../fr/", it: "../it/", en: "../en/" };
+
   function adresse(sprache) {
-    if (sprache === "de") return hier === "de" ? "./" : "../";
-    return (hier === "de" ? "" : "../") + sprache + "/";
+    return Object.prototype.hasOwnProperty.call(ZIEL, sprache) ? ZIEL[sprache] : null;
   }
 
   // Wer eine Sprache gewaehlt hat, kommt auf der Startseite wieder dort an.
@@ -545,8 +551,9 @@
   if (hier === "de") {
     var gewaehlt = null;
     try { gewaehlt = localStorage.getItem("maschera.sprache"); } catch (e) {}
-    if (gewaehlt && gewaehlt !== "de" && T[gewaehlt]) {
-      location.replace(adresse(gewaehlt));
+    var z = gewaehlt && gewaehlt !== "de" ? adresse(gewaehlt) : null;
+    if (z) {
+      location.replace(z);
       return;
     }
   }
@@ -555,7 +562,8 @@
     b.addEventListener("click", function () {
       var sprache = b.getAttribute("data-sprache");
       try { localStorage.setItem("maschera.sprache", sprache); } catch (e) {}
-      if (sprache !== hier) location.href = adresse(sprache);
+      var z = adresse(sprache);
+      if (z && sprache !== hier) location.href = z;
     });
   });
 

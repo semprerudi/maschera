@@ -183,7 +183,7 @@ const I18N = {
         bspdWeg: "Maske wirklich entfernen?\n{} ist ein besonders schützenswertes Personendatum.",
         bspdSetzen: "Als {} maskieren?\nDas ist ein besonders schützenswertes Personendatum.",
         einstT: "Einstellungen",
-        schliessen: "Schliessen", einstZu: "Speichern", einstZuRest: " & schliessen",
+        schliessen: "Schliessen", einstZu: "Speichern", einstZuRest: " & schliessen", einstAbbrechen: "Abbrechen",
         allgemeinT: "Allgemein",
         serverT: "Server",
         serverH: "Adresse und Port des lokalen Maskierdienstes. Der Text verlässt dein Gerät nicht — die Prüfung zeigt, ob der Dienst antwortet.",
@@ -374,6 +374,7 @@ const I18N = {
           dienst_ohne_namen: "Dienst {nummer} hat keinen Namen.",
           dienst_schema: "Dienst {name}: nur https:// oder http://, nicht {adresse}",
           dienste_keine_liste: "Feld `dienste` ist keine Liste.",
+          dienste_leer: "Mindestens ein Dienst ist nötig — sonst weiss «Kopieren und öffnen» nicht, wohin.",
           dienste_zu_viele: "Höchstens {hoechstens} Dienste.",
           einst_kein_objekt: "Kein Objekt.",
           einstellungen_gespeichert: "Gespeichert.",
@@ -452,7 +453,7 @@ const I18N = {
         bspdWeg: "Retirer vraiment le masque ?\n{} est une donnée sensible.",
         bspdSetzen: "Masquer comme {} ?\nC'est une donnée sensible.",
         einstT: "Réglages",
-        schliessen: "Fermer", einstZu: "Enregistrer", einstZuRest: " et fermer",
+        schliessen: "Fermer", einstZu: "Enregistrer", einstZuRest: " et fermer", einstAbbrechen: "Annuler",
         allgemeinT: "Général",
         serverT: "Serveur",
         serverH: "Adresse et port du service de masquage local. Le texte ne quitte pas ton appareil — la vérification montre si le service répond.",
@@ -634,6 +635,7 @@ const I18N = {
           dienst_ohne_namen: "Le service {nummer} n’a pas de nom.",
           dienst_schema: "Service {name} : uniquement https:// ou http://, pas {adresse}",
           dienste_keine_liste: "Le champ `dienste` n’est pas une liste.",
+          dienste_leer: "Il faut au moins un service — sinon « Copier et ouvrir » ne sait pas où aller.",
           dienste_zu_viele: "{hoechstens} services au maximum.",
           einst_kein_objekt: "Pas un objet.",
           einstellungen_gespeichert: "Enregistré.",
@@ -712,7 +714,7 @@ const I18N = {
         bspdWeg: "Togliere davvero la maschera?\n{} è un dato personale degno di particolare protezione.",
         bspdSetzen: "Mascherare come {}?\nÈ un dato degno di particolare protezione.",
         einstT: "Impostazioni",
-        schliessen: "Chiudi", einstZu: "Salva", einstZuRest: " e chiudi",
+        schliessen: "Chiudi", einstZu: "Salva", einstZuRest: " e chiudi", einstAbbrechen: "Annulla",
         allgemeinT: "Generale",
         serverT: "Server",
         serverH: "Indirizzo e porta del servizio di mascheratura locale. Il testo non lascia il dispositivo — la verifica mostra se il servizio risponde.",
@@ -893,6 +895,7 @@ const I18N = {
           dienst_ohne_namen: "Il servizio {nummer} non ha nome.",
           dienst_schema: "Servizio {name}: solo https:// o http://, non {adresse}",
           dienste_keine_liste: "Il campo `dienste` non è un elenco.",
+          dienste_leer: "Serve almeno un servizio, altrimenti «Copia e apri» non sa dove andare.",
           dienste_zu_viele: "Al massimo {hoechstens} servizi.",
           einst_kein_objekt: "Non è un oggetto.",
           einstellungen_gespeichert: "Salvato.",
@@ -971,7 +974,7 @@ const I18N = {
         bspdWeg: "Really remove the mask?\n{} is sensitive personal data.",
         bspdSetzen: "Mask as {}?\nThis is sensitive personal data.",
         einstT: "Settings",
-        schliessen: "Close", einstZu: "Save", einstZuRest: " & close",
+        schliessen: "Close", einstZu: "Save", einstZuRest: " & close", einstAbbrechen: "Cancel",
         allgemeinT: "General",
         serverT: "Server",
         serverH: "Address and port of the local masking service. The text never leaves your device — the check shows whether the service responds.",
@@ -1152,6 +1155,7 @@ const I18N = {
           dienst_ohne_namen: "Service {nummer} has no name.",
           dienst_schema: "Service {name}: only https:// or http://, not {adresse}",
           dienste_keine_liste: "Field `dienste` is not a list.",
+          dienste_leer: "At least one service is needed — otherwise “Copy and open” has nowhere to go.",
           dienste_zu_viele: "At most {hoechstens} services.",
           einst_kein_objekt: "Not an object.",
           einstellungen_gespeichert: "Saved.",
@@ -1478,6 +1482,15 @@ function farbe(typ) {
  * `data-thema="automatisch"` waere ein dritter Zustand, den das Blatt nicht
  * kennt.
  */
+/* Die Adresse der Maske zur Farbwahl. Ein BILD sieht `data-thema` der Seite
+ * nicht; die Wahl reist deshalb in der Adresse, und `maske.svg` faerbt per
+ * `:target` um. «automatisch» braucht keine: dort entscheidet in der Datei
+ * `prefers-color-scheme`. */
+function maskeAdresse() {
+  return z.thema === "hell" || z.thema === "dunkel"
+    ? "maske.svg#" + z.thema : "maske.svg";
+}
+
 function themaAnwenden() {
   // Die Reihe zeigt, welche Stufe gilt — sonst waeren es drei Knoepfe, von
   // denen keiner sagt, wo man steht.
@@ -1493,6 +1506,9 @@ function themaAnwenden() {
   } else {
     w.removeAttribute("data-thema");
   }
+  // Startbildschirm und Kopf der Einseiter zeigen die Maske als `<img>`;
+  // die Kopfzeile als Hintergrund, und den stellt das Blatt um.
+  for (const b of document.querySelectorAll("img.maske")) b.src = maskeAdresse();
 }
 
 function $(id) { return document.getElementById(id); }
@@ -2639,7 +2655,8 @@ function zeichneBeschriftung() {
   // zweiter Aufruf haengte ein zweites Zeichen an.
   for (const [kennung, bild] of [["knopf-regeln-speichern", "speichern"],
                                  ["knopf-dienst-neu", "hinzufuegen"],
-                                 ["knopf-seite-zu", "schliessen"]]) {
+                                 ["knopf-seite-zu", "schliessen"],
+                                 ["knopf-einst-abbrechen", "schliessen"]]) {
     const k = $(kennung);
     if (!k.querySelector("svg")) {
       k.prepend(zeichenSinnbild(bild, KNOPFBILDER));
@@ -2651,6 +2668,7 @@ function zeichneBeschriftung() {
   // an beliebiger Stelle zerschneidet, braeche in einer Sprache mit anderer
   // Wortstellung falsch — deshalb zwei Schluessel und nicht ein `split()`.
   $("einst-zu-rest").textContent = s.einstZuRest;
+  $("einst-abbrechen-text").textContent = s.einstAbbrechen;
   $("einst-darstellung-titel").textContent = s.darstellungT;
   $("einst-thema-hilfe").textContent = s.themaH;
   $("einst-thema-etikett").textContent = s.themaEtikett;
@@ -2845,6 +2863,8 @@ function zeichneDienstliste() {
     });
     const url = document.createElement("input");
     url.value = d.url; url.placeholder = "https://…"; url.spellcheck = false;
+    if (d.falsch === "name") name.classList.add("falsch");
+    if (d.falsch === "url") url.classList.add("falsch");
     url.addEventListener("change", (e) => { d.url = e.target.value; });
     const weg = el("button", null, "×");
     weg.type = "button";
@@ -2946,23 +2966,128 @@ async function tagUmlegen(tag, meta) {
   zeichneTagwolke();
 }
 
+/* WOHIN EIN FEHLER BEIM SPEICHERN GEHOERT (Issue #11).
+ *
+ * Bis 16.10.2026 landete JEDER Fehler in `#einst-befund` — und das steht im
+ * Abschnitt Server. «Dienst 1 hat keinen Namen.» stand so unter Adresse und
+ * Port, und wer bei den Diensten weiter unten stand, sah gar nichts: «es
+ * passiert nichts».
+ *
+ * Unterschieden wird am SCHLUESSEL des Servers (`core/einstellungen.py`),
+ * nicht am Text — der ist uebersetzt. Was keinem Abschnitt gehoert, steht in
+ * der Fusszeile neben den Knoepfen.
+ */
+function befundFuer(e) {
+  const k = String((e && e.schluessel) || "");
+  if (/^dienst/.test(k)) return $("einst-dienste-befund");
+  if (/^(adresse|port)_/.test(k)) return $("einst-befund");
+  return $("einst-fuss-befund");
+}
+
+/* Das Feld, an dem es scheiterte, rot umranden. Die Nummer des Servers
+ * zaehlt in der GESENDETEN Liste (`gesendet`), nicht in der Anzeige — die ist
+ * alphabetisch. Deshalb wird das Objekt gesucht und am Objekt markiert. */
+function feldMarkieren(e, gesendet) {
+  const k = String((e && e.schluessel) || "");
+  const w = (e && e.werte) || {};
+  let d = null;
+  if (k === "dienst_ohne_namen") d = gesendet[Number(w.nummer) - 1] || null;
+  else if (w.name) d = gesendet.find((x) => String(x.name || "").trim() === w.name) || null;
+  if (d) d.falsch = k === "dienst_ohne_namen" ? "name" : "url";
+  if (/^adresse_/.test(k)) $("einst-adresse").classList.add("falsch");
+  if (/^port_/.test(k)) $("einst-port").classList.add("falsch");
+}
+
+function befundeLeeren() {
+  for (const id of ["einst-befund", "einst-dienste-befund",
+                    "einst-fuss-befund"]) {
+    $(id).className = "einst-befund";
+    $(id).textContent = "";
+  }
+  $("einst-adresse").classList.remove("falsch");
+  $("einst-port").classList.remove("falsch");
+  for (const d of z.dienste) delete d.falsch;
+}
+
 /* Ein leerer Name oder eine Adresse ohne `https://` haelt den Dialog
  * offen und nennt den Grund. Zumachen und den Stand verwerfen waere die
  * schlechtere Antwort: der Anwender hat gerade etwas eingetippt.
+ *
+ * Der Grund steht seit 17.10.2026 BEIM ABSCHNITT, und der Dialog rollt hin.
  */
 async function einstellungenSchliessen() {
-  const befund = $("einst-befund");
+  befundeLeeren();
   try {
     await sichereEinstellungen();
   } catch (e) {
+    const befund = befundFuer(e);
+    feldMarkieren(e, gesendeteDienste());
     befund.className = "einst-befund schlecht";
     befund.textContent = fehlerText(e);
+    zeichneDienstliste();
+    befund.scrollIntoView({ block: "center" });
     zeichne();
     return;
   }
-  befund.className = "einst-befund";
-  befund.textContent = "";
   z.einstMeldung = "";
+  z.einstVorher = null;
+  $("einst").hidden = true;
+  zeichne();
+}
+
+/* WAS BEIM OEFFNEN GALT — fuer «Abbrechen».
+ *
+ * ⚠️ Eine TIEFE Kopie der Dienste: die Eingabefelder in
+ * `zeichneDienstliste()` schreiben direkt in die Objekte von `z.dienste`
+ * (`d.name = …`). Eine flache Kopie der Liste truege dieselben Objekte und
+ * stellte nichts her.
+ *
+ * Nicht darin, weil schon gespeichert und nicht zurueckzunehmen:
+ * Klartext-Tags (beim Umlegen), eigene Regeln (eigener Knopf), Tray und
+ * Schmales Fenster (`merkeFenster()` sofort).
+ */
+function einstMomentaufnahme() {
+  return {
+    dienste: z.dienste.map((x) => ({ ...x })),
+    dienst: z.dienst,
+    eigenesFenster: z.eigenesFenster,
+    thema: z.thema,
+    schriftart: z.schriftart,
+    schriftgroesse: z.schriftgroesse,
+    schriftUeberall: z.schriftUeberall,
+    adresse: $("einst-adresse").value,
+    port: $("einst-port").value,
+  };
+}
+
+/* Abbrechen: Knopf, Escape und der Klick auf den Hintergrund. Was nur in
+ * `z` und in den Feldern stand, geht zurueck auf den Stand beim Oeffnen —
+ * auch Farben und Schrift, die beim Waehlen sofort wirken. */
+function einstellungenAbbrechen() {
+  const m = z.einstVorher;
+  if (m) {
+    z.dienste = m.dienste.map((x) => ({ ...x }));
+    z.dienst = m.dienst;
+    z.eigenesFenster = m.eigenesFenster;
+    z.thema = m.thema;
+    z.schriftart = m.schriftart;
+    z.schriftgroesse = m.schriftgroesse;
+    z.schriftUeberall = m.schriftUeberall;
+    $("einst-adresse").value = m.adresse;
+    $("einst-port").value = m.port;
+    $("schalter-fenster").setAttribute("aria-checked",
+                                       String(z.eigenesFenster));
+    $("einst-schrift-ueberall").checked = z.schriftUeberall;
+    $("einst-schriftgroesse").value = String(z.schriftgroesse);
+    $("einst-schriftart").value = z.schriftart;
+    themaAnwenden();
+    schriftAnwenden();
+    zeichnePruefknopf();
+    zeichneDienstmenu();
+  }
+  befundeLeeren();
+  z.einstMeldung = "";
+  z.einstVorher = null;
   $("einst").hidden = true;
   zeichne();
 }
@@ -2992,7 +3117,8 @@ function dialogVonOben(huelle, rumpf) {
 async function einstellungenOeffnen() {
   z.einstMeldung = "";
   dialogVonOben($("einst"), $("einst-rumpf"));
-  $("einst-befund").textContent = "";
+  befundeLeeren();
+  z.einstVorher = einstMomentaufnahme();
   $("einst-regeln-befund").textContent = "";
   $("einst-tags-befund").textContent = "";
   try {
@@ -3161,8 +3287,8 @@ function textHinein(knoten, inhalt) {
  */
 function seitenKopf(st) {
   const kopf = el("div", "seite-kopf");
-  const bild = el("img");
-  bild.src = "maske.svg";
+  const bild = el("img", "maske");
+  bild.src = maskeAdresse();
   bild.alt = "";
   const rechts = el("div");
   // Die Wortmarke in drei Stuecken — das CH steht fett, wie ueberall.
@@ -4087,6 +4213,14 @@ function verbinde() {
   // --- Einstellungen ---
   $("knopf-einstellungen").addEventListener("click", einstellungenOeffnen);
   $("knopf-einst-zu").addEventListener("click", einstellungenSchliessen);
+  $("knopf-einst-abbrechen").addEventListener("click", einstellungenAbbrechen);
+  // Escape bricht ab — aber nicht, wenn die Rueckfrage darueber offen ist:
+  // deren eigener Horcher nimmt das Escape (und ruft `preventDefault`).
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || e.defaultPrevented) return;
+    if ($("einst").hidden || !$("frage").hidden) return;
+    einstellungenAbbrechen();
+  });
   $("frage-ja").addEventListener("click", () => frageSchliessen(true));
   $("frage-nein").addEventListener("click", () => frageSchliessen(false));
   // Ein Klick neben den Kasten ist ein Nein — nie ein Ja.
@@ -4105,8 +4239,10 @@ function verbinde() {
   $("seite").addEventListener("click", (e) => {
     if (e.target === $("seite")) seiteSchliessen();
   });
+  // Seit 17.10.2026 ein ABBRECHEN, kein Speichern (Issue #11) — wie bei der
+  // Rueckfrage: ein Klick neben den Kasten ist ein Nein, nie ein Ja.
   $("einst").addEventListener("click", (e) => {
-    if (e.target === $("einst")) einstellungenSchliessen();
+    if (e.target === $("einst")) einstellungenAbbrechen();
   });
 
   // Die Portpruefung fragt wirklich nach und liest `dienst`. Wer auf 4141
@@ -4120,13 +4256,20 @@ function verbinde() {
     // Browser kann sich die Seite nicht selbst neu starten; dann sagt sie,
     // ab wann es gilt.
     if (adresseGeaendert()) {
+      befundeLeeren();
       try {
         await sichereEinstellungen();
       } catch (e) {
-        befund.className = "einst-befund schlecht";
-        befund.textContent = fehlerText(e);
+        const wo = befundFuer(e);
+        feldMarkieren(e, gesendeteDienste());
+        wo.className = "einst-befund schlecht";
+        wo.textContent = fehlerText(e);
+        zeichneDienstliste();
+        wo.scrollIntoView({ block: "center" });
         return;
       }
+      // Jetzt gespeichert: ein spaeteres Abbrechen nimmt das nicht zurueck.
+      z.einstVorher = einstMomentaufnahme();
       if (kannNeuStarten()) {
         befund.className = "einst-befund";
         befund.textContent = t().startetNeu;
@@ -5069,6 +5212,11 @@ function zeichnePruefknopf() {
  * `tests/test_api.py` prueft den ganzen Rundlauf gegen `VORGABE` — jedes
  * Feld, damit auch der naechste neue Schluessel auffaellt.
  */
+function gesendeteDienste() {
+  return z.dienste.filter(
+    (x) => String(x.name || "").trim() || String(x.url || "").trim());
+}
+
 async function sichereEinstellungen() {
   const d = await setzeEinstellungen({
     adresse: $("einst-adresse").value.trim() || "127.0.0.1",
@@ -5085,7 +5233,11 @@ async function sichereEinstellungen() {
     tray: z.tray,
     fenstermodus: z.fenstermodus,
     thema: z.thema,
-    dienste: z.dienste.map((x) => ({ id: x.id, name: x.name, url: x.url })),
+    // Eine GANZ leere Zeile («Hinzufuegen» geklickt, nichts getippt) faellt
+    // still weg (Issue #11). Eine halb ausgefuellte geht mit und wird vom
+    // Server abgewiesen — dort fehlt etwas, das gemeint war.
+    dienste: gesendeteDienste()
+      .map((x) => ({ id: x.id, name: x.name, url: x.url })),
   });
   z.dienste = (d.dienste || []).map((x) => ({ ...x }));
   if (!z.dienste.some((x) => x.id === z.dienst) && z.dienste.length) {

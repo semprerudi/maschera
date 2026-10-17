@@ -18,7 +18,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
-from core.symbol import MASSE, quadratisch  # noqa: E402
+from core.symbol import MASSE, symbol  # noqa: E402
 
 
 def main(quelle: Path, ziel: Path) -> int:
@@ -31,7 +31,8 @@ def main(quelle: Path, ziel: Path) -> int:
     # ⚠️ `install -D` legt Elternverzeichnisse an, Python nicht — und das
     # Ziel ist im Flatpak-Bau ein Pfad, den es noch nicht gibt.
     ziel.parent.mkdir(parents=True, exist_ok=True)
-    ziel.write_text(quadratisch(text), encoding="utf-8")
+    # Mit hellem Aussenrand (seit 17.10.2026) — siehe `core/symbol.py`.
+    ziel.write_text(symbol(text), encoding="utf-8")
 
     b, h = float(treffer.group(3)), float(treffer.group(4))
     print(f"{ziel.name}: {b:g}x{h:g} -> {max(b, h):g}x{max(b, h):g}")

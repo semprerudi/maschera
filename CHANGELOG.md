@@ -1,5 +1,36 @@
 # Änderungen
 
+## 1.1.0 – in Arbeit (Datum beim Ausliefern setzen)
+
+Die erste Fassung mit Rückmeldungen von Testerinnen und Testern — danke!
+
+### Geändert
+- **Einstellungen** ([#11](https://github.com/semprerudi/maschera/issues/11)):
+  «Abbrechen» und «Speichern & schliessen» stehen in einer eigenen Fusszeile,
+  immer sichtbar, auch auf dem Handy. Escape und ein Klick neben den Dialog
+  brechen ab, statt zu speichern. Abbrechen nimmt Dienste, Adresse, Farben und
+  Schrift zurück (Klartext-Tags, eigene Regeln und die Fensterschalter sind
+  schon beim Umlegen gespeichert).
+- Ein Fehler beim Speichern steht **beim Abschnitt**, zu dem er gehört — die
+  Meldung zu einem Dienst stand bisher unter «Server». Der Dialog rollt hin,
+  das Feld ist rot umrandet.
+- Eine ganz leere Dienstzeile fällt beim Speichern still weg. Ganz ohne Dienst
+  wird nicht gespeichert, mit einer Meldung, warum.
+- **Logo auf dunklem Grund:** die Maske steht im dunklen Thema in gebrochenem
+  Weiss statt als greller Fleck mit dunklem Rand, der im Hintergrund verschwand.
+  Das Programmsymbol (Linux, Windows, Ablagefach) hat einen schmalen hellen
+  Rand und trägt so auf heller wie dunkler Leiste.
+- Flatpak: Bildschirmfotos in den Software-Store-Daten; als Entwickler steht
+  «MASCHERA-Projekt» statt zum zweiten Mal «MASCHERA».
+
+### Sicherheit
+- Webseite: Der Sprachwechsel wählt das Ziel aus einer festen Tabelle, statt
+  die Adresse aus `localStorage` oder `data-sprache` zusammenzusetzen
+  (CodeQL js/xss-through-dom #10, #11; ausnutzbar war es nicht).
+- Docker: pip ist aus dem Abbild entfernt. Es wird im Betrieb nie gebraucht,
+  und seine mitgelieferten Kopien von urllib3, msgpack und setuptools
+  lösten bei trivy 4 HIGH aus.
+
 ## 1.0.5 – 2026-10-16
 
 ### Neu

@@ -284,7 +284,7 @@ check(a.status_code == 200, f"/maske.svg -> {a.status_code}")
 check(a.headers.get("Content-Type", "").startswith("image/svg"),
       "/maske.svg kommt nicht als SVG")
 for stelle, muster in (("Favicon", r'rel="icon"\s+href="maske\.svg"'),
-                       ("Startbildschirm", r'<img src="maske\.svg"')):
+                       ("Startbildschirm", r'<img class="maske" src="maske\.svg"')):
     check(re.search(muster, seite2), f"{stelle} zeigt nicht auf maske.svg")
 # `css` wird erst in Punkt 20 geholt — hier eigens, damit die Reihenfolge
 # der Punkte frei bleibt.
@@ -733,6 +733,52 @@ for _m in _re22.finditer(r"border(?:-[a-z]+)?-radius:\s*([^;]+);", _css22):
               f"`{_m.group(0)}` — eine eigene Rundung neben `--radius-md`")
 if not failures:
     print("   OK   jede Rundung ist `--radius-md`, eine Pille oder gerade")
+
+print("23. Die Maske traegt auf dunklem Grund — in der App und als Symbol")
+# Anwender, 17.10.2026, zwei Bildschirmfotos: auf schwarzem Grund verschwand
+# der dunkle Rand, uebrig blieb ein greller Fleck mit hellem Saum — im
+# Startbildschirm und als Symbol im Software-Store.
+_svg23 = (STATIC / "maske.svg").read_text(encoding="utf-8")
+check('class="maske-flaeche"' in _svg23 and 'class="maske-rand"' in _svg23,
+      "maske.svg: Flaeche oder Rand tragen ihre Klasse nicht mehr")
+check("prefers-color-scheme: dark" in _svg23,
+      "maske.svg folgt dem dunklen System nicht")
+for _ziel23 in ("#dunkel:target", "#hell:target", ':root[data-thema="dunkel"]'):
+    check(_ziel23 in _svg23, f"maske.svg kennt {_ziel23} nicht")
+check('id="hell"' in _svg23 and 'id="dunkel"' in _svg23,
+      "maske.svg: die Ziele #hell/#dunkel fehlen")
+_css23 = (STATIC / "maschera.css").read_text(encoding="utf-8")
+for _t23 in ("dunkel", "hell"):
+    check(f':root[data-thema="{_t23}"] .kopfzeile .logo {{ background-image: '
+          f'url("maske.svg#{_t23}")' in _css23,
+          f"die Kopfzeile folgt der Wahl «{_t23}» nicht")
+check('"maske.svg#" + z.thema' in (STATIC / "maschera.js").read_text(
+    encoding="utf-8"), "die Bilder der Maske folgen der Farbwahl nicht")
+# Das SYMBOL kennt kein Thema: es bekommt den hellen Aussenrand.
+import sys as _sys23  # noqa: E402
+_sys23.path.insert(0, str(WURZEL))
+from core.symbol import MASSE as _M23, symbol as _sym23  # noqa: E402
+_s23 = _sym23(_svg23)
+_b23 = [float(g) for g in _M23.search(_s23).groups()]
+check(_b23[2] == _b23[3], "das Symbol ist nicht quadratisch")
+check(_b23[2] > 1506, "das Symbol hat keinen Platz fuer den Rand")
+check('class="maske-flaeche" stroke="#ffffff"' in _s23,
+      "das Symbol hat keinen hellen Aussenrand")
+# ⚠️ Und JEDER Weg zum Symbol geht ueber `symbol()` — ein Weg, der die
+# rohe Maske zeichnet, haette den Rand still nicht.
+for _datei23, _muss23 in (
+        ("tools/paket/symbol_quadrat.py", "symbol(text)"),
+        ("tools/paket/appimage_bauen.fish", "symbol_quadrat.py"),
+        ("tools/favicon_bauen.fish", "symbol_quadrat.py"),
+        ("tools/paket/ch.maschera.Maschera.yml", "symbol_quadrat.py")):
+    check(_muss23 in (WURZEL / _datei23).read_text(encoding="utf-8"),
+          f"{_datei23} zeichnet das Symbol nicht ueber core/symbol.py")
+_f23 = (WURZEL / "app" / "fenster.py").read_text(encoding="utf-8")
+check(_f23.count("_symbol(") >= 2 and "quadratisch(" not in _f23,
+      "fenster.py: Ablagefach oder Fenster zeichnen die rohe Maske")
+if not failures:
+    print("   OK   App: System, #dunkel/#hell, data-thema; Symbol: Rand, "
+          "quadratisch, alle Wege")
 
 print()
 if failures:

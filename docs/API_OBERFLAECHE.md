@@ -373,6 +373,11 @@ Adresse, Port, Dienste, Darstellung, Fensterschalter
 Vorgabe ein. Wer ein einzelnes Feld ändern will, liest zuerst, ändert und
 schreibt das Ganze zurück.
 
+⚠️ **Mindestens ein Dienst** (seit 17.10.2026): `PUT` mit leerer `dienste`-Liste
+→ 400 `dienste_leer`. Nur beim Speichern — `lade()` nimmt eine ältere Datei
+mit leerer Liste weiter an, statt alle übrigen Werte auf die Vorgabe zu
+setzen. Eine ganz leere Zeile schickt die Oberfläche gar nicht erst mit.
+
 ⚠️ **Der gewählte Dienst wird sofort gesichert**, nicht erst beim Schliessen
 des Dialogs. Gibt es die Kennung nicht mehr, liefert der Server den ersten
 — sonst zeigte der Sendeknopf einen Namen, zu dem keine Adresse gehört.

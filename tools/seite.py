@@ -371,6 +371,12 @@ def cmd_hochladen(args) -> int:
             print(f"     {rel}")
         return 1
     print(f"   ok    {len(gesamt)} Datei(en) online, Pruefsummen gleich")
+    # Hat sich Inhalt geaendert, sollen Google und Bing es frueh erfahren.
+    # Von Hand im Browser — fuer «Indexierung beantragen» gibt es keine
+    # Schnittstelle (16.10.2026).
+    if any(p.endswith(".html") for p in gesamt):
+        print("\n   Danach: Google Search Console und Bing Webmaster Tools anstossen\n"
+              "   (/, /fr/, /it/, /en/) — «Indexierung beantragen» bzw. «Submit URLs».")
     return 0
 
 

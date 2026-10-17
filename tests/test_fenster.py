@@ -1664,6 +1664,20 @@ else:
         if _wf.name == "pakete.yml":
             check(_ausl == {"workflow_dispatch"},
                   f"der Paket-Workflow startet nicht nur von Hand: {_aus}")
+        if _wf.name == "abbild-signieren.yml":
+            # Nur von Hand, und das Eingabefeld nie direkt im Skript: ein
+            # `${{ inputs.… }}` in `run:` liesse Shell-Befehle einschleusen.
+            check(_ausl == {"workflow_dispatch"},
+                  f"der Signatur-Workflow startet nicht nur von Hand: {_aus}")
+            _laeufe = re.findall(r"run:\s*\|?\n?((?:.*\n?)*?)(?=\n\s*- |\Z)",
+                                 _text26)
+            check(not any("${{" in _l for _l in _laeufe),
+                  "abbild-signieren.yml setzt ${{ … }} direkt in ein Skript")
+            _job = next(iter(_w.get("jobs", {}).values()), {})
+            check(_job.get("permissions", {}).get("id-token") == "write"
+                  and set(_job.get("permissions", {})) <= {"contents",
+                                                           "packages", "id-token"},
+                  f"abbild-signieren.yml: Rechte des Jobs {_job.get('permissions')}")
         if _wf.name == "tests.yml":
             check(_ausl <= {"push", "pull_request"} and _ausl,
                   f"der Testlauf startet bei etwas anderem als Push und "

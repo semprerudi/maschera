@@ -261,6 +261,16 @@ cosign verify ghcr.io/semprerudi/maschera:latest \
     --certificate-oidc-issuer https://github.com/login/oauth
 ```
 
+Newer images are signed by the repository's own workflow
+(`.github/workflows/abbild-signieren.yml`) instead of by hand. Verify those with
+the workflow's identity:
+
+```fish
+cosign verify ghcr.io/semprerudi/maschera:latest \
+    --certificate-identity https://github.com/semprerudi/maschera/.github/workflows/abbild-signieren.yml@refs/heads/main \
+    --certificate-oidc-issuer https://token.actions.githubusercontent.com
+```
+
 An SBOM (SPDX) for the Docker image and one for the AppImage are attached to
 each release since 1.0.1.
 

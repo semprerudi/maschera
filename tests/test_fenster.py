@@ -1669,8 +1669,10 @@ else:
             # `${{ inputs.… }}` in `run:` liesse Shell-Befehle einschleusen.
             check(_ausl == {"workflow_dispatch"},
                   f"der Signatur-Workflow startet nicht nur von Hand: {_aus}")
-            _laeufe = re.findall(r"run:\s*\|?\n?((?:.*\n?)*?)(?=\n\s*- |\Z)",
-                                 _text26)
+            # Aus dem geparsten YAML, nicht per Muster aus dem Text: das
+            # erste Muster hier war selbst ein ReDoS (CodeQL #12).
+            _laeufe = [_st["run"] for _j in _w.get("jobs", {}).values()
+                       for _st in _j.get("steps", []) if "run" in _st]
             check(not any("${{" in _l for _l in _laeufe),
                   "abbild-signieren.yml setzt ${{ … }} direkt in ein Skript")
             _job = next(iter(_w.get("jobs", {}).values()), {})

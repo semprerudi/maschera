@@ -603,11 +603,12 @@ print("\n13. Wer aus der Maske ein Symbol macht, legt sie aufs Quadrat")
 #
 # Geprueft wird als EIGENSCHAFT ueber den ganzen Baum: was die Maske
 # anfasst UND daraus ein Symbol macht, muss quadrieren. Ausgenommen sind
-# `app/static/` und `tests/` — dort wird sie als Bild eingebettet
+# `app/static/`, `site/bilder/` und `tests/` — dort wird sie als Bild
+# eingebettet (die Webseite traegt seit 2.0 eine Kopie von `maske.svg`)
 # beziehungsweise nur besprochen.
 _symbol = []
 for _rel in _verfolgt:
-    if _rel.startswith(("app/static/", "tests/")):
+    if _rel.startswith(("app/static/", "site/bilder/", "tests/")):
         continue
     _q = (WURZEL / _rel).read_text(encoding="utf-8", errors="replace")
     if "maske.svg" not in _q:

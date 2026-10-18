@@ -36,10 +36,16 @@ def check(ok, msg):
 AMTLICH = (set(range(0x20, 0x7F)) | set(range(0xA0, 0x100))
            | set(range(0x100, 0x180)))
 
-# ⚠️ Bekannte Luecken von Barlow, jede mit Grund. Diese Liste ist der Zweck
+# ⚠️ Bekannte Luecken JE SCHRIFT, jede mit Grund. Diese Liste ist der Zweck
 # der Pruefung: sie darf nicht laenger werden, ohne dass jemand hinsieht.
 # Wer eine Schrift austauscht oder eine Teilmenge weglaesst, merkt es hier.
-LUECKEN = {
+#
+# Seit 2.0 (18.10.2026) tragen IBM Plex Sans und Mono Oberflaeche und Texte —
+# beide decken den amtlichen Zeichensatz GANZ ab (gemessen: 319 von 319).
+# Barlow Condensed setzt nur noch die Wortmarke MASCHERA; ihre Luecken
+# betreffen keinen Personennamen mehr, sie stehen hier, damit die Pruefung
+# trotzdem merkt, wenn sich die Datei aendert.
+LUECKEN_BARLOW = {
     0x0114: "E mit Breve — in Namen praktisch nicht vorkommend",
     0x0115: "e mit Breve — dito",
     0x012C: "I mit Breve — dito",
@@ -53,6 +59,7 @@ LUECKEN = {
     0x0132: "IJ-Ligatur gross, niederlaendisch — kann in einem Namen stehen",
     0x013F: "L mit Mittelpunkt gross, katalanisch — kann in einem Namen stehen",
 }
+LUECKEN = {"BarlowCondensed": LUECKEN_BARLOW, "IBMPlexSans": {}, "IBMPlexMono": {}}
 
 print("1. Die Schriftdateien liegen da")
 dateien = sorted(SCHRIFTEN.glob("*.woff2"))
@@ -114,14 +121,16 @@ else:
 
     for familie, cps in sorted(je_familie.items()):
         fehlt = AMTLICH - cps
-        neu = fehlt - set(LUECKEN)
+        bekannt = set(LUECKEN.get(familie, {}))
+        check(familie in LUECKEN, f"{familie}: unbekannte Schrift — in LUECKEN eintragen")
+        neu = fehlt - bekannt
         for c in sorted(neu):
             check(False,
                   f"{familie}: U+{c:04X} {chr(c)!r} fehlt und steht nicht "
                   f"in LUECKEN — im amtlichen Zeichensatz seit 11.11.2024")
         # Gegenprobe: eine Luecke, die zugegangen ist, gehoert aus der Liste.
         # Sonst waechst sie zu einer Liste von Behauptungen.
-        zu = set(LUECKEN) - fehlt
+        zu = bekannt - fehlt
         for c in sorted(zu):
             check(False,
                   f"{familie}: U+{c:04X} {chr(c)!r} steht in LUECKEN, ist "

@@ -514,10 +514,10 @@
   };
 
   var titel = {
-    de: "Schweizer Dokumente maskieren & anonymisieren – Open Source",
-    fr: "Masquer et anonymiser des documents suisses – open source",
-    it: "Mascherare e anonimizzare documenti svizzeri – open source",
-    en: "Mask and anonymise PII in Swiss documents – open source"
+    de: "Schweizer Dokumente maskieren & anonymisieren · Open Source",
+    fr: "Masquer et anonymiser des documents suisses · open source",
+    it: "Mascherare e anonimizzare documenti svizzeri · open source",
+    en: "Mask and anonymise PII in Swiss documents · open source"
   };
 
   // Die Beschreibung fuer Suchmaschinen und geteilte Links. Die deutsche steht

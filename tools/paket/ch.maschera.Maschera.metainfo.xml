@@ -114,6 +114,22 @@
 
 
   <releases>
+    <!-- Die erste Angabe muss zur Fassung in app/serve.py passen
+         (test_fenster 12). Testbauten tragen `X.Y.Z-test.N` mit
+         type="development"; Software-Stores zeigen das nicht als Release. -->
+    <release version="2.0.0" date="2026-10-18">
+      <description>
+        <p>A new look, designed together with a UX architect. The window
+        reads as six cards along the way from original to final text, with a
+        step bar on top that follows your progress and jumps to a card on
+        click. Green marks what stays on your device, orange what leaves it.
+        New typefaces (IBM Plex Sans and Mono), new colours in light and dark.
+        Values kept in plain text on purpose now carry a light grey frame. The
+        vocabulary can be filtered by group. The notice about remaining
+        placeholders can be closed. Fewer settings: one typeface option and
+        the switch for buttons and labels are gone.</p>
+      </description>
+    </release>
     <release version="1.1.0" date="2026-10-17">
       <description>
         <p>The first release with feedback from testers. Settings have a

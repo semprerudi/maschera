@@ -33,7 +33,7 @@ const HILFE_DE = [
 
   ["h", "Warum nichts hinausgeht"],
   ["p", "Die Erkennung läuft vollständig auf diesem Gerät. Im Betrieb "
-      + "wird nichts nachgeladen und nichts gesendet — auch keine "
+      + "wird nichts nachgeladen und nichts gesendet, auch keine "
       + "Schriften, keine Symbole und keine Statistik. Ohne "
       + "Netzverbindung funktioniert alles ausser dem Öffnen des "
       + "KI-Dienstes."],
@@ -41,13 +41,13 @@ const HILFE_DE = [
       + "GitHub einmal nach der neuesten Fassungsnummer. Mitgeschickt wird "
       + "nichts, und ohne diesen Klick fragt MASCHERA nie."],
   ["p", "Je nach Paket liegt das Modell schon darin, oder es wird einmal "
-      + "beim ersten Start geholt — aus einer benannten Quelle, mit "
+      + "beim ersten Start geholt: aus einer benannten Quelle, mit "
       + "Prüfsumme, und erst nachdem du zugestimmt hast. Du kannst auch "
       + "ablehnen und es später tun. Danach ist es hier und bleibt hier."],
   ["p", ["Es gibt in MASCHERA keinen Endpunkt, der Text verschickt, und es "
        + "wird auch keinen geben. Der Weg nach draussen führt immer über "
        + "deine Zwischenablage: du kopierst, du fügst ein. Damit bleibt "
-       + "sichtbar, was hinausgeht — Bereich ", ["b", "03 Prompt"],
+       + "sichtbar, was hinausgeht. Bereich ", ["b", "03 Prompt"],
          " zeigt genau den Text, der zum Dienst gelangt, und zählt seine "
        + "Zeichen."]],
   ["p", "Geschrieben wird nur, was du ausdrücklich speicherst: deine "
@@ -57,39 +57,39 @@ const HILFE_DE = [
   ["h", "Der Weg durch das Fenster"],
   ["tab", [
     ["01 Originaltext",
-     ["Text einfügen, tippen oder eine Datei hineinziehen — txt, md, csv, "
-    + "json, eml, msg, mbox, pdf, docx. Dann ", ["b", "Maskieren"], ". "
+     ["Text einfügen, tippen oder eine Datei hineinziehen (txt, md, csv, "
+    + "json, eml, msg, mbox, pdf, docx). Dann ", ["b", "Maskieren"], ". "
     + "Höchstens {mb} MB je Datei; die Dauer hängt an der Textlänge und "
-    + "nicht an der Dateigrösse — rund 100 Seiten (300 000 Zeichen) "
+    + "nicht an der Dateigrösse. Rund 100 Seiten (300 000 Zeichen) "
     + "brauchen etwa eine Minute."]],
     ["02 Maskiert",
      ["Das Ergebnis. Jeder Platzhalter ist farbig; ein Rechtsklick darauf "
     + "ändert oder entfernt ihn. Ein Rechtsklick auf gewöhnlichen Text "
     + "maskiert ihn nachträglich. ", ["b", "Bearbeiten"],
-      " öffnet den Text zum Korrigieren von Hand — die Platzhalter dabei "
+      " öffnet den Text zum Korrigieren von Hand. Die Platzhalter dabei "
     + "stehen lassen."]],
     ["03 Prompt",
      ["Deine Frage an das KI-Werkzeug. Darunter steht, was wirklich "
-    + "hinausgeht. Der rote Rand bedeutet: ab hier verlässt es das Gerät. ",
+    + "hinausgeht. Die orange gestrichelte Zone bedeutet: ab hier verlässt es das Gerät. ",
       ["b", "Kopieren"], " legt beides in die Zwischenablage und öffnet "
     + "den gewählten Dienst."]],
   ]],
 
   // ⚠️ Der Bruch zwischen 03 und 04 ist der einzige Moment,
   // in dem der Anwender das Werkzeug verlaesst.
-  ["rot", "Ab hier arbeitest du selbst online. Nimm den Prompt zum KI-Dienst, arbeite dort, bis das Ergebnis stimmt — und komm mit der Antwort hierher zurück."],
+  ["rot", "Ab hier arbeitest du selbst online. Nimm den Prompt zum KI-Dienst, arbeite dort, bis das Ergebnis stimmt, und komm mit der Antwort hierher zurück."],
 
   ["tab", [
     ["04 Antwort", "Die Antwort des Dienstes hier einfügen."],
     ["05 Finaler Text",
-     [["b", "Vokabular einpflegen"], " setzt deine echten Daten wieder ein "
-    + "— über das Wörterbuch."]],
+     [["b", "Vokabular einpflegen"], " setzt deine echten Daten wieder ein, "
+    + "über das Wörterbuch."]],
   ]],
 
   ["h", "Das Wörterbuch"],
   ["p", ["Es hält fest, welcher Platzhalter für welchen Wert steht, und "
        + "liegt nur im Browserfenster. Wer es verliert, kann den Text nie "
-       + "mehr zurückwandeln — deshalb der Knopf ", ["b", "Herunterladen"],
+       + "mehr zurückwandeln. Deshalb der Knopf ", ["b", "Herunterladen"],
          ". Die Datei enthält die echten Werte im Klartext: sie gehört an "
        + "einen Ort, an den auch das Original gehört."]],
 
@@ -100,7 +100,7 @@ const HILFE_DE = [
       + "kostet die Daten einer Person."],
   ["p", "Umgekehrt ist ein leerer Befund keine Entwarnung. Ein "
       + "eingescanntes PDF ohne Textebene wird abgewiesen statt "
-      + "«sauber» gemeldet — dort ist nichts zu erkennen, nicht nichts "
+      + "«sauber» gemeldet. Dort ist nichts zu erkennen, nicht nichts "
       + "zu finden."],
 
   ["h", "Eigene Regeln"],
@@ -112,16 +112,16 @@ const HILFE_DE = [
        + "die Werte bleiben in der Sprache deiner Dokumente."]],
 
   ["h", "Pseudonymisierung, nicht Anonymisierung"],
-  ["p", ["Über das Wörterbuch ist jede Maskierung umkehrbar — genau das "
+  ["p", ["Über das Wörterbuch ist jede Maskierung umkehrbar, und genau das "
        + "macht das Werkzeug brauchbar. Deshalb heisst der Knopf ",
          ["b", "Maskieren"], ". Ein maskierter Text ist kein anonymer "
        + "Text: solange das Wörterbuch existiert, ist der Bezug zur "
        + "Person herstellbar."]],
-  ["h", "⚠ Entwicklungsfassung — bitte nachsehen"],
+  ["h", "⚠ Entwicklungsfassung, bitte nachsehen"],
   ["p", ["MASCHERA ist noch nicht fertig, und das Modell ist es nie: es "
        + "kann Personendaten ", ["b", "übersehen"], ". Sieh dir den "
-       + "maskierten Text an, ", ["b", "bevor"], " du ihn hinausgibst — "
-       + "das ist der einzige Handgriff, den dir kein Werkzeug abnimmt."]],
+       + "maskierten Text an, ", ["b", "bevor"], " du ihn hinausgibst. "
+       + "Das ist der einzige Handgriff, den dir kein Werkzeug abnimmt."]],
   ["p", ["Das Werkzeug ist offene Software. Wer einen Fehler findet oder "
        + "etwas beitragen möchte: der Quelltext steht im Menü unter ",
          ["b", "Quellcode auf GitHub"], "."]],
@@ -135,7 +135,7 @@ const HILFE_FR = [
 
   ["h", "Pourquoi rien ne sort"],
   ["p", "La détection se fait entièrement sur cet appareil. En "
-      + "fonctionnement, rien n’est téléchargé et rien n’est envoyé — ni "
+      + "fonctionnement, rien n’est téléchargé et rien n’est envoyé, ni "
       + "polices, ni icônes, ni statistiques. Sans connexion réseau, tout "
       + "fonctionne, sauf l’ouverture du service IA."],
   ["p", "Une exception, c’est toi qui la choisis : « Rechercher des mises à "
@@ -143,12 +143,12 @@ const HILFE_FR = [
       + "version la plus récente. Rien n’est envoyé, et sans ce clic "
       + "MASCHERA ne demande jamais."],
   ["p", "Selon le paquet, le modèle y est déjà, ou il est récupéré une "
-      + "seule fois au premier démarrage — d’une source nommée, avec une "
+      + "seule fois au premier démarrage : d’une source nommée, avec une "
       + "somme de contrôle, et seulement après ton accord. Tu peux aussi "
       + "refuser et le faire plus tard. Ensuite il reste ici."],
   ["p", ["MASCHERA n’a aucun point d’accès qui expédie du texte, et il n’y "
        + "en aura pas. La sortie passe toujours par ton presse-papiers : "
-       + "tu copies, tu colles. Ce qui sort reste ainsi visible — la zone ",
+       + "tu copies, tu colles. Ce qui sort reste ainsi visible. La zone ",
          ["b", "03 Prompt"], " montre exactement le texte qui parvient au "
        + "service et en compte les caractères."]],
   ["p", "N’est écrit que ce que tu enregistres expressément : tes règles, "
@@ -158,39 +158,39 @@ const HILFE_FR = [
   ["h", "Le parcours dans la fenêtre"],
   ["tab", [
     ["01 Texte original",
-     ["Coller du texte, l’écrire ou y glisser un fichier — txt, md, csv, "
-    + "json, eml, msg, mbox, pdf, docx. Puis ", ["b", "Masquer"], ". "
+     ["Coller du texte, l’écrire ou y glisser un fichier (txt, md, csv, "
+    + "json, eml, msg, mbox, pdf, docx). Puis ", ["b", "Masquer"], ". "
     + "Au plus {mb} Mo par fichier ; la durée dépend de la longueur du "
-    + "texte et non de la taille du fichier — environ 100 pages "
+    + "texte et non de la taille du fichier. Environ 100 pages "
     + "(300 000 caractères) prennent à peu près une minute."]],
     ["02 Masqué",
      ["Le résultat. Chaque marqueur est coloré ; un clic droit dessus le "
     + "modifie ou le retire. Un clic droit sur du texte ordinaire le "
     + "masque après coup. ", ["b", "Modifier"],
-      " ouvre le texte à la correction manuelle — en laissant les "
+      " ouvre le texte à la correction manuelle, en laissant les "
     + "marqueurs en place."]],
     ["03 Prompt",
      ["Ta question à l’outil IA. En dessous s’affiche ce qui sort "
-    + "réellement. Le liseré rouge signifie : à partir d’ici, cela quitte "
+    + "réellement. La zone orange en pointillés signifie : à partir d’ici, cela quitte "
     + "l’appareil. ", ["b", "Copier"], " met le tout dans le "
     + "presse-papiers et ouvre le service choisi."]],
   ]],
 
   // ⚠️ Der Bruch zwischen 03 und 04 ist der einzige Moment,
   // in dem der Anwender das Werkzeug verlaesst.
-  ["rot", "À partir d’ici, tu travailles toi-même en ligne. Emporte le prompt vers le service d’IA, travaille là-bas jusqu’à ce que le résultat te convienne — puis reviens ici avec la réponse."],
+  ["rot", "À partir d’ici, tu travailles toi-même en ligne. Emporte le prompt vers le service d’IA, travaille là-bas jusqu’à ce que le résultat te convienne, puis reviens ici avec la réponse."],
 
   ["tab", [
     ["04 Réponse", "Coller ici la réponse du service."],
     ["05 Texte final",
      [["b", "Appliquer le vocabulaire"], " remet tes données réelles en "
-    + "place — via le vocabulaire."]],
+    + "place, via le vocabulaire."]],
   ]],
 
   ["h", "Le vocabulaire"],
   ["p", ["Il retient quel marqueur correspond à quelle valeur et ne vit "
        + "que dans la fenêtre du navigateur. Qui le perd ne pourra plus "
-       + "jamais rétablir le texte — d’où le bouton ",
+       + "jamais rétablir le texte. D’où le bouton ",
          ["b", "Télécharger"], ". Le fichier contient les valeurs réelles "
        + "en clair : sa place est là où se trouve aussi l’original."]],
 
@@ -201,7 +201,7 @@ const HILFE_FR = [
       + "personne."],
   ["p", "À l’inverse, un résultat vide n’est pas un feu vert. Un PDF "
       + "scanné sans couche de texte est refusé au lieu d’être déclaré "
-      + "« propre » — là, il n’y a rien à reconnaître, et non rien à "
+      + "« propre ». Là, il n’y a rien à reconnaître, et non rien à "
       + "trouver."],
 
   ["h", "Règles personnelles"],
@@ -213,16 +213,16 @@ const HILFE_FR = [
        + "valeurs restent dans la langue de tes documents."]],
 
   ["h", "Pseudonymisation, pas anonymisation"],
-  ["p", ["Via le vocabulaire, chaque masquage est réversible — et c’est "
+  ["p", ["Via le vocabulaire, chaque masquage est réversible, et c’est "
        + "précisément ce qui rend l’outil utilisable. D’où le bouton ",
          ["b", "Masquer"], ". Un texte masqué n’est pas un texte anonyme : "
        + "tant que le vocabulaire existe, le lien avec la personne peut "
        + "être rétabli."]],
-  ["h", "⚠ Version de développement — vérifiez"],
+  ["h", "⚠ Version de développement, vérifiez"],
   ["p", ["MASCHERA n’est pas terminé, et le modèle ne le sera jamais : il "
        + "peut ", ["b", "passer à côté"], " de données personnelles. "
-       + "Relisez le texte masqué ", ["b", "avant"], " de le transmettre — "
-       + "c’est le seul geste qu’aucun outil ne fera à ta place."]],
+       + "Relisez le texte masqué ", ["b", "avant"], " de le transmettre. "
+       + "C’est le seul geste qu’aucun outil ne fera à ta place."]],
   ["p", ["L’outil est un logiciel libre. Qui trouve une erreur ou veut "
        + "contribuer : le code source est au menu sous ",
          ["b", "Code source sur GitHub"], "."]],
@@ -236,19 +236,19 @@ const HILFE_IT = [
 
   ["h", "Perché non esce nulla"],
   ["p", "Il riconoscimento avviene interamente su questo dispositivo. "
-      + "Durante l’uso non viene scaricato né inviato nulla — nemmeno "
+      + "Durante l’uso non viene scaricato né inviato nulla, nemmeno "
       + "caratteri, icone o statistiche. Senza connessione di rete "
       + "funziona tutto, tranne l’apertura del servizio IA."],
   ["p", "Un’eccezione la scegli tu: «Cerca aggiornamenti» nel menu chiede una "
       + "volta a GitHub il numero della versione più recente. Non viene "
       + "inviato nulla, e senza questo clic MASCHERA non chiede mai."],
   ["p", "A seconda del pacchetto il modello è già incluso, oppure viene "
-      + "scaricato una sola volta al primo avvio — da una fonte indicata, "
+      + "scaricato una sola volta al primo avvio: da una fonte indicata, "
       + "con somma di controllo, e solo dopo il tuo consenso. Puoi anche "
       + "rifiutare e farlo più tardi. Dopodiché resta qui."],
   ["p", ["In MASCHERA non esiste alcun endpoint che spedisca testo, e non "
        + "ci sarà. La via verso l’esterno passa sempre dagli appunti: tu "
-       + "copi, tu incolli. Così resta visibile ciò che esce — l’area ",
+       + "copi, tu incolli. Così resta visibile ciò che esce. L’area ",
          ["b", "03 Prompt"], " mostra esattamente il testo che raggiunge "
        + "il servizio e ne conta i caratteri."]],
   ["p", "Viene scritto solo ciò che salvi espressamente: le tue regole, i "
@@ -258,39 +258,39 @@ const HILFE_IT = [
   ["h", "Il percorso nella finestra"],
   ["tab", [
     ["01 Testo originale",
-     ["Incollare il testo, scriverlo o trascinarvi un file — txt, md, csv, "
-    + "json, eml, msg, mbox, pdf, docx. Poi ", ["b", "Maschera"], ". "
+     ["Incollare il testo, scriverlo o trascinarvi un file (txt, md, csv, "
+    + "json, eml, msg, mbox, pdf, docx). Poi ", ["b", "Maschera"], ". "
     + "Al massimo {mb} MB per file; la durata dipende dalla lunghezza "
-    + "del testo e non dalla dimensione del file — circa 100 pagine "
+    + "del testo e non dalla dimensione del file. Circa 100 pagine "
     + "(300 000 caratteri) richiedono circa un minuto."]],
     ["02 Mascherato",
      ["Il risultato. Ogni segnaposto è colorato; un clic destro lo cambia "
     + "o lo rimuove. Un clic destro su testo normale lo maschera a "
     + "posteriori. ", ["b", "Modifica"],
-      " apre il testo alla correzione a mano — lasciando i segnaposto al "
+      " apre il testo alla correzione a mano, lasciando i segnaposto al "
     + "loro posto."]],
     ["03 Prompt",
      ["La tua domanda allo strumento IA. Sotto si vede ciò che esce "
-    + "davvero. Il bordo rosso significa: da qui in poi lascia il "
+    + "davvero. La zona arancione tratteggiata significa: da qui in poi lascia il "
     + "dispositivo. ", ["b", "Copia"], " mette tutto negli appunti e apre "
     + "il servizio scelto."]],
   ]],
 
   // ⚠️ Der Bruch zwischen 03 und 04 ist der einzige Moment,
   // in dem der Anwender das Werkzeug verlaesst.
-  ["rot", "Da qui in poi lavori tu stesso online. Porta il prompt al servizio di IA, lavora lì finché il risultato non ti soddisfa — poi torna qui con la risposta."],
+  ["rot", "Da qui in poi lavori tu stesso online. Porta il prompt al servizio di IA, lavora lì finché il risultato non ti soddisfa, poi torna qui con la risposta."],
 
   ["tab", [
     ["04 Risposta", "Incollare qui la risposta del servizio."],
     ["05 Testo finale",
-     [["b", "Applica il vocabolario"], " reinserisce i tuoi dati reali — "
+     [["b", "Applica il vocabolario"], " reinserisce i tuoi dati reali, "
     + "tramite il vocabolario."]],
   ]],
 
   ["h", "Il vocabolario"],
   ["p", ["Tiene nota di quale segnaposto sta per quale valore e vive solo "
        + "nella finestra del browser. Chi lo perde non potrà mai più "
-       + "ripristinare il testo — per questo il pulsante ",
+       + "ripristinare il testo. Per questo il pulsante ",
          ["b", "Scarica"], ". Il file contiene i valori reali in chiaro: "
        + "va tenuto dove sta anche l’originale."]],
 
@@ -301,7 +301,7 @@ const HILFE_IT = [
       + "costa i dati di una persona."],
   ["p", "Al contrario, un esito vuoto non è un via libera. Un PDF "
       + "scansionato senza livello di testo viene respinto invece di "
-      + "essere dichiarato «pulito» — lì non c’è nulla da riconoscere, "
+      + "essere dichiarato «pulito». Lì non c’è nulla da riconoscere, "
       + "non nulla da trovare."],
 
   ["h", "Regole proprie"],
@@ -313,15 +313,15 @@ const HILFE_IT = [
        + "valori restano nella lingua dei tuoi documenti."]],
 
   ["h", "Pseudonimizzazione, non anonimizzazione"],
-  ["p", ["Tramite il vocabolario ogni mascheratura è reversibile — ed è "
+  ["p", ["Tramite il vocabolario ogni mascheratura è reversibile, ed è "
        + "proprio questo a rendere utile lo strumento. Per questo il "
        + "pulsante si chiama ", ["b", "Maschera"], ". Un testo mascherato "
        + "non è un testo anonimo: finché il vocabolario esiste, il legame "
        + "con la persona è ricostruibile."]],
-  ["h", "⚠ Versione in sviluppo — controlla"],
+  ["h", "⚠ Versione in sviluppo, controlla"],
   ["p", ["MASCHERA non è finito, e il modello non lo sarà mai: può ",
          ["b", "non riconoscere"], " dati personali. Rileggi il testo "
-       + "mascherato ", ["b", "prima"], " di consegnarlo — è l’unico gesto "
+       + "mascherato ", ["b", "prima"], " di consegnarlo. È l’unico gesto "
        + "che nessuno strumento può fare al posto tuo."]],
   ["p", ["Lo strumento è software libero. Chi trova un errore o vuole "
        + "contribuire: il codice sorgente è nel menu sotto ",
@@ -336,19 +336,19 @@ const HILFE_EN = [
 
   ["h", "Why nothing goes out"],
   ["p", "Detection runs entirely on this device. In operation nothing "
-      + "is fetched and nothing is sent — no fonts, no icons, no "
+      + "is fetched and nothing is sent: no fonts, no icons, no "
       + "statistics. Without a network connection everything works except "
       + "opening the AI service."],
   ["p", "One exception is yours to choose: “Check for updates” in the menu "
       + "asks GitHub once for the newest version number. Nothing is sent "
       + "along, and without that click MASCHERA never asks."],
   ["p", "Depending on the package the model is already inside, or it is "
-      + "fetched once on first start — from a named source, with a "
+      + "fetched once on first start: from a named source, with a "
       + "checksum, and only after you agree. You can also decline and do "
       + "it another time. After that it stays here."],
   ["p", ["MASCHERA has no endpoint that sends text, and there will not be "
        + "one. The way out always goes through your clipboard: you copy, "
-       + "you paste. What leaves stays visible that way — area ",
+       + "you paste. What leaves stays visible that way. Area ",
          ["b", "03 Prompt"], " shows exactly the text that reaches the "
        + "service, and counts its characters."]],
   ["p", "Only what you explicitly save is written: your rules, templates, "
@@ -358,38 +358,38 @@ const HILFE_EN = [
   ["h", "The way through the window"],
   ["tab", [
     ["01 Original text",
-     ["Paste text, type it, or drag a file in — txt, md, csv, json, eml, "
-    + "msg, mbox, pdf, docx. Then ", ["b", "Mask"], ". "
+     ["Paste text, type it, or drag a file in (txt, md, csv, json, eml, "
+    + "msg, mbox, pdf, docx). Then ", ["b", "Mask"], ". "
     + "At most {mb} MB per file; how long it takes depends on the text "
-    + "length, not the file size — about 100 pages (300,000 characters) "
+    + "length, not the file size. About 100 pages (300,000 characters) "
     + "take roughly a minute."]],
     ["02 Masked",
      ["The result. Every placeholder is coloured; a right-click changes or "
     + "removes it. A right-click on ordinary text masks it after the fact. ",
-      ["b", "Edit"], " opens the text for correction by hand — leave the "
+      ["b", "Edit"], " opens the text for correction by hand. Leave the "
     + "placeholders in place."]],
     ["03 Prompt",
      ["Your question to the AI tool. Below it stands what actually goes "
-    + "out. The red border means: from here on it leaves the device. ",
+    + "out. The dashed orange zone means: from here on it leaves the device. ",
       ["b", "Copy"], " puts both on the clipboard and opens the chosen "
     + "service."]],
   ]],
 
   // ⚠️ Der Bruch zwischen 03 und 04 ist der einzige Moment,
   // in dem der Anwender das Werkzeug verlaesst.
-  ["rot", "From here you work online yourself. Take the prompt to the AI service, work there until the result is right — then come back here with the answer."],
+  ["rot", "From here you work online yourself. Take the prompt to the AI service, work there until the result is right, then come back here with the answer."],
 
   ["tab", [
     ["04 Answer", "Paste the service’s answer here."],
     ["05 Final text",
-     [["b", "Apply vocabulary"], " puts your real data back in — through "
+     [["b", "Apply vocabulary"], " puts your real data back in, through "
     + "the vocabulary."]],
   ]],
 
   ["h", "The vocabulary"],
   ["p", ["It records which placeholder stands for which value, and lives "
        + "only in the browser window. Whoever loses it can never restore "
-       + "the text — hence the ", ["b", "Download"], " button. The file "
+       + "the text. Hence the ", ["b", "Download"], " button. The file "
        + "holds the real values in the clear: it belongs where the "
        + "original belongs."]],
 
@@ -399,8 +399,8 @@ const HILFE_EN = [
       + "replaced too many costs you a moment, one word missed costs a "
       + "person’s data."],
   ["p", "Conversely, an empty finding is not an all-clear. A scanned PDF "
-      + "without a text layer is refused rather than reported «clean» — "
-      + "there is nothing to recognise there, not nothing to find."],
+      + "without a text layer is refused rather than reported «clean». "
+      + "There is nothing to recognise there, not nothing to find."],
 
   ["h", "Own rules"],
   ["p", ["File numbers, case numbers, internal project names: what occurs "
@@ -411,15 +411,15 @@ const HILFE_EN = [
        + "language of your documents."]],
 
   ["h", "Pseudonymisation, not anonymisation"],
-  ["p", ["Through the vocabulary every masking is reversible — which is "
+  ["p", ["Through the vocabulary every masking is reversible, which is "
        + "exactly what makes the tool usable. Hence the button is called ",
          ["b", "Mask"], ". A masked text is not an anonymous text: as long "
        + "as the vocabulary exists, the link to the person can be "
        + "restored."]],
-  ["h", "⚠ Development version — please check"],
+  ["h", "⚠ Development version, please check"],
   ["p", ["MASCHERA is not finished, and the model never will be: it can ",
          ["b", "miss"], " personal data. Read the masked text ",
-         ["b", "before"], " you pass it on — that is the one step no tool "
+         ["b", "before"], " you pass it on. That is the one step no tool "
        + "can take for you."]],
   ["p", ["The tool is open software. If you find a fault or want to "
        + "contribute: the source code is in the menu under ",

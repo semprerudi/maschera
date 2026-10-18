@@ -578,7 +578,8 @@ for _rel in _verfolgt:
     for _z in (WURZEL / _rel).read_text(
             encoding="utf-8", errors="replace").splitlines():
         _mv = _re.search(r'(?:^\s*\w*ver(?:sion)?=|version=")'
-                         r'"?(\d+\.\d+\.\d+-?[A-Za-z]*)', _z)
+                         # Vorabteil mit Punkt (`2.0.0-test.1`, Teststufe)
+                         r'"?(\d+\.\d+\.\d+-?[A-Za-z]*(?:\.\d+)?)', _z)
         if not _mv:
             continue
         _verkuendet += 1

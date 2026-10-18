@@ -723,7 +723,11 @@ print("\n22. Knoepfe, Kaesten und Fenster tragen EINE Rundung")
 import re as _re22
 _css22 = _re22.sub(r"/\*.*?\*/", "", (WURZEL / "app" / "static" /
                    "maschera.css").read_text(encoding="utf-8"), flags=_re22.S)
-_erlaubt22 = {"var(--radius-md)", "999px", "50%", "0"}
+# Seit 2.0 drei weitere, alle als Marke: Karte (12px), Feld (8px) und
+# Pille (6px) des Entwurfs. Eine Zahl im Regelblock bleibt verboten.
+_erlaubt22 = {"var(--radius-md)", "var(--radius-karte)", "var(--radius-feld)",
+              "var(--radius-pille)",
+              "999px", "50%", "0"}
 _marke22 = _re22.search(r"--radius-md:\s*([^;]+);", _css22)
 check(_marke22 and _marke22.group(1).strip() == "4px",
       "`--radius-md` ist nicht 4px — die Rundung der Feldknoepfe")

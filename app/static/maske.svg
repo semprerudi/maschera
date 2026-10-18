@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1278 1506"
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-38 -38 1354 1582"
      role="img" aria-label="MASCHERA">
 <!-- Die Maske von MASCHERA. Eine Quelle fuer alle vier Stellen: Favicon,
      Kopfzeile, Startbildschirm und das AppImage-Symbol.
@@ -11,10 +11,15 @@
      ⚠️ Keine Adresse nach aussen — `tests/test_app.py` Punkt 6 prueft
      jede ausgelieferte `.svg` mit. Der DOCTYPE-Verweis von potrace auf
      w3.org ist deshalb entfernt; er lud nichts, stand aber im Text. -->
-<!-- DUNKLER GRUND (seit 17.10.2026). Der dunkle Rand verschwand auf schwarzem
-     Grund, und uebrig blieb ein grell weisser Fleck mit einem feinen hellen
-     Saum. Im Dunkeln tragen Flaeche UND Rand das gebrochene Weiss der
-     Schrift (Variable color-text); Brauen, Augen und Mund bleiben dunkel.
+<!-- DUNKLER GRUND (seit 17.10.2026, geaendert 18.10.2026). Auf schwarzem
+     Grund verschwand der dunkle Rand, und an der Kante blieb ein feiner
+     heller Saum. Im Dunkeln bekommt die Maske deshalb einen BEWUSSTEN
+     schmalen weissen Saum — dasselbe Bild wie das Programmsymbol
+     (`core/symbol.py`), auf Wunsch des Anwenders «ueberall im dunklen
+     Design». Hell bleibt sie ohne Saum.
+
+     Die viewBox laesst ringsum 38 Einheiten frei (3 % der Breite), damit der
+     Saum nicht abgeschnitten wird.
 
      Drei Wege dorthin, damit es EINE Datei bleibt:
        - `prefers-color-scheme` — Favicon, und jedes Bild bei «automatisch»
@@ -26,17 +31,14 @@
      Die Klassen tragen den Vorsatz `maske-`, weil sie eingesetzt in der
      ganzen Seite gelten. -->
 <style>
+.maske-flaeche { stroke-width: 767; stroke-linejoin: round; }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-thema="hell"]) .maske-flaeche,
-  :root:not([data-thema="hell"]) .maske-rand { fill: #ece9e3; }
+  :root:not([data-thema="hell"]) .maske-flaeche { stroke: #ffffff; }
 }
 :root[data-thema="dunkel"] .maske-flaeche,
-:root[data-thema="dunkel"] .maske-rand,
-#dunkel:target .maske-flaeche, #dunkel:target .maske-rand { fill: #ece9e3; }
+#dunkel:target .maske-flaeche { stroke: #ffffff; }
 :root[data-thema="hell"] .maske-flaeche,
-#hell:target .maske-flaeche { fill: #ffffff; }
-:root[data-thema="hell"] .maske-rand,
-#hell:target .maske-rand { fill: #1d1f20; }
+#hell:target .maske-flaeche { stroke: none; }
 </style>
 <g id="hell"><g id="dunkel">
 <g transform="translate(0,1506) scale(0.1,-0.1)" fill="#1d1f20">

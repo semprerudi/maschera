@@ -269,9 +269,6 @@ def ablauf(seite, sprache: str, bis: str):
     Dienstmenue). Gibt den Kasten der Spalte 02 zurueck.
     """
     seite.click(f"[data-sprache='{sprache}']")
-    # Drei Spalten von Anfang an — sonst klappt die dritte erst mit der
-    # Uebernahme auf, und 01 und 02 sind doppelt breit.
-    seite.click("#knopf-ausklappen")
     seite.wait_for_selector("#knopf-beispiel:not([disabled])")
     seite.click("#knopf-beispiel")
     seite.wait_for_selector("#knopf-maskieren:not([disabled])")

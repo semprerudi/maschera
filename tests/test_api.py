@@ -219,6 +219,13 @@ check("andrea.bruelhart@example.ch" in d4["maskiert"],
 mail = [s for s in d4["spans"] if s["tag"] == "EMAIL"]
 check(mail and mail[0]["platzhalter"] is None,
       "nicht ersetztes Tag traegt einen Platzhalter")
+# Seit 2.0: die Spanne sagt selbst, dass sie bewusst im Klartext bleibt —
+# 02 rahmt sie hellgrau. `platzhalter: null` allein reicht dafuer nicht, das
+# gilt auch bei `"woerterbuch": false` (Abschnitt 5).
+check(mail and mail[0].get("klartext") is True,
+      "Klartext-Spanne traegt nicht `klartext: true`")
+check(all(sp.get("klartext") is False for sp in d3["spans"]),
+      "ohne Woerterbuch gilt eine ersetzte Spanne als Klartext")
 r = c.post("/api/anonymisieren", json={"text": TEXT, "ohne": ["NATIONALITY"]})
 check(r.status_code == 400,
       "bsPD im Klartext ohne auch_bspd durchgelassen")
@@ -945,7 +952,7 @@ check(not _fehlt,
 # waere der zwoelfte Verwalter dieses Projekts.
 _abweichend = {"adresse": "127.0.0.2", "port": 9001, "eigenes_fenster": False,
                "dienst": "eigen", "schriftgroesse": 125, "schriftart": "serif",
-               "schrift_ueberall": True, "sprache": "it", "tray": False,
+               "sprache": "it", "tray": False,
                "fenstermodus": "voll", "thema": "dunkel",
                "dienste": [{"id": "eigen", "name": "Eigene KI",
                             "url": "https://ki.example.ch"}]}
@@ -1034,6 +1041,18 @@ for _m in _modi:
 _serve = (WURZEL / "app" / "serve.py").read_text(encoding="utf-8")
 check('"automatisch"' not in _serve,
       "serve.py schreibt die Themenliste ein zweites Mal aus")
+# Eine abgeloeste Schrift in einer alten Einstellungsdatei wird umgesetzt,
+# nicht abgewiesen: abgewiesen fiele `lade()` auf die GANZE Vorgabe zurueck,
+# und Dienste, Port und Sprache waeren mit weg.
+try:
+    # Dazu `schrift_ueberall`, das es bis 2.0 gab: wird uebergangen.
+    _alt = _E.pruefe({**_E.VORGABE, "schriftart": "sans", "sprache": "fr",
+                      "schrift_ueberall": True})
+except _E.Abgelehnt:
+    _alt = {}
+check(_alt.get("schriftart") == "werk" and _alt.get("sprache") == "fr",
+      "alte Schrift «sans» wird abgewiesen statt umgesetzt — lade() verwirft "
+      "dann alle Einstellungen")
 if not failures:
     print(f"   OK   {len(_E.THEMEN)}+{len(_E.SCHRIFTEN)}+{len(_modi)} "
           "Eintraege, je ein Verwalter")
@@ -1192,7 +1211,7 @@ _erlaubt = {e.lstrip(".") for e in _dok.ALLE if e}
 # eine Sprache fehlt.
 _seiten = _re.sub(r'"\s*\+\s*"', "", _seiten_roh)
 
-_zeilen = _re.findall(r"txt, md, csv, json, ([a-z, ]+?)\.", _seiten)
+_zeilen = _re.findall(r"txt, md, csv, json, ([a-z, ]+?)\)?\.", _seiten)
 check(len(_zeilen) == 4,
       f"{len(_zeilen)} Formatzeilen in seiten.js, genau vier erwartet — "
       "eine Sprache nennt andere Formate oder gar keine")
@@ -1387,6 +1406,48 @@ else:
     einstellungen.PFAD.write_text(_alt27, encoding="utf-8")
 if not failures:
     print("   OK   PUT [] -> 400 dienste_leer; lade() behaelt die uebrigen Werte")
+
+
+print("\n28. Eine Testfassung liegt VOR der gleichnamigen fertigen")
+# Teststufe (18.10.2026): wer `3.1.4-test.2` faehrt, soll `3.1.4` angeboten
+# bekommen, aber nicht `2.9.9`.
+from core import neueste as _n28  # noqa: E402
+for _neu28, _alt28, _soll28 in (("3.1.4", "3.1.4-test.2", True),
+                                ("2.9.9", "3.1.4-test.2", False),
+                                ("3.1.4-test.2", "3.1.4-test.2", False),
+                                ("3.1.4-test.2", "3.1.4", False),
+                                ("3.1.5", "3.1.4", True)):
+    check(_n28.ist_neuer(_neu28, _alt28) is _soll28,
+          f"ist_neuer({_neu28!r}, {_alt28!r}) ist nicht {_soll28}")
+check(_n28.nachsehen(lambda _a: b'{"tag_name": "v3.1.4-test.2"}')
+      == "3.1.4-test.2", "der Vorabteil geht beim Lesen verloren")
+if not failures:
+    print("   OK   Vorabfassung vor fertiger, Vorabteil bleibt erhalten")
+
+
+print("\n29. Das GitHub-Abfragelimit heisst nicht «nicht erreichbar»")
+# Gemessen am 17.10.2026: 0 von 60 Abfragen, GitHub antwortet 403 mit
+# `X-RateLimit-Remaining: 0`, und die App sagte «nicht erreichbar» — bei
+# laufendem Netz.
+import urllib.error as _ue29  # noqa: E402
+def _wirft29(code, rest):
+    def holen(_a):
+        raise _ue29.HTTPError(_n28.ADRESSE, code, "x",
+                              {"X-RateLimit-Remaining": rest} if rest is not None else {}, None)
+    return holen
+for _code29, _rest29, _soll29 in ((403, "0", "neueste_begrenzt"),
+                                  (429, None, "neueste_begrenzt"),
+                                  (403, None, "neueste_nicht_erreichbar"),
+                                  (500, None, "neueste_nicht_erreichbar")):
+    app.config["NEUESTE_HOLEN"] = _wirft29(_code29, _rest29)
+    _r29 = c.post("/api/neueste")
+    check(_r29.status_code == 503
+          and (_r29.get_json() or {}).get("fehler_schluessel") == _soll29,
+          f"HTTP {_code29} (Rest {_rest29}): {_r29.status_code} "
+          f"{(_r29.get_json() or {}).get('fehler_schluessel')} statt {_soll29}")
+app.config.pop("NEUESTE_HOLEN", None)
+if not failures:
+    print("   OK   403 mit Rest 0 und 429 → begrenzt; anderes 403/500 → nicht erreichbar")
 
 print()
 if failures:

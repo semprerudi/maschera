@@ -44,6 +44,15 @@ if test (count $rest) -gt 0
     echo "  "(count $rest)" weitere Zeile(n) unveraendert erhalten"
 end
 
+# ⚠️ EIN TESTBAU BEKOMMT KEINEN GHCR-NAMEN (`--test`, seit 18.10.2026).
+# Sonst truege das Abbild der Teststufe lokal `ghcr…:latest`, und das
+# naechste `docker push …:latest` veroeffentlichte einen Testbau.
+if contains -- --test $argv
+    docker images maschera:$FASSUNG --format '  {{.Repository}}:{{.Tag}}  {{.Size}}'
+    echo "  Testbau — ohne GHCR-Namen"
+    exit 0
+end
+
 # Derselbe Bau unter dem Namen, unter dem er auf GitHub liegt. Nur ein
 # zweiter Name, kein zweites Abbild — hochgeladen wird er erst auf
 # ausdrueckliches «Los» (`docker push`, von Hand).

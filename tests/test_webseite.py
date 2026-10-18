@@ -72,7 +72,9 @@ for _u in _geladen:
 # vier Dateien an, die es nicht geben muss.
 _css_code = re.sub(r"/\*.*?\*/", "", CSS, flags=re.S)
 for _u in re.findall(r'url\(\s*["\']?([^"\')]+)["\']?\s*\)', _css_code):
-    check((SITE / _u).is_file(), f"stil.css verweist auf {_u} — fehlt")
+    # Ein Sprungziel (`maske.svg#dunkel`) ist kein Teil des Dateinamens.
+    _datei = _u.split("#", 1)[0]
+    check((SITE / _datei).is_file(), f"stil.css verweist auf {_u} — fehlt")
 # Die Bilder liegen je Sprache unter `bilder/<sprache>/<name>.png`, das
 # dunkle Gegenstueck mit Endung `-dunkel`. Das HTML nennt die deutschen;
 # `sprachen.js` waehlt den Ordner zur Sprache.

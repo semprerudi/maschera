@@ -74,6 +74,11 @@
   </div>
 </header>
 
+<!-- Steps (since 2.0, UX design): filled by maschera.js, follow the work
+     and jump to the tile on click. -->
+<nav class="schritte" id="schritte" aria-label="Ablauf"></nav>
+
+
 <main class="raster" id="raster">
 
   <!-- ===== Column 1: 01 original text / 05 final text ===== -->
@@ -92,7 +97,7 @@
         <span class="bereich-zahl" id="zahl-01">0 Zeichen</span>
       </div>
       <label class="ablage" id="ablage">
-        <span id="ablage-text">PDF, DOCX, TXT oder Mail hierher ziehen —
+        <span id="ablage-text">PDF, DOCX, TXT oder Mail hierher ziehen,
           oder klicken</span>
         <input type="file" id="datei"
                accept=".pdf,.docx,.txt,.md,.log,.csv,.json,.eml,.msg,.mbox">
@@ -185,16 +190,17 @@
             d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
           <span id="final-kopieren-text">Finalisierten Text kopieren</span>
         </button>
-        <!-- Stacked view only: the way back to the top from the end of the flow. -->
-        <button class="tat neu-unten" id="knopf-neu-unten">
-          <svg class="rand-r-schmal" width="15" height="15" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-            stroke-linejoin="round"><path
-            d="M12 5v14"/><path d="M5 12h14"/></svg><span
-            id="neu-unten-text">Neu</span>
-        </button>
       </div>
     </div>
+    <!-- Stacked view only: the way back to the top from the end of the flow.
+         Outside tile 05: starting over is not part of the final text. -->
+    <button class="tat neu-unten" id="knopf-neu-unten">
+      <svg class="rand-r-schmal" width="15" height="15" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+        stroke-linejoin="round"><path
+        d="M12 5v14"/><path d="M5 12h14"/></svg><span
+        id="neu-unten-text">Neu</span>
+    </button>
   </div>
 
   <!-- ===== Column 2: 02 masked / vocabulary ===== -->
@@ -226,11 +232,24 @@
         <textarea id="antwortfeld" spellcheck="false" autocomplete="off"
           hidden placeholder="Antwort deines KI-Werkzeugs hier einfügen …"></textarea>
         <div class="feldknoepfe">
-        <button class="imfeld bearbeiten" id="knopf-bearbeiten" disabled>
+        <!-- Way back only: empties the pasted answer, nothing else. -->
+        <button class="imfeld nurbild loeschen" id="knopf-leeren-rueck" hidden>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/>
+            <path d="M19 6l-1 14H6L5 6"/></svg>
+        </button>
+        <button class="imfeld bearbeiten" id="knopf-bearbeiten" disabled>
+          <svg class="zeichen-stift" width="12" height="12" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round"><path d="M12 20h9"/>
             <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          <!-- «Done» while editing: the same floppy as saving a template. -->
+          <svg class="zeichen-diskette" width="12" height="12" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round"><path
+            d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/>
+            <path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
           <span id="bearbeiten-text">Bearbeiten</span>
         </button>
         <button class="imfeld" id="knopf-herunter-mask" disabled>
@@ -321,25 +340,16 @@
           <span class="bereich-nr">03</span>
           <span class="bereich-titel" id="titel-03">Prompt</span>
         </div>
-        <button class="einklappen" id="knopf-einklappen">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round"><path d="M3 4v16"/><path d="M9 12h12"/>
-            <path d="m15 6 6 6-6 6"/></svg><span
-            id="einklappen-text">Einklappen</span>
-        </button>
       </div>
       <div class="drei-rumpf">
         <div class="teil">
           <div class="teil-kopf">
             <span class="teil-titel" id="titel-prompt">Prompt</span>
             <div class="vorlagenzeile">
-              <span class="vorlagen-lokal" id="vorlagen-lokal">Vorlagen
-                (lokal gespeichert)</span>
               <div class="vorlagenwahl">
                 <button class="ghostknopf klein" id="knopf-vorlagen"
                         aria-expanded="false" aria-haspopup="listbox">
-                  <span id="vorlagen-anzeige">Vorlage wählen</span>
+                  <span id="vorlagen-anzeige">Lokale Vorlage wählen</span>
                   <span class="pfeil" aria-hidden="true"><svg width="14"
                     height="14" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2.2"
@@ -405,16 +415,11 @@
         </div>
       </div>
       <div class="fuss fuss-03">
-        <!-- The online notice sits at the button, where data actually leaves. -->
-        <!-- Exclamation in a circle, chosen over the triangle: the red
-           already says "careful", so the sign says what happens, not how
-           to feel about it. Size lives in the stylesheet, in rem. -->
+        <!-- Since 2.0: the zone notice sits at the button, where data
+             actually leaves — "Leaves your device", the long sentence as
+             tooltip. Replaces the exclamation sign and the zone bar. -->
         <p class="onlinewarnung" id="onlinewarnung">
-          <svg viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-            stroke-linejoin="round" aria-hidden="true"><circle cx="12"
-            cy="12" r="9"/><path d="M12 7v6"/><path
-            d="M12 17h.01"/></svg><span id="onlinewarnung-text"></span>
+          <i aria-hidden="true"></i><span id="onlinewarnung-text"></span>
         </p>
         <div class="sendegruppe">
           <button class="tat senden" id="knopf-senden" disabled>
@@ -476,16 +481,6 @@
     </div>
   </div>
 
-  <!-- Third column, collapsed. -->
-  <section class="schiene" id="schiene" title="Ausklappen">
-    <button type="button" id="knopf-ausklappen">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round"
-        stroke-linejoin="round"><path d="M21 4v16"/><path d="M15 12H3"/>
-        <path d="m9 6-6 6 6 6"/></svg>
-    </button>
-    <div class="senkrecht" id="schiene-text">03 · Prompt</div>
-  </section>
 
 </main>
 
@@ -576,7 +571,7 @@
       <section class="einst-teil" id="teil-server" hidden>
         <h3 id="einst-server-titel">Server</h3>
         <p class="einst-hilfe" id="einst-server-hilfe">Adresse und Port des
-          lokalen Maskierdienstes. Der Text verlässt dein Gerät nicht — die
+          lokalen Maskierdienstes. Der Text verlässt dein Gerät nicht. Die
           Prüfung zeigt, ob der Dienst antwortet.</p>
         <div class="einst-zeile">
           <label class="feld">
@@ -599,21 +594,24 @@
 
       <section class="einst-teil">
         <h3 id="einst-dienste-titel">Dienste</h3>
-        <p class="einst-hilfe" id="einst-dienste-hilfe">Der Web-Link wird beim
-          Kopieren geöffnet.</p>
+        <p class="einst-hilfe" id="einst-dienste-hilfe">Diese Dienste stehen
+          im Menü neben dem Sendeknopf. Beim Kopieren öffnet MASCHERA die
+          Adresse des gewählten Dienstes. Der zuletzt gewählte bleibt auch
+          für künftige Sitzungen gespeichert.</p>
         <div id="einst-dienste"></div>
         <p class="einst-befund" id="einst-dienste-befund"></p>
-        <!-- The window switch belongs with the services it applies to. -->
         <div class="einst-zeile">
           <button class="tat" id="knopf-dienst-neu">
             <span id="dienst-neu-text">Hinzufügen</span>
           </button>
-          <label class="einst-schalterzeile" id="zeile-fenster">
-            <button class="schalter" id="schalter-fenster" role="switch"
-                    aria-checked="true"><i></i></button>
-            <span id="fenster-wort">In eigenem Fenster öffnen</span>
-          </label>
         </div>
+        <!-- The window switch belongs with the services it applies to, on a
+             line of its own under «Add». -->
+        <label class="einst-schalterzeile fenster-eigen" id="zeile-fenster">
+          <button class="schalter" id="schalter-fenster" role="switch"
+                  aria-checked="true"><i></i></button>
+          <span id="fenster-wort">Dienste in neuem Fenster öffnen statt im Reiter</span>
+        </label>
       </section>
 
       <!-- Appearance. Unlike the window switches above, this applies in
@@ -646,7 +644,7 @@
       <section class="einst-teil">
         <h3 id="einst-schrift-titel">Schrift</h3>
         <p class="einst-hilfe" id="einst-schrift-hilfe">Gilt für die
-          Textflächen — Originaltext, maskierter Text, Prompt und Antwort.</p>
+          Textflächen: Originaltext, maskierter Text, Prompt und Antwort.</p>
         <div class="einst-zeile">
           <label class="feld">
             <span id="einst-schriftart-etikett">Schriftart</span>
@@ -654,8 +652,7 @@
                labelling. The families repeat SCHRIFTEN in maschera.js;
                test_api point 21 holds the two together. -->
             <select id="einst-schriftart" class="schriftwahl">
-              <option value="werk">Barlow</option>
-              <option value="sans" id="schriftart-sans">Serifenlos</option>
+              <option value="werk">IBM Plex</option>
               <option value="serif" id="schriftart-serif">Serifen</option>
               <option value="mono" id="schriftart-mono">Feste Breite</option>
             </select>
@@ -675,17 +672,14 @@
           <span class="schriftprobe" id="einst-schriftprobe">Sehr geehrte
             Damen und Herren</span>
         </div>
-        <label class="einst-haken">
-          <input type="checkbox" id="einst-schrift-ueberall">
-          <span id="einst-schrift-ueberall-text">Auch für Knöpfe und
-            Beschriftungen</span>
-        </label>
       </section>
 
       <section class="einst-teil">
         <h3 id="einst-klartext-titel">Klartext-Tags</h3>
-        <p class="einst-hilfe" id="einst-klartext-hilfe">Diese Typen bleiben
-          dauerhaft im Klartext — erkannt, aber nicht ersetzt.</p>
+        <p class="einst-hilfe" id="einst-klartext-hilfe">Wähle die Typen,
+          die MASCHERA nie maskieren soll. Sie werden weiter erkannt,
+          bleiben im Text aber stehen. Das gilt für jedes Dokument, bis
+          du sie wieder abwählst.</p>
         <div class="tagliste" id="einst-tags"></div>
         <p class="einst-befund" id="einst-tags-befund"></p>
       </section>

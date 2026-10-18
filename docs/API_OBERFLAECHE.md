@@ -360,7 +360,7 @@ Adresse, Port, Dienste, Darstellung, Fensterschalter
 { "adresse": "127.0.0.1", "port": 4141, "eigenes_fenster": true,
   "dienst": "claude",              // der zuletzt gewählte
   "schriftgroesse": 100,           // 70 | 80 | 90 | 100 | 110 | 125 | 140
-  "schriftart": "werk",            // werk | sans | serif | mono
+  "schriftart": "werk",            // werk | serif | mono («sans» bis 2.0, wird zu werk)
   "sprache": "de",                 // de | fr | it | en
   "thema": "automatisch",          // automatisch | hell | dunkel
   "tray": true,                    // beim Schliessen in den Infobereich
@@ -454,6 +454,7 @@ Server (`core/neueste.py`) — die Anfrage kann keine eigene vorgeben.
 | Status | `fehler_schluessel` | Wann |
 |---|---|---|
 | 503 | `neueste_nicht_erreichbar` | kein Netz, oder der Server darf nicht hinaus (Docker) |
+| 503 | `neueste_begrenzt` | GitHub begrenzt die Abfragen (403 mit `X-RateLimit-Remaining: 0`, oder 429) — ohne Anmeldung 60 je Stunde und Adresse |
 | 502 | `neueste_unlesbar` | GitHub antwortet ohne lesbare Fassungsnummer |
 
 ⚠️ **Die zweite benannte Ausnahme von «kein Nachladen von aussen»** (die erste
@@ -478,6 +479,7 @@ prüft, dass `/api/senden` mit 404 antwortet.
 | | |
 |---|---|
 | **`platzhalter` ist `null`**, nicht `"—"` | bei `CANTON` und bei allem, was über `ohne` im Klartext bleibt. Auch bei `"woerterbuch": false` — dort entsteht keine Zuordnung. Der maskierte Text trägt die Nummer trotzdem |
+| **`klartext` je Spanne** (seit 2.0) | `true`, wenn das Tag erkannt, aber bewusst nicht ersetzt wird: über `ohne`, die gespeicherten Vorlieben oder weil es ohnehin im Klartext bleibt (`CANTON`). Unterscheidet diese Stellen von `platzhalter: null` bei `"woerterbuch": false`. Die Oberfläche rahmt sie in 02 hellgrau |
 | **`ohne` fehlt ganz ≠ `"ohne": []`** | fehlt das Feld, gelten die gespeicherten Klartext-Vorlieben, und die Antwort sagt es in `hinweise`. Steht es da, gilt genau das. Sonst wäre «diesmal wirklich alles maskieren» nicht ausdrückbar |
 | **`auch_bspd`** | ohne dieses Feld weist der Server `ohne: ["NATIONALITY"]` mit 400 ab. Besonders schützenswerte Personendaten dürfen nicht über einen Schalter im Klartext landen, den man einmal umlegt |
 | **`zurueckwandeln` hat `hinweise`** | steht `[FULLNAME_1]` im Wörterbuch und `[fullname_1]` im Text, wird **nicht** stillschweigend ersetzt, aber gemeldet. Stilles Beheben hiesse: der Server ersetzt etwas, das so nie vergeben wurde |

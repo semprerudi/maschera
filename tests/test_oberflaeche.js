@@ -584,12 +584,11 @@ setTimeout(async () => {
 console.log("1. Alle Knoepfe sind verdrahtet");
   for (const id of ["knopf-maskieren", "knopf-beispiel", "knopf-neu",
                     "knopf-kopieren", "knopf-kopieren-orig",
-                    "schalter-vokabular", "knopf-einklappen",
-                    "knopf-ausklappen"]) {
+                    "schalter-vokabular"]) {
     const o = document.getElementById(id);
     pruefe(o && (o._h.click || []).length > 0, `${id} hat keinen Horcher`);
   }
-  if (!fehler) console.log("   OK   8 Knoepfe");
+  if (!fehler) console.log("   OK   6 Knoepfe");
 
   console.log("2. Der Startbildschirm wird verborgen, nicht entfernt");
   // ⚠️ Wird der Startbildschirm entfernt statt versteckt, findet der
@@ -687,14 +686,24 @@ console.log("1. Alle Knoepfe sind verdrahtet");
          "Zwischenablage traegt nicht Prompt und Anhang");
   if (!fehler) console.log("   OK   " + geoeffnet.url + " als Fenster");
 
-  console.log("8. «Übernahme in Prompt» klappt Spalte 3 auf");
-  await feuer("knopf-beispiel");
-  await feuer("knopf-maskieren");
-  await new Promise((r) => setTimeout(r, 30));
-  spaltenOffen = false;
-  await feuer("knopf-uebernahme");
-  pruefe(spaltenOffen, "die dritte Spalte bleibt zu");
-  if (!fehler) console.log("   OK   aufgeklappt");
+  console.log("8. Spalte 3 ist immer da — kein Ein- und Ausklappen mehr");
+  // Seit 2.0 (Entwurf des UX-Architekten, Entscheid 18.10.2026): die dritte
+  // Spalte steht immer, wie im Entwurf. Schiene, Ein-/Ausklappknopf und die
+  // Klasse `drei` sind weg — nichts darf sie wieder einfuehren.
+  {
+    const html8 = fs.readFileSync(path.join(WURZEL, "app/static/index.html"), "utf8");
+    const js8 = fs.readFileSync(path.join(WURZEL, "app/static/maschera.js"), "utf8");
+    const css8 = fs.readFileSync(path.join(WURZEL, "app/static/maschera.css"), "utf8");
+    pruefe(!/id="(schiene|knopf-einklappen|knopf-ausklappen)"/.test(html8), "Schiene oder Klappknopf wieder im HTML");
+    pruefe(!/classList\.(add|remove|toggle)\("drei"/.test(js8), "das Skript klappt Spalte 3 wieder");
+    pruefe(!/body\.drei|body:not\(\.drei\)|\.schiene\b/.test(css8), "das Blatt kennt die Klappe wieder");
+    await feuer("knopf-beispiel");
+    await feuer("knopf-maskieren");
+    await new Promise((r) => setTimeout(r, 30));
+    await feuer("knopf-uebernahme");
+    pruefe(!spaltenOffen, "die Uebernahme setzt wieder `drei`");
+  }
+  if (!fehler) console.log("   OK   immer drei Spalten, keine Klappe");
 
   console.log("9. «Weg zurück» macht 02 zum Eingabefeld");
   // ⚠️ Wer die dritte Spalte nicht braucht — weil er selbst mit dem Text
@@ -900,8 +909,6 @@ console.log("1. Alle Knoepfe sind verdrahtet");
   // Der erste Durchlauf klappt, der zweite muss es auch.
   for (let i = 0; i < 5; i++) await feuer("knopf-beispiel");
   await feuer("knopf-neu");
-  await feuer("knopf-einklappen");
-  await feuer("knopf-ausklappen");
   if (!fehler) console.log("   OK   9 weitere Durchlaeufe");
 
   console.log("20. Das Vokabular ueberlebt einen Rundlauf");
@@ -1153,10 +1160,13 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     pruefe(suender.length === 0,
            `${suender.length} feste Groesse(n): ${suender.slice(0, 4).join(" | ")}`);
 
-    // Die Wortmarke und die Bereichstitel behalten ihre Schrift.
-    const fest = (CSS.match(/var\(--font-heading\)/g) || []).length;
-    pruefe(fest >= 4 && fest <= 6,
-           `${fest} Stellen mit fester Titelschrift, 4 bis 6 erwartet`);
+    // Die Wortmarke behaelt ihre Schrift — seit 2.0 als EINZIGE (Entscheid
+    // 18.10.2026: «Fonts aus dem neuen Designsystem ausser fuer das Logo»).
+    // Drei Stellen: Kopfzeile, Startbildschirm, Kopf der Einseiter.
+    const marke = (CSS.match(/font-family:\s*var\(--font-marke\)/g) || []).length;
+    pruefe(marke === 3, `${marke} Wortmarken in --font-marke, 3 erwartet`);
+    pruefe(/--font-marke:\s*"Barlow Condensed"/.test(CSS),
+           "die Wortmarke steht nicht mehr in Barlow Condensed");
     pruefe(/--skala/.test(CSS) && /calc\(100% \* var\(--skala\)\)/.test(CSS),
            "die Wurzelgroesse haengt nicht an --skala");
 
@@ -1979,7 +1989,7 @@ console.log("1. Alle Knoepfe sind verdrahtet");
            "die Klasse `gerollt` wirft keinen Schatten");
     // Die Fusszeile darf gestapelt nicht mehr am Fensterrand kleben.
     const gestapeltBlock = CSS.slice(CSS.indexOf(
-      "@media (max-width: 59.99em)"));
+      "@media (max-width: 81.24em)"));
     pruefe(/main\.raster\s*\{[^}]*overflow:\s*visible/.test(gestapeltBlock),
            "gestapelt rollt weiterhin das Raster — der Fuss bleibt kleben");
     // ⚠️ Ohne Stapelkontext liegt der Schatten UNTER dem Inhalt und ist
@@ -2190,37 +2200,27 @@ console.log("1. Alle Knoepfe sind verdrahtet");
   }
   if (!fehler) console.log("   OK   Wortgrenzen einig, Markierung gesetzt, drei Sinnbilder");
 
-  console.log("50. Der Onlinehinweis verschwindet nie ganz");
-  // ⚠️ Bei wenig Platz bleibt nur das Dreieck stehen. Der SATZ darf dabei
-  // nicht verlorengehen: er steht weiter im Text (`tests/test_app.py`
-  // Punkt 16 liest ihn dort) und zusaetzlich im Tooltip. Verborgen, nicht
-  // entfernt.
+  console.log("50. Der Hinweis am Sendeknopf ist immer sichtbar");
+  // Seit 2.0 (Feedback des Anwenders, 18.10.2026) steht am Knopf kurz
+  // «Verlaesst dein Geraet» — die Zone, die vorher als Leiste ueber der
+  // Spalte stand. Er wird NIE weggeklappt (vorher blieb eng nur ein Zeichen);
+  // der lange Satz mit dem Dienst steht als Tooltip, aus EINER Zeichenkette.
   {
     const js = fs.readFileSync(
       path.join(WURZEL, "app/static/maschera.js"), "utf8");
     pruefe(/\$\("onlinewarnung"\)\.title = warnsatz;/.test(js),
-           "der Satz steht nicht im Tooltip");
-    // ⚠️ DERSELBE Satz, kein zweiter Schluessel — sonst gaebe es zwei
-    // Fassungen einer Warnung, die auseinanderlaufen koennen.
+           "der lange Satz steht nicht im Tooltip");
     pruefe(/const warnsatz = s\.onlineWarnung\.replace/.test(js),
-           "Tooltip und Text kommen nicht aus derselben Zeichenkette");
-
+           "der Tooltip kommt nicht aus `onlineWarnung`");
+    pruefe(/\$\("onlinewarnung-text"\)\.textContent = s\.zoneHinaus;/.test(js),
+           "am Knopf steht nicht «Verlaesst dein Geraet»");
     const css = fs.readFileSync(
-      path.join(WURZEL, "app/static/maschera.css"), "utf8");
-    const block = css.slice(css.indexOf("@container fuss (max-width: 34rem)"));
-    pruefe(block.startsWith("@container fuss (max-width: 34rem)"),
-           "kein Umschaltpunkt fuer den Onlinehinweis");
-    const ende = block.indexOf("}\n}");
-    const regel = block.slice(0, ende);
-    pruefe(/#onlinewarnung-text/.test(regel),
-           "der Umschaltpunkt trifft nicht den Text");
-    // ⚠️ `display: none` waere falsch: der Satz muss im DOM UND fuer
-    // Vorlesegeraete erhalten bleiben. Weggeklappt wird er optisch.
-    pruefe(!/display:\s*none/.test(regel),
-           "der Satz wird entfernt statt verborgen");
-    pruefe(/clip-path/.test(regel), "der Satz wird nicht optisch weggeklappt");
+      path.join(WURZEL, "app/static/maschera.css"), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+    const regeln = [...css.matchAll(/#onlinewarnung-text\s*\{([^}]*)\}/g)].map((m) => m[1]).join(" ");
+    pruefe(!/clip-path|display:\s*none|width:\s*1px/.test(regeln),
+           "der Hinweis wird wieder weggeklappt");
   }
-  if (!fehler) console.log("   OK   Tooltip aus derselben Quelle, Satz bleibt im Text");
+  if (!fehler) console.log("   OK   immer sichtbar, Tooltip aus derselben Quelle");
 
   console.log("51. Die Hoehe misst, was auf dem Handy wirklich da ist");
   // ⚠️ Auf dem Handy muss die Fusszeile erreichbar bleiben. Klebt sie am
@@ -2264,7 +2264,7 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     // ⚠️ `.offen` selbst bleibt — es ist die rote Warnbox und traegt den
     // Rand zu Recht. Geprueft wird nur, dass sie ihn noch hat: faellt er
     // weg, war der Zusammenstoss doch nicht die Erklaerung.
-    pruefe(/\.offen \{\s*\n\s*flex: none; margin: 0 1rem/.test(css),
+    pruefe(/\.offen \{[^}]*border:\s*1px solid var\(--bx-kante-stark\)/.test(css),
            "die rote Warnbox hat ihren Rand verloren — dann stimmt die "
            + "Erklaerung von 8.6 nicht mehr");
   }
@@ -2497,12 +2497,14 @@ console.log("1. Alle Knoepfe sind verdrahtet");
              && /box-shadow:[^;]*var\(--fokus\)/.test(regel),
              "der aktive Rahmen traegt wieder eine feste Farbe");
       const spaltenFokus = (block.match(/--fokus:\s*([^;}]+)/) || [])[1];
-      pruefe(aufloesen(spaltenFokus) === "#8c2f22",
+      // Seit 2.0 in oklch und ohne festen Ton im Test: die Spalte setzt ihre
+      // kraeftige Kante, ohne Spalte gilt das Gruen.
+      pruefe(aufloesen(spaltenFokus) === aufloesen("var(--bx-kante-stark)"),
              "die rote Spalte setzt --fokus nicht auf ihren eigenen Ton, "
              + "sondern auf " + aufloesen(spaltenFokus));
       const wurzelFokus = (css.match(/:root\s*\{\s*--fokus:\s*([^;}]+)/)
                            || [])[1];
-      pruefe(aufloesen(wurzelFokus) === "#2f6b46",
+      pruefe(aufloesen(wurzelFokus) === aufloesen("var(--gr-flaeche)"),
              "ohne Spalte fehlt die gruene Vorgabe fuer --fokus");
     }
 
@@ -2522,13 +2524,15 @@ console.log("1. Alle Knoepfe sind verdrahtet");
                          "--bx-matt", "--bx-aus",
                          "--bx-kante", "--bx-kante2"]) {
       pruefe(wurzel[marke], "die Marke " + marke + " fehlt");
-      pruefe(!wurzel[marke] || /^#[0-9a-f]{6}$/i.test(aufloesen(wurzel[marke])),
+      pruefe(!wurzel[marke]
+             || /^(#[0-9a-f]{6}|oklch\([\d.]+ [\d.]+ [\d.]+\))$/i.test(aufloesen(wurzel[marke])),
              marke + " ist keine Farbe, sondern " + aufloesen(wurzel[marke]));
     }
     // ⚠️ Und die gruene Leiter daneben, nach derselben Bauart.
+    // Seit 2.0 ohne `--gr-tief`/`--gr-aus`: der Hauptknopf ist nicht mehr
+    // gruen, Gruen heisst nur noch «bleibt auf dem Geraet».
     for (const marke of ["--gr-flaeche", "--gr-flaeche2", "--gr-schrift",
-                         "--gr-kante", "--gr-tief",
-                         "--gr-hell", "--gr-matt", "--gr-aus"]) {
+                         "--gr-kante", "--gr-hell", "--gr-matt"]) {
       pruefe(wurzel[marke], "die gruene Marke " + marke + " fehlt");
     }
 
@@ -2550,8 +2554,10 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     // verhalten. Die Spaltenregel laesst ihn in Ruhe.
     pruefe(!/\.spalte\.hinaus[^{]*\.senden:hover/.test(block),
            "die rote Spalte faerbt den Hauptknopf wieder um");
-    for (const [wahl, ton] of [["button.tat.haupt:hover", "#255239"],
-                               ["button.tat.senden:hover", "#6b2119"]]) {
+    // Seit 2.0: der fast schwarze Hauptknopf wird beim Ueberfahren eine Stufe
+    // heller (`--color-neutral-800`), der orange Sendeknopf eine Stufe tiefer.
+    for (const [wahl, ton] of [["button.tat.haupt:hover", aufloesen("var(--color-neutral-800)")],
+                               ["button.tat.senden:hover", aufloesen("var(--bx-tief)")]]) {
       const regel = css.slice(css.indexOf(wahl), css.indexOf(wahl) + 140);
       const hat = (regel.match(/background:\s*([^;}]+)/) || [])[1];
       pruefe(aufloesen(hat) === ton,
@@ -2618,7 +2624,7 @@ console.log("1. Alle Knoepfe sind verdrahtet");
       "MASCHERA": "der Name des Werkzeugs, in jeder Sprache derselbe",
       "MAS": "die Wortmarke, in drei Stuecke zerlegt fuer das fette CH",
       "ERA": "dasselbe Stueck der Wortmarke",
-      "Barlow": "der Name der Hausschrift, kein deutsches Wort",
+      "IBM Plex": "der Name der Hausschrift, kein deutsches Wort",
     };
 
     const JS = fs.readFileSync(
@@ -3578,7 +3584,7 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     // Und jede FARBmarke der hellen Wurzel kommt im Dunkeln vor.
     const kopf = roh.slice(0, roh.indexOf("@media (prefers-color-scheme: dark)"));
     const hell = [...kopf.matchAll(/(--[a-z0-9_-]+)\s*:\s*([^;}]+)/g)]
-      .filter((m) => /#[0-9a-f]{3,6}\b|color-mix|rgba?\(/i.test(m[2]))
+      .filter((m) => /#[0-9a-f]{3,6}\b|color-mix|rgba?\(|oklch\(/i.test(m[2]))
       .map((m) => m[1]);
     const vergessen = [...new Set(hell)].filter((n) => !a.has(n));
     pruefe(vergessen.length === 0,
@@ -4333,7 +4339,10 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     const tab = inhalt._kinder.find((k) => k.id === "_neu_table");
     const kopfZeile = tab && tab._kinder[0]._kinder[0];
     const spalten = kopfZeile ? kopfZeile._kinder.map((k) => text(k)) : [];
-    pruefe(spalten.length === 4 && spalten[3] === M.I18N.de.entfernen,
+    // Seit 18.10.2026 ohne sichtbare Ueberschrift ueber dem Kreuz, aber
+    // vorgelesen: `aria-label` traegt das Wort.
+    pruefe(spalten.length === 4 && spalten[3] === ""
+           && kopfZeile._kinder[3].getAttribute("aria-label") === M.I18N.de.entfernen,
            `Kopf der Tabelle: ${JSON.stringify(spalten)}`);
     const zeilen = tab ? tab._kinder[1]._kinder : [];
     const orgZeile = zeilen.find((r) => text(r._kinder[0]).includes("[ORG_1]"));
@@ -4352,18 +4361,24 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     if (fehler === vorher) console.log("   OK   vier Spalten, ein Klick entfernt [ORG_1] an beiden Stellen, [FULLNAME_1] bleibt");
   }
 
-  console.log("86. Trennlinien: dreispaltig duenn, untereinander deutlich");
+  console.log("86. Karten mit Abstand, dreispaltig wie untereinander");
+  // Bis 1.1 lagen die Kaesten mit 1px Spalt aneinander (dreispaltig) bzw.
+  // 0.375rem (untereinander). Seit 2.0 (Entwurf des UX-Architekten) sind es
+  // Karten mit Rand und Rundung auf dem Grund — der Abstand traegt die
+  // Trennung, nicht mehr eine Linie.
   {
     const vorher = fehler;
     const css86 = fs.readFileSync(path.join(WURZEL, "app/static/maschera.css"), "utf8")
       .replace(/\/\*[\s\S]*?\*\//g, "");
-    const grund = css86.match(/main\.raster\s*\{[^}]*\bgap:\s*([^;]+);/);
-    pruefe(grund && grund[1].trim() === "1px", `dreispaltig gap ${grund && grund[1]} statt 1px`);
-    const stapel = css86.slice(css86.indexOf("@media (max-width: 59.99em)"));
+    const grund = css86.match(/main\.raster\s*\{[^}]*\bgap:\s*([\d.]+)rem/);
+    pruefe(grund && parseFloat(grund[1]) >= 0.75, `dreispaltig gap ${grund && grund[1]}rem statt >= 0.75rem`);
+    pruefe(/\.bereich\s*\{[^}]*border-radius:\s*var\(--radius-karte\)/.test(css86)
+           && /--radius-karte:\s*12px/.test(css86), "die Kachel ist keine Karte mehr (Rundung)");
+    const stapel = css86.slice(css86.indexOf("@media (max-width: 81.24em)"));
     const dick = stapel.match(/main\.raster\s*\{\s*gap:\s*([\d.]+)rem/);
-    pruefe(dick && parseFloat(dick[1]) >= 0.25,
-           `gestapelt keine dickere Linie in rem: ${dick && dick[0]}`);
-    if (fehler === vorher) console.log(`   OK   1px dreispaltig, ${dick[1]}rem gestapelt`);
+    pruefe(dick && parseFloat(dick[1]) >= 0.5,
+           `gestapelt zu wenig Abstand: ${dick && dick[0]}`);
+    if (fehler === vorher) console.log(`   OK   ${grund[1]}rem dreispaltig, ${dick[1]}rem gestapelt, Karten gerundet`);
   }
 
   console.log("87. Einstellungen: Abbrechen, Escape, Hintergrund — und der Fehler beim Abschnitt");
@@ -4473,6 +4488,41 @@ console.log("1. Alle Knoepfe sind verdrahtet");
       console.log("   OK   Fusszeile, Abbrechen/Escape/Hintergrund, leer weg, "
                   + "Fehler bei den Diensten");
     }
+  }
+
+  console.log("88. Die Schrittleiste folgt dem Ablauf und steht einspaltig auf einer Zeile");
+  // Seit 2.0 (Entwurf des UX-Architekten). Einspaltig auf Wunsch des
+  // Anwenders (18.10.2026): eine Zeile, der aktuelle Schritt mittig, die
+  // Nachbarn angeschnitten zum Antippen — nicht drei Zeilen gestapelt.
+  {
+    const vorher = fehler;
+    const war = { a: M.zustand.antwort, u: M.zustand.uebernommen, a4: M.zustand.antwort04, f: M.zustand.final };
+    const stufen = [
+      [{ a: null }, 0], [{ a: { maskiert: "x" }, u: false }, 1],
+      [{ a: { maskiert: "x" }, u: true, a4: "" }, 2], [{ a: { maskiert: "x" }, u: true, a4: "Antwort" }, 3],
+      [{ a: { maskiert: "x" }, u: true, a4: "Antwort", f: { text: "y" } }, 5]];
+    for (const [st, soll] of stufen) {
+      M.zustand.antwort = st.a; M.zustand.uebernommen = !!st.u; M.zustand.antwort04 = st.a4 || ""; M.zustand.final = st.f || null;
+      pruefe(M.schrittJetzt() === soll, `Schritt ${M.schrittJetzt()} statt ${soll}`);
+    }
+    M.zustand.antwort = { maskiert: "x" }; M.zustand.uebernommen = false;
+    M.zeichneSchritte();
+    const knoepfe = document.getElementById("schritte")._kinder.filter((k) => /^schritt( |$)/.test(k.className));
+    pruefe(knoepfe.length === 5, `${knoepfe.length} Schritte statt 5`);
+    pruefe(knoepfe[1] && knoepfe[1].className.includes("jetzt") && knoepfe[1].getAttribute("aria-current") === "step",
+           "Schritt 2 ist nach dem Maskieren nicht der aktuelle");
+    pruefe(knoepfe[0] && knoepfe[0].className.includes("fertig"), "Schritt 1 ist nicht als fertig markiert");
+    Object.assign(M.zustand, { antwort: war.a, uebernommen: war.u, antwort04: war.a4, final: war.f });
+    const css88 = fs.readFileSync(path.join(WURZEL, "app/static/maschera.css"), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+    // Seit dem Feedback vom 18.10.2026 in der GANZEN gestapelten Ansicht.
+    const handy = css88.slice(css88.search(/@media \(max-width: 81\.24em\), \(max-height: 44em\) \{\s*body \.schritte/));
+    pruefe(/flex-wrap:\s*nowrap/.test(handy) && /overflow-x:\s*auto/.test(handy)
+           && /padding-inline:\s*calc\(50%/.test(handy),
+           "einspaltig stapelt die Schrittleiste wieder oder kann nicht zentrieren");
+    const js88 = fs.readFileSync(path.join(WURZEL, "app/static/maschera.js"), "utf8");
+    pruefe(/z\.schrittMitte = i;\s*schrittZentrieren\(true\)/.test(js88),
+           "ein Tippen zentriert den angetippten Schritt nicht");
+    if (fehler === vorher) console.log("   OK   folgt dem Zustand, 5 Schritte, einspaltig eine Zeile mit Mitte");
   }
 
   console.log("");

@@ -37,7 +37,7 @@ falschen Zeichen.
 
 | Betrifft | Stand |
 |---|---|
-| **Schriften der Oberfläche** | `latin` und `latin-ext` decken den Satz ab, Vietnamesisch weggelassen. `tests/test_schriften.py` misst die Abdeckung und führt die Lücken von Barlow mit Begründung |
+| **Schriften der Oberfläche** | `latin` und `latin-ext` decken den Satz ab, Vietnamesisch weggelassen. `tests/test_schriften.py` misst die Abdeckung je Schrift: IBM Plex Sans und Mono 319 von 319, Barlow Condensed (nur Wortmarke) mit ihren Lücken und Begründung |
 | **Regex-Zeichenklassen** | Lücke, aber grösstenteils folgenlos. Latin Extended-A: 0 von 63 Grossbuchstaben am Wortanfang. Stufe 3 fängt es bei `FULLNAME` und `PLACE_OF_ORIGIN` auf; bei `ORG` schlägt es durch. Siehe unten |
 | **Nomenklaturen** | Lücke. Latin Extended-A kommt in den Namenslisten praktisch nicht vor. Siehe unten |
 | **Tokenizer** | kein Problem. Von 317 druckbaren Zeichen fällt **keines** auf `<unk>`. Siehe unten |

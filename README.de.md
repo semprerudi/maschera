@@ -235,7 +235,7 @@ Ein fertiges Abbild, rund 4,2 GB, das Modell fährt mit:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:1.1.0
+    ghcr.io/semprerudi/maschera:2.0.0
 ```
 
 Danach im Browser `http://127.0.0.1:4141` öffnen. Der Server speichert

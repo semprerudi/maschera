@@ -30,7 +30,13 @@ ERLAUBTE_SCHEMATA = ("https://", "http://")
 # im Auswahlfeld von `index.html` und im Vertrag `docs/API_OBERFLAECHE.md`;
 # `tests/test_api.py` Punkt 17 haelt die vier Stellen zusammen.
 GROESSEN = (70, 80, 90, 100, 110, 125, 140)
-SCHRIFTEN = ("werk", "serif", "sans", "mono")
+# «sans» (Systemschrift) gab es bis 2.0. Sie unterschied sich von IBM Plex
+# kaum und ist auf Entscheid des Anwenders weg (18.10.2026). Eine alte
+# Einstellungsdatei, die sie noch traegt, wird unten auf «werk» umgesetzt:
+# abgewiesen fiele `lade()` sonst auf die GANZE Vorgabe zurueck, und mit der
+# Schrift gingen Dienste, Port und Sprache verloren.
+SCHRIFTEN = ("werk", "serif", "mono")
+ABGELOESTE_SCHRIFTEN = {"sans": "werk"}
 
 # Die vier Bediensprachen, in derselben Reihenfolge wie im Kopf der
 # Oberflaeche. Es ist die Sprache der BEDIENUNG, nicht die des Dokuments.
@@ -93,7 +99,6 @@ VORGABE = {
     "dienst": "claude",
     "schriftgroesse": 100,
     "schriftart": "werk",
-    "schrift_ueberall": False,
     # Die Vorgabe greift nur beim allerersten Start. Danach steht hier, was
     # der Anwender zuletzt gewaehlt hat.
     "sprache": "de",
@@ -205,15 +210,14 @@ def pruefe(roh) -> dict:
                         moeglich=", ".join(str(g) for g in GROESSEN))
 
     schrift = roh.get("schriftart", VORGABE["schriftart"])
+    schrift = ABGELOESTE_SCHRIFTEN.get(schrift, schrift)
     if schrift not in SCHRIFTEN:
         raise Abgelehnt(f"Schriftart nicht in {SCHRIFTEN}: {schrift!r}",
                         schluessel="schriftart_unbekannt", wert=repr(schrift),
                         moeglich=", ".join(SCHRIFTEN))
 
-    ueberall = roh.get("schrift_ueberall", VORGABE["schrift_ueberall"])
-    if not isinstance(ueberall, bool):
-        raise Abgelehnt("Feld `schrift_ueberall` ist kein Wahrheitswert.",
-                        schluessel="schrift_ueberall_kein_wahrheitswert")
+    # `schrift_ueberall` gab es bis 2.0 (Bedienschrift wie Textschrift). Eine
+    # alte Datei, die es noch traegt, wird gelesen; das Feld wird uebergangen.
 
     sprache = roh.get("sprache", VORGABE["sprache"])
     if sprache not in SPRACHEN:
@@ -259,7 +263,6 @@ def pruefe(roh) -> dict:
         "dienst": dienst,
         "schriftgroesse": groesse,
         "schriftart": schrift,
-        "schrift_ueberall": ueberall,
         "sprache": sprache,
         "tray": tray,
         "fenstermodus": modus,

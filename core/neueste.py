@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 import re
+import urllib.error
 import urllib.request
 
 # Das oeffentliche Repository. `tests/test_api.py` prueft, dass der Eintrag
@@ -33,11 +34,25 @@ ADRESSE = f"https://api.github.com/repos/{REPO}/releases/latest"
 HOECHSTENS = 1024 * 1024
 WARTEN_S = 8
 
-_FASSUNG = re.compile(r"v?(\d{1,4})\.(\d{1,4})\.(\d{1,4})")
+# Mit optionalem Vorabteil (`2.0.0-test.1`, seit 18.10.2026 fuer die
+# Teststufe). Eine Vorabfassung ist AELTER als dieselbe Nummer ohne Zusatz —
+# wie bei SemVer: wer `2.0.0-test.3` faehrt, bekommt `2.0.0` angeboten.
+_FASSUNG = re.compile(
+    r"v?(\d{1,4})\.(\d{1,4})\.(\d{1,4})(?:-([0-9A-Za-z][0-9A-Za-z.]{0,30}))?")
 
 
 class NichtErreichbar(Exception):
     """GitHub antwortet nicht — kein Netz, Docker ohne Ausgang, Sperre."""
+
+
+class Begrenzt(Exception):
+    """GitHub antwortet, aber begrenzt gerade (Abfragelimit erschoepft).
+
+    Gemessen am 17.10.2026: ohne Anmeldung erlaubt GitHub 60 Abfragen je
+    Stunde und Adresse, fuer das ganze Heimnetz zusammen. Danach kommt 403
+    mit `X-RateLimit-Remaining: 0`. Bis 1.1 hiess das in der App «nicht
+    erreichbar» — falsch, das Netz ging.
+    """
 
 
 class Unlesbar(Exception):
@@ -45,9 +60,27 @@ class Unlesbar(Exception):
 
 
 def zerlegen(fassung: str) -> tuple[int, int, int] | None:
-    """`2.3.10` oder `v2.3.10` → (2, 3, 10). Alles andere → None."""
+    """`2.3.10`, `v2.3.10` oder `2.3.10-test.1` → (2, 3, 10). Sonst None."""
     m = _FASSUNG.fullmatch((fassung or "").strip())
-    return tuple(int(x) for x in m.groups()) if m else None
+    return tuple(int(x) for x in m.groups()[:3]) if m else None
+
+
+def _rang(fassung: str) -> tuple[int, int, int, int] | None:
+    """Zum Vergleichen: die drei Zahlen und 1 fuer eine fertige Fassung,
+    0 fuer eine Vorabfassung — so liegt `3.1.4-test.2` vor `3.1.4`."""
+    m = _FASSUNG.fullmatch((fassung or "").strip())
+    if not m:
+        return None
+    return (*(int(x) for x in m.groups()[:3]), 0 if m.group(4) else 1)
+
+
+def _normal(fassung: str) -> str | None:
+    """`v3.1.4-test.2` → `3.1.4-test.2`; der Vorabteil bleibt stehen."""
+    m = _FASSUNG.fullmatch((fassung or "").strip())
+    if not m:
+        return None
+    zahl = ".".join(str(int(x)) for x in m.groups()[:3])
+    return zahl + (f"-{m.group(4)}" if m.group(4) else "")
 
 
 def _holen(adresse: str) -> bytes:
@@ -68,7 +101,13 @@ def nachsehen(holen=_holen) -> str:
     """
     try:
         roh = holen(ADRESSE)
-    except Exception as e:  # jede Art, nicht anzukommen
+    except urllib.error.HTTPError as e:
+        # 403/429 mit erschoepftem Limit ist eine ANTWORT, kein Netzfehler.
+        rest = (e.headers or {}).get("X-RateLimit-Remaining") if hasattr(e, "headers") else None
+        if e.code in (403, 429) and (rest == "0" or e.code == 429):
+            raise Begrenzt(f"HTTP {e.code}") from e
+        raise NichtErreichbar(f"HTTP {e.code}") from e
+    except Exception as e:  # jede andere Art, nicht anzukommen
         raise NichtErreichbar(type(e).__name__) from e
     if len(roh) > HOECHSTENS:
         raise Unlesbar("Antwort zu gross")
@@ -77,13 +116,13 @@ def nachsehen(holen=_holen) -> str:
     except ValueError as e:
         raise Unlesbar("kein JSON") from e
     marke = daten.get("tag_name") if isinstance(daten, dict) else None
-    teile = zerlegen(marke) if isinstance(marke, str) else None
-    if teile is None:
+    fassung = _normal(marke) if isinstance(marke, str) else None
+    if fassung is None:
         raise Unlesbar("keine Fassungsnummer")
-    return ".".join(str(x) for x in teile)
+    return fassung
 
 
 def ist_neuer(neueste: str, aktuell: str) -> bool:
     """Liegt `neueste` hinter `aktuell`? Unlesbares zaehlt als «nein»."""
-    a, b = zerlegen(neueste), zerlegen(aktuell)
+    a, b = _rang(neueste), _rang(aktuell)
     return bool(a and b and a > b)

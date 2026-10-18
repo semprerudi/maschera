@@ -66,8 +66,10 @@ const TYPE_FALLBACK = [
  * gestrichelt, gepunktet tragen im Dunkeln unveraendert.
  */
 const SRC_STYLE = {
-  model:       "1px solid var(--gr-kante)",
-  propagation: "1px solid var(--color-neutral-500)",
+  // Seit 2.0 ohne sichtbaren Rand: die haeufigste Herkunft sieht aus wie im
+  // Entwurf. Die anderen behalten ihren Rand als Hinweis.
+  model:       "1px solid transparent",
+  propagation: "1px solid transparent",
   manuell:     "3px double var(--manuell)",
   checksum:    "1px dashed var(--gr-matt)",
   regex:       "1px dashed var(--muster)",
@@ -184,9 +186,10 @@ const I18N = {
         bspdSetzen: "Als {} maskieren?\nDas ist ein besonders schützenswertes Personendatum.",
         einstT: "Einstellungen",
         schliessen: "Schliessen", einstZu: "Speichern", einstZuRest: " & schliessen", einstAbbrechen: "Abbrechen",
+        zoneHinaus: "Verlässt dein Gerät", vokAlle: "Alle", ablauf: "Ablauf", schritte: ["Text einfügen", "Prüfen", "Prompt senden", "Antwort einfügen", "Zurückübersetzen"],
         allgemeinT: "Allgemein",
         serverT: "Server",
-        serverH: "Adresse und Port des lokalen Maskierdienstes. Der Text verlässt dein Gerät nicht — die Prüfung zeigt, ob der Dienst antwortet.",
+        serverH: "Adresse und Port des lokalen Maskierdienstes. Der Text verlässt dein Gerät nicht. Die Prüfung zeigt, ob der Dienst antwortet.",
         adresse: "Adresse",
         port: "Port",
         pruefen: "Prüfen",
@@ -196,15 +199,18 @@ const I18N = {
         giltNachNeustart: "Gespeichert. Gilt ab dem nächsten Start des Dienstes.",
         keinDienstDa: "Unter {} antwortet kein MASCHERA.",
         diensteT: "Dienste",
-        diensteH: "Der Web-Link wird beim Kopieren geöffnet.",
+        diensteH: "Diese Dienste stehen im Menü neben dem Sendeknopf. Beim Kopieren öffnet MASCHERA die Adresse des gewählten Dienstes. Der zuletzt gewählte bleibt auch für künftige Sitzungen gespeichert.",
         hinzu: "Hinzufügen",
         entfernen: "Entfernen",
-        fensterWort: "In eigenem Fenster öffnen statt im Reiter",
+        vokWeg: "{} entfernen: Der Platzhalter verschwindet im ganzen Text, dort steht wieder der Originalwert. Gibst du den Text danach weiter, geht er unmaskiert mit.",
+        fensterWort: "Dienste in neuem Fenster öffnen statt im Reiter",
         trayWort: "Beim Schliessen in den Infobereich (Tray) statt beenden",
         widgetWort: "Schmales Fenster, immer im Vordergrund",
         fensterHilfe: "Beides wirkt erst nach dem Neustart der Applikation.",
         klartextT: "Klartext-Tags",
-        klartextH: "Diese Typen bleiben dauerhaft im Klartext — erkannt, aber nicht ersetzt.",
+        klartextStelle: "erkannt, bleibt im Klartext",
+        klartextWort: "Klartext",
+        klartextH: "Wähle die Typen, die MASCHERA nie maskieren soll. Sie werden weiter erkannt, bleiben im Text aber stehen. Das gilt für jedes Dokument, bis du sie wieder abwählst.",
         regelnT: "Eigene Regeln",
         regelnH: "Eigene Wörter und Muster, die zusätzlich maskiert werden. Als YAML. Wer sie ändert, ändert das Messergebnis.",
         regelnSpeichern: "Regeln speichern",
@@ -213,16 +219,16 @@ const I18N = {
         falscherDienst: "Antwortet, ist aber nicht MASCHERA: {}",
         keinDienst: "Keine Antwort: {}",
         bspdFrage: "{} dauerhaft im Klartext lassen?\nDas ist ein besonders schützenswertes Personendatum.",
-        starrHinweis: "Bleibt ohnehin im Klartext — nicht umlegbar.",
+        starrHinweis: "Bleibt ohnehin im Klartext. Nicht umlegbar.",
         unbekannteTags: "Gespeicherte Tags, die es nicht mehr gibt: {}",
         einpflegen04: "Vokabular einpflegen", leerenA: "Leeren",
         antwortPlatz: "Antwort deines KI-Werkzeugs hier einfügen (Ctrl+V) …",
-        offenText: "{} Platzhalter blieben stehen — im fertigen Text nachsehen:",
+        offenText: "{} Platzhalter blieben stehen. Im fertigen Text nachsehen:",
         gutText: "{} Platzhalter zurückgesetzt.",
         promptT: "Prompt", hinausT: "Das geht hinaus", trenner: "den oberen Prompt auf folgenden Text anwenden",
-        sendenZu: "Kopieren und {} öffnen", onlineWarnung: "In {} arbeitest du online, sei vorsichtig!", origPlatz: "Originaltext hier einfügen …", promptPlatz: "Dein Prompt, z. B. «Beantworte diese E-Mail freundlich.»", hinausLeer: "Erst «Übernahme in Prompt» — dann steht hier, was hinausgeht.",
+        sendenZu: "Kopieren und {} öffnen", onlineWarnung: "In {} arbeitest du online, sei vorsichtig!", origPlatz: "Originaltext hier einfügen …", promptPlatz: "Dein Prompt, z. B. «Beantworte diese E-Mail freundlich.»", hinausLeer: "Erst «Übernahme in Prompt», dann steht hier, was hinausgeht.",
         hinausZahl: "Genau diese {} Zeichen gehen zu {dienst}, sobald du sie kopierst und dort einfügst.",
-        verworfenHinweis: "Wörterbuch verworfen — der maskierte Text lässt sich nicht mehr zurückwandeln.",
+        verworfenHinweis: "Wörterbuch verworfen. Der maskierte Text lässt sich nicht mehr zurückwandeln.",
         an: "An", aus: "Aus", spalteId: "ID",
         spalteWert: "Originalwert", spalteTyp: "Typ", anteilW: "Maskierter Anteil",
         keinVokabular: "Noch kein Vokabular. Es entsteht beim Maskieren.",
@@ -237,15 +243,14 @@ const I18N = {
         themaAuto: "Automatisch", themaHell: "Hell", themaDunkel: "Dunkel",
         schriftT: "Schrift", schriftart: "Schriftart",
         schriftgroesse: "Grösse",
-        schriftH: "Gilt für die Textflächen — Originaltext, maskierter Text, Prompt und Antwort.",
+        schriftH: "Gilt für die Textflächen: Originaltext, maskierter Text, Prompt und Antwort.",
         schriftprobe: "Sehr geehrte Damen und Herren",
-        schriftAlles: "Auch für Knöpfe und Beschriftungen",
-        schriftSans: "Serifenlos", schriftSerif: "Serifen",
+        schriftSerif: "Serifen",
         schriftMono: "Feste Breite",
         herunterladen: "Herunterladen", einfuegen: "Einfügen",
-        einfuegenHinweis: "Zwischenablage gesperrt — bitte Ctrl+V drücken.",
+        einfuegenHinweis: "Zwischenablage gesperrt. Bitte Ctrl+V drücken.",
         drop_ohne_datei: "Aus diesem Programm kommt keine Datei an. Ziehe die Nachricht zuerst auf den Schreibtisch und dann hierher.",
-        mUpdate: "Nach Updates suchen", neuesteSucht: "Frage GitHub nach der neuesten Fassung …", neuesteAktuell: "Du hast {aktuell} — das ist die neueste Fassung.", neuesteNeu: "Fassung {neueste} ist da. Du hast {aktuell}.", neuesteSeite: "Zur Download-Seite",
+        mUpdate: "Nach Updates suchen", neuesteSucht: "Frage GitHub nach der neuesten Fassung …", neuesteAktuell: "Du hast {aktuell}. Das ist die neueste Fassung.", neuesteNeu: "Fassung {neueste} ist da. Du hast {aktuell}.", neuesteSeite: "Zur Download-Seite",
         kAusschneiden: "Ausschneiden", kKopieren: "Kopieren", kEinfuegen: "Einfügen",
         menu: "Menü",
         mBrowser: "Im Browser öffnen", mHilfe: "Hilfe",
@@ -257,41 +262,40 @@ const I18N = {
         vokHerunter: "Vokabular herunterladen",
         vokHoch: "Vokabular hochladen",
         tplMenu: "Vorlagen", tplSichern: "Speichern",
-        tplWaehlen: "Vorlage wählen ({})",
+        tplWaehlen: "Lokale Vorlage wählen ({})",
         tplSuchen: "Suchen …", tplNichts: "Keine Vorlage passt.",
-        tplLokal: "lokal gespeichert",
-        tplLeer: "Noch keine Vorlage gespeichert",
+        tplLeer: "Noch keine lokale Vorlage gespeichert",
         tplName: "Name der Vorlage",
         tplWarnung: "Vorlagen liegen dauerhaft im Klartext auf der Platte. "
           + "Keine Personendaten in eine Vorlage schreiben.",
         tplWeg: "Vorlage «{}» löschen?", tplWegT: "Löschen",
         tplGesichert: "Vorlage «{}» gespeichert.",
         tplFehler: "Vorlage nicht gespeichert: {}",
-        sichernWarnung: "Die Datei enthält {} Originalwerte im Klartext — "
-          + "alles, was hier maskiert wurde. Sie liegt danach ungeschützt "
+        sichernWarnung: "Die Datei enthält {} Originalwerte im Klartext, "
+          + "also alles, was hier maskiert wurde. Sie liegt danach ungeschützt "
           + "im Downloadordner. Sichern?",
         vokGeladen: "{} Vokabulareinträge eingelesen.",
-        vokKaputt: "Die Datei ist kein lesbares JSON — nichts eingelesen.",
+        vokKaputt: "Die Datei ist kein lesbares JSON. Nichts eingelesen.",
         frageJa: "Weiter",
         frageNein: "Abbrechen",
         frageOk: "Übernehmen",
         neuladenFrage: "Wirklich neu laden?\n{} Vokabulareinträge gehen verloren.",
-        verbindungWeg: "Keine Verbindung zum MASCHERA-Dienst — die Anfrage kam nicht an. Nochmals versuchen; hilft das nicht, MASCHERA neu starten.",
+        verbindungWeg: "Keine Verbindung zum MASCHERA-Dienst. Die Anfrage kam nicht an. Nochmals versuchen; hilft das nicht, MASCHERA neu starten.",
         httpFehler: "Der MASCHERA-Dienst hat die Anfrage abgelehnt (Fehler {status}).",
-        vokFalsch: "Die Datei enthält kein Objekt — nichts eingelesen.",
-        vokFremd: "Keine MASCHERA-Vokabulardatei — nichts eingelesen.",
-        vokFassung: "Unbekannte Fassung {} — diese Ausgabe liest Fassung 1.",
-        vokKein: "Kein Wörterbuch in der Datei — nichts eingelesen.",
-        vokSchluessel: "Kein gültiger Platzhalter: {} — nichts eingelesen.",
-        vokWert: "Der Wert zu {} ist keine Zeichenkette — nichts eingelesen.",
+        vokFalsch: "Die Datei enthält kein Objekt. Nichts eingelesen.",
+        vokFremd: "Keine MASCHERA-Vokabulardatei. Nichts eingelesen.",
+        vokFassung: "Unbekannte Fassung {}. Diese Ausgabe liest Fassung 1.",
+        vokKein: "Kein Wörterbuch in der Datei. Nichts eingelesen.",
+        vokSchluessel: "Kein gültiger Platzhalter: {}. Nichts eingelesen.",
+        vokWert: "Der Wert zu {} ist keine Zeichenkette. Nichts eingelesen.",
         vokText: "Der maskierte Text in der Datei ist keine Zeichenkette.",
-        einklappen: "Einklappen", ausklappen: "Ausklappen",
+       
         bearbeiten: "Bearbeiten", bearbeitenFertig: "Fertig",
-        bearbeitenHilfe: "Text von Hand korrigieren. Platzhalter wie [FULLNAME_1] bitte stehen lassen — sie werden am Ende zurückgewandelt.",
+        bearbeitenHilfe: "Text von Hand korrigieren. Platzhalter wie [FULLNAME_1] bitte stehen lassen. Sie werden am Ende zurückgewandelt.",
         phUnbekannt: "Diese Platzhalter kennt das Wörterbuch nicht: {liste}. Sie bleiben am Ende stehen.",
-        phEntwertet: "{} Platzhalter aus der Markdown-Auszeichnung zurückgeholt — der Dienst hatte sie mit Rückstrichen entwertet.",
-        phErgaenzt: "{} zerschlagene Platzhalter ergänzt: {liste}. Das Wörterbuch kennt sie — die Klammer hatte der Dienst verschluckt.",
-        phKaputt: "Diese Stellen sehen aus wie Platzhalter, sind aber keine: {liste}. Sie werden am Ende NICHT ersetzt — bitte im Text nachsehen.",
+        phEntwertet: "{} Platzhalter aus der Markdown-Auszeichnung zurückgeholt. Der Dienst hatte sie mit Rückstrichen entwertet.",
+        phErgaenzt: "{} zerschlagene Platzhalter ergänzt: {liste}. Das Wörterbuch kennt sie. Die Klammer hatte der Dienst verschluckt.",
+        phKaputt: "Diese Stellen sehen aus wie Platzhalter, sind aber keine: {liste}. Sie werden am Ende NICHT ersetzt. Bitte im Text nachsehen.",
         fussLinks: "MASCHERA · Verarbeitung auf diesem Gerät · keine Online-Verbindung zu den KI-Diensten", bereitS: "Bereit",
         orig: "Originaltext", masked: "Maskiert", run: "Maskieren",
         fertig: "Finaler Text", prompt: "Prompt",
@@ -310,7 +314,7 @@ const I18N = {
               + "einpflegst.",
         leer02: "Noch nichts maskiert. Text in Spalte 1 einfügen und "
               + "«Maskieren» drücken.",
-        dropN: "PDF, DOCX, TXT oder Mail hierher ziehen — oder klicken",
+        dropN: "PDF, DOCX, TXT oder Mail hierher ziehen, oder klicken",
         laeuft: "läuft …", lWartet: "Text wird vorbereitet …", lModell: "Fenster {} von {}", lMaskieren: "Maskieren, Wörterbuch wird gebaut …", lRest: "noch etwa {}", lFertig: "in {} maskiert", drop: "Datei hierher ziehen oder wählen",
         portFehlt: "Kein Port angegeben.",
         verwerfenVok: "Wirklich fortfahren?\n{} Vokabulareinträge gehen verloren.",
@@ -322,29 +326,29 @@ const I18N = {
         verworfen: "Knapp verworfen", nichts: "nichts",
         bereit: "bereit", quelle: "Quelle", vertrauen: "Vertrauen",
         zeichen: "Zeichen", anteil: "maskiert",
-        ohneModell: "OHNE MODELL — nur Prüfsummen und Muster. Namen, "
+        ohneModell: "OHNE MODELL: nur Prüfsummen und Muster. Namen, "
                   + "Daten und Adressen bleiben im Klartext.",
         // Hinweise des Servers. Er schickt den Schluessel und die
         // Werte, der Satz steht hier — s. `core/hinweise.py`.
         hinweise: {
-          ohne_modell: "OHNE MODELL — nur Prüfsummen und Muster. Namen, Daten und Adressen bleiben im KLARTEXT.",
+          ohne_modell: "OHNE MODELL: nur Prüfsummen und Muster. Namen, Daten und Adressen bleiben im KLARTEXT.",
           fenster: "Länger als ein Fenster ({token} Token). Wird überlappend verarbeitet.",
           wortgrenzen: "{anzahl} Modellspannen lagen mitten in einem Wort und wurden auf Wortgrenzen gezogen.",
-          mehrere_nachrichten: "{anzahl} Nachrichten in der Datei — nur die erste wird verarbeitet.",
+          mehrere_nachrichten: "{anzahl} Nachrichten in der Datei. Nur die erste wird verarbeitet.",
           vorlieben: "Aus den gespeicherten Vorlieben im Klartext: {tags}",
-          ohne_woerterbuch: "Ohne Wörterbuch — endgültig anonymisiert, keine Rückwandlung möglich.",
+          ohne_woerterbuch: "Ohne Wörterbuch: endgültig anonymisiert, keine Rückwandlung möglich.",
           eigene_regeln: "Eigene Regeln angewendet ({anzahl}): {namen}",
-          schreibweise: "{platzhalter} unterscheidet sich von {treffer} nur in der Schreibweise — nicht ersetzt.",
+          schreibweise: "{platzhalter} unterscheidet sich von {treffer} nur in der Schreibweise. Nicht ersetzt.",
           anhang_uebersprungen: "Anhang übersprungen: {name}",
           kein_textteil: "Die Mail hat keinen Textteil, nur {art}.",
           msg_ohne_textrumpf: "Die .msg hat keinen reinen Textrumpf (nur RTF oder HTML). In Outlook «Speichern unter» → .eml wählen.",
           binaer_abgeschnitten: "{zeichen} Zeichen nach dem Textende sahen aus wie Binärdaten und wurden weggelassen.",
           nur_html: "nur HTML-Teil vorhanden, grob entkleidet",
           kein_rumpf: "kein Textrumpf gefunden",
-          pdf_ohne_text: "kein Text im PDF — vermutlich ein Scan. Ohne OCR sieht der Filter nichts, und ein leerer Befund heisst hier NICHT, dass keine Personendaten drin sind.",
+          pdf_ohne_text: "kein Text im PDF. Vermutlich ein Scan. Ohne OCR sieht der Filter nichts, und ein leerer Befund heisst hier NICHT, dass keine Personendaten drin sind.",
           pdf_seiten: "{anzahl} Seiten, Layout geht beim Auslesen verloren",
           tabellen: "{anzahl} Tabellen, zeilenweise gelesen",
-          nicht_gelesen: "NICHT gelesen: {teile} — dort steht bei Briefen oft der Absender",
+          nicht_gelesen: "NICHT gelesen: {teile}. Dort steht bei Briefen oft der Absender",
           docx_leer: "kein Text im Dokument. Ein leerer Befund heisst hier NICHT, dass keine Personendaten drin sind.",
           kodierung: "Kodierung {kodierung}",
           bom: "Byte-Order-Mark am Textanfang, entfernt",
@@ -366,7 +370,7 @@ const I18N = {
           adresse_fehlt: "Feld `adresse` fehlt oder ist leer.",
           adresse_zu_lang: "Adresse länger als {hoechstens} Zeichen.",
           datei_ohne_text: "Datei ergab keinen Text.",
-          datei_unlesbar: "Datei nicht lesbar — beschädigt oder kein unterstütztes Format.",
+          datei_unlesbar: "Datei nicht lesbar: beschädigt oder kein unterstütztes Format.",
           datei_zu_gross: "Datei grösser als {mb} MB.",
           dienst_kein_objekt: "Dienst {nummer} ist kein Objekt.",
           dienst_kennung_doppelt: "Kennung zweimal vergeben: {kennung}",
@@ -374,7 +378,7 @@ const I18N = {
           dienst_ohne_namen: "Dienst {nummer} hat keinen Namen.",
           dienst_schema: "Dienst {name}: nur https:// oder http://, nicht {adresse}",
           dienste_keine_liste: "Feld `dienste` ist keine Liste.",
-          dienste_leer: "Mindestens ein Dienst ist nötig — sonst weiss «Kopieren und öffnen» nicht, wohin.",
+          dienste_leer: "Mindestens ein Dienst ist nötig. Sonst weiss «Kopieren und öffnen» nicht, wohin.",
           dienste_zu_viele: "Höchstens {hoechstens} Dienste.",
           einst_kein_objekt: "Kein Objekt.",
           einstellungen_gespeichert: "Gespeichert.",
@@ -386,19 +390,19 @@ const I18N = {
           format_unbekannt: "Format {endung} wird nicht gelesen. Möglich: {moeglich}",
           keine_datei: "Keine Datei erhalten.",
           klartext_gelesen: "Diese Tags bleiben dauerhaft im Klartext.",
-          klartext_gespeichert: "Gespeichert. Diese Tags bleiben dauerhaft im Klartext — auch in künftigen Dokumenten.",
-          nicht_gespeichert: "Nicht gespeichert — die Datei im Einstellungsordner liess sich nicht schreiben.",
+          klartext_gespeichert: "Gespeichert. Diese Tags bleiben dauerhaft im Klartext, auch in künftigen Dokumenten.",
+          nicht_gespeichert: "Nicht gespeichert. Die Datei im Einstellungsordner liess sich nicht schreiben.",
           ohne_tags_unbekannt: "Unbekannte Tags bei `ohne`: {tags}",
           port_ausserhalb: "Port ausserhalb 1–65535: {port}",
           regeldatei_fehlerhaft: "Die Regeldatei ist fehlerhaft und wurde nicht angewendet.",
-          regeln_abgelehnt: "Regeln abgelehnt — die Datei enthält einen Fehler.",
+          regeln_abgelehnt: "Regeln abgelehnt. Die Datei enthält einen Fehler.",
           regeln_gelesen: "Wer die Regeln ändert, ändert das Messergebnis.",
           regeln_veraltete_schluessel: "Diese Regeldatei benutzt veraltete Schlüssel. Sie werden weiter gelesen oder übergangen: {umbenennungen}",
           regeln_gespeichert: "Gespeichert. Das Messergebnis ändert sich damit.",
-          neueste_nicht_erreichbar: "GitHub ist nicht erreichbar — ohne Netz, oder der Server darf nicht hinaus. Die neueste Fassung steht auf der Download-Seite.",
+          neueste_begrenzt: "GitHub begrenzt gerade die Abfragen. Für dein Netz sind die 60 pro Stunde aufgebraucht. In einer Stunde nochmals versuchen, oder direkt auf die Download-Seite.",
+          neueste_nicht_erreichbar: "GitHub ist nicht erreichbar: ohne Netz, oder der Server darf nicht hinaus. Die neueste Fassung steht auf der Download-Seite.",
           neueste_unlesbar: "GitHub hat geantwortet, aber ohne lesbare Fassungsnummer. Die neueste Fassung steht auf der Download-Seite.",
-          regeln_unlesbar: "Regeln nicht lesbar — ein Feld hat die falsche Form.",
-          schrift_ueberall_kein_wahrheitswert: "Feld `schrift_ueberall` ist kein Wahrheitswert.",
+          regeln_unlesbar: "Regeln nicht lesbar. Ein Feld hat die falsche Form.",
           tray_kein_wahrheitswert: "Feld `tray` ist kein Wahrheitswert.",
           fenstermodus_unbekannt: "Fenstermodus {wert} gibt es nicht. Möglich: {moeglich}",
           thema_unbekannt: "Thema {wert} gibt es nicht. Möglich: {moeglich}",
@@ -420,13 +424,13 @@ const I18N = {
           vorliebe_tags_unbekannt: "Unbekannte Tags: {tags}",
           wirt_unbekannt: "Dieser Dienst antwortet nicht unter dem Namen «{wirt}». Lokal ist er unter 127.0.0.1 erreichbar; hinter einem Proxy gehört der Name in MASCHERA_WIRT.",
           regeln_kein_yaml: "Die Regeln sind kein gültiges YAML (Zeile {zeile}).",
-          regel_zu_langsam: "Regel «{id}»: das Muster braucht {dauer} s für eine Probezeile — zu langsam, meist wegen geschachtelter Wiederholungen wie (a+)+.",
+          regel_zu_langsam: "Regel «{id}»: das Muster braucht {dauer} s für eine Probezeile. Das ist zu langsam, meist wegen geschachtelter Wiederholungen wie (a+)+.",
           regel_ohne_kennung: "Eine Regel hat keine Kennung (`id`).",
           regel_kennung: "Regel-Kennung «{id}»: nur Kleinbuchstaben, Ziffern und Unterstrich, 2 bis 32 Zeichen.",
           regel_platzhalter: "Regel «{id}»: der Platzhalter «{platzhalter}» muss aus 2 bis 20 Buchstaben oder Ziffern bestehen.",
           regel_woerter_leer: "Regel «{id}»: die Wortliste (`words`) ist leer.",
           regel_woerter_kurz: "Regel «{id}»: zu kurze Einträge ({kurz}). Unter {min} Zeichen treffen sie als Silbe überall.",
-          regel_etiketten_leer: "Regel «{id}»: `labels` ist leer — ohne Etikett träfe die Regel jede Zahl.",
+          regel_etiketten_leer: "Regel «{id}»: `labels` ist leer. Ohne Etikett träfe die Regel jede Zahl.",
           regel_wertform: "Regel «{id}»: die Wertform «{form}» gibt es nicht. Möglich: {moeglich}",
           regel_min_max: "Regel «{id}»: min/max unplausibel ({min}/{max}).",
           regel_muster_fehlt: "Regel «{id}»: das Muster (`pattern`) fehlt.",
@@ -435,10 +439,10 @@ const I18N = {
           regeln_doppelt: "Diese Regel-Kennungen stehen doppelt: {kennungen}",
           regel_platzhalter_vergeben: "Platzhalter schon vergeben: {platzhalter}. Wähle einen anderen Namen.",
           msg_ohne_olefile: "Outlook-Nachrichten (.msg) lassen sich hier nicht lesen. In Outlook «Speichern unter» → .eml wählen.",
-          pdf_ohne_pymupdf: "PDF lassen sich hier nicht lesen — die PDF-Bibliothek fehlt.",
+          pdf_ohne_pymupdf: "PDF lassen sich hier nicht lesen. Die PDF-Bibliothek fehlt.",
           docx_zu_gross: "Das Word-Dokument wäre ausgepackt {mb} MB gross; höchstens {hoechstens} MB werden gelesen.",
           docx_kaputt: "Keine lesbare .docx-Datei. Ältere .doc sind ein anderes Format.",
-          docx_ohne_dokument: "Kein Word-Dokument — vermutlich .odt, .pptx oder .xlsx mit falscher Endung.",
+          docx_ohne_dokument: "Kein Word-Dokument. Vermutlich .odt, .pptx oder .xlsx mit falscher Endung.",
           docx_dtd: "Das Word-Dokument enthält eine DTD; das kommt in echten Word-Dateien nicht vor und wird nicht gelesen.",
           word_alt: "Das alte Word-Format (.doc) wird nicht gelesen. In Word oder LibreOffice als .docx speichern.",
         },
@@ -454,9 +458,10 @@ const I18N = {
         bspdSetzen: "Masquer comme {} ?\nC'est une donnée sensible.",
         einstT: "Réglages",
         schliessen: "Fermer", einstZu: "Enregistrer", einstZuRest: " et fermer", einstAbbrechen: "Annuler",
+        zoneHinaus: "Quitte ton appareil", vokAlle: "Tous", ablauf: "Déroulement", schritte: ["Insérer le texte", "Vérifier", "Envoyer le prompt", "Insérer la réponse", "Retraduire"],
         allgemeinT: "Général",
         serverT: "Serveur",
-        serverH: "Adresse et port du service de masquage local. Le texte ne quitte pas ton appareil — la vérification montre si le service répond.",
+        serverH: "Adresse et port du service de masquage local. Le texte ne quitte pas ton appareil. La vérification montre si le service répond.",
         adresse: "Adresse",
         port: "Port",
         pruefen: "Vérifier",
@@ -466,15 +471,18 @@ const I18N = {
         giltNachNeustart: "Enregistré. S'applique au prochain démarrage du service.",
         keinDienstDa: "Aucun MASCHERA ne répond à {}.",
         diensteT: "Services",
-        diensteH: "Le lien web s’ouvre lors de la copie.",
+        diensteH: "Ces services figurent dans le menu à côté du bouton d’envoi. Lors de la copie, MASCHERA ouvre l’adresse du service choisi. Le dernier choisi reste enregistré pour les prochaines sessions.",
         hinzu: "Ajouter",
         entfernen: "Supprimer",
-        fensterWort: "Ouvrir dans une fenêtre plutôt qu’un onglet",
+        vokWeg: "Supprimer {} : le substitut disparaît de tout le texte et la valeur originale revient à sa place. Si tu transmets ensuite le texte, elle part sans masque.",
+        fensterWort: "Ouvrir les services dans une nouvelle fenêtre plutôt qu’un onglet",
         trayWort: "À la fermeture, réduire dans la zone de notification",
         widgetWort: "Fenêtre étroite, toujours au premier plan",
         fensterHilfe: "Les deux prennent effet au prochain démarrage de l’application.",
         klartextT: "Types en clair",
-        klartextH: "Ces types restent en clair — reconnus, mais non remplacés.",
+        klartextStelle: "reconnu, reste en clair",
+        klartextWort: "en clair",
+        klartextH: "Choisis les types que MASCHERA ne doit jamais masquer. Ils restent reconnus, mais ne sont pas remplacés dans le texte. Cela vaut pour chaque document, jusqu’à ce que tu les désélectionnes.",
         regelnT: "Règles personnelles",
         regelnH: "Mots et motifs supplémentaires à masquer. En YAML. Les modifier modifie le résultat de mesure.",
         regelnSpeichern: "Enregistrer",
@@ -487,12 +495,12 @@ const I18N = {
         unbekannteTags: "Types enregistrés qui n’existent plus : {}",
         einpflegen04: "Appliquer le vocabulaire", leerenA: "Vider",
         antwortPlatz: "Colle ici la réponse de ton outil d’IA (Ctrl+V) …",
-        offenText: "{} substituts sont restés — à vérifier dans le texte final :",
+        offenText: "{} substituts sont restés. À vérifier dans le texte final :",
         gutText: "{} substituts rétablis.",
         promptT: "Prompt", hinausT: "Ce qui sort", trenner: "appliquer le prompt ci-dessus au texte suivant",
-        sendenZu: "Copier et ouvrir {}", onlineWarnung: "Dans {}, tu travailles en ligne — sois prudent !", origPlatz: "Coller ici le texte original …", promptPlatz: "Ton prompt, p. ex. « Réponds à ce courriel poliment. »", hinausLeer: "D’abord « Reprise dans le prompt » — ensuite tu verras ici ce qui sort.",
+        sendenZu: "Copier et ouvrir {}", onlineWarnung: "Dans {}, tu travailles en ligne, sois prudent !", origPlatz: "Coller ici le texte original …", promptPlatz: "Ton prompt, p. ex. « Réponds à ce courriel poliment. »", hinausLeer: "D’abord « Reprise dans le prompt », ensuite tu verras ici ce qui sort.",
         hinausZahl: "Ces {} caractères précisément iront à {dienst} dès que tu les colles là-bas.",
-        verworfenHinweis: "Vocabulaire supprimé — le texte masqué ne peut plus être rétabli.",
+        verworfenHinweis: "Vocabulaire supprimé. Le texte masqué ne peut plus être rétabli.",
         an: "Activé", aus: "Désactivé", spalteId: "ID",
         spalteWert: "Valeur d’origine", spalteTyp: "Type", anteilW: "Part masquée",
         keinVokabular: "Pas encore de vocabulaire. Il naît au masquage.",
@@ -507,15 +515,14 @@ const I18N = {
         themaAuto: "Automatique", themaHell: "Clair", themaDunkel: "Sombre",
         schriftT: "Police", schriftart: "Police",
         schriftgroesse: "Taille",
-        schriftH: "S'applique aux zones de texte — texte original, texte masqué, prompt et réponse.",
+        schriftH: "S'applique aux zones de texte : texte original, texte masqué, prompt et réponse.",
         schriftprobe: "Madame, Monsieur",
-        schriftAlles: "Aussi pour les boutons et les libellés",
-        schriftSans: "Sans empattement", schriftSerif: "Avec empattement",
+        schriftSerif: "Avec empattement",
         schriftMono: "Largeur fixe",
         herunterladen: "Télécharger", einfuegen: "Coller",
-        einfuegenHinweis: "Presse-papiers bloqué — utilise Ctrl+V.",
+        einfuegenHinweis: "Presse-papiers bloqué. Utilise Ctrl+V.",
         drop_ohne_datei: "Ce programme ne fournit aucun fichier. Glisse d’abord le message sur le bureau, puis ici.",
-        mUpdate: "Rechercher des mises à jour", neuesteSucht: "Je demande à GitHub la version la plus récente …", neuesteAktuell: "Tu as la {aktuell} — c’est la version la plus récente.", neuesteNeu: "La version {neueste} est disponible. Tu as la {aktuell}.", neuesteSeite: "Vers la page de téléchargement",
+        mUpdate: "Rechercher des mises à jour", neuesteSucht: "Je demande à GitHub la version la plus récente …", neuesteAktuell: "Tu as la {aktuell}. C’est la version la plus récente.", neuesteNeu: "La version {neueste} est disponible. Tu as la {aktuell}.", neuesteSeite: "Vers la page de téléchargement",
         kAusschneiden: "Couper", kKopieren: "Copier", kEinfuegen: "Coller",
         menu: "Menu",
         mBrowser: "Ouvrir dans le navigateur", mHilfe: "Aide",
@@ -527,41 +534,40 @@ const I18N = {
         vokHerunter: "Télécharger le vocabulaire",
         vokHoch: "Téléverser le vocabulaire",
         tplMenu: "Modèles", tplSichern: "Enregistrer",
-        tplWaehlen: "Choisir un modèle ({})",
+        tplWaehlen: "Choisir un modèle local ({})",
         tplSuchen: "Chercher …", tplNichts: "Aucun modèle ne correspond.",
-        tplLokal: "enregistré en local",
-        tplLeer: "Aucun modèle enregistré",
+        tplLeer: "Aucun modèle local enregistré",
         tplName: "Nom du modèle",
         tplWarnung: "Les modèles restent en clair sur le disque. "
           + "N'y écrivez pas de données personnelles.",
         tplWeg: "Supprimer le modèle « {} » ?", tplWegT: "Supprimer",
         tplGesichert: "Modèle « {} » enregistré.",
         tplFehler: "Modèle non enregistré : {}",
-        sichernWarnung: "Le fichier contient {} valeurs originales en clair "
-          + "— tout ce qui a été masqué ici. Il restera sans protection "
+        sichernWarnung: "Le fichier contient {} valeurs originales en clair, "
+          + "soit tout ce qui a été masqué ici. Il restera sans protection "
           + "dans le dossier de téléchargement. Enregistrer ?",
         vokGeladen: "{} entrées de vocabulaire chargées.",
-        vokKaputt: "Le fichier n'est pas du JSON lisible — rien de chargé.",
+        vokKaputt: "Le fichier n'est pas du JSON lisible. Rien de chargé.",
         frageJa: "Continuer",
         frageNein: "Annuler",
         frageOk: "Valider",
         neuladenFrage: "Recharger vraiment ?\n{} entrées de vocabulaire seront perdues.",
-        verbindungWeg: "Pas de connexion au service MASCHERA — la requête n'est pas arrivée. Réessaie ; si cela ne suffit pas, redémarre MASCHERA.",
+        verbindungWeg: "Pas de connexion au service MASCHERA. La requête n'est pas arrivée. Réessaie ; si cela ne suffit pas, redémarre MASCHERA.",
         httpFehler: "Le service MASCHERA a refusé la requête (erreur {status}).",
-        vokFalsch: "Le fichier ne contient pas d'objet — rien de chargé.",
-        vokFremd: "Ce n'est pas un vocabulaire MASCHERA — rien de chargé.",
-        vokFassung: "Version inconnue {} — cette édition lit la version 1.",
-        vokKein: "Pas de dictionnaire dans le fichier — rien de chargé.",
-        vokSchluessel: "Marqueur non valable : {} — rien de chargé.",
-        vokWert: "La valeur de {} n'est pas une chaîne — rien de chargé.",
+        vokFalsch: "Le fichier ne contient pas d'objet. Rien de chargé.",
+        vokFremd: "Ce n'est pas un vocabulaire MASCHERA. Rien de chargé.",
+        vokFassung: "Version inconnue {}. Cette édition lit la version 1.",
+        vokKein: "Pas de dictionnaire dans le fichier. Rien de chargé.",
+        vokSchluessel: "Marqueur non valable : {}. Rien de chargé.",
+        vokWert: "La valeur de {} n'est pas une chaîne. Rien de chargé.",
         vokText: "Le texte masqué du fichier n'est pas une chaîne.",
-        einklappen: "Replier", ausklappen: "Déplier",
+       
         bearbeiten: "Modifier", bearbeitenFertig: "Terminé",
-        bearbeitenHilfe: "Corriger le texte à la main. Laissez les marqueurs comme [FULLNAME_1] en place — ils sont rétablis à la fin.",
+        bearbeitenHilfe: "Corriger le texte à la main. Laissez les marqueurs comme [FULLNAME_1] en place. Ils sont rétablis à la fin.",
         phUnbekannt: "Le dictionnaire ne connaît pas ces marqueurs : {liste}. Ils resteront tels quels.",
-        phEntwertet: "{} marqueurs récupérés du balisage Markdown — le service les avait échappés avec des barres obliques inverses.",
-        phErgaenzt: "{} marqueurs cassés complétés : {liste}. Le dictionnaire les connaît — le service avait avalé le crochet.",
-        phKaputt: "Ces passages ressemblent à des marqueurs sans en être : {liste}. Ils ne seront PAS rétablis — à vérifier dans le texte.",
+        phEntwertet: "{} marqueurs récupérés du balisage Markdown. Le service les avait échappés avec des barres obliques inverses.",
+        phErgaenzt: "{} marqueurs cassés complétés : {liste}. Le dictionnaire les connaît. Le service avait avalé le crochet.",
+        phKaputt: "Ces passages ressemblent à des marqueurs sans en être : {liste}. Ils ne seront PAS rétablis. À vérifier dans le texte.",
         fussLinks: "MASCHERA · traitement sur cet appareil · aucune connexion en ligne aux services IA", bereitS: "Prêt",
         orig: "Texte original", masked: "Masqué", run: "Masquer",
         fertig: "Texte final", prompt: "Prompt",
@@ -580,7 +586,7 @@ const I18N = {
               + "vocabulaire.",
         leer02: "Rien de masqué. Colle un texte dans la colonne 1 puis "
               + "presse « Masquer ».",
-        dropN: "Glisser un PDF, DOCX, TXT ou courriel — ou cliquer",
+        dropN: "Glisser un PDF, DOCX, TXT ou courriel, ou cliquer",
         laeuft: "en cours …", lWartet: "Préparation du texte …", lModell: "Fenêtre {} sur {}", lMaskieren: "Masquage, création du glossaire …", lRest: "encore environ {}", lFertig: "masqué en {}", drop: "Glisser un fichier ou choisir",
         portFehlt: "Aucun port indiqué.",
         verwerfenVok: "Continuer vraiment ?\n{} entrées de vocabulaire seront perdues.",
@@ -592,29 +598,29 @@ const I18N = {
         verworfen: "Rejeté de peu", nichts: "rien",
         bereit: "prêt", quelle: "Source", vertrauen: "Confiance",
         zeichen: "Caractères", anteil: "masqué",
-        ohneModell: "SANS MODÈLE — seulement sommes de contrôle et motifs. "
+        ohneModell: "SANS MODÈLE : seulement sommes de contrôle et motifs. "
                   + "Noms, dates et adresses restent en clair.",
         // Hinweise des Servers. Er schickt den Schluessel und die
         // Werte, der Satz steht hier — s. `core/hinweise.py`.
         hinweise: {
-          ohne_modell: "SANS MODÈLE — seulement sommes de contrôle et motifs. Noms, dates et adresses restent EN CLAIR.",
+          ohne_modell: "SANS MODÈLE : seulement sommes de contrôle et motifs. Noms, dates et adresses restent EN CLAIR.",
           fenster: "Plus long qu’une fenêtre ({token} jetons). Traité par recouvrement.",
           wortgrenzen: "{anzahl} segments du modèle tombaient au milieu d’un mot et ont été étendus aux limites de mots.",
-          mehrere_nachrichten: "{anzahl} messages dans le fichier — seul le premier est traité.",
+          mehrere_nachrichten: "{anzahl} messages dans le fichier. Seul le premier est traité.",
           vorlieben: "D’après les préférences enregistrées, en clair : {tags}",
-          ohne_woerterbuch: "Sans dictionnaire — anonymisé définitivement, aucun retour possible.",
+          ohne_woerterbuch: "Sans dictionnaire : anonymisé définitivement, aucun retour possible.",
           eigene_regeln: "Règles personnelles appliquées ({anzahl}) : {namen}",
-          schreibweise: "{platzhalter} ne diffère de {treffer} que par la casse — non remplacé.",
+          schreibweise: "{platzhalter} ne diffère de {treffer} que par la casse. Non remplacé.",
           anhang_uebersprungen: "Pièce jointe ignorée : {name}",
           kein_textteil: "Le courriel n’a pas de partie texte, seulement {art}.",
           msg_ohne_textrumpf: "Le .msg n’a pas de corps en texte brut (seulement RTF ou HTML). Dans Outlook, choisir « Enregistrer sous » → .eml.",
           binaer_abgeschnitten: "{zeichen} caractères après la fin du texte ressemblaient à des données binaires et ont été omis.",
           nur_html: "seule la partie HTML est présente, dépouillée sommairement",
           kein_rumpf: "aucun corps de texte trouvé",
-          pdf_ohne_text: "aucun texte dans le PDF — probablement un scan. Sans OCR le filtre ne voit rien, et un résultat vide ne signifie PAS qu’il n’y a pas de données personnelles.",
+          pdf_ohne_text: "aucun texte dans le PDF. Probablement un scan. Sans OCR le filtre ne voit rien, et un résultat vide ne signifie PAS qu’il n’y a pas de données personnelles.",
           pdf_seiten: "{anzahl} pages, la mise en page est perdue à la lecture",
           tabellen: "{anzahl} tableaux, lus ligne par ligne",
-          nicht_gelesen: "NON lu : {teile} — c’est souvent là que figure l’expéditeur",
+          nicht_gelesen: "NON lu : {teile}. C’est souvent là que figure l’expéditeur",
           docx_leer: "aucun texte dans le document. Un résultat vide ne signifie PAS qu’il n’y a pas de données personnelles.",
           kodierung: "Encodage {kodierung}",
           bom: "marque d’ordre des octets en tête, supprimée",
@@ -627,7 +633,7 @@ const I18N = {
           adresse_fehlt: "Le champ `adresse` est absent ou vide.",
           adresse_zu_lang: "Adresse de plus de {hoechstens} caractères.",
           datei_ohne_text: "Le fichier n’a donné aucun texte.",
-          datei_unlesbar: "Fichier illisible — endommagé ou format non pris en charge.",
+          datei_unlesbar: "Fichier illisible : endommagé ou format non pris en charge.",
           datei_zu_gross: "Fichier de plus de {mb} Mo.",
           dienst_kein_objekt: "Le service {nummer} n’est pas un objet.",
           dienst_kennung_doppelt: "Identifiant attribué deux fois : {kennung}",
@@ -635,7 +641,7 @@ const I18N = {
           dienst_ohne_namen: "Le service {nummer} n’a pas de nom.",
           dienst_schema: "Service {name} : uniquement https:// ou http://, pas {adresse}",
           dienste_keine_liste: "Le champ `dienste` n’est pas une liste.",
-          dienste_leer: "Il faut au moins un service — sinon « Copier et ouvrir » ne sait pas où aller.",
+          dienste_leer: "Il faut au moins un service. Sinon « Copier et ouvrir » ne sait pas où aller.",
           dienste_zu_viele: "{hoechstens} services au maximum.",
           einst_kein_objekt: "Pas un objet.",
           einstellungen_gespeichert: "Enregistré.",
@@ -647,19 +653,19 @@ const I18N = {
           format_unbekannt: "Le format {endung} n’est pas lu. Possible : {moeglich}",
           keine_datei: "Aucun fichier reçu.",
           klartext_gelesen: "Ces types restent durablement en clair.",
-          klartext_gespeichert: "Enregistré. Ces types restent durablement en clair — dans les documents à venir également.",
-          nicht_gespeichert: "Non enregistré — le fichier du dossier de réglages n'a pas pu être écrit.",
+          klartext_gespeichert: "Enregistré. Ces types restent durablement en clair, dans les documents à venir également.",
+          nicht_gespeichert: "Non enregistré. Le fichier du dossier de réglages n'a pas pu être écrit.",
           ohne_tags_unbekannt: "Types inconnus dans `ohne` : {tags}",
           port_ausserhalb: "Port hors de 1–65535 : {port}",
           regeldatei_fehlerhaft: "Le fichier de règles est défectueux et n'a pas été appliqué.",
-          regeln_abgelehnt: "Règles refusées — le fichier contient une erreur.",
+          regeln_abgelehnt: "Règles refusées. Le fichier contient une erreur.",
           regeln_gelesen: "Modifier les règles, c’est modifier le résultat de mesure.",
           regeln_veraltete_schluessel: "Ce fichier de règles utilise des clés obsolètes. Elles restent lues ou sont ignorées : {umbenennungen}",
           regeln_gespeichert: "Enregistré. Le résultat de mesure change en conséquence.",
-          neueste_nicht_erreichbar: "GitHub est injoignable — pas de réseau, ou le serveur n’a pas le droit de sortir. La version la plus récente se trouve sur la page de téléchargement.",
+          neueste_begrenzt: "GitHub limite les requêtes en ce moment. Les 60 par heure de ton réseau sont épuisées. Réessaie dans une heure, ou va directement sur la page de téléchargement.",
+          neueste_nicht_erreichbar: "GitHub est injoignable : pas de réseau, ou le serveur n’a pas le droit de sortir. La version la plus récente se trouve sur la page de téléchargement.",
           neueste_unlesbar: "GitHub a répondu, mais sans numéro de version lisible. La version la plus récente se trouve sur la page de téléchargement.",
-          regeln_unlesbar: "Règles illisibles — un champ n'a pas la bonne forme.",
-          schrift_ueberall_kein_wahrheitswert: "Le champ `schrift_ueberall` n’est pas un booléen.",
+          regeln_unlesbar: "Règles illisibles. Un champ n'a pas la bonne forme.",
           tray_kein_wahrheitswert: "Le champ `tray` n’est pas un booléen.",
           fenstermodus_unbekannt: "Le mode de fenêtre {wert} n’existe pas. Possible : {moeglich}",
           thema_unbekannt: "Le thème {wert} n’existe pas. Possible : {moeglich}",
@@ -681,13 +687,13 @@ const I18N = {
           vorliebe_tags_unbekannt: "Types inconnus : {tags}",
           wirt_unbekannt: "Ce service ne répond pas sous le nom « {wirt} ». En local, il est joignable sur 127.0.0.1 ; derrière un proxy, le nom se met dans MASCHERA_WIRT.",
           regeln_kein_yaml: "Les règles ne sont pas du YAML valide (ligne {zeile}).",
-          regel_zu_langsam: "Règle « {id} » : le motif prend {dauer} s pour une ligne d'essai — trop lent, souvent à cause de répétitions imbriquées comme (a+)+.",
+          regel_zu_langsam: "Règle « {id} » : le motif prend {dauer} s pour une ligne d'essai. C'est trop lent, souvent à cause de répétitions imbriquées comme (a+)+.",
           regel_ohne_kennung: "Une règle n'a pas d'identifiant (`id`).",
           regel_kennung: "Identifiant « {id} » : seulement minuscules, chiffres et trait de soulignement, 2 à 32 caractères.",
           regel_platzhalter: "Règle « {id} » : l'espace réservé « {platzhalter} » doit compter 2 à 20 lettres ou chiffres.",
           regel_woerter_leer: "Règle « {id} » : la liste de mots (`words`) est vide.",
           regel_woerter_kurz: "Règle « {id} » : entrées trop courtes ({kurz}). En dessous de {min} caractères, elles touchent partout comme syllabe.",
-          regel_etiketten_leer: "Règle « {id} » : `labels` est vide — sans étiquette, la règle toucherait n'importe quel nombre.",
+          regel_etiketten_leer: "Règle « {id} » : `labels` est vide. Sans étiquette, la règle toucherait n'importe quel nombre.",
           regel_wertform: "Règle « {id} » : la forme de valeur « {form} » n'existe pas. Possible : {moeglich}",
           regel_min_max: "Règle « {id} » : min/max invraisemblables ({min}/{max}).",
           regel_muster_fehlt: "Règle « {id} » : le motif (`pattern`) manque.",
@@ -696,10 +702,10 @@ const I18N = {
           regeln_doppelt: "Ces identifiants de règle figurent deux fois : {kennungen}",
           regel_platzhalter_vergeben: "Espace réservé déjà utilisé : {platzhalter}. Choisis un autre nom.",
           msg_ohne_olefile: "Les messages Outlook (.msg) ne peuvent pas être lus ici. Dans Outlook, « Enregistrer sous » → .eml.",
-          pdf_ohne_pymupdf: "Les PDF ne peuvent pas être lus ici — la bibliothèque PDF manque.",
+          pdf_ohne_pymupdf: "Les PDF ne peuvent pas être lus ici. La bibliothèque PDF manque.",
           docx_zu_gross: "Le document Word ferait {mb} Mo une fois décompressé ; au plus {hoechstens} Mo sont lus.",
           docx_kaputt: "Pas de fichier .docx lisible. Les anciens .doc sont un autre format.",
-          docx_ohne_dokument: "Pas un document Word — sans doute un .odt, .pptx ou .xlsx mal nommé.",
+          docx_ohne_dokument: "Pas un document Word. Sans doute un .odt, .pptx ou .xlsx mal nommé.",
           docx_dtd: "Le document Word contient une DTD ; cela n'existe pas dans un vrai fichier Word et n'est pas lu.",
           word_alt: "L'ancien format Word (.doc) n'est pas lu. Enregistre-le en .docx dans Word ou LibreOffice.",
         },
@@ -715,9 +721,10 @@ const I18N = {
         bspdSetzen: "Mascherare come {}?\nÈ un dato degno di particolare protezione.",
         einstT: "Impostazioni",
         schliessen: "Chiudi", einstZu: "Salva", einstZuRest: " e chiudi", einstAbbrechen: "Annulla",
+        zoneHinaus: "Lascia il tuo dispositivo", vokAlle: "Tutti", ablauf: "Procedura", schritte: ["Inserire il testo", "Verificare", "Inviare il prompt", "Inserire la risposta", "Ritradurre"],
         allgemeinT: "Generale",
         serverT: "Server",
-        serverH: "Indirizzo e porta del servizio di mascheratura locale. Il testo non lascia il dispositivo — la verifica mostra se il servizio risponde.",
+        serverH: "Indirizzo e porta del servizio di mascheratura locale. Il testo non lascia il dispositivo. La verifica mostra se il servizio risponde.",
         adresse: "Indirizzo",
         port: "Porta",
         pruefen: "Verifica",
@@ -727,15 +734,18 @@ const I18N = {
         giltNachNeustart: "Salvato. Vale dal prossimo avvio del servizio.",
         keinDienstDa: "MASCHERA non risponde sul IP {}",
         diensteT: "Servizi",
-        diensteH: "Il link web si apre alla copia.",
+        diensteH: "Questi servizi compaiono nel menu accanto al pulsante di invio. Alla copia MASCHERA apre l’indirizzo del servizio scelto. L’ultimo scelto resta salvato anche per le sessioni future.",
         hinzu: "Aggiungi",
         entfernen: "Rimuovi",
-        fensterWort: "Aprire in una finestra invece che in una scheda",
+        vokWeg: "Rimuovi {}: il segnaposto scompare da tutto il testo e al suo posto torna il valore originale. Se poi inoltri il testo, esce senza maschera.",
+        fensterWort: "Aprire i servizi in una nuova finestra invece che in una scheda",
         trayWort: "Alla chiusura, riduci nell’area di notifica",
         widgetWort: "Finestra stretta, sempre in primo piano",
         fensterHilfe: "Entrambi hanno effetto al prossimo avvio dell’applicazione.",
         klartextT: "Tipi in chiaro",
-        klartextH: "Questi tipi restano in chiaro — riconosciuti, ma non sostituiti.",
+        klartextStelle: "riconosciuto, resta in chiaro",
+        klartextWort: "in chiaro",
+        klartextH: "Scegli i tipi che MASCHERA non deve mai mascherare. Vengono comunque riconosciuti, ma restano invariati nel testo. Vale per ogni documento, finché non li deselezioni.",
         regelnT: "Regole proprie",
         regelnH: "Parole e schemi aggiuntivi da mascherare. In YAML. Modificarle cambia il risultato della misura.",
         regelnSpeichern: "Salva regole",
@@ -748,12 +758,12 @@ const I18N = {
         unbekannteTags: "Tipi salvati che non esistono più: {}",
         einpflegen04: "Applica il vocabolario", leerenA: "Svuota",
         antwortPlatz: "Incolla qui la risposta del tuo strumento IA (Ctrl+V) …",
-        offenText: "{} segnaposto sono rimasti — da controllare nel testo finale:",
+        offenText: "{} segnaposto sono rimasti. Da controllare nel testo finale:",
         gutText: "{} segnaposto ripristinati.",
         promptT: "Prompt", hinausT: "Questo esce", trenner: "applica il prompt qui sopra al testo seguente",
-        sendenZu: "Copia e apri {}", onlineWarnung: "In {} lavori online, fai attenzione!", origPlatz: "Incolla qui il testo originale …", promptPlatz: "Il tuo prompt, p. es. «Rispondi a questa e-mail gentilmente.»", hinausLeer: "Prima «Riprendi nel prompt» — poi qui vedrai cosa esce.",
+        sendenZu: "Copia e apri {}", onlineWarnung: "In {} lavori online, fai attenzione!", origPlatz: "Incolla qui il testo originale …", promptPlatz: "Il tuo prompt, p. es. «Rispondi a questa e-mail gentilmente.»", hinausLeer: "Prima «Riprendi nel prompt», poi qui vedrai cosa esce.",
         hinausZahl: "Esattamente questi {} caratteri andranno a {dienst} appena li incolli lì.",
-        verworfenHinweis: "Vocabolario eliminato — il testo mascherato non è più ripristinabile.",
+        verworfenHinweis: "Vocabolario eliminato. Il testo mascherato non è più ripristinabile.",
         an: "Attivo", aus: "Spento", spalteId: "ID",
         spalteWert: "Valore originale", spalteTyp: "Tipo", anteilW: "Quota mascherata",
         keinVokabular: "Nessun vocabolario. Nasce con la mascheratura.",
@@ -768,15 +778,14 @@ const I18N = {
         themaAuto: "Automatico", themaHell: "Chiaro", themaDunkel: "Scuro",
         schriftT: "Carattere", schriftart: "Carattere",
         schriftgroesse: "Dimensione",
-        schriftH: "Vale per le aree di testo — testo originale, testo mascherato, prompt e risposta.",
+        schriftH: "Vale per le aree di testo: testo originale, testo mascherato, prompt e risposta.",
         schriftprobe: "Gentili signore, egregi signori",
-        schriftAlles: "Anche per pulsanti ed etichette",
-        schriftSans: "Senza grazie", schriftSerif: "Con grazie",
+        schriftSerif: "Con grazie",
         schriftMono: "Larghezza fissa",
         herunterladen: "Scarica", einfuegen: "Incolla",
-        einfuegenHinweis: "Appunti bloccati — usa Ctrl+V.",
+        einfuegenHinweis: "Appunti bloccati. Usa Ctrl+V.",
         drop_ohne_datei: "Da questo programma non arriva alcun file. Trascina prima il messaggio sulla scrivania, poi qui.",
-        mUpdate: "Cerca aggiornamenti", neuesteSucht: "Chiedo a GitHub la versione più recente …", neuesteAktuell: "Hai la {aktuell} — è la versione più recente.", neuesteNeu: "È disponibile la versione {neueste}. Tu hai la {aktuell}.", neuesteSeite: "Alla pagina di download",
+        mUpdate: "Cerca aggiornamenti", neuesteSucht: "Chiedo a GitHub la versione più recente …", neuesteAktuell: "Hai la {aktuell}. È la versione più recente.", neuesteNeu: "È disponibile la versione {neueste}. Tu hai la {aktuell}.", neuesteSeite: "Alla pagina di download",
         kAusschneiden: "Taglia", kKopieren: "Copia", kEinfuegen: "Incolla",
         menu: "Menu",
         mBrowser: "Apri nel browser", mHilfe: "Aiuto",
@@ -788,41 +797,40 @@ const I18N = {
         vokHerunter: "Scarica il vocabolario",
         vokHoch: "Carica il vocabolario",
         tplMenu: "Modelli", tplSichern: "Salva",
-        tplWaehlen: "Scegliere un modello ({})",
+        tplWaehlen: "Scegli un modello locale ({})",
         tplSuchen: "Cerca …", tplNichts: "Nessun modello corrisponde.",
-        tplLokal: "salvato in locale",
-        tplLeer: "Nessun modello salvato",
+        tplLeer: "Nessun modello locale salvato",
         tplName: "Nome del modello",
         tplWarnung: "I modelli restano in chiaro sul disco. "
           + "Non scrivervi dati personali.",
         tplWeg: "Eliminare il modello «{}»?", tplWegT: "Elimina",
         tplGesichert: "Modello «{}» salvato.",
         tplFehler: "Modello non salvato: {}",
-        sichernWarnung: "Il file contiene {} valori originali in chiaro — "
-          + "tutto ciò che è stato mascherato. Resterà senza protezione "
+        sichernWarnung: "Il file contiene {} valori originali in chiaro, "
+          + "cioè tutto ciò che è stato mascherato. Resterà senza protezione "
           + "nella cartella dei download. Salvare?",
         vokGeladen: "{} voci di vocabolario caricate.",
-        vokKaputt: "Il file non è JSON leggibile — non caricato nulla.",
+        vokKaputt: "Il file non è JSON leggibile. Non caricato nulla.",
         frageJa: "Continua",
         frageNein: "Annulla",
         frageOk: "Conferma",
         neuladenFrage: "Ricaricare davvero?\n{} voci di vocabolario andranno perse.",
-        verbindungWeg: "Nessuna connessione al servizio MASCHERA — la richiesta non è arrivata. Riprova; se non basta, riavvia MASCHERA.",
+        verbindungWeg: "Nessuna connessione al servizio MASCHERA. La richiesta non è arrivata. Riprova; se non basta, riavvia MASCHERA.",
         httpFehler: "Il servizio MASCHERA ha rifiutato la richiesta (errore {status}).",
-        vokFalsch: "Il file non contiene un oggetto — non caricato nulla.",
-        vokFremd: "Non è un vocabolario MASCHERA — non caricato nulla.",
-        vokFassung: "Versione sconosciuta {} — questa edizione legge la 1.",
-        vokKein: "Nessun dizionario nel file — non caricato nulla.",
-        vokSchluessel: "Segnaposto non valido: {} — non caricato nulla.",
-        vokWert: "Il valore di {} non è una stringa — non caricato nulla.",
+        vokFalsch: "Il file non contiene un oggetto. Non caricato nulla.",
+        vokFremd: "Non è un vocabolario MASCHERA. Non caricato nulla.",
+        vokFassung: "Versione sconosciuta {}. Questa edizione legge la 1.",
+        vokKein: "Nessun dizionario nel file. Non caricato nulla.",
+        vokSchluessel: "Segnaposto non valido: {}. Non caricato nulla.",
+        vokWert: "Il valore di {} non è una stringa. Non caricato nulla.",
         vokText: "Il testo mascherato nel file non è una stringa.",
-        einklappen: "Richiudi", ausklappen: "Apri",
+       
         bearbeiten: "Modifica", bearbeitenFertig: "Fatto",
-        bearbeitenHilfe: "Correggere il testo a mano. Lasciare i segnaposto come [FULLNAME_1] — vengono ripristinati alla fine.",
+        bearbeitenHilfe: "Correggere il testo a mano. Lasciare i segnaposto come [FULLNAME_1]. Vengono ripristinati alla fine.",
         phUnbekannt: "Il dizionario non conosce questi segnaposto: {liste}. Resteranno invariati.",
-        phEntwertet: "{} segnaposto recuperati dalla marcatura Markdown — il servizio li aveva protetti con barre rovesciate.",
-        phErgaenzt: "{} segnaposto spezzati completati: {liste}. Il dizionario li conosce — il servizio aveva inghiottito la parentesi.",
-        phKaputt: "Questi punti sembrano segnaposto ma non lo sono: {liste}. NON verranno ripristinati — da controllare nel testo.",
+        phEntwertet: "{} segnaposto recuperati dalla marcatura Markdown. Il servizio li aveva protetti con barre rovesciate.",
+        phErgaenzt: "{} segnaposto spezzati completati: {liste}. Il dizionario li conosce. Il servizio aveva inghiottito la parentesi.",
+        phKaputt: "Questi punti sembrano segnaposto ma non lo sono: {liste}. NON verranno ripristinati. Da controllare nel testo.",
         fussLinks: "MASCHERA · elaborazione su questo dispositivo · nessuna connessione online ai servizi IA", bereitS: "Pronto",
         orig: "Testo originale", masked: "Mascherato", run: "Maschera",
         fertig: "Testo finale", prompt: "Prompt",
@@ -840,7 +848,7 @@ const I18N = {
         leer05: "Il testo finale apparirà qui appena applichi il vocabolario.",
         leer02: "Niente mascherato. Incolla un testo nella colonna 1 e premi "
               + "«Maschera».",
-        dropN: "Trascina PDF, DOCX, TXT o e-mail — oppure clicca",
+        dropN: "Trascina PDF, DOCX, TXT o e-mail, oppure clicca",
         laeuft: "in corso …", lWartet: "Preparazione del testo …", lModell: "Finestra {} di {}", lMaskieren: "Mascheratura, creazione del glossario …", lRest: "ancora circa {}", lFertig: "mascherato in {}", drop: "Trascina un file o scegli",
         portFehlt: "Nessuna porta indicata.",
         verwerfenVok: "Continuare davvero?\n{} voci di vocabolario andranno perse.",
@@ -852,29 +860,29 @@ const I18N = {
         verworfen: "Scartato per poco", nichts: "niente",
         bereit: "pronto", quelle: "Fonte", vertrauen: "Fiducia",
         zeichen: "Caratteri", anteil: "mascherato",
-        ohneModell: "SENZA MODELLO — solo checksum e pattern. Nomi, date e "
+        ohneModell: "SENZA MODELLO: solo checksum e pattern. Nomi, date e "
                   + "indirizzi restano in chiaro.",
         // Hinweise des Servers. Er schickt den Schluessel und die
         // Werte, der Satz steht hier — s. `core/hinweise.py`.
         hinweise: {
-          ohne_modell: "SENZA MODELLO — solo checksum e pattern. Nomi, date e indirizzi restano IN CHIARO.",
+          ohne_modell: "SENZA MODELLO: solo checksum e pattern. Nomi, date e indirizzi restano IN CHIARO.",
           fenster: "Più lungo di una finestra ({token} token). Elaborato con sovrapposizione.",
           wortgrenzen: "{anzahl} intervalli del modello cadevano dentro una parola e sono stati estesi ai confini di parola.",
-          mehrere_nachrichten: "{anzahl} messaggi nel file — viene elaborato solo il primo.",
+          mehrere_nachrichten: "{anzahl} messaggi nel file. Viene elaborato solo il primo.",
           vorlieben: "Dalle preferenze salvate, in chiaro: {tags}",
-          ohne_woerterbuch: "Senza dizionario — anonimizzato definitivamente, nessun ritorno possibile.",
+          ohne_woerterbuch: "Senza dizionario: anonimizzato definitivamente, nessun ritorno possibile.",
           eigene_regeln: "Regole proprie applicate ({anzahl}): {namen}",
-          schreibweise: "{platzhalter} differisce da {treffer} solo per maiuscole e minuscole — non sostituito.",
+          schreibweise: "{platzhalter} differisce da {treffer} solo per maiuscole e minuscole. Non sostituito.",
           anhang_uebersprungen: "Allegato saltato: {name}",
           kein_textteil: "L’e-mail non ha una parte di testo, solo {art}.",
           msg_ohne_textrumpf: "Il .msg non ha un corpo in testo semplice (solo RTF o HTML). In Outlook scegliere «Salva con nome» → .eml.",
           binaer_abgeschnitten: "{zeichen} caratteri dopo la fine del testo sembravano dati binari e sono stati omessi.",
           nur_html: "presente solo la parte HTML, ripulita sommariamente",
           kein_rumpf: "nessun corpo di testo trovato",
-          pdf_ohne_text: "nessun testo nel PDF — probabilmente una scansione. Senza OCR il filtro non vede nulla, e un esito vuoto NON significa che non ci siano dati personali.",
+          pdf_ohne_text: "nessun testo nel PDF. Probabilmente una scansione. Senza OCR il filtro non vede nulla, e un esito vuoto NON significa che non ci siano dati personali.",
           pdf_seiten: "{anzahl} pagine, il layout va perso in lettura",
           tabellen: "{anzahl} tabelle, lette riga per riga",
-          nicht_gelesen: "NON letto: {teile} — lì nelle lettere si trova spesso il mittente",
+          nicht_gelesen: "NON letto: {teile}. Lì nelle lettere si trova spesso il mittente",
           docx_leer: "nessun testo nel documento. Un esito vuoto NON significa che non ci siano dati personali.",
           kodierung: "Codifica {kodierung}",
           bom: "byte order mark all’inizio del testo, rimosso",
@@ -887,7 +895,7 @@ const I18N = {
           adresse_fehlt: "Il campo `adresse` manca o è vuoto.",
           adresse_zu_lang: "Indirizzo più lungo di {hoechstens} caratteri.",
           datei_ohne_text: "Il file non ha prodotto alcun testo.",
-          datei_unlesbar: "File illeggibile — danneggiato o formato non supportato.",
+          datei_unlesbar: "File illeggibile: danneggiato o formato non supportato.",
           datei_zu_gross: "File più grande di {mb} MB.",
           dienst_kein_objekt: "Il servizio {nummer} non è un oggetto.",
           dienst_kennung_doppelt: "Identificativo assegnato due volte: {kennung}",
@@ -907,19 +915,19 @@ const I18N = {
           format_unbekannt: "Il formato {endung} non viene letto. Possibili: {moeglich}",
           keine_datei: "Nessun file ricevuto.",
           klartext_gelesen: "Questi tipi restano permanentemente in chiaro.",
-          klartext_gespeichert: "Salvato. Questi tipi restano permanentemente in chiaro — anche nei documenti futuri.",
-          nicht_gespeichert: "Non salvato — impossibile scrivere il file nella cartella delle impostazioni.",
+          klartext_gespeichert: "Salvato. Questi tipi restano permanentemente in chiaro, anche nei documenti futuri.",
+          nicht_gespeichert: "Non salvato. Impossibile scrivere il file nella cartella delle impostazioni.",
           ohne_tags_unbekannt: "Tipi sconosciuti in `ohne`: {tags}",
           port_ausserhalb: "Porta fuori da 1–65535: {port}",
           regeldatei_fehlerhaft: "Il file delle regole è difettoso e non è stato applicato.",
-          regeln_abgelehnt: "Regole rifiutate — il file contiene un errore.",
+          regeln_abgelehnt: "Regole rifiutate. Il file contiene un errore.",
           regeln_gelesen: "Chi cambia le regole cambia il risultato della misurazione.",
           regeln_veraltete_schluessel: "Questo file di regole usa chiavi obsolete. Vengono ancora lette o ignorate: {umbenennungen}",
           regeln_gespeichert: "Salvato. Il risultato della misurazione cambia di conseguenza.",
-          neueste_nicht_erreichbar: "GitHub non è raggiungibile — niente rete, oppure il server non può uscire. La versione più recente è nella pagina di download.",
+          neueste_begrenzt: "GitHub sta limitando le richieste. Le 60 all’ora della tua rete sono esaurite. Riprova tra un’ora, oppure vai direttamente alla pagina di download.",
+          neueste_nicht_erreichbar: "GitHub non è raggiungibile: niente rete, oppure il server non può uscire. La versione più recente è nella pagina di download.",
           neueste_unlesbar: "GitHub ha risposto, ma senza un numero di versione leggibile. La versione più recente è nella pagina di download.",
-          regeln_unlesbar: "Regole illeggibili — un campo ha la forma sbagliata.",
-          schrift_ueberall_kein_wahrheitswert: "Il campo `schrift_ueberall` non è un valore booleano.",
+          regeln_unlesbar: "Regole illeggibili. Un campo ha la forma sbagliata.",
           tray_kein_wahrheitswert: "Il campo `tray` non è un valore booleano.",
           fenstermodus_unbekannt: "La modalità finestra {wert} non esiste. Possibili: {moeglich}",
           thema_unbekannt: "Il tema {wert} non esiste. Possibili: {moeglich}",
@@ -941,13 +949,13 @@ const I18N = {
           vorliebe_tags_unbekannt: "Tipi sconosciuti: {tags}",
           wirt_unbekannt: "Questo servizio non risponde con il nome «{wirt}». In locale è raggiungibile su 127.0.0.1; dietro un proxy il nome va in MASCHERA_WIRT.",
           regeln_kein_yaml: "Le regole non sono YAML valido (riga {zeile}).",
-          regel_zu_langsam: "Regola «{id}»: il modello impiega {dauer} s per una riga di prova — troppo lento, spesso per ripetizioni annidate come (a+)+.",
+          regel_zu_langsam: "Regola «{id}»: il modello impiega {dauer} s per una riga di prova. È troppo lento, spesso per ripetizioni annidate come (a+)+.",
           regel_ohne_kennung: "Una regola non ha identificativo (`id`).",
           regel_kennung: "Identificativo «{id}»: solo minuscole, cifre e trattino basso, da 2 a 32 caratteri.",
           regel_platzhalter: "Regola «{id}»: il segnaposto «{platzhalter}» deve avere da 2 a 20 lettere o cifre.",
           regel_woerter_leer: "Regola «{id}»: l'elenco di parole (`words`) è vuoto.",
           regel_woerter_kurz: "Regola «{id}»: voci troppo corte ({kurz}). Sotto i {min} caratteri colpiscono ovunque come sillaba.",
-          regel_etiketten_leer: "Regola «{id}»: `labels` è vuoto — senza etichetta la regola colpirebbe qualsiasi numero.",
+          regel_etiketten_leer: "Regola «{id}»: `labels` è vuoto. Senza etichetta la regola colpirebbe qualsiasi numero.",
           regel_wertform: "Regola «{id}»: la forma di valore «{form}» non esiste. Possibile: {moeglich}",
           regel_min_max: "Regola «{id}»: min/max non plausibili ({min}/{max}).",
           regel_muster_fehlt: "Regola «{id}»: manca il modello (`pattern`).",
@@ -956,10 +964,10 @@ const I18N = {
           regeln_doppelt: "Questi identificativi di regola compaiono due volte: {kennungen}",
           regel_platzhalter_vergeben: "Segnaposto già assegnato: {platzhalter}. Scegli un altro nome.",
           msg_ohne_olefile: "I messaggi Outlook (.msg) non si possono leggere qui. In Outlook «Salva con nome» → .eml.",
-          pdf_ohne_pymupdf: "I PDF non si possono leggere qui — manca la libreria PDF.",
+          pdf_ohne_pymupdf: "I PDF non si possono leggere qui. Manca la libreria PDF.",
           docx_zu_gross: "Il documento Word sarebbe di {mb} MB una volta decompresso; se ne leggono al massimo {hoechstens} MB.",
           docx_kaputt: "Nessun file .docx leggibile. I vecchi .doc sono un altro formato.",
-          docx_ohne_dokument: "Non è un documento Word — probabilmente .odt, .pptx o .xlsx con estensione sbagliata.",
+          docx_ohne_dokument: "Non è un documento Word. Probabilmente .odt, .pptx o .xlsx con estensione sbagliata.",
           docx_dtd: "Il documento Word contiene una DTD; nei veri file Word non esiste e non viene letto.",
           word_alt: "Il vecchio formato Word (.doc) non viene letto. Salvalo come .docx in Word o LibreOffice.",
         },
@@ -975,9 +983,10 @@ const I18N = {
         bspdSetzen: "Mask as {}?\nThis is sensitive personal data.",
         einstT: "Settings",
         schliessen: "Close", einstZu: "Save", einstZuRest: " & close", einstAbbrechen: "Cancel",
+        zoneHinaus: "Leaves your device", vokAlle: "All", ablauf: "Steps", schritte: ["Insert text", "Check", "Send prompt", "Insert answer", "Translate back"],
         allgemeinT: "General",
         serverT: "Server",
-        serverH: "Address and port of the local masking service. The text never leaves your device — the check shows whether the service responds.",
+        serverH: "Address and port of the local masking service. The text never leaves your device. The check shows whether the service responds.",
         adresse: "Address",
         port: "Port",
         pruefen: "Check",
@@ -987,15 +996,18 @@ const I18N = {
         giltNachNeustart: "Saved. Applies from the next start of the service.",
         keinDienstDa: "No MASCHERA answers at {}.",
         diensteT: "Services",
-        diensteH: "The web link opens when you copy.",
+        diensteH: "These services appear in the menu next to the send button. When you copy, MASCHERA opens the address of the chosen service. The last one you chose is kept for future sessions.",
         hinzu: "Add",
         entfernen: "Remove",
-        fensterWort: "Open in a window rather than a tab",
+        vokWeg: "Remove {}: the placeholder disappears from the whole text and the original value is back in its place. If you pass the text on afterwards, it goes out unmasked.",
+        fensterWort: "Open services in a new window rather than a tab",
         trayWort: "On close, minimise to the tray instead of quitting",
         widgetWort: "Narrow window, always on top",
         fensterHilfe: "Both take effect after restarting the application.",
         klartextT: "Plaintext types",
-        klartextH: "These types stay in the clear — detected, but not replaced.",
+        klartextStelle: "detected, stays in plain text",
+        klartextWort: "in the clear",
+        klartextH: "Choose the types MASCHERA should never mask. They are still detected, but stay as they are in the text. This applies to every document until you deselect them.",
         regelnT: "Own rules",
         regelnH: "Extra words and patterns to mask. As YAML. Changing them changes the measurement.",
         regelnSpeichern: "Save rules",
@@ -1008,12 +1020,12 @@ const I18N = {
         unbekannteTags: "Saved types that no longer exist: {}",
         einpflegen04: "Apply vocabulary", leerenA: "Clear",
         antwortPlatz: "Paste your AI tool’s answer here (Ctrl+V) …",
-        offenText: "{} placeholders remained — check them in the final text:",
+        offenText: "{} placeholders remained. Check them in the final text:",
         gutText: "{} placeholders restored.",
         promptT: "Prompt", hinausT: "This goes out", trenner: "apply the prompt above to the following text",
-        sendenZu: "Copy and open {}", onlineWarnung: "In {} you are working online — be careful!", origPlatz: "Paste the original text here …", promptPlatz: "Your prompt, e.g. \u00abReply to this e-mail politely.\u00bb", hinausLeer: "First «Take into prompt» — then you see here what goes out.",
+        sendenZu: "Copy and open {}", onlineWarnung: "In {} you are working online, be careful!", origPlatz: "Paste the original text here …", promptPlatz: "Your prompt, e.g. \u00abReply to this e-mail politely.\u00bb", hinausLeer: "First «Take into prompt», then you see here what goes out.",
         hinausZahl: "Exactly these {} characters go to {dienst} once you paste them there.",
-        verworfenHinweis: "Vocabulary discarded — the masked text can no longer be restored.",
+        verworfenHinweis: "Vocabulary discarded. The masked text can no longer be restored.",
         an: "On", aus: "Off", spalteId: "ID",
         spalteWert: "Original value", spalteTyp: "Type", anteilW: "Masked share",
         keinVokabular: "No vocabulary yet. It appears when you mask.",
@@ -1028,15 +1040,14 @@ const I18N = {
         themaAuto: "Automatic", themaHell: "Light", themaDunkel: "Dark",
         schriftT: "Type", schriftart: "Typeface",
         schriftgroesse: "Size",
-        schriftH: "Applies to the text areas — original, masked text, prompt and reply.",
+        schriftH: "Applies to the text areas: original, masked text, prompt and reply.",
         schriftprobe: "Dear Sir or Madam",
-        schriftAlles: "Also for buttons and labels",
-        schriftSans: "Sans serif", schriftSerif: "Serif",
+        schriftSerif: "Serif",
         schriftMono: "Monospace",
         herunterladen: "Download", einfuegen: "Paste",
-        einfuegenHinweis: "Clipboard blocked — press Ctrl+V.",
+        einfuegenHinweis: "Clipboard blocked. Press Ctrl+V.",
         drop_ohne_datei: "This program does not hand over a file. Drag the message to the desktop first, then here.",
-        mUpdate: "Check for updates", neuesteSucht: "Asking GitHub for the newest version …", neuesteAktuell: "You have {aktuell} — that is the newest version.", neuesteNeu: "Version {neueste} is out. You have {aktuell}.", neuesteSeite: "To the download page",
+        mUpdate: "Check for updates", neuesteSucht: "Asking GitHub for the newest version …", neuesteAktuell: "You have {aktuell}. That is the newest version.", neuesteNeu: "Version {neueste} is out. You have {aktuell}.", neuesteSeite: "To the download page",
         kAusschneiden: "Cut", kKopieren: "Copy", kEinfuegen: "Paste",
         menu: "Menu",
         mBrowser: "Open in browser", mHilfe: "Help",
@@ -1048,41 +1059,40 @@ const I18N = {
         vokHerunter: "Download vocabulary",
         vokHoch: "Upload vocabulary",
         tplMenu: "Templates", tplSichern: "Save",
-        tplWaehlen: "Choose a template ({})",
+        tplWaehlen: "Choose a local template ({})",
         tplSuchen: "Search …", tplNichts: "No template matches.",
-        tplLokal: "stored locally",
-        tplLeer: "No template saved yet",
+        tplLeer: "No local template saved yet",
         tplName: "Template name",
         tplWarnung: "Templates stay in plain text on disk. "
           + "Do not put personal data into a template.",
         tplWeg: "Delete template “{}”?", tplWegT: "Delete",
         tplGesichert: "Template “{}” saved.",
         tplFehler: "Template not saved: {}",
-        sichernWarnung: "The file holds {} original values in plain text — "
-          + "everything masked here. It will then sit unprotected in your "
+        sichernWarnung: "The file holds {} original values in plain text, "
+          + "that is everything masked here. It will then sit unprotected in your "
           + "downloads folder. Save?",
         vokGeladen: "{} vocabulary entries loaded.",
-        vokKaputt: "The file is not readable JSON — nothing loaded.",
+        vokKaputt: "The file is not readable JSON. Nothing loaded.",
         frageJa: "Continue",
         frageNein: "Cancel",
         frageOk: "OK",
         neuladenFrage: "Really reload?\n{} vocabulary entries will be lost.",
-        verbindungWeg: "No connection to the MASCHERA service — the request did not arrive. Try again; if that does not help, restart MASCHERA.",
+        verbindungWeg: "No connection to the MASCHERA service. The request did not arrive. Try again; if that does not help, restart MASCHERA.",
         httpFehler: "The MASCHERA service refused the request (error {status}).",
-        vokFalsch: "The file does not contain an object — nothing loaded.",
-        vokFremd: "Not a MASCHERA vocabulary file — nothing loaded.",
-        vokFassung: "Unknown version {} — this build reads version 1.",
-        vokKein: "No dictionary in the file — nothing loaded.",
-        vokSchluessel: "Not a valid placeholder: {} — nothing loaded.",
-        vokWert: "The value for {} is not a string — nothing loaded.",
+        vokFalsch: "The file does not contain an object. Nothing loaded.",
+        vokFremd: "Not a MASCHERA vocabulary file. Nothing loaded.",
+        vokFassung: "Unknown version {}. This build reads version 1.",
+        vokKein: "No dictionary in the file. Nothing loaded.",
+        vokSchluessel: "Not a valid placeholder: {}. Nothing loaded.",
+        vokWert: "The value for {} is not a string. Nothing loaded.",
         vokText: "The masked text in the file is not a string.",
-        einklappen: "Collapse", ausklappen: "Expand",
+       
         bearbeiten: "Edit", bearbeitenFertig: "Done",
-        bearbeitenHilfe: "Correct the text by hand. Leave placeholders such as [FULLNAME_1] in place — they are restored at the end.",
+        bearbeitenHilfe: "Correct the text by hand. Leave placeholders such as [FULLNAME_1] in place. They are restored at the end.",
         phUnbekannt: "The dictionary does not know these placeholders: {liste}. They will stay as they are.",
-        phEntwertet: "{} placeholders recovered from Markdown escaping — the service had escaped them with backslashes.",
-        phErgaenzt: "{} broken placeholders completed: {liste}. The dictionary knows them — the service swallowed the bracket.",
-        phKaputt: "These passages look like placeholders but are not: {liste}. They will NOT be restored — please check them in the text.",
+        phEntwertet: "{} placeholders recovered from Markdown escaping. The service had escaped them with backslashes.",
+        phErgaenzt: "{} broken placeholders completed: {liste}. The dictionary knows them. The service swallowed the bracket.",
+        phKaputt: "These passages look like placeholders but are not: {liste}. They will NOT be restored. Please check them in the text.",
         fussLinks: "MASCHERA · processed on this device · no online connection to the AI services", bereitS: "Ready",
         orig: "Original text", masked: "Masked", run: "Mask",
         fertig: "Final text", prompt: "Prompt",
@@ -1100,7 +1110,7 @@ const I18N = {
         leer05: "The final text appears here once you apply the vocabulary.",
         leer02: "Nothing masked yet. Paste text into column 1 and press "
               + "\u00abMask\u00bb.",
-        dropN: "Drop a PDF, DOCX, TXT or e-mail — or click",
+        dropN: "Drop a PDF, DOCX, TXT or e-mail, or click",
         laeuft: "running …", lWartet: "Preparing the text …", lModell: "Window {} of {}", lMaskieren: "Masking, building the glossary …", lRest: "about {} left", lFertig: "masked in {}", drop: "Drop a file or choose one",
         portFehlt: "No port given.",
         verwerfenVok: "Really continue?\n{} vocabulary entries will be lost.",
@@ -1112,29 +1122,29 @@ const I18N = {
         verworfen: "Narrowly discarded", nichts: "none",
         bereit: "ready", quelle: "Source", vertrauen: "Confidence",
         zeichen: "Characters", anteil: "masked",
-        ohneModell: "NO MODEL — checksums and patterns only. Names, dates "
+        ohneModell: "NO MODEL: checksums and patterns only. Names, dates "
                   + "and addresses stay in the clear.",
         // Hinweise des Servers. Er schickt den Schluessel und die
         // Werte, der Satz steht hier — s. `core/hinweise.py`.
         hinweise: {
-          ohne_modell: "NO MODEL — checksums and patterns only. Names, dates and addresses stay IN THE CLEAR.",
+          ohne_modell: "NO MODEL: checksums and patterns only. Names, dates and addresses stay IN THE CLEAR.",
           fenster: "Longer than one window ({token} tokens). Processed with overlap.",
           wortgrenzen: "{anzahl} model spans fell inside a word and were extended to word boundaries.",
-          mehrere_nachrichten: "{anzahl} messages in the file — only the first one is processed.",
+          mehrere_nachrichten: "{anzahl} messages in the file. Only the first one is processed.",
           vorlieben: "From the saved preferences, in the clear: {tags}",
-          ohne_woerterbuch: "Without a dictionary — anonymised for good, no way back.",
+          ohne_woerterbuch: "Without a dictionary: anonymised for good, no way back.",
           eigene_regeln: "Own rules applied ({anzahl}): {namen}",
-          schreibweise: "{platzhalter} differs from {treffer} only in capitalisation — not replaced.",
+          schreibweise: "{platzhalter} differs from {treffer} only in capitalisation. Not replaced.",
           anhang_uebersprungen: "Attachment skipped: {name}",
           kein_textteil: "The e-mail has no text part, only {art}.",
           msg_ohne_textrumpf: "The .msg has no plain-text body (only RTF or HTML). In Outlook choose «Save as» → .eml.",
           binaer_abgeschnitten: "{zeichen} characters after the end of the text looked like binary data and were left out.",
           nur_html: "only an HTML part present, roughly stripped",
           kein_rumpf: "no text body found",
-          pdf_ohne_text: "no text in the PDF — probably a scan. Without OCR the filter sees nothing, and an empty finding does NOT mean there is no personal data in it.",
+          pdf_ohne_text: "no text in the PDF. Probably a scan. Without OCR the filter sees nothing, and an empty finding does NOT mean there is no personal data in it.",
           pdf_seiten: "{anzahl} pages, layout is lost on reading",
           tabellen: "{anzahl} tables, read row by row",
-          nicht_gelesen: "NOT read: {teile} — that is where letters often carry the sender",
+          nicht_gelesen: "NOT read: {teile}. That is where letters often carry the sender",
           docx_leer: "no text in the document. An empty finding does NOT mean there is no personal data in it.",
           kodierung: "Encoding {kodierung}",
           bom: "byte order mark at the start of the text, removed",
@@ -1147,7 +1157,7 @@ const I18N = {
           adresse_fehlt: "Field `adresse` is missing or empty.",
           adresse_zu_lang: "Address longer than {hoechstens} characters.",
           datei_ohne_text: "The file yielded no text.",
-          datei_unlesbar: "File not readable — damaged or an unsupported format.",
+          datei_unlesbar: "File not readable: damaged or an unsupported format.",
           datei_zu_gross: "File larger than {mb} MB.",
           dienst_kein_objekt: "Service {nummer} is not an object.",
           dienst_kennung_doppelt: "Identifier used twice: {kennung}",
@@ -1155,7 +1165,7 @@ const I18N = {
           dienst_ohne_namen: "Service {nummer} has no name.",
           dienst_schema: "Service {name}: only https:// or http://, not {adresse}",
           dienste_keine_liste: "Field `dienste` is not a list.",
-          dienste_leer: "At least one service is needed — otherwise “Copy and open” has nowhere to go.",
+          dienste_leer: "At least one service is needed. Otherwise “Copy and open” has nowhere to go.",
           dienste_zu_viele: "At most {hoechstens} services.",
           einst_kein_objekt: "Not an object.",
           einstellungen_gespeichert: "Saved.",
@@ -1167,19 +1177,19 @@ const I18N = {
           format_unbekannt: "Format {endung} is not read. Possible: {moeglich}",
           keine_datei: "No file received.",
           klartext_gelesen: "These types stay in plain text permanently.",
-          klartext_gespeichert: "Saved. These types stay in plain text permanently — in future documents as well.",
-          nicht_gespeichert: "Not saved — the file in the settings folder could not be written.",
+          klartext_gespeichert: "Saved. These types stay in plain text permanently, in future documents as well.",
+          nicht_gespeichert: "Not saved. The file in the settings folder could not be written.",
           ohne_tags_unbekannt: "Unknown types in `ohne`: {tags}",
           port_ausserhalb: "Port outside 1–65535: {port}",
           regeldatei_fehlerhaft: "The rule file is faulty and was not applied.",
-          regeln_abgelehnt: "Rules rejected — the file contains an error.",
+          regeln_abgelehnt: "Rules rejected. The file contains an error.",
           regeln_gelesen: "Changing the rules changes the measured result.",
           regeln_veraltete_schluessel: "This rule file uses outdated keys. They are still read or skipped: {umbenennungen}",
           regeln_gespeichert: "Saved. The measured result changes with it.",
-          neueste_nicht_erreichbar: "GitHub cannot be reached — no network, or the server may not go out. The newest version is on the download page.",
+          neueste_begrenzt: "GitHub is limiting requests right now. Your network has used its 60 per hour. Try again in an hour, or go straight to the download page.",
+          neueste_nicht_erreichbar: "GitHub cannot be reached: no network, or the server may not go out. The newest version is on the download page.",
           neueste_unlesbar: "GitHub answered, but without a readable version number. The newest version is on the download page.",
-          regeln_unlesbar: "Rules not readable — a field has the wrong form.",
-          schrift_ueberall_kein_wahrheitswert: "Field `schrift_ueberall` is not a boolean.",
+          regeln_unlesbar: "Rules not readable. A field has the wrong form.",
           tray_kein_wahrheitswert: "Field `tray` is not a boolean.",
           fenstermodus_unbekannt: "Window mode {wert} does not exist. Possible: {moeglich}",
           thema_unbekannt: "Theme {wert} does not exist. Possible: {moeglich}",
@@ -1201,13 +1211,13 @@ const I18N = {
           vorliebe_tags_unbekannt: "Unknown types: {tags}",
           wirt_unbekannt: "This service does not answer under the name “{wirt}”. Locally it is reachable on 127.0.0.1; behind a proxy the name belongs in MASCHERA_WIRT.",
           regeln_kein_yaml: "The rules are not valid YAML (line {zeile}).",
-          regel_zu_langsam: "Rule “{id}”: the pattern takes {dauer} s on a test line — too slow, usually because of nested repetition such as (a+)+.",
+          regel_zu_langsam: "Rule “{id}”: the pattern takes {dauer} s on a test line. That is too slow, usually because of nested repetition such as (a+)+.",
           regel_ohne_kennung: "A rule has no identifier (`id`).",
           regel_kennung: "Rule identifier “{id}”: lowercase letters, digits and underscore only, 2 to 32 characters.",
           regel_platzhalter: "Rule “{id}”: the placeholder “{platzhalter}” must be 2 to 20 letters or digits.",
           regel_woerter_leer: "Rule “{id}”: the word list (`words`) is empty.",
           regel_woerter_kurz: "Rule “{id}”: entries too short ({kurz}). Below {min} characters they match everywhere as a syllable.",
-          regel_etiketten_leer: "Rule “{id}”: `labels` is empty — without a label the rule would match any number.",
+          regel_etiketten_leer: "Rule “{id}”: `labels` is empty. Without a label the rule would match any number.",
           regel_wertform: "Rule “{id}”: the value form “{form}” does not exist. Possible: {moeglich}",
           regel_min_max: "Rule “{id}”: implausible min/max ({min}/{max}).",
           regel_muster_fehlt: "Rule “{id}”: the pattern (`pattern`) is missing.",
@@ -1216,10 +1226,10 @@ const I18N = {
           regeln_doppelt: "These rule identifiers appear twice: {kennungen}",
           regel_platzhalter_vergeben: "Placeholder already taken: {platzhalter}. Choose another name.",
           msg_ohne_olefile: "Outlook messages (.msg) cannot be read here. In Outlook choose “Save as” → .eml.",
-          pdf_ohne_pymupdf: "PDFs cannot be read here — the PDF library is missing.",
+          pdf_ohne_pymupdf: "PDFs cannot be read here. The PDF library is missing.",
           docx_zu_gross: "The Word document would be {mb} MB unpacked; at most {hoechstens} MB are read.",
           docx_kaputt: "Not a readable .docx file. Older .doc files are a different format.",
-          docx_ohne_dokument: "Not a Word document — probably .odt, .pptx or .xlsx with the wrong extension.",
+          docx_ohne_dokument: "Not a Word document. Probably .odt, .pptx or .xlsx with the wrong extension.",
           docx_dtd: "The Word document declares a DTD; real Word files never do, so it is not read.",
           word_alt: "The old Word format (.doc) is not read. Save it as .docx in Word or LibreOffice.",
         },
@@ -1313,6 +1323,8 @@ const BEISPIEL = {
 
 const z = {
   sprache: "de",
+  // Filter im Vokabular (seit 2.0): «alle» oder eine Gruppe aus TAG_GRUPPEN.
+  vokFilter: "alle",
   bearbeiten: false,
   tray: true,
   fenstermodus: "widget",
@@ -1349,6 +1361,8 @@ const z = {
   zurueck: false,
   antwortText: "",
   final: null,
+  // Das Ergebnis, dessen Banner «Platzhalter blieben stehen» geschlossen ist.
+  offenZu: null,
   dienst: "claude",
   kontext: null,
   kontextGruppe: null,   // welche Gruppe im Kontextmenue offen ist
@@ -1356,7 +1370,6 @@ const z = {
   eigenesFenster: true,
   schriftgroesse: 100,
   schriftart: "werk",
-  schriftUeberall: false,
   klartext: [],
   bspdTags: [],
   regelnYaml: "",
@@ -1740,6 +1753,41 @@ function platzhalter(text, span) {
   return s;
 }
 
+/* Was erkannt, aber bewusst nicht ersetzt wurde, rahmt 02 hellgrau. Gibt
+ * eine Funktion zurueck, die ein Textstueck zwischen zwei Platzhaltern an
+ * `ziel` haengt und die Klartext-Werte darin rahmt. */
+function klartextStuecke(ziel, spans) {
+  // Was erkannt, aber bewusst nicht ersetzt wurde, bekommt einen hellgrauen
+  // Rahmen (Feedback 18.10.2026): sonst sieht «erkannt und stehen gelassen»
+  // aus wie «uebersehen». Gesucht wird ueber den WERT in den Textstuecken
+  // zwischen den Platzhaltern, nicht ueber die Position: die Positionen
+  // gelten im Original, und jede Korrektur von Hand verschiebt den Text.
+  const original = z.antwort.original || "";
+  const klar = new Map();
+  for (const sp of spans) {
+    if (!sp.klartext) continue;
+    const wert = original.slice(sp.start, sp.end);
+    if (wert.trim() && !klar.has(wert)) klar.set(wert, sp.tag);
+  }
+  const werte = [...klar.keys()].sort((a, b) => b.length - a.length);
+  return (seg) => {
+    if (!werte.length) { ziel.append(document.createTextNode(seg)); return; }
+    let i = 0, von = 0;
+    while (i < seg.length) {
+      const w = werte.find((x) => seg.startsWith(x, i)
+        && !/[\p{L}\p{N}]/u.test(seg[i - 1] || "")
+        && !/[\p{L}\p{N}]/u.test(seg[i + x.length] || ""));
+      if (!w) { i++; continue; }
+      if (i > von) ziel.append(document.createTextNode(seg.slice(von, i)));
+      const k = el("span", "klartext-stelle", w);
+      k.title = klar.get(w) + " · " + t().klartextStelle;
+      ziel.append(k);
+      i += w.length; von = i;
+    }
+    if (von < seg.length) ziel.append(document.createTextNode(seg.slice(von)));
+  };
+}
+
 function zeichneMaskiert() {
   const ziel = $("maskiert");
   ziel.replaceChildren();
@@ -1762,15 +1810,16 @@ function zeichneMaskiert() {
   // Fundstellen Quelle und Vertrauen, und eine Modellvermutung bei 0.31
   // saehe aus wie eine Pruefsumme. Deshalb der Reihe nach zuordnen: die
   // Spannen kommen in Dokumentreihenfolge, die Platzhalter auch.
-  const reihe = spans.filter((sp) => !sp.platzhalter);
+  // Klartext-Stellen sind keine Kandidaten dafuer: sie tragen keine Nummer.
+  const reihe = spans.filter((sp) => !sp.platzhalter && !sp.klartext);
   let n = 0;
+
+  const stueck = klartextStuecke(ziel, spans);
 
   let letzte = 0, m;
   PH_RE.lastIndex = 0;
   while ((m = PH_RE.exec(text)) !== null) {
-    if (m.index > letzte) {
-      ziel.append(document.createTextNode(text.slice(letzte, m.index)));
-    }
+    if (m.index > letzte) stueck(text.slice(letzte, m.index));
     let sp = nach[m[0]];
     if (!sp && reihe.length) {
       // Nur nehmen, wenn das Tag passt — sonst lieber ohne Zusatz einfaerben
@@ -1781,9 +1830,7 @@ function zeichneMaskiert() {
     ziel.append(platzhalter(m[0], sp));
     letzte = m.index + m[0].length;
   }
-  if (letzte < text.length) {
-    ziel.append(document.createTextNode(text.slice(letzte)));
-  }
+  if (letzte < text.length) stueck(text.slice(letzte));
 }
 
 /* ========================================================================
@@ -2409,27 +2456,36 @@ function zeichneVokabular() {
   const schluessel = Object.keys(w);
   const spans = (z.antwort && z.antwort.spans) || [];
 
-  // Legende: je Tagart eine Plakette mit Anzahl, alphabetisch.
-  const zaehler = {};
-  for (const sp of spans) {
-    if (!sp.platzhalter) continue;
-    zaehler[sp.tag] = (zaehler[sp.tag] || 0) + 1;
+  // FILTER NACH GRUPPE (seit 2.0, Entwurf des UX-Architekten) statt einer
+  // Plakette je Tag: «Alle» und je Gruppe ein Knopf mit Anzahl. Gezaehlt
+  // werden die EINTRAEGE des Vokabulars, nicht die Fundstellen — der Filter
+  // wirkt auf die Tabelle darunter.
+  const jeGruppe = {};
+  for (const ph of schluessel) {
+    const g = GRUPPE_VON[typOf(ph)] || "rest";
+    jeGruppe[g] = (jeGruppe[g] || 0) + 1;
   }
+  if (z.vokFilter !== "alle" && !jeGruppe[z.vokFilter]) z.vokFilter = "alle";
   const leg = $("legende");
   leg.replaceChildren();
-  for (const tag of Object.keys(zaehler).sort()) {
-    const c = farbe(tag);
-    const chip = el("span", "chip");
-    chip.style.background = c[0];
-    chip.style.border = "1px solid " + c[1];
-    chip.style.color = c[2];
+  const filterKnopf = (key, wort, n, probe) => {
+    const b = el("button", "chip");
+    b.type = "button";
+    b.setAttribute("aria-pressed", String(z.vokFilter === key));
     const punkt = el("i");
-    punkt.style.background = c[1];
-    chip.append(punkt, document.createTextNode(tag + " "),
-                el("b", null, String(zaehler[tag])));
-    leg.append(chip);
+    if (probe) punkt.style.background = farbe(probe)[2];
+    b.append(punkt, document.createTextNode(wort + " "), el("b", null, String(n)));
+    b.addEventListener("click", () => { z.vokFilter = key; zeichneVokabular(); });
+    leg.append(b);
+  };
+  if (schluessel.length) {
+    filterKnopf("alle", s.vokAlle, schluessel.length, null);
+    for (const g of Object.keys(TAG_GRUPPEN).concat(["rest"])) {
+      if (!jeGruppe[g]) continue;
+      filterKnopf(g, (s.gruppen || {})[g] || g, jeGruppe[g],
+                  (TAG_GRUPPEN[g] || [])[0]);
+    }
   }
-
   const ziel = $("vokabular-inhalt");
   ziel.replaceChildren();
   if (!schluessel.length) {
@@ -2440,24 +2496,34 @@ function zeichneVokabular() {
 
   const tab = el("table", "vokabular");
   const kopf = el("tr");
+  // Die vierte Spalte ohne sichtbare Ueberschrift: das spart Breite fuer den
+  // Originalwert (Feedback 18.10.2026). Vorgelesen wird sie trotzdem, und das
+  // Kreuz erklaert sich im Tooltip.
+  const wegKopf = el("th", "vok-weg-kopf");
+  wegKopf.setAttribute("aria-label", s.entfernen);
   kopf.append(el("th", null, s.spalteId), el("th", null, s.spalteWert),
-              el("th", null, s.spalteTyp), el("th", "vok-weg-kopf", s.entfernen));
+              el("th", null, s.spalteTyp), wegKopf);
   const thead = el("thead"); thead.append(kopf);
   const tbody = el("tbody");
+
+  const spanZu = {};
+  for (const sp of ((z.antwort && z.antwort.spans) || [])) {
+    if (sp.platzhalter && !spanZu[sp.platzhalter]) spanZu[sp.platzhalter] = sp;
+  }
 
   // Sortiert nach Platzhalter, nicht nach Fundreihenfolge — sonst springt
   // die Tabelle bei jedem Lauf, und man sucht Zeilen statt sie zu lesen.
   for (const ph of schluessel.sort()) {
     const typ = typOf(ph);
+    if (z.vokFilter !== "alle" && (GRUPPE_VON[typ] || "rest") !== z.vokFilter) continue;
     const c = farbe(typ);
     const tr = el("tr");
 
+    // DIESELBE Plakette wie im Text von 02, aus derselben Funktion: Farbe,
+    // Schrift, Groesse und die Umrandung nach Herkunft koennen so nicht
+    // auseinanderlaufen (Feedback 18.10.2026).
     const td1 = el("td");
-    const kennung = el("span", "vok-ph", ph);
-    kennung.style.background = c[0];
-    kennung.style.border = "1px solid " + c[1];
-    kennung.style.color = c[2];
-    td1.append(kennung);
+    td1.append(platzhalter(ph, spanZu[ph]));
 
     // Der Originalwert ist aenderbar. Wer beim Zurueckwandeln einen anderen
     // Wert einsetzen will — etwa einen bewusst erfundenen —, soll das hier tun
@@ -2472,11 +2538,11 @@ function zeichneVokabular() {
     });
     td2.append(feld);
 
+    // Der Typ im selben Stil, eine Stufe kleiner (`.ph-typ`): nur Auskunft.
     const td3 = el("td");
-    const art = el("span", "vok-ph", typ);
-    art.style.background = c[0];
-    art.style.border = "1px solid " + c[1];
-    art.style.color = c[2];
+    const art = platzhalter(ph, spanZu[ph]);
+    art.textContent = typ;
+    art.classList.add("ph-typ");
     td3.append(art);
 
     // Entfernen von HIER aus, nicht nur ueber das Klappmenue in 02: bei einem
@@ -2488,7 +2554,7 @@ function zeichneVokabular() {
     const td4 = el("td");
     const weg = el("button", "imfeld nurbild loeschen vok-weg");
     weg.type = "button";
-    weg.title = ph + " · " + s.entfernen;
+    weg.title = s.vokWeg.replace("{}", ph);
     weg.setAttribute("aria-label", ph + " · " + s.entfernen);
     weg.append(zeichenSinnbild("schliessen", KNOPFBILDER));
     weg.addEventListener("click", () => {
@@ -2549,7 +2615,22 @@ function zeichneHinweise() {
   // Das Trennzeichen ist `·` — dasselbe wie im Untertitel der Kopfzeile und
   // in der Fusszeile.
   if (ruhig.length) {
-    ziel.append(el("p", "hinweis hinweiszeile", ruhig.join(" · ")));
+    const zeile = ruhig.join(" · ");
+    const p = el("p", "hinweis hinweiszeile");
+    // Im Hinweis zu den Vorlieben traegt das Wort «Klartext» denselben
+    // hellgrauen Rahmen wie die Stellen im Text darueber: so erklaert die
+    // Zeile, was der Rahmen bedeutet (Feedback 18.10.2026).
+    const wort = t().klartextWort;
+    const i = hs.some((h) => hinweisSchluessel(h) === "vorlieben") && wort
+      ? zeile.indexOf(wort) : -1;
+    if (i < 0) {
+      p.textContent = zeile;
+    } else {
+      p.append(document.createTextNode(zeile.slice(0, i)),
+               el("span", "klartext-stelle", wort),
+               document.createTextNode(zeile.slice(i + wort.length)));
+    }
+    ziel.append(p);
   }
 }
 
@@ -2566,10 +2647,8 @@ function zeichneBeschriftung() {
   $("titel-vokabular").textContent = s.vokabular;
   $("vok-herunter-text").textContent = s.vokHerunter;
   $("vok-hoch-text").textContent = s.vokHoch;
-  $("vorlagen-lokal").textContent = s.tplMenu + " (" + s.tplLokal + ")";
   $("vorlagen-filter").placeholder = s.tplSuchen;
   $("vorlage-sichern-text").textContent = s.tplSichern;
-  $("vorlagen-lokal").textContent = s.tplLokal;
   // BEIDES im Tooltip, und die Reihenfolge ist Absicht.
   //
   // Wird die Spalte eng, verschwindet die Beschriftung und nur das Zeichen
@@ -2577,7 +2656,7 @@ function zeichneBeschriftung() {
   // steht aber schon ein WARNENDER: Vorlagen liegen dauerhaft im Klartext auf
   // der Platte. Was der Knopf tut, erraet man am Zeichen; dass die Vorlage im
   // Klartext landet, nicht.
-  $("knopf-vorlage-sichern").title = s.tplSichern + " — " + s.tplWarnung;
+  $("knopf-vorlage-sichern").title = s.tplSichern + ". " + s.tplWarnung;
   $("spruch").textContent = s.spruch;
   $("lokalzeiger").textContent = s.hundert;
   $("ablage-text").textContent = s.dropN;
@@ -2609,9 +2688,6 @@ function zeichneBeschriftung() {
   $("knopf-bearbeiten").title = s.bearbeitenHilfe;
   $("maskiert-feld").placeholder = s.bearbeitenHilfe;
   $("kopieren-orig-text").textContent = s.kopieren;
-  $("einklappen-text").textContent = s.einklappen;
-  $("schiene").title = s.ausklappen;
-  $("schiene-text").textContent = "03 · " + s.prompt;
   // In Stuecke zerlegt, damit die Zeile nur ZWISCHEN den Aussagen bricht
   // und nie mitten in einer.
   //
@@ -2635,7 +2711,7 @@ function zeichneBeschriftung() {
   $("herunter-final-text").textContent = s.herunterladen;
   $("einfuegen-antwort-text").textContent = s.einfuegen;
   for (const kid of ["knopf-leeren-orig", "knopf-leeren-prompt",
-                     "knopf-leeren-antwort"]) {
+                     "knopf-leeren-antwort", "knopf-leeren-rueck"]) {
     $(kid).title = s.leerenA;
     $(kid).setAttribute("aria-label", s.leerenA);
   }
@@ -2669,6 +2745,7 @@ function zeichneBeschriftung() {
   // Wortstellung falsch — deshalb zwei Schluessel und nicht ein `split()`.
   $("einst-zu-rest").textContent = s.einstZuRest;
   $("einst-abbrechen-text").textContent = s.einstAbbrechen;
+  $("schritte").setAttribute("aria-label", s.ablauf);
   $("einst-darstellung-titel").textContent = s.darstellungT;
   $("einst-thema-hilfe").textContent = s.themaH;
   $("einst-thema-etikett").textContent = s.themaEtikett;
@@ -2696,10 +2773,8 @@ function zeichneBeschriftung() {
   $("einst-schriftart-etikett").textContent = s.schriftart;
   $("einst-schriftgroesse-etikett").textContent = s.schriftgroesse;
   $("einst-schriftprobe").textContent = s.schriftprobe;
-  $("einst-schrift-ueberall-text").textContent = s.schriftAlles;
-  // Die Eintraege der Schriftwahl wechseln die Sprache mit. «Barlow» bleibt,
+  // Die Eintraege der Schriftwahl wechseln die Sprache mit. «IBM Plex» bleibt,
   // wie es ist: der Name der Hausschrift, in jeder Sprache derselbe.
-  $("schriftart-sans").textContent = s.schriftSans;
   $("schriftart-serif").textContent = s.schriftSerif;
   $("schriftart-mono").textContent = s.schriftMono;
   $("einst-allgemein-titel").textContent = s.allgemeinT;
@@ -2786,8 +2861,18 @@ function zeichneOffen() {
   if (!z.final) return;
 
   const fehlend = z.final.nicht_gefunden || [];
-  if (fehlend.length) {
+  // Geschlossen gilt fuer DIESEN Befund: `z.offenZu` haelt das Ergebnis, zu
+  // dem das Kreuz geklickt wurde. Ein neues «Vokabular einpflegen» bringt
+  // ein neues Ergebnis und damit den Banner wieder (Entscheid 18.10.2026).
+  if (fehlend.length && z.offenZu !== z.final) {
     const kasten = el("div", "offen");
+    const zu = el("button", "offen-zu");
+    zu.type = "button";
+    zu.title = s.schliessen;
+    zu.setAttribute("aria-label", s.schliessen);
+    zu.append(zeichenSinnbild("schliessen", KNOPFBILDER));
+    zu.addEventListener("click", () => { z.offenZu = z.final; zeichneOffen(); });
+    kasten.append(zu);
     kasten.append(el("strong", null,
       s.offenText.replace("{}", String(fehlend.length))));
     const liste = el("div", "liste");
@@ -3054,7 +3139,6 @@ function einstMomentaufnahme() {
     thema: z.thema,
     schriftart: z.schriftart,
     schriftgroesse: z.schriftgroesse,
-    schriftUeberall: z.schriftUeberall,
     adresse: $("einst-adresse").value,
     port: $("einst-port").value,
   };
@@ -3072,12 +3156,10 @@ function einstellungenAbbrechen() {
     z.thema = m.thema;
     z.schriftart = m.schriftart;
     z.schriftgroesse = m.schriftgroesse;
-    z.schriftUeberall = m.schriftUeberall;
     $("einst-adresse").value = m.adresse;
     $("einst-port").value = m.port;
     $("schalter-fenster").setAttribute("aria-checked",
                                        String(z.eigenesFenster));
-    $("einst-schrift-ueberall").checked = z.schriftUeberall;
     $("einst-schriftgroesse").value = String(z.schriftgroesse);
     $("einst-schriftart").value = z.schriftart;
     themaAnwenden();
@@ -3484,8 +3566,107 @@ function zeichneDienstmenu() {
   }
 }
 
+/* DIE SCHRITTLEISTE (seit 2.0, Entwurf des UX-Architekten).
+ *
+ * Sie FOLGT dem Ablauf, statt ihn zu steuern: welcher Schritt dran ist, ergibt
+ * sich aus dem Zustand — maskiert? uebernommen? Antwort da? zurueckgewandelt?
+ * Ein Klick springt zur Kachel.
+ */
+const SCHRITT_ZIEL = ["b01", "b02", "b03", "b04", "b05"];
+
+function schrittJetzt() {
+  if (!(z.antwort && z.antwort.maskiert)) return 0;
+  if (!z.uebernommen) return 1;
+  if (!String(z.antwort04 || "").trim()) return 2;
+  if (!z.final) return 3;
+  return 5;
+}
+
+function schrittAnspringen(i) {
+  const ziel = SCHRITT_ZIEL[i];
+  // Die Leiste zentriert den ANGETIPPTEN Schritt, bis der Ablauf weiterrueckt.
+  z.schrittMitte = i;
+  schrittZentrieren(true);
+  schrittMitteMarkieren();
+  if (gestapelt()) {
+    springeZu(ziel);
+  }
+  const k = $(ziel);
+  k.classList.add("blitz");
+  setTimeout(() => k.classList.remove("blitz"), 900);
+}
+
+const SCHRITTBILDER = { haken: ["M5 12.5 10 17.5 19 7"] };
+
+/* Wo man ist: der angetippte Schritt bekommt einen Rahmen, solange er nicht
+ * der aktuelle ist — der traegt seine Pille schon. Ohne den Rahmen stand
+ * einspaltig ein Schritt in der Mitte, und nichts sagte, dass er der
+ * gemeinte ist (Feedback 18.10.2026). */
+function schrittMitteMarkieren() {
+  const nav = $("schritte");
+  if (!nav) return;
+  const jetzt = schrittJetzt();
+  (nav.querySelectorAll(".schritt") || []).forEach((b, i) => {
+    b.classList.toggle("mitte", z.schrittMitte === i && i !== jetzt);
+  });
+}
+
+/* Den Schritt in der Mitte der Leiste zeigen — nur wenn sie seitlich rollt
+ * (einspaltig). Mittig steht der angetippte, sonst der aktuelle. */
+function schrittZentrieren(weich) {
+  const nav = $("schritte");
+  if (!nav || nav.scrollWidth <= nav.clientWidth) return;
+  const i = z.schrittMitte == null ? schrittJetzt() : z.schrittMitte;
+  const b = (nav.querySelectorAll(".schritt") || [])[Math.min(i, 4)];
+  if (!b) return;
+  const links = (b.offsetLeft || 0) - ((nav.clientWidth || 0) - (b.offsetWidth || 0)) / 2;
+  const ruhig = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (typeof nav.scrollTo === "function") {
+    // Weich nur nach einem Tippen. Beim Neuzeichnen sofort: `zeichne()`
+    // laeuft waehrend eines Laufs oft hintereinander, und jedes Neuzeichnen
+    // brach das Gleiten ab — die Leiste blieb daneben stehen (gemessen).
+    nav.scrollTo({ left: links, behavior: weich === true && !ruhig ? "smooth" : "auto" });
+  } else {
+    nav.scrollLeft = links;
+  }
+}
+
+function zeichneSchritte() {
+  const nav = $("schritte");
+  const namen = t().schritte || [];
+  const jetzt = schrittJetzt();
+  // Rueckt der Ablauf weiter, gilt wieder der aktuelle Schritt als Mitte.
+  if (z.schrittZuletzt !== jetzt) { z.schrittMitte = null; z.schrittZuletzt = jetzt; }
+  nav.replaceChildren();
+  namen.forEach((wort, i) => {
+    const b = el("button", "schritt"
+      + (i < jetzt ? " fertig" : i === jetzt ? " jetzt" : "")
+      + (i === 2 || i === 3 ? " aussen" : ""));
+    b.type = "button";
+    if (i === jetzt) b.setAttribute("aria-current", "step");
+    // Der Haken als Zeichnung mit kraeftigem Strich: das Schriftzeichen «✓»
+    // ging im gruenen Kreis fast unter (Feedback 18.10.2026).
+    const nr = el("span", "schritt-nr", i < jetzt ? null : String(i + 1));
+    if (i < jetzt) {
+      const h = zeichenSinnbild("haken", SCHRITTBILDER);
+      h.setAttribute("stroke-width", "3.5");
+      nr.append(h);
+    }
+    b.append(nr, el("span", null, wort));
+    b.addEventListener("click", () => schrittAnspringen(i));
+    nav.append(b);
+    if (i < namen.length - 1) nav.append(el("span", "schritt-pfeil", "→"));
+  });
+  schrittMitteMarkieren();
+  // Nach dem Zeichnen, damit die Masse stimmen — mit `setTimeout` und nicht
+  // `requestAnimationFrame`: der haelt in einem verdeckten Fenster an, und die
+  // Leiste bliebe dann am falschen Schritt stehen (gemessen).
+  setTimeout(() => schrittZentrieren(false), 0);
+}
+
 function zeichne() {
   zeichneBeschriftung();
+  zeichneSchritte();
   zeichneBurger();
   // Auch das Dienstmenue neu zeichnen, sonst taucht ein neu eingetragener
   // Dienst im Sendeknopf erst nach dem Neuladen auf.
@@ -3587,6 +3768,8 @@ function zeichne() {
   $("knopf-einpflegen04").disabled =
     !z.antwort04.trim() || !hatWoerterbuch();
   $("knopf-leeren-antwort").hidden = !z.antwort04.trim();
+  // Im Rueckweg der Papierkorb fuer das eingefuegte Antwortfeld in 02.
+  $("knopf-leeren-rueck").hidden = !(z.zurueck && z.antwortText.trim());
   $("knopf-leeren-orig").hidden = !z.orig.trim();
   $("knopf-leeren-prompt").hidden = !z.prompt.trim();
   $("knopf-herunter-mask").disabled = !(z.antwort && z.antwort.maskiert);
@@ -3607,10 +3790,10 @@ function zeichne() {
   // Knopfbeschriftung auf «Kopiert» steht. Er haengt am Dienst, nicht am
   // Zustand des Knopfes — genau beim Kopieren geht ja etwas hinaus.
   const warnsatz = s.onlineWarnung.replace("{}", dienstJetzt().name);
-  $("onlinewarnung-text").textContent = warnsatz;
-  // Derselbe Satz auch als Tooltip. Wird die Spalte eng, bleibt vom Hinweis
-  // nur das Dreieck stehen (`maschera.css`, Behaelter `fuss`) — dann traegt
-  // ihn der Tooltip. Kein zweiter Schluessel: es ist derselbe Satz.
+  // Seit 2.0 steht hier kurz «Verlaesst dein Geraet» — die Zone, die vorher
+  // als Leiste ueber der Spalte stand, gleich neben dem Knopf, der hinaus-
+  // schickt. Der lange Satz mit dem Dienst bleibt als Tooltip.
+  $("onlinewarnung-text").textContent = s.zoneHinaus;
   $("onlinewarnung").title = warnsatz;
   $("maskiert").classList.toggle("istleer", !z.antwort);
   vokabularKlappe();
@@ -3754,12 +3937,15 @@ function messeRollbalken() {
  * Schrift des BROWSERS, nicht `--skala`. Stuenden hier Pixel und dort `em`,
  * liefen Anzeige und Verhalten bei jedem Schriftwechsel auseinander.
  */
+/* Die Grenze liegt seit 2.0 bei 81.24em (rund 1300 px): darunter stuenden
+ * die drei Karten so schmal, dass das Vokabular seitlich rollte und 03
+ * umbrach (Feedback des Anwenders, 18.10.2026). Vorher 59.99em. */
 function gestapelt() {
   // Dieselbe Abfrage wie im CSS, Wort fuer Wort — Breite ODER Hoehe. Sonst
   // stuenden die Kaesten untereinander, aber es gaebe keinen Sprung zum
   // naechsten Schritt.
   return window.matchMedia(
-    "(max-width: 59.99em), (max-height: 44em)").matches;
+    "(max-width: 81.24em), (max-height: 44em)").matches;
 }
 
 function einspaltig() {
@@ -3826,9 +4012,18 @@ function springeZu(kennung) {
   // Gemessen, nicht als Zahl eingetragen: die Hoehe haengt an `--skala` und
   // am Umbruch der Kopfzeile. `position` wird mitgefragt: nebeneinander
   // steht die Kopfzeile im Fluss und verdeckt nichts.
+  //
+  // Darunter klebt die Schrittleiste und verdeckt ebenso — ohne sie lag der
+  // Kachelkopf hinter ihr (Feedback 18.10.2026). Dazu ein Luftraum, damit
+  // der obere Rand der Kachel samt Ecken sichtbar bleibt.
+  const klebt = (el) => el && getComputedStyle(el).position === "sticky"
+    ? el.getBoundingClientRect().height : 0;
   const kopf = $("kopfzeile");
-  const verdeckt = kopf && getComputedStyle(kopf).position === "sticky"
-    ? kopf.getBoundingClientRect().height : 0;
+  const leiste = $("schritte");
+  const luft = klebt(leiste)
+    ? parseFloat(getComputedStyle(document.documentElement).fontSize) * 0.75
+    : 0;
+  const verdeckt = klebt(kopf) + klebt(leiste) + luft;
   const nach = von + ziel.getBoundingClientRect().top - obenIm - verdeckt;
   if (Math.abs(nach - von) < 2) return;
 
@@ -4193,6 +4388,13 @@ function verbinde() {
   $("raster").addEventListener("scroll", schattenPruefen);
   window.addEventListener("scroll", schattenPruefen);
   window.addEventListener("resize", schattenPruefen);
+  // Die Schrittleiste klebt untereinander direkt unter der Kopfzeile — dafuer
+  // braucht das Blatt deren Hoehe, und die aendert sich mit Schrift und Breite.
+  const kopfMessen = () => document.documentElement.style.setProperty(
+    "--kopfhoehe", $("kopfzeile").offsetHeight + "px");
+  window.addEventListener("resize", kopfMessen);
+  window.addEventListener("resize", () => schrittZentrieren(false));
+  kopfMessen();
 
   $("knopf-vok-klappe").addEventListener("click", () => {
     z.vokZu = !z.vokZu;
@@ -4414,7 +4616,6 @@ function verbinde() {
     if (!z.zurueck) {
       // ⚠️ HIER wandert der maskierte Text hinueber, nirgends sonst.
       z.uebernommen = true;
-      document.body.classList.add("drei");
       zeichne();
       springeZu("b03");
       $("prompt").focus();
@@ -4439,6 +4640,12 @@ function verbinde() {
   });
   $("knopf-leeren-antwort").addEventListener("click", () => {
     z.antwort04 = ""; $("antwort04").value = ""; zeichne();
+  });
+  // Derselbe Papierkorb im Rueckweg von 02: leert NUR das eingefuegte
+  // Antwortfeld. Woerterbuch und maskierter Text bleiben, wie bei 04.
+  $("knopf-leeren-rueck").addEventListener("click", () => {
+    z.antwortText = ""; $("antwortfeld").value = ""; zeichne();
+    $("antwortfeld").focus();
   });
   // Der Papierkorb in 05 leert NUR Bereich 05. Das Woerterbuch bleibt, und
   // der Text in 04 bleibt: wer mit dem Ergebnis unzufrieden ist, will es neu
@@ -4628,10 +4835,6 @@ function verbinde() {
     z.schriftart = SCHRIFTEN[e.target.value] ? e.target.value : "werk";
     schriftAnwenden();
   });
-  $("einst-schrift-ueberall").addEventListener("change", (e) => {
-    z.schriftUeberall = !!e.target.checked;
-    schriftAnwenden();
-  });
   $("einst-schriftgroesse").addEventListener("change", (e) => {
     const n = parseInt(e.target.value, 10);
     z.schriftgroesse = GROESSEN.includes(n) ? n : 100;
@@ -4716,16 +4919,6 @@ function verbinde() {
     zeichne();
   });
 
-  // ⚠️ Die dritte Spalte startet eingeklappt. Solange nichts hinausgeht,
-  // soll die Oberflaeche auch nicht so aussehen, als ginge schon etwas
-  // hinaus. Die Schiene bleibt sichtbar, damit klar ist, dass es sie gibt.
-  const auf = () => document.body.classList.add("drei");
-  $("schiene").addEventListener("click", auf);
-  $("knopf-ausklappen").addEventListener("click", auf);
-  $("knopf-einklappen").addEventListener("click", (e) => {
-    e.stopPropagation();
-    document.body.classList.remove("drei");
-  });
 
   // Nichts wird auf die Festplatte geschrieben. Damit ist das Woerterbuch
   // nach dem Schliessen unwiederbringlich weg, und ein maskierter Text ohne
@@ -5052,7 +5245,6 @@ function vokabularEinlesen(datei) {
  */
 const SCHRIFTEN = {
   werk: "var(--font-body)",
-  sans: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
   serif: "Iowan Old Style, Palatino, Georgia, serif",
   mono: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
 };
@@ -5067,14 +5259,11 @@ function schriftAnwenden() {
   w.setProperty("--skala", String(z.schriftgroesse / 100));
   const familie = SCHRIFTEN[z.schriftart] || SCHRIFTEN.werk;
   w.setProperty("--textschrift", familie);
-  // ⚠️ Nur wenn der Anwender es will. Die Bedienschrift zu wechseln aendert
-  // das Erscheinungsbild des Werkzeugs, nicht nur die Lesbarkeit eines
-  // Textes — das gehoert an einen eigenen Schalter und nicht an denselben.
-  const bedien = z.schriftUeberall ? familie : SCHRIFTEN.werk;
-  w.setProperty("--ui-schrift", bedien);
-  w.setProperty("--ui-heading",
-                z.schriftUeberall && z.schriftart !== "werk"
-                  ? familie : "var(--font-heading)");
+  // Die Bedienschrift bleibt immer IBM Plex. Der Schalter «Auch für Knöpfe
+  // und Beschriftungen» ist seit 18.10.2026 weg (Entscheid des Anwenders):
+  // die Wahl gilt nur fuer den Dokumenttext.
+  w.setProperty("--ui-schrift", SCHRIFTEN.werk);
+  w.setProperty("--ui-heading", "var(--font-heading)");
 }
 
 /* Die gewaehlte Sprache behalten.
@@ -5123,9 +5312,6 @@ async function ladeEinstellungen() {
     }
     if (GROESSEN.includes(d.schriftgroesse)) z.schriftgroesse = d.schriftgroesse;
     if (SCHRIFTEN[d.schriftart]) z.schriftart = d.schriftart;
-    if (typeof d.schrift_ueberall === "boolean") {
-      z.schriftUeberall = d.schrift_ueberall;
-    }
     // ⚠️ Die zuletzt gewaehlte Sprache. `SPRACHEN` ist die Liste im
     // Kopf der Oberflaeche; steht dort ein unbekannter Wert, bleibt die
     // Vorgabe — eine kaputte Einstellungsdatei darf die Bedienung nicht
@@ -5144,7 +5330,6 @@ async function ladeEinstellungen() {
         k.classList.toggle("aktiv", k.dataset.sprache === z.sprache);
       }
     }
-    $("einst-schrift-ueberall").checked = z.schriftUeberall;
     if (d.adresse) $("einst-adresse").value = d.adresse;
     if (d.port) $("einst-port").value = String(d.port);
     // Steht gespeichert etwas anderes als der laufende Dienst, soll der
@@ -5228,7 +5413,6 @@ async function sichereEinstellungen() {
     dienst: z.dienst,
     schriftgroesse: z.schriftgroesse,
     schriftart: z.schriftart,
-    schrift_ueberall: z.schriftUeberall,
     sprache: z.sprache,
     tray: z.tray,
     fenstermodus: z.fenstermodus,
@@ -5530,6 +5714,7 @@ if (typeof module !== "undefined" && module.exports) {
     ausgehend, uebernommenerText,
     laufAnzeigen, laufAus, dauerWort, restWort, fortschrittHolen,
     springeZu, vokabularKlappe, gestapelt, einspaltig,
+    zeichneSchritte, schrittJetzt, SCHRITT_ZIEL,
     zeichneBeschriftung,
     zeichne, zeichneFinal,
     messeRollbalken, knopfTitelSetzen,

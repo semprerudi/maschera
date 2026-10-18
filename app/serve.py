@@ -79,7 +79,7 @@ from filter_document import Mitschreiber  # noqa: E402
 # hier heraus. `tests/test_fenster.py` Punkt 7 prueft, dass es bei dieser
 # einen Stelle bleibt. In einem Fehlerbericht sagt sie, welcher Stand
 # gemeint ist.
-VERSION = "1.1.0"
+VERSION = "2.0.0"
 
 # Mehr nimmt der Server nicht an. Ein Dokument ist laut Messung 1500 bis 4500
 # Zeichen; 10 MB fangen auch ein PDF mit Bildern ab, ohne dass ein
@@ -338,6 +338,11 @@ def _durchlauf(z: Zustand, text: str, ohne: set[str], woerterbuch: bool,
             "start": s.start,
             "end": s.end,
             "platzhalter": platzhalter(s.tag, wert),
+            # Erkannt, aber bewusst nicht ersetzt: aus den Vorlieben oder ein
+            # Tag, das ohnehin im Klartext bleibt. Die Oberflaeche rahmt diese
+            # Stellen in 02 hellgrau, damit «erkannt» nicht wie «uebersehen»
+            # aussieht.
+            "klartext": actions.get(s.tag) == "tag_only",
             "quelle": s.source,
             "vertrauen": vertrauen_zu(s),
             "bspd": bool(bspd.get(s.tag, False)),
@@ -596,6 +601,10 @@ def baue(z: Zustand) -> Flask:
             print(f"Nach Updates suchen: {e}", file=sys.stderr, flush=True)
             return fehler("GitHub ist nicht erreichbar.", 503,
                           schluessel="neueste_nicht_erreichbar")
+        except neueste.Begrenzt as e:
+            print(f"Nach Updates suchen: {e}", file=sys.stderr, flush=True)
+            return fehler("GitHub begrenzt gerade die Abfragen.", 503,
+                          schluessel="neueste_begrenzt")
         except neueste.Unlesbar as e:
             print(f"Nach Updates suchen: {e}", file=sys.stderr, flush=True)
             return fehler("Die Antwort von GitHub war nicht lesbar.", 502,

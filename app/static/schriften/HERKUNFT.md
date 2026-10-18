@@ -1,9 +1,19 @@
 # Schriften
 
-**Barlow** und **Barlow Condensed**, gestaltet von Jeremy Tribby.
-Copyright 2017 The Barlow Project Authors — <https://github.com/jpt/barlow>
+**IBM Plex Sans** und **IBM Plex Mono** fuer Oberflaeche und Texte (seit 2.0,
+Entwurf des UX-Architekten). Copyright © 2017 IBM Corp., Reserved Font Name
+«Plex» — <https://github.com/IBM/plex>. Plex Sans ist eine stufenlose Datei
+(Gewicht 100–700), Plex Mono in 400 und 500. Die Dateien sind die
+`latin`- und `latin-ext`-Teilmengen, wie Google Fonts sie ausliefert;
+uebernommen aus dem Entwurf, nicht aus dem Netz geladen.
 
-Lizenz: **SIL Open Font License 1.1**, vollständiger Text in `OFL.txt`.
+**Barlow Condensed** nur noch fuer die Wortmarke MAS**CH**ERA, gestaltet von
+Jeremy Tribby. Copyright 2017 The Barlow Project Authors —
+<https://github.com/jpt/barlow>. Barlow (die Textschrift bis 1.1) ist
+entfernt.
+
+Lizenz aller drei: **SIL Open Font License 1.1**, vollstaendiger Text in
+`OFL.txt`.
 
 ## Warum sie hier liegen und nicht geladen werden
 
@@ -16,8 +26,9 @@ benutzt — ohne dass ein Zeichen des Dokuments übertragen würde.
 
 ## Welche Teilmengen und warum
 
-Zehn Dateien: fünf Schnitte (Barlow 400/500/700, Barlow Condensed 400/600)
-mal zwei Teilmengen (`latin`, `latin-ext`). Zusammen 178 KB.
+Zehn Dateien, je in den Teilmengen `latin` und `latin-ext`: Plex Sans
+(stufenlos), Plex Mono 400 und 500, Barlow Condensed 400 und 600.
+Zusammen rund 200 KB.
 
 ⚠️ **Vietnamesisch fehlt absichtlich.** Seit dem 11.11.2024 gilt in den
 Schweizer Personenregistern ein einheitlicher Zeichensatz: **ISO 8859-1 +
@@ -27,13 +38,10 @@ festgelegt: `U+0020–U+00FF` und `U+0100–U+017F`. Die beiden gewählten
 Teilmengen decken genau das ab. Vietnamesisch liegt ausserhalb und hätte
 37 KB für nichts gekostet.
 
-## Was Barlow nicht abdeckt
+## Abdeckung des amtlichen Zeichensatzes
 
-310 der 319 druckbaren Zeichen. Die neun Lücken stehen mit Begründung in
-`tests/test_schriften.py`; die Prüfung schlägt an, sobald eine zehnte
-dazukommt.
-
-Zwei davon haben Namensbezug: `Ĳ` (niederländische Ligatur, gross) und `Ŀ`
-(katalanisches L mit Mittelpunkt, gross). Die Kleinformen `ĳ` und `ŀ` sind
-vorhanden — es fehlen ausgerechnet die, die am Anfang eines Nachnamens
-stünden. Der Browser fällt dort zeichenweise auf eine Systemschrift zurück.
+Gemessen am 18.10.2026: IBM Plex Sans und Plex Mono decken **alle 319**
+druckbaren Zeichen ab. Barlow Condensed 310 von 319 — das betrifft nur die
+Wortmarke, keinen Personennamen. Die Luecken stehen je Schrift in
+`tests/test_schriften.py`; die Pruefung schlaegt an, sobald sich etwas
+aendert.

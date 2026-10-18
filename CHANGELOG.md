@@ -1,5 +1,45 @@
 # Änderungen
 
+## 2.0.0 – 2026-10-18
+
+Ein neues Aussehen, entworfen zusammen mit einem UX-Architekten. Alle
+Funktionen von 1.1 bleiben.
+
+### Neu
+- **Sechs Kacheln entlang des Wegs** vom Originaltext zum fertigen Text, mit
+  einer **Schrittleiste** oben. Sie folgt dem Arbeitsstand; ein Klick springt
+  zur Kachel und zeigt sie kurz umrandet. Auf dem Handy steht die Leiste auf
+  einer Zeile, der gewählte Schritt in der Mitte.
+- **Grün heisst lokal, Orange heisst hinaus.** 03 und 04 tragen einen orangen
+  Rand, und am Sendeknopf steht «Verlässt dein Gerät».
+- **Bewusst im Klartext gelassene Stellen** haben im maskierten Text einen
+  hellgrauen Rahmen. So sieht man, dass sie erkannt und nicht übersehen wurden.
+- **Vokabular nach Gruppe filtern**; die Plaketten sehen aus wie im Text.
+- Der Hinweis «Platzhalter blieben stehen» lässt sich schliessen. Beim
+  nächsten Einpflegen erscheint er wieder, wenn erneut etwas übrig bleibt.
+- Im «Weg zurück» gibt es einen Papierkorb für das eingefügte Feld.
+
+### Geändert
+- **Schriften IBM Plex Sans und Mono** statt Barlow; nur die Wortmarke bleibt
+  Barlow Condensed. Neue Farben, hell und dunkel.
+- Die Maske hat im dunklen Thema überall einen weissen Saum.
+- Erklärungen ohne Gedankenstriche und klarer formuliert, etwa zu Diensten
+  und Klartext-Tags.
+- Die Vorlagenwahl heisst «Lokale Vorlage wählen» und bleibt immer auf einer
+  Zeile.
+- «Nach Updates suchen» erkennt, wenn GitHub die Abfragen begrenzt, und sagt
+  das, statt «nicht erreichbar» zu melden.
+
+### Entfernt
+- Die Schriftart «Serifenlos» (kaum anders als IBM Plex) und der Schalter
+  «Auch für Knöpfe und Beschriftungen». Eine gespeicherte Einstellung mit
+  «Serifenlos» wird zu IBM Plex; die übrigen Einstellungen bleiben.
+- Das Ein- und Ausklappen der dritten Spalte.
+
+### Für Entwickler
+- `POST /api/anonymisieren`: jede Spanne trägt neu `klartext` (bewusst nicht
+  ersetzt).
+
 ## 1.1.0 – 2026-10-17
 
 Die erste Fassung mit Rückmeldungen von Testerinnen und Testern — danke!

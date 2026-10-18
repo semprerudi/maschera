@@ -9,69 +9,70 @@
  * verriete einer fremden Stelle, dass und wann jemand MASCHERA benutzt.
  * `tests/test_app.py` prueft das an jeder Datei.
  *
- * SCHRIFT — Barlow und Barlow Condensed, SIL Open Font License 1.1,
- * Lizenztext unter `schriften/OFL.txt`.
+ * SCHRIFT (seit 2.0, Entwurf des UX-Architekten) — IBM Plex Sans fuer
+ * Oberflaeche und Texte, IBM Plex Mono fuer Platzhalter, Nummern und das
+ * Antwortfeld. NUR die Wortmarke MAS**CH**ERA bleibt in Barlow Condensed
+ * (Entscheid 18.10.2026: «Fonts aus dem neuen Designsystem ausser fuer das
+ * Logo»). Alle drei SIL Open Font License 1.1, Text unter
+ * `schriften/OFL.txt`, Herkunft in `schriften/HERKUNFT.md`.
+ *
+ * Plex Sans ist EINE stufenlose Datei je Teilmenge (wght 100–700): 400,
+ * 500 und 600 kommen aus derselben Datei.
  *
  * Vietnamesisch fehlt absichtlich. In den Schweizer Personenregistern gilt
  * ein amtlicher Zeichensatz: ISO 8859-1 + Latin Extended-A. Die Teilmengen
- * `latin` und `latin-ext` decken ihn ab. Was Barlow darin fehlt, steht in
- * `tests/test_schriften.py`.
+ * `latin` und `latin-ext` decken ihn ab. Was den Schriften darin fehlt,
+ * steht in `tests/test_schriften.py`.
  */
 
 @font-face {
-  font-family: "Barlow";
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 100 700;
+  font-display: swap;
+  src: url("schriften/IBMPlexSans-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 100 700;
+  font-display: swap;
+  src: url("schriften/IBMPlexSans-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("schriften/Barlow-400-latin.woff2") format("woff2");
+  src: url("schriften/IBMPlexMono-400-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-
 @font-face {
-  font-family: "Barlow";
+  font-family: "IBM Plex Mono";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("schriften/Barlow-400-latin-ext.woff2") format("woff2");
+  src: url("schriften/IBMPlexMono-400-latin-ext.woff2") format("woff2");
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
-
 @font-face {
-  font-family: "Barlow";
+  font-family: "IBM Plex Mono";
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url("schriften/Barlow-500-latin.woff2") format("woff2");
+  src: url("schriften/IBMPlexMono-500-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-
 @font-face {
-  font-family: "Barlow";
+  font-family: "IBM Plex Mono";
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url("schriften/Barlow-500-latin-ext.woff2") format("woff2");
+  src: url("schriften/IBMPlexMono-500-latin-ext.woff2") format("woff2");
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
-
-@font-face {
-  font-family: "Barlow";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("schriften/Barlow-700-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: "Barlow";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("schriften/Barlow-700-latin-ext.woff2") format("woff2");
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
 @font-face {
   font-family: "Barlow Condensed";
   font-style: normal;
@@ -128,42 +129,52 @@
      ebenfalls — sonst stuenden Knopfbeschriftung und Knopfinhalt in zwei
      verschiedenen Schriften. */
   --ui-heading: var(--font-heading);
-  --color-bg: #f2f2f3;
-  --color-surface: #e9e9ea;
-  --color-text: #1d1f20;
-  --color-accent: #5980a6;
+  --color-bg: oklch(0.972 0.004 85);
+  --color-surface: oklch(0.95 0.004 85);
+  --color-text: oklch(0.24 0.01 85);
+  --color-accent: oklch(0.45 0.1 155);
   --color-divider: color-mix(in srgb, var(--color-text) 16%, transparent);
 
   /* Tonal ramps — generated in OKLCH on one shared lightness scale, so the
      same step of any role matches the others in visual value. */
-  --color-neutral-100: #f5f5f8;
-  --color-neutral-200: #e7e7ea;
-  --color-neutral-300: #d4d4d7;
-  --color-neutral-400: #b7b7ba;
-  --color-neutral-500: #98989b;
-  --color-neutral-600: #7a7a7d;
-  --color-neutral-700: #5d5d60;
-  --color-neutral-800: #424244;
-  --color-neutral-900: #2b2b2d;
+  --color-neutral-100: oklch(0.985 0.003 85);
+  --color-neutral-200: oklch(0.95 0.004 85);
+  --color-neutral-300: oklch(0.91 0.005 85);
+  --color-neutral-400: oklch(0.86 0.006 85);
+  --color-neutral-500: oklch(0.74 0.008 85);
+  --color-neutral-600: oklch(0.56 0.01 85);
+  --color-neutral-700: oklch(0.45 0.01 85);
+  --color-neutral-800: oklch(0.34 0.01 85);
+  --color-neutral-900: oklch(0.26 0.01 85);
 
-  --color-accent-100: #eef6ff;
-  --color-accent-600: #597ea3;
-  --color-accent-700: #416180;
-  --color-accent-800: #2c455d;
+  --color-accent-100: oklch(0.955 0.025 155);
+  --color-accent-600: oklch(0.48 0.1 155);
+  --color-accent-700: oklch(0.4 0.09 155);
+  --color-accent-800: oklch(0.32 0.07 155);
 
-  --color-accent-2-100: #eef6ff;
-  --color-accent-2-800: #314457;
+  --color-accent-2-100: oklch(0.955 0.025 155);
+  --color-accent-2-800: oklch(0.32 0.07 155);
 
-  --font-heading: "Barlow Condensed", system-ui, sans-serif;
+  /* Bis 1.1 trugen Wortmarke UND Bereichstitel Barlow Condensed. Seit 2.0
+     traegt nur noch die Wortmarke die eigene Schrift (`--font-marke`); die
+     Titel folgen dem Entwurf in Plex Sans. */
+  --font-marke: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-heading: "IBM Plex Sans", system-ui, sans-serif;
   --font-heading-weight: 600;
-  --font-body: "Barlow", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
   --space-1: 0.2125rem;
   --space-2: 0.425rem;
   --space-3: 0.6375rem;
   --space-4: 0.85rem;
   --radius-md: 4px;
-  --radius-lg: 7px;
+  /* Seit 2.0 (Entwurf): Karte und Zone. Mehr Rundungen gibt es nicht —
+     test_app 22. */
+  --radius-karte: 12px;
+  --radius-feld: 8px;    /* Ablagefeld, «Das geht hinaus», Sprachwahl */
+  --radius-pille: 6px;   /* die gewaehlte Sprache in der Sprachwahl */
+    --radius-lg: 7px;
 
   /* Elevation — derived from the ground: soft ink-tinted shadows on a
      light theme, a hairline edge + ambient darkness on a dark one. */
@@ -252,54 +263,49 @@ figcaption {
  */
 :root {
   /* Gruen — «bleibt auf dem Geraet» */
-  --gr-flaeche:  #2f6b46;   /* FLAECHE gruener Knoepfe und Balken */
-  --gr-flaeche2: #24523a;   /* die tiefere Flaeche — Einpflegen, Laufbalken */
-  --gr-schrift:  #24523a;   /* SCHRIFT in Gruen — Titel, Plaketten, Hinweise */
-  --gr-kante:    #24523a;   /* Kante gruener Flaechen */
-  --gr-tief:                #255239;   /* Rollover des Hauptknopfs */
-  --gr-dunkel2:             #1c422e;   /* Kante des dunklen Knopfs */
-  --gr-hell:                #4f9d69;   /* aktiver Rahmen, Fokus */
-  --gr-matt:                #8fbfa0;   /* Pruefsummenrand, matte Zeichen */
-  --gr-aus:                 #9ab5a5;   /* deaktivierter Hauptknopf */
-  --gr-aus-kante:           #8aa895;   /* dessen Kante */
-  --gr-grund:               #eef5ef;   /* helle gruene Flaeche */
-  --gr-grund2:              #dff0e5;   /* helle gruene Flaeche, Kante */
-  --gr-grund3:              #f4faf6;   /* hellste gruene Flaeche */
+  --gr-flaeche:  oklch(0.55 0.12 155);   /* FLAECHE gruener Knoepfe und Balken */
+  --gr-flaeche2: oklch(0.48 0.11 155);   /* die tiefere Flaeche — Einpflegen, Laufbalken */
+  --gr-schrift:  oklch(0.42 0.08 155);   /* SCHRIFT in Gruen — Titel, Plaketten, Hinweise */
+  --gr-kante:    oklch(0.5 0.1 155);   /* Kante gruener Flaechen */
+  --gr-hell:                oklch(0.6 0.13 155);   /* aktiver Rahmen, Fokus */
+  --gr-matt:                oklch(0.75 0.07 155);   /* Pruefsummenrand, matte Zeichen */
+  --gr-grund:               oklch(0.962 0.02 155);   /* helle gruene Flaeche */
+  --gr-grund2:              oklch(0.92 0.04 155);   /* helle gruene Flaeche, Kante */
+  --gr-grund3:              oklch(0.98 0.01 155);   /* hellste gruene Flaeche */
 
   /* Rot — «geht hinaus» */
-  --bx-schrift:      #8c2f22;   /* SCHRIFT in Rot — Titel, Knopfschrift */
-  --bx-flaeche:      #8c2f22;   /* FLAECHE des Sendeknopfs und der Tints */
-  --bx-kante-stark:  #8c2f22;   /* die kraeftige rote Kante */
-  --bx-dunkel:              #75291d;   /* Kante des Sendeknopfs */
-  --bx-tief:                #6b2119;   /* Rollover des Sendeknopfs */
-  --bx-dunkel2:             #7c2d22;
-  --bx-matt:                #a35a4c;   /* Informationstext, Platzhalter */
-  --bx-matt2:               #b07a70;
-  --bx-matt3:               #c98a7e;
-  --bx-aus:                 #c8968d;   /* deaktivierte Schrift */
-  --bx-kante:               #d8a49b;   /* Fensterrahmen, Knopfrahmen */
-  --bx-kante-hell:          #e0aca5;
-  --bx-kante2:              #e5c3bc;   /* Rahmen von Deaktiviertem */
-  --bx-grund:               #fdeceb;   /* helle rote Flaeche */
-  --bx-grund2:              #fbe9e7;
-  --bx-grund3:              #fdf3f1;
-  --bx-grund4:              #fbf2f0;
-  --bx-grund5:              #fbeeec;
-  --bx-aus-schrift:  #c9a49e;   /* Schrift auf dem deaktivierten Sendeknopf */
-  --bx-aus-flaeche:         #c9a49e;   /* deaktivierter Sendeknopf */
-  --bx-aus-kante:           #b8918a;   /* dessen Kante */
-  --bx-loeschen:            #c4483a;   /* der Leeren-Knopf im Feld */
-  --bx-loeschen-kante:      #a63a2e;
-  --bx-senden-aus:          #e8cbc6;   /* deaktivierter Sendeknopf in der roten Spalte */
-  --bx-senden-aus-kante:    #ddb4ad;   /* dessen Kante — UND die des Pfeils daneben */
+  --bx-schrift:      oklch(0.48 0.13 45);   /* SCHRIFT in Rot — Titel, Knopfschrift */
+  --bx-flaeche:      oklch(0.5 0.14 42);   /* FLAECHE des Sendeknopfs und der Tints */
+  --bx-kante-stark:  oklch(0.55 0.13 45);   /* die kraeftige rote Kante */
+  --bx-dunkel:              oklch(0.44 0.13 42);   /* Kante des Sendeknopfs */
+  --bx-tief:                oklch(0.44 0.14 42);   /* Rollover des Sendeknopfs */
+  --bx-dunkel2:             oklch(0.44 0.13 42);
+  --bx-matt:                oklch(0.58 0.09 50);   /* Informationstext, Platzhalter */
+  --bx-matt2:               oklch(0.64 0.07 50);
+  --bx-matt3:               oklch(0.7 0.07 50);
+  --bx-aus:                 oklch(0.74 0.05 55);   /* deaktivierte Schrift */
+  --bx-kante:               oklch(0.8 0.07 50);   /* Fensterrahmen, Knopfrahmen */
+  --bx-kante-hell:          oklch(0.84 0.05 55);
+  --bx-kante2:              oklch(0.88 0.03 55);   /* Rahmen von Deaktiviertem */
+  --bx-grund:               oklch(0.962 0.02 60);   /* helle rote Flaeche */
+  --bx-grund2:              oklch(0.955 0.022 60);
+  --bx-grund4:              oklch(0.982 0.008 60);
+  --bx-grund5:              oklch(0.965 0.018 60);
+  --bx-aus-schrift:  oklch(0.66 0.03 55);   /* Schrift auf dem deaktivierten Sendeknopf */
+  --bx-aus-flaeche:         oklch(0.9 0.02 55);   /* deaktivierter Sendeknopf */
+  --bx-aus-kante:           oklch(0.86 0.03 55);   /* dessen Kante */
+  --bx-loeschen:            oklch(0.55 0.17 25);   /* der Leeren-Knopf im Feld */
+  --bx-loeschen-kante:      oklch(0.48 0.16 25);
+  --bx-senden-aus:          oklch(0.9 0.025 55);   /* deaktivierter Sendeknopf in der roten Spalte */
+  --bx-senden-aus-kante:    oklch(0.86 0.035 55);   /* dessen Kante — UND die des Pfeils daneben */
 
   /* Einzelne */
   /* Der Ton, aus dem Schleier und Schatten gemischt werden — als Marke, auch
    * wenn er als `rgba(…)` nach einer Zahlenreihe aussieht.
    */
-  --schatten-grund:         #1d1f20;
-  --manuell:                #5c3a92;   /* von Hand gesetzt — Rand und Plakette */
-  --muster:                 #a3bdd1;   /* Rand einer Musterfundstelle */
+  --schatten-grund:         oklch(0.24 0.01 85);
+  --manuell:                oklch(0.45 0.15 300);   /* von Hand gesetzt — Rand und Plakette */
+  --muster:                 oklch(0.68 0.08 250);   /* Rand einer Musterfundstelle */
 
   /* Zwei Bedeutungen, zwei Marken: die PAPIERFLAECHE eines Feldes oder
    * Menues und die SCHRIFT auf einer farbigen Flaeche. Im Hellen haben sie
@@ -308,6 +314,8 @@ figcaption {
    */
   --papier:    #fff;   /* Flaeche von Feldern, Menues, Dialogen */
   --auf-farbe: #fff;   /* Schrift und Zeichen auf farbiger Flaeche */
+  --auf-hinaus: #fff;  /* Schrift auf dem orangen Sendeknopf (2.0) */
+  --auf-haupt: #fff;   /* Schrift auf dem fast schwarzen Hauptknopf (2.0) */
 }
 
 /* ══ DIE PLATZHALTERFARBEN ═══════════════════════════════════════════
@@ -324,28 +332,28 @@ figcaption {
  * Dunkeln dasselbe Prinzip, nur andersherum.
  */
 :root {
-  --ph-gruppe-person-fl: #f3ecfb;  --ph-gruppe-person-ra: #c6a8e6;  --ph-gruppe-person-sc: #5c3a92;
-  --ph-gruppe-origin-fl: #eef2fb;  --ph-gruppe-origin-ra: #a9b9e0;  --ph-gruppe-origin-sc: #33447f;
-  --ph-gruppe-address-fl: #f6f2e4;  --ph-gruppe-address-ra: #cfc292;  --ph-gruppe-address-sc: #6d6127;
-  --ph-gruppe-contact-fl: #f4f6e2;  --ph-gruppe-contact-ra: #c9d38d;  --ph-gruppe-contact-sc: #5c6720;
-  --ph-gruppe-official-fl: #e6f7f4;  --ph-gruppe-official-ra: #96d3c8;  --ph-gruppe-official-sc: #1f5f56;
-  --ph-gruppe-finance-fl: #eaf4ee;  --ph-gruppe-finance-ra: #9dc9ac;  --ph-gruppe-finance-sc: #2c5f3c;
-  --ph-gruppe-health-fl: #fdedee;  --ph-gruppe-health-ra: #e5a6ab;  --ph-gruppe-health-sc: #8e2f38;
-  --ph-gruppe-process-fl: #f5f3e6;  --ph-gruppe-process-ra: #ccc596;  --ph-gruppe-process-sc: #67602a;
-  --ph-gruppe-plain-fl: #f1f1f2;  --ph-gruppe-plain-ra: #c2c4c6;  --ph-gruppe-plain-sc: #5a5d60;
-  --ph-tag-fullname-fl: #f3ecfb;  --ph-tag-fullname-ra: #c6a8e6;  --ph-tag-fullname-sc: #5c3a92;
-  --ph-tag-city-fl: #f8ecf8;  --ph-tag-city-ra: #dda8dd;  --ph-tag-city-sc: #84357f;
-  --ph-tag-street-fl: #f6f2e4;  --ph-tag-street-ra: #cfc292;  --ph-tag-street-sc: #6d6127;
-  --ph-tag-date-fl: #faf3e0;  --ph-tag-date-ra: #dcc689;  --ph-tag-date-sc: #7a5f12;
-  --ph-tag-email-fl: #f4f6e2;  --ph-tag-email-ra: #c9d38d;  --ph-tag-email-sc: #5c6720;
-  --ph-tag-phone-fl: #fdedee;  --ph-tag-phone-ra: #e5a6ab;  --ph-tag-phone-sc: #8e2f38;
-  --ph-tag-org-fl: #f5f3e6;  --ph-tag-org-ra: #ccc596;  --ph-tag-org-sc: #67602a;
-  --ph-tag-case_id-fl: #eceffa;  --ph-tag-case_id-ra: #a9b5e6;  --ph-tag-case_id-sc: #33417f;
-  --ph-tag-ahvn13-fl: #e6f7f4;  --ph-tag-ahvn13-ra: #96d3c8;  --ph-tag-ahvn13-sc: #1f5f56;
-  --ph-rest-1-fl: #eef4f8;  --ph-rest-1-ra: #a3bdd1;  --ph-rest-1-sc: #2f5771;
-  --ph-rest-2-fl: #f5eef1;  --ph-rest-2-ra: #d3aab8;  --ph-rest-2-sc: #7a3149;
-  --ph-rest-3-fl: #eef5ee;  --ph-rest-3-ra: #a8cba8;  --ph-rest-3-sc: #2f5f34;
-  --ph-rest-4-fl: #f6f1e8;  --ph-rest-4-ra: #cfb894;  --ph-rest-4-sc: #6b4f26;
+  --ph-gruppe-person-fl: oklch(0.95 0.035 300);  --ph-gruppe-person-ra: oklch(0.95 0.035 300);  --ph-gruppe-person-sc: oklch(0.42 0.12 300);
+  --ph-gruppe-origin-fl: oklch(0.95 0.035 340);  --ph-gruppe-origin-ra: oklch(0.95 0.035 340);  --ph-gruppe-origin-sc: oklch(0.42 0.12 340);
+  --ph-gruppe-address-fl: oklch(0.95 0.035 195);  --ph-gruppe-address-ra: oklch(0.95 0.035 195);  --ph-gruppe-address-sc: oklch(0.42 0.12 195);
+  --ph-gruppe-contact-fl: oklch(0.95 0.035 250);  --ph-gruppe-contact-ra: oklch(0.95 0.035 250);  --ph-gruppe-contact-sc: oklch(0.42 0.12 250);
+  --ph-gruppe-official-fl: oklch(0.95 0.035 20);  --ph-gruppe-official-ra: oklch(0.95 0.035 20);  --ph-gruppe-official-sc: oklch(0.42 0.12 20);
+  --ph-gruppe-finance-fl: oklch(0.95 0.035 110);  --ph-gruppe-finance-ra: oklch(0.95 0.035 110);  --ph-gruppe-finance-sc: oklch(0.42 0.12 110);
+  --ph-gruppe-health-fl: oklch(0.95 0.035 165);  --ph-gruppe-health-ra: oklch(0.95 0.035 165);  --ph-gruppe-health-sc: oklch(0.42 0.12 165);
+  --ph-gruppe-process-fl: oklch(0.95 0.035 75);  --ph-gruppe-process-ra: oklch(0.95 0.035 75);  --ph-gruppe-process-sc: oklch(0.42 0.12 75);
+  --ph-gruppe-plain-fl: oklch(0.95 0.006 85);  --ph-gruppe-plain-ra: oklch(0.95 0.006 85);  --ph-gruppe-plain-sc: oklch(0.42 0.01 85);
+  --ph-tag-fullname-fl: oklch(0.95 0.035 300);  --ph-tag-fullname-ra: oklch(0.95 0.035 300);  --ph-tag-fullname-sc: oklch(0.42 0.12 300);
+  --ph-tag-city-fl: oklch(0.95 0.035 195);  --ph-tag-city-ra: oklch(0.95 0.035 195);  --ph-tag-city-sc: oklch(0.42 0.12 195);
+  --ph-tag-street-fl: oklch(0.95 0.035 195);  --ph-tag-street-ra: oklch(0.95 0.035 195);  --ph-tag-street-sc: oklch(0.42 0.12 195);
+  --ph-tag-date-fl: oklch(0.95 0.035 75);  --ph-tag-date-ra: oklch(0.95 0.035 75);  --ph-tag-date-sc: oklch(0.42 0.12 75);
+  --ph-tag-email-fl: oklch(0.95 0.035 250);  --ph-tag-email-ra: oklch(0.95 0.035 250);  --ph-tag-email-sc: oklch(0.42 0.12 250);
+  --ph-tag-phone-fl: oklch(0.95 0.035 250);  --ph-tag-phone-ra: oklch(0.95 0.035 250);  --ph-tag-phone-sc: oklch(0.42 0.12 250);
+  --ph-tag-org-fl: oklch(0.95 0.035 75);  --ph-tag-org-ra: oklch(0.95 0.035 75);  --ph-tag-org-sc: oklch(0.42 0.12 75);
+  --ph-tag-case_id-fl: oklch(0.95 0.035 75);  --ph-tag-case_id-ra: oklch(0.95 0.035 75);  --ph-tag-case_id-sc: oklch(0.42 0.12 75);
+  --ph-tag-ahvn13-fl: oklch(0.95 0.035 20);  --ph-tag-ahvn13-ra: oklch(0.95 0.035 20);  --ph-tag-ahvn13-sc: oklch(0.42 0.12 20);
+  --ph-rest-1-fl: oklch(0.95 0.035 230);  --ph-rest-1-ra: oklch(0.95 0.035 230);  --ph-rest-1-sc: oklch(0.42 0.12 230);
+  --ph-rest-2-fl: oklch(0.95 0.035 0);  --ph-rest-2-ra: oklch(0.95 0.035 0);  --ph-rest-2-sc: oklch(0.42 0.12 0);
+  --ph-rest-3-fl: oklch(0.95 0.035 140);  --ph-rest-3-ra: oklch(0.95 0.035 140);  --ph-rest-3-sc: oklch(0.42 0.12 140);
+  --ph-rest-4-fl: oklch(0.95 0.035 60);  --ph-rest-4-ra: oklch(0.95 0.035 60);  --ph-rest-4-sc: oklch(0.42 0.12 60);
 }
 
 /* == DER DUNKELMODUS =================================================
@@ -376,161 +384,155 @@ figcaption {
  */
 @media (prefers-color-scheme: dark) {
   :root:not([data-thema="hell"]) {
-    --color-bg: #1a1917;
-    --color-surface: #232220;
-    --color-text: #ece9e3;
-    --papier: #2b2a27;
+    --color-bg: oklch(0.19 0.006 85);
+    --color-surface: oklch(0.215 0.006 85);
+    --color-text: oklch(0.93 0.006 85);
+    --papier: oklch(0.235 0.007 85);
     --auf-farbe: #f4f2ee;
-    --color-neutral-100: #1f1e1c;
-    --color-neutral-200: #2a2926;
-    --color-neutral-300: #343330;
-    --color-neutral-400: #423f3b;
-    --color-neutral-500: #5b5852;
-    --color-neutral-600: #7d7972;
-    --color-neutral-700: #a5a29b;
-    --color-neutral-800: #c9c5be;
-    --color-neutral-900: #ece9e3;
-    --gr-tief: #43895c;
-    --gr-dunkel2: #4e9a6c;
-    --gr-hell: #5fb37f;
-    --gr-matt: #5f9f78;
-    --gr-aus: #385644;
-    --gr-aus-kante: #456450;
-    --gr-grund: #1d2a22;
-    --gr-grund2: #24382c;
-    --gr-grund3: #1a241e;
-    --bx-dunkel: #8a2e21;
-    --bx-tief: #b23f2e;
-    --bx-dunkel2: #7c2d22;
-    --bx-matt: #ba7869;
-    --bx-matt2: #a76a5c;
-    --bx-matt3: #96604f;
-    --bx-aus: #7c524a;
-    --bx-kante: #6d3c31;
-    --bx-kante-hell: #84483b;
-    --bx-kante2: #4a2b24;
-    --bx-grund: #2e1d1a;
-    --bx-grund2: #341f1b;
-    --bx-grund3: #281a18;
-    --bx-grund4: #231917;
-    --bx-grund5: #2a1c19;
-    --bx-aus-flaeche: #4a2b24;
-    --bx-aus-kante: #5c352c;
-    --bx-loeschen: #b8483a;
-    --bx-loeschen-kante: #8f382c;
-    --bx-senden-aus: #482924;
-    --bx-senden-aus-kante: #573129;
-    --manuell: #a184d0;
-    --muster: #7fa3c2;
-    --gr-flaeche: #37764e;  --gr-flaeche2: #2c6340;  --gr-schrift: #7ecb9c;  --gr-kante: #4e9a6c;  --bx-flaeche: #9c3627;  --bx-schrift: #e2907f;  --bx-kante-stark: #a8503f;  --bx-aus-schrift: #a8837b;
+    --auf-hinaus: oklch(0.2 0.02 50);
+    --auf-haupt: oklch(0.2 0.006 85);
+    --color-neutral-100: oklch(0.215 0.006 85);
+    --color-neutral-200: oklch(0.26 0.007 85);
+    --color-neutral-300: oklch(0.32 0.008 85);
+    --color-neutral-400: oklch(0.38 0.008 85);
+    --color-neutral-500: oklch(0.5 0.008 85);
+    --color-neutral-600: oklch(0.64 0.008 85);
+    --color-neutral-700: oklch(0.76 0.008 85);
+    --color-neutral-800: oklch(0.86 0.007 85);
+    --color-neutral-900: oklch(0.93 0.006 85);
+    --gr-hell: oklch(0.72 0.13 155);
+    --gr-matt: oklch(0.55 0.08 155);
+    --gr-grund: oklch(0.25 0.03 155);
+    --gr-grund2: oklch(0.3 0.045 155);
+    --gr-grund3: oklch(0.22 0.02 155);
+    --bx-dunkel: oklch(0.62 0.13 48);
+    --bx-tief: oklch(0.76 0.13 48);
+    --bx-dunkel2: oklch(0.62 0.13 48);
+    --bx-matt: oklch(0.68 0.08 55);
+    --bx-matt2: oklch(0.6 0.07 55);
+    --bx-matt3: oklch(0.55 0.06 55);
+    --bx-aus: oklch(0.5 0.04 55);
+    --bx-kante: oklch(0.52 0.08 50);
+    --bx-kante-hell: oklch(0.45 0.06 55);
+    --bx-kante2: oklch(0.36 0.04 55);
+    --bx-grund: oklch(0.235 0.028 55);
+    --bx-grund2: oklch(0.25 0.03 55);
+    --bx-grund4: oklch(0.21 0.015 60);
+    --bx-grund5: oklch(0.24 0.025 58);
+    --bx-aus-flaeche: oklch(0.3 0.02 55);
+    --bx-aus-kante: oklch(0.36 0.03 55);
+    --bx-loeschen: oklch(0.68 0.16 25);
+    --bx-loeschen-kante: oklch(0.6 0.15 25);
+    --bx-senden-aus: oklch(0.3 0.02 55);
+    --bx-senden-aus-kante: oklch(0.36 0.03 55);
+    --manuell: oklch(0.75 0.12 300);
+    --muster: oklch(0.68 0.08 250);
+    --gr-flaeche: oklch(0.62 0.13 155);  --gr-flaeche2: oklch(0.56 0.12 155);  --gr-schrift: oklch(0.78 0.1 155);  --gr-kante: oklch(0.62 0.12 155);  --bx-flaeche: oklch(0.7 0.14 48);  --bx-schrift: oklch(0.8 0.11 55);  --bx-kante-stark: oklch(0.68 0.13 50);  --bx-aus-schrift: oklch(0.55 0.03 55);
     --schatten-grund: #000000;
-    --color-accent: #7ea8d0;
-    --color-accent-100: #1a2430;  --color-accent-600: #8fb4d6;  --color-accent-700: #a9c6e0;  --color-accent-800: #c6dbee;  --color-accent-2-100: #1b2530;  --color-accent-2-800: #c2d6e6;
+    --color-accent: oklch(0.76 0.1 155);
+    --color-accent-100: oklch(0.28 0.04 155);  --color-accent-600: oklch(0.74 0.1 155);  --color-accent-700: oklch(0.8 0.09 155);  --color-accent-800: oklch(0.88 0.06 155);  --color-accent-2-100: oklch(0.28 0.04 155);  --color-accent-2-800: oklch(0.88 0.06 155);
     --color-divider: color-mix(in srgb, #ece9e3 16%, transparent);
     --shadow-sm: 0 1px 2px color-mix(in srgb, #000000 45%, transparent);
     --shadow-md: 0 3px 10px color-mix(in srgb, #000000 50%, transparent);
     --shadow-lg: 0 12px 32px color-mix(in srgb, #000000 58%, transparent);
-    --ph-gruppe-address-fl: #2b2717;  --ph-gruppe-address-ra: #87773b;  --ph-gruppe-address-sc: #dcd19d;
-    --ph-gruppe-contact-fl: #292b17;  --ph-gruppe-contact-ra: #7d883a;  --ph-gruppe-contact-sc: #d5e09a;
-    --ph-gruppe-finance-fl: #172b1f;  --ph-gruppe-finance-ra: #457d58;  --ph-gruppe-finance-sc: #a4d5b4;
-    --ph-gruppe-health-fl: #2b1718;  --ph-gruppe-health-ra: #883a40;  --ph-gruppe-health-sc: #de9ba2;
-    --ph-gruppe-official-fl: #172b28;  --ph-gruppe-official-ra: #3a887a;  --ph-gruppe-official-sc: #9bded5;
-    --ph-gruppe-origin-fl: #171d2b;  --ph-gruppe-origin-ra: #3a5188;  --ph-gruppe-origin-sc: #a0add9;
-    --ph-gruppe-person-fl: #20172b;  --ph-gruppe-person-ra: #603a88;  --ph-gruppe-person-sc: #b6a0d9;
-    --ph-gruppe-plain-fl: #202022;  --ph-gruppe-plain-ra: #496179;  --ph-gruppe-plain-sc: #a5bdd4;
-    --ph-gruppe-process-fl: #2b2817;  --ph-gruppe-process-ra: #827a3f;  --ph-gruppe-process-sc: #d9d2a1;
-    --ph-rest-1-fl: #17232b;  --ph-rest-1-ra: #416581;  --ph-rest-1-sc: #a1c3d8;
-    --ph-rest-2-fl: #2a1920;  --ph-rest-2-ra: #804257;  --ph-rest-2-sc: #d9a0b3;
-    --ph-rest-3-fl: #192a19;  --ph-rest-3-ra: #497949;  --ph-rest-3-sc: #a5d4aa;
-    --ph-rest-4-fl: #2b2417;  --ph-rest-4-ra: #86693c;  --ph-rest-4-sc: #dcc39d;
-    --ph-tag-ahvn13-fl: #172b28;  --ph-tag-ahvn13-ra: #3a887a;  --ph-tag-ahvn13-sc: #9bded5;
-    --ph-tag-case_id-fl: #171b2b;  --ph-tag-case_id-ra: #3a4988;  --ph-tag-case_id-sc: #a0abd9;
-    --ph-tag-city-fl: #2b172b;  --ph-tag-city-ra: #883a88;  --ph-tag-city-sc: #d9a0d5;
-    --ph-tag-date-fl: #2b2617;  --ph-tag-date-ra: #88733a;  --ph-tag-date-sc: #e1ce98;
-    --ph-tag-email-fl: #292b17;  --ph-tag-email-ra: #7d883a;  --ph-tag-email-sc: #d5e09a;
-    --ph-tag-fullname-fl: #20172b;  --ph-tag-fullname-ra: #603a88;  --ph-tag-fullname-sc: #b6a0d9;
-    --ph-tag-org-fl: #2b2817;  --ph-tag-org-ra: #827a3f;  --ph-tag-org-sc: #d9d2a1;
-    --ph-tag-phone-fl: #2b1718;  --ph-tag-phone-ra: #883a40;  --ph-tag-phone-sc: #de9ba2;
-    --ph-tag-street-fl: #2b2717;  --ph-tag-street-ra: #87773b;  --ph-tag-street-sc: #dcd19d;
+    --ph-gruppe-address-fl: oklch(0.33 0.06 195);  --ph-gruppe-address-ra: oklch(0.33 0.06 195);  --ph-gruppe-address-sc: oklch(0.85 0.1 195);
+    --ph-gruppe-contact-fl: oklch(0.33 0.06 250);  --ph-gruppe-contact-ra: oklch(0.33 0.06 250);  --ph-gruppe-contact-sc: oklch(0.85 0.1 250);
+    --ph-gruppe-finance-fl: oklch(0.33 0.06 110);  --ph-gruppe-finance-ra: oklch(0.33 0.06 110);  --ph-gruppe-finance-sc: oklch(0.85 0.1 110);
+    --ph-gruppe-health-fl: oklch(0.33 0.06 165);  --ph-gruppe-health-ra: oklch(0.33 0.06 165);  --ph-gruppe-health-sc: oklch(0.85 0.1 165);
+    --ph-gruppe-official-fl: oklch(0.33 0.06 20);  --ph-gruppe-official-ra: oklch(0.33 0.06 20);  --ph-gruppe-official-sc: oklch(0.85 0.1 20);
+    --ph-gruppe-origin-fl: oklch(0.33 0.06 340);  --ph-gruppe-origin-ra: oklch(0.33 0.06 340);  --ph-gruppe-origin-sc: oklch(0.85 0.1 340);
+    --ph-gruppe-person-fl: oklch(0.33 0.06 300);  --ph-gruppe-person-ra: oklch(0.33 0.06 300);  --ph-gruppe-person-sc: oklch(0.85 0.1 300);
+    --ph-gruppe-plain-fl: oklch(0.33 0.006 85);  --ph-gruppe-plain-ra: oklch(0.33 0.006 85);  --ph-gruppe-plain-sc: oklch(0.85 0.01 85);
+    --ph-gruppe-process-fl: oklch(0.33 0.06 75);  --ph-gruppe-process-ra: oklch(0.33 0.06 75);  --ph-gruppe-process-sc: oklch(0.85 0.1 75);
+    --ph-rest-1-fl: oklch(0.33 0.06 230);  --ph-rest-1-ra: oklch(0.33 0.06 230);  --ph-rest-1-sc: oklch(0.85 0.1 230);
+    --ph-rest-2-fl: oklch(0.33 0.06 0);  --ph-rest-2-ra: oklch(0.33 0.06 0);  --ph-rest-2-sc: oklch(0.85 0.1 0);
+    --ph-rest-3-fl: oklch(0.33 0.06 140);  --ph-rest-3-ra: oklch(0.33 0.06 140);  --ph-rest-3-sc: oklch(0.85 0.1 140);
+    --ph-rest-4-fl: oklch(0.33 0.06 60);  --ph-rest-4-ra: oklch(0.33 0.06 60);  --ph-rest-4-sc: oklch(0.85 0.1 60);
+    --ph-tag-ahvn13-fl: oklch(0.33 0.06 20);  --ph-tag-ahvn13-ra: oklch(0.33 0.06 20);  --ph-tag-ahvn13-sc: oklch(0.85 0.1 20);
+    --ph-tag-case_id-fl: oklch(0.33 0.06 75);  --ph-tag-case_id-ra: oklch(0.33 0.06 75);  --ph-tag-case_id-sc: oklch(0.85 0.1 75);
+    --ph-tag-city-fl: oklch(0.33 0.06 195);  --ph-tag-city-ra: oklch(0.33 0.06 195);  --ph-tag-city-sc: oklch(0.85 0.1 195);
+    --ph-tag-date-fl: oklch(0.33 0.06 75);  --ph-tag-date-ra: oklch(0.33 0.06 75);  --ph-tag-date-sc: oklch(0.85 0.1 75);
+    --ph-tag-email-fl: oklch(0.33 0.06 250);  --ph-tag-email-ra: oklch(0.33 0.06 250);  --ph-tag-email-sc: oklch(0.85 0.1 250);
+    --ph-tag-fullname-fl: oklch(0.33 0.06 300);  --ph-tag-fullname-ra: oklch(0.33 0.06 300);  --ph-tag-fullname-sc: oklch(0.85 0.1 300);
+    --ph-tag-org-fl: oklch(0.33 0.06 75);  --ph-tag-org-ra: oklch(0.33 0.06 75);  --ph-tag-org-sc: oklch(0.85 0.1 75);
+    --ph-tag-phone-fl: oklch(0.33 0.06 250);  --ph-tag-phone-ra: oklch(0.33 0.06 250);  --ph-tag-phone-sc: oklch(0.85 0.1 250);
+    --ph-tag-street-fl: oklch(0.33 0.06 195);  --ph-tag-street-ra: oklch(0.33 0.06 195);  --ph-tag-street-sc: oklch(0.85 0.1 195);
   }
 }
 :root[data-thema="dunkel"] {
-    --color-bg: #1a1917;
-    --color-surface: #232220;
-    --color-text: #ece9e3;
-    --papier: #2b2a27;
+    --color-bg: oklch(0.19 0.006 85);
+    --color-surface: oklch(0.215 0.006 85);
+    --color-text: oklch(0.93 0.006 85);
+    --papier: oklch(0.235 0.007 85);
     --auf-farbe: #f4f2ee;
-    --color-neutral-100: #1f1e1c;
-    --color-neutral-200: #2a2926;
-    --color-neutral-300: #343330;
-    --color-neutral-400: #423f3b;
-    --color-neutral-500: #5b5852;
-    --color-neutral-600: #7d7972;
-    --color-neutral-700: #a5a29b;
-    --color-neutral-800: #c9c5be;
-    --color-neutral-900: #ece9e3;
-    --gr-tief: #43895c;
-    --gr-dunkel2: #4e9a6c;
-    --gr-hell: #5fb37f;
-    --gr-matt: #5f9f78;
-    --gr-aus: #385644;
-    --gr-aus-kante: #456450;
-    --gr-grund: #1d2a22;
-    --gr-grund2: #24382c;
-    --gr-grund3: #1a241e;
-    --bx-dunkel: #8a2e21;
-    --bx-tief: #b23f2e;
-    --bx-dunkel2: #7c2d22;
-    --bx-matt: #ba7869;
-    --bx-matt2: #a76a5c;
-    --bx-matt3: #96604f;
-    --bx-aus: #7c524a;
-    --bx-kante: #6d3c31;
-    --bx-kante-hell: #84483b;
-    --bx-kante2: #4a2b24;
-    --bx-grund: #2e1d1a;
-    --bx-grund2: #341f1b;
-    --bx-grund3: #281a18;
-    --bx-grund4: #231917;
-    --bx-grund5: #2a1c19;
-    --bx-aus-flaeche: #4a2b24;
-    --bx-aus-kante: #5c352c;
-    --bx-loeschen: #b8483a;
-    --bx-loeschen-kante: #8f382c;
-    --bx-senden-aus: #482924;
-    --bx-senden-aus-kante: #573129;
-    --manuell: #a184d0;
-    --muster: #7fa3c2;
-    --gr-flaeche: #37764e;  --gr-flaeche2: #2c6340;  --gr-schrift: #7ecb9c;  --gr-kante: #4e9a6c;  --bx-flaeche: #9c3627;  --bx-schrift: #e2907f;  --bx-kante-stark: #a8503f;  --bx-aus-schrift: #a8837b;
+    --auf-hinaus: oklch(0.2 0.02 50);
+    --auf-haupt: oklch(0.2 0.006 85);
+    --color-neutral-100: oklch(0.215 0.006 85);
+    --color-neutral-200: oklch(0.26 0.007 85);
+    --color-neutral-300: oklch(0.32 0.008 85);
+    --color-neutral-400: oklch(0.38 0.008 85);
+    --color-neutral-500: oklch(0.5 0.008 85);
+    --color-neutral-600: oklch(0.64 0.008 85);
+    --color-neutral-700: oklch(0.76 0.008 85);
+    --color-neutral-800: oklch(0.86 0.007 85);
+    --color-neutral-900: oklch(0.93 0.006 85);
+    --gr-hell: oklch(0.72 0.13 155);
+    --gr-matt: oklch(0.55 0.08 155);
+    --gr-grund: oklch(0.25 0.03 155);
+    --gr-grund2: oklch(0.3 0.045 155);
+    --gr-grund3: oklch(0.22 0.02 155);
+    --bx-dunkel: oklch(0.62 0.13 48);
+    --bx-tief: oklch(0.76 0.13 48);
+    --bx-dunkel2: oklch(0.62 0.13 48);
+    --bx-matt: oklch(0.68 0.08 55);
+    --bx-matt2: oklch(0.6 0.07 55);
+    --bx-matt3: oklch(0.55 0.06 55);
+    --bx-aus: oklch(0.5 0.04 55);
+    --bx-kante: oklch(0.52 0.08 50);
+    --bx-kante-hell: oklch(0.45 0.06 55);
+    --bx-kante2: oklch(0.36 0.04 55);
+    --bx-grund: oklch(0.235 0.028 55);
+    --bx-grund2: oklch(0.25 0.03 55);
+    --bx-grund4: oklch(0.21 0.015 60);
+    --bx-grund5: oklch(0.24 0.025 58);
+    --bx-aus-flaeche: oklch(0.3 0.02 55);
+    --bx-aus-kante: oklch(0.36 0.03 55);
+    --bx-loeschen: oklch(0.68 0.16 25);
+    --bx-loeschen-kante: oklch(0.6 0.15 25);
+    --bx-senden-aus: oklch(0.3 0.02 55);
+    --bx-senden-aus-kante: oklch(0.36 0.03 55);
+    --manuell: oklch(0.75 0.12 300);
+    --muster: oklch(0.68 0.08 250);
+    --gr-flaeche: oklch(0.62 0.13 155);  --gr-flaeche2: oklch(0.56 0.12 155);  --gr-schrift: oklch(0.78 0.1 155);  --gr-kante: oklch(0.62 0.12 155);  --bx-flaeche: oklch(0.7 0.14 48);  --bx-schrift: oklch(0.8 0.11 55);  --bx-kante-stark: oklch(0.68 0.13 50);  --bx-aus-schrift: oklch(0.55 0.03 55);
     --schatten-grund: #000000;
-    --color-accent: #7ea8d0;
-    --color-accent-100: #1a2430;  --color-accent-600: #8fb4d6;  --color-accent-700: #a9c6e0;  --color-accent-800: #c6dbee;  --color-accent-2-100: #1b2530;  --color-accent-2-800: #c2d6e6;
+    --color-accent: oklch(0.76 0.1 155);
+    --color-accent-100: oklch(0.28 0.04 155);  --color-accent-600: oklch(0.74 0.1 155);  --color-accent-700: oklch(0.8 0.09 155);  --color-accent-800: oklch(0.88 0.06 155);  --color-accent-2-100: oklch(0.28 0.04 155);  --color-accent-2-800: oklch(0.88 0.06 155);
     --color-divider: color-mix(in srgb, #ece9e3 16%, transparent);
     --shadow-sm: 0 1px 2px color-mix(in srgb, #000000 45%, transparent);
     --shadow-md: 0 3px 10px color-mix(in srgb, #000000 50%, transparent);
     --shadow-lg: 0 12px 32px color-mix(in srgb, #000000 58%, transparent);
-    --ph-gruppe-address-fl: #2b2717;  --ph-gruppe-address-ra: #87773b;  --ph-gruppe-address-sc: #dcd19d;
-    --ph-gruppe-contact-fl: #292b17;  --ph-gruppe-contact-ra: #7d883a;  --ph-gruppe-contact-sc: #d5e09a;
-    --ph-gruppe-finance-fl: #172b1f;  --ph-gruppe-finance-ra: #457d58;  --ph-gruppe-finance-sc: #a4d5b4;
-    --ph-gruppe-health-fl: #2b1718;  --ph-gruppe-health-ra: #883a40;  --ph-gruppe-health-sc: #de9ba2;
-    --ph-gruppe-official-fl: #172b28;  --ph-gruppe-official-ra: #3a887a;  --ph-gruppe-official-sc: #9bded5;
-    --ph-gruppe-origin-fl: #171d2b;  --ph-gruppe-origin-ra: #3a5188;  --ph-gruppe-origin-sc: #a0add9;
-    --ph-gruppe-person-fl: #20172b;  --ph-gruppe-person-ra: #603a88;  --ph-gruppe-person-sc: #b6a0d9;
-    --ph-gruppe-plain-fl: #202022;  --ph-gruppe-plain-ra: #496179;  --ph-gruppe-plain-sc: #a5bdd4;
-    --ph-gruppe-process-fl: #2b2817;  --ph-gruppe-process-ra: #827a3f;  --ph-gruppe-process-sc: #d9d2a1;
-    --ph-rest-1-fl: #17232b;  --ph-rest-1-ra: #416581;  --ph-rest-1-sc: #a1c3d8;
-    --ph-rest-2-fl: #2a1920;  --ph-rest-2-ra: #804257;  --ph-rest-2-sc: #d9a0b3;
-    --ph-rest-3-fl: #192a19;  --ph-rest-3-ra: #497949;  --ph-rest-3-sc: #a5d4aa;
-    --ph-rest-4-fl: #2b2417;  --ph-rest-4-ra: #86693c;  --ph-rest-4-sc: #dcc39d;
-    --ph-tag-ahvn13-fl: #172b28;  --ph-tag-ahvn13-ra: #3a887a;  --ph-tag-ahvn13-sc: #9bded5;
-    --ph-tag-case_id-fl: #171b2b;  --ph-tag-case_id-ra: #3a4988;  --ph-tag-case_id-sc: #a0abd9;
-    --ph-tag-city-fl: #2b172b;  --ph-tag-city-ra: #883a88;  --ph-tag-city-sc: #d9a0d5;
-    --ph-tag-date-fl: #2b2617;  --ph-tag-date-ra: #88733a;  --ph-tag-date-sc: #e1ce98;
-    --ph-tag-email-fl: #292b17;  --ph-tag-email-ra: #7d883a;  --ph-tag-email-sc: #d5e09a;
-    --ph-tag-fullname-fl: #20172b;  --ph-tag-fullname-ra: #603a88;  --ph-tag-fullname-sc: #b6a0d9;
-    --ph-tag-org-fl: #2b2817;  --ph-tag-org-ra: #827a3f;  --ph-tag-org-sc: #d9d2a1;
-    --ph-tag-phone-fl: #2b1718;  --ph-tag-phone-ra: #883a40;  --ph-tag-phone-sc: #de9ba2;
-    --ph-tag-street-fl: #2b2717;  --ph-tag-street-ra: #87773b;  --ph-tag-street-sc: #dcd19d;
+    --ph-gruppe-address-fl: oklch(0.33 0.06 195);  --ph-gruppe-address-ra: oklch(0.33 0.06 195);  --ph-gruppe-address-sc: oklch(0.85 0.1 195);
+    --ph-gruppe-contact-fl: oklch(0.33 0.06 250);  --ph-gruppe-contact-ra: oklch(0.33 0.06 250);  --ph-gruppe-contact-sc: oklch(0.85 0.1 250);
+    --ph-gruppe-finance-fl: oklch(0.33 0.06 110);  --ph-gruppe-finance-ra: oklch(0.33 0.06 110);  --ph-gruppe-finance-sc: oklch(0.85 0.1 110);
+    --ph-gruppe-health-fl: oklch(0.33 0.06 165);  --ph-gruppe-health-ra: oklch(0.33 0.06 165);  --ph-gruppe-health-sc: oklch(0.85 0.1 165);
+    --ph-gruppe-official-fl: oklch(0.33 0.06 20);  --ph-gruppe-official-ra: oklch(0.33 0.06 20);  --ph-gruppe-official-sc: oklch(0.85 0.1 20);
+    --ph-gruppe-origin-fl: oklch(0.33 0.06 340);  --ph-gruppe-origin-ra: oklch(0.33 0.06 340);  --ph-gruppe-origin-sc: oklch(0.85 0.1 340);
+    --ph-gruppe-person-fl: oklch(0.33 0.06 300);  --ph-gruppe-person-ra: oklch(0.33 0.06 300);  --ph-gruppe-person-sc: oklch(0.85 0.1 300);
+    --ph-gruppe-plain-fl: oklch(0.33 0.006 85);  --ph-gruppe-plain-ra: oklch(0.33 0.006 85);  --ph-gruppe-plain-sc: oklch(0.85 0.01 85);
+    --ph-gruppe-process-fl: oklch(0.33 0.06 75);  --ph-gruppe-process-ra: oklch(0.33 0.06 75);  --ph-gruppe-process-sc: oklch(0.85 0.1 75);
+    --ph-rest-1-fl: oklch(0.33 0.06 230);  --ph-rest-1-ra: oklch(0.33 0.06 230);  --ph-rest-1-sc: oklch(0.85 0.1 230);
+    --ph-rest-2-fl: oklch(0.33 0.06 0);  --ph-rest-2-ra: oklch(0.33 0.06 0);  --ph-rest-2-sc: oklch(0.85 0.1 0);
+    --ph-rest-3-fl: oklch(0.33 0.06 140);  --ph-rest-3-ra: oklch(0.33 0.06 140);  --ph-rest-3-sc: oklch(0.85 0.1 140);
+    --ph-rest-4-fl: oklch(0.33 0.06 60);  --ph-rest-4-ra: oklch(0.33 0.06 60);  --ph-rest-4-sc: oklch(0.85 0.1 60);
+    --ph-tag-ahvn13-fl: oklch(0.33 0.06 20);  --ph-tag-ahvn13-ra: oklch(0.33 0.06 20);  --ph-tag-ahvn13-sc: oklch(0.85 0.1 20);
+    --ph-tag-case_id-fl: oklch(0.33 0.06 75);  --ph-tag-case_id-ra: oklch(0.33 0.06 75);  --ph-tag-case_id-sc: oklch(0.85 0.1 75);
+    --ph-tag-city-fl: oklch(0.33 0.06 195);  --ph-tag-city-ra: oklch(0.33 0.06 195);  --ph-tag-city-sc: oklch(0.85 0.1 195);
+    --ph-tag-date-fl: oklch(0.33 0.06 75);  --ph-tag-date-ra: oklch(0.33 0.06 75);  --ph-tag-date-sc: oklch(0.85 0.1 75);
+    --ph-tag-email-fl: oklch(0.33 0.06 250);  --ph-tag-email-ra: oklch(0.33 0.06 250);  --ph-tag-email-sc: oklch(0.85 0.1 250);
+    --ph-tag-fullname-fl: oklch(0.33 0.06 300);  --ph-tag-fullname-ra: oklch(0.33 0.06 300);  --ph-tag-fullname-sc: oklch(0.85 0.1 300);
+    --ph-tag-org-fl: oklch(0.33 0.06 75);  --ph-tag-org-ra: oklch(0.33 0.06 75);  --ph-tag-org-sc: oklch(0.85 0.1 75);
+    --ph-tag-phone-fl: oklch(0.33 0.06 250);  --ph-tag-phone-ra: oklch(0.33 0.06 250);  --ph-tag-phone-sc: oklch(0.85 0.1 250);
+    --ph-tag-street-fl: oklch(0.33 0.06 195);  --ph-tag-street-ra: oklch(0.33 0.06 195);  --ph-tag-street-sc: oklch(0.85 0.1 195);
 }
 :root { --fokus: var(--gr-flaeche); }
 /* Die Farbe des aktiven Rahmens folgt der SPALTE, nicht dem Feld: in der
@@ -756,7 +758,7 @@ textarea.input { min-height: 5.625rem; resize: vertical; }
 :root[data-thema="dunkel"] .kopfzeile .logo { background-image: url("maske.svg#dunkel"); }
 :root[data-thema="hell"] .kopfzeile .logo { background-image: url("maske.svg#hell"); }
 .kopfzeile .marke {
-  font-family: var(--font-heading); font-size: 1.625rem; letter-spacing: .06em;
+  font-family: var(--font-marke); font-size: 1.625rem; letter-spacing: .06em;
   text-transform: uppercase; line-height: 1; font-weight: 400;
 }
 .kopfzeile .marke b { font-weight: 700; }
@@ -770,11 +772,12 @@ textarea.input { min-height: 5.625rem; resize: vertical; }
    * wuerde eine Zeile hoeher.
    */
   white-space: nowrap;
-  display: flex; align-items: center; gap: 0.4375rem; color: var(--color-text);
-  padding: 0.3125rem 0.625rem; font-size: 0.6875rem; letter-spacing: .1em;
-  text-transform: uppercase;
+  /* Seit 2.0 wie die Statuspille des Entwurfs: gruener Punkt, gruene
+     Schrift, normale Schreibung. */
+  display: flex; align-items: center; gap: 0.5rem; color: var(--gr-schrift);
+  padding: 0.3125rem 0.625rem; font-size: 0.8125rem; font-weight: 500;
 }
-.lokalzeiger i { display: block; width: 0.4375rem; height: 0.4375rem; background: var(--color-text); }
+.lokalzeiger i { display: block; width: 0.5rem; height: 0.5rem; border-radius: 999px; background: var(--gr-flaeche); }
 .zahnrad {
   flex: none; width: 1.6875rem; height: 1.6875rem; display: inline-flex;
   align-items: center; justify-content: center;
@@ -788,6 +791,22 @@ textarea.input { min-height: 5.625rem; resize: vertical; }
  * `overflow: hidden` schneidet die Flaeche des gewaehlten Knopfs an den
  * Ecken mit ab. */
 #sprachen { border-radius: var(--radius-md); overflow: hidden; }
+/* Seit 2.0 wie im Entwurf: graue Schiene, die gewaehlte Sprache als weisse
+   Pille mit Schatten. */
+#sprachen.gruppe {
+  border: 0; gap: 2px; padding: 0.1875rem; background: var(--color-neutral-200);
+  border-radius: var(--radius-feld);
+}
+#sprachen.gruppe button {
+  height: 1.75rem; min-width: 2.125rem; padding: 0 0.5rem; border-radius: var(--radius-pille);
+  background: transparent; color: var(--color-neutral-600); letter-spacing: 0;
+  font-size: 0.75rem; font-weight: 500;
+}
+#sprachen.gruppe button:hover { background: transparent; color: var(--color-text); }
+#sprachen.gruppe button.aktiv {
+  background: var(--papier); color: var(--color-text);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--schatten-grund) 14%, transparent);
+}
 .gruppe button {
   font-family: var(--ui-heading); font-size: 0.7188rem; font-weight: 500;
   letter-spacing: .1em; text-transform: uppercase; padding: 0.25rem 0.6875rem;
@@ -806,14 +825,17 @@ textarea.input { min-height: 5.625rem; resize: vertical; }
  * setzt der Vorgabewert `min-height: auto` von Flex und Grid die Kaesten
  * auf ihre Inhaltshoehe und schiebt den Rest hinaus.
  */
+/* KARTEN STATT SPALT (seit 2.0, Entwurf des UX-Architekten): jede Kachel
+ * eine Karte mit Rand und Rundung, 1rem Abstand auf dem Grund. Bis 1.1 lagen
+ * die Kaesten mit 1px Spalt auf grauem Grund aneinander. */
 main.raster {
-  flex: 1 1 0; min-height: 0; display: flex; gap: 1px;
-  background: var(--color-neutral-300);
+  flex: 1 1 0; min-height: 0; display: flex; gap: 1rem;
+  padding: 0 1rem 1rem; background: var(--color-bg);
 }
 main.raster > .spalte {
   flex: 1 1 0; min-width: 0; display: grid;
-  grid-template-rows: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1px;
-  background: var(--color-neutral-300); overflow: hidden;
+  grid-template-rows: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1rem;
+  background: transparent; overflow: hidden;
 }
 /* KEINE Mindestbreite: sie machte aus jedem schmalen Fenster ein waagrecht
  * rollendes, und weil `rem` an `--skala` haengt, verschoebe sie sich mit dem
@@ -824,42 +846,6 @@ main.raster > .spalte {
  * Medienabfrage die Schrift des BROWSERS, nicht `--skala`.
  */
 .kopfzeile, main.raster, footer { min-width: 0; }
-
-/* --- Dritte Spalte: eingeklappt ---------------------------------------- */
-/* Sie startet EINGEKLAPPT: solange nichts hinausgeht, soll die Oberflaeche
- * auch nicht so aussehen, als ginge schon etwas hinaus. Die Schiene bleibt
- * sichtbar, damit klar ist, dass es sie gibt.
- */
-.schiene {
-  flex: none; width: 2.875rem; border-left: 2px solid var(--bx-kante-stark);
-  box-shadow: inset 5px 0 7px -5px color-mix(in srgb, var(--bx-flaeche) 55%, transparent); z-index: 2;
-  display: flex; flex-direction: column; align-items: center; gap: 1rem;
-  background: var(--bx-grund3); padding: 0.875rem 0; cursor: pointer;
-}
-.schiene button {
-  border: 1px solid var(--color-neutral-400); background: var(--papier);
-  width: 1.625rem; height: 1.625rem; cursor: pointer; color: var(--bx-schrift);
-  display: flex; align-items: center; justify-content: center;
-  border-radius: var(--radius-md);
-}
-.schiene button:hover { background: var(--color-neutral-200); }
-.schiene .senkrecht {
-  writing-mode: vertical-rl; transform: rotate(180deg);
-  font-family: var(--ui-heading); font-size: 0.75rem; letter-spacing: .2em;
-  text-transform: uppercase; color: var(--color-neutral-600);
-}
-body.drei .schiene { display: none; }
-body:not(.drei) .spalte.hinaus { display: none; }
-
-.einklappen {
-  margin-left: auto; display: inline-flex; align-items: center; gap: 0.4375rem;
-  border: 1px solid var(--color-neutral-400); background: var(--papier);
-  color: var(--bx-schrift); padding: 0.1875rem 0.5625rem; cursor: pointer;
-  font-family: var(--ui-heading); font-size: 0.7188rem; letter-spacing: .1em;
-  text-transform: uppercase;
-  border-radius: var(--radius-md);
-}
-.einklappen:hover { background: var(--color-neutral-200); }
 
 /* --- Fusszeile --------------------------------------------------------- */
 footer {
@@ -880,26 +866,85 @@ footer {
 #version { white-space: nowrap; }
 .bereich {
   display: flex; flex-direction: column; min-height: 0; min-width: 0;
-  overflow: hidden; background: var(--color-bg);
+  overflow: hidden; background: var(--papier);
+  border: 1px solid var(--color-neutral-300); border-radius: var(--radius-karte);
 }
-/* ⚠️ Spalte 3 ist farblich abgesetzt, weil dort die Grenze verlaeuft: was
-   hier steht, geht hinaus. Das ist die Aussage der ganzen Oberflaeche. */
-.spalte.hinaus { border-left: 0.1875rem solid var(--bx-kante-stark); }
-.bereich.hinaus { background: var(--bx-grund4); }
-.bereich.fertig { background: var(--gr-grund); }
+/* ⚠️ Spalte 3 ist abgesetzt, weil dort die Grenze verlaeuft: was hier steht,
+   geht hinaus. Das ist die Aussage der ganzen Oberflaeche. Seit 2.0 traegt
+   das der RAND der Karten 03 und 04 — kraeftig orange-rot. Die gestrichelte
+   Zone um die Spalte ist weg (Feedback des Anwenders, 18.10.2026). */
+.bereich.hinaus { background: var(--papier); border: 1.5px solid var(--bx-kante-stark); }
+.bereich.fertig { background: var(--papier); }
+
+/* Die Schrittleiste (seit 2.0). */
+.schritte {
+  flex: none; display: flex; align-items: center; flex-wrap: wrap;
+  gap: 0.25rem 0.375rem; padding: 0.75rem 1rem 0.5rem; background: var(--color-bg);
+}
+.schritt {
+  display: inline-flex; align-items: center; gap: 0.5rem; height: 1.875rem;
+  padding: 0 0.75rem 0 0.25rem; border: 0; border-radius: 999px;
+  background: transparent; color: var(--color-neutral-600); cursor: pointer;
+  font-family: var(--ui-schrift); font-size: 0.8125rem;
+}
+.schritt:hover { color: var(--color-text); }
+.schritt-nr {
+  width: 1.375rem; height: 1.375rem; border-radius: 999px; display: grid;
+  place-items: center; font-family: var(--font-mono); font-size: 0.6875rem;
+  border: 1px solid var(--color-neutral-400); color: var(--color-neutral-600);
+}
+.schritt.fertig { color: var(--color-neutral-700); }
+.schritt.fertig .schritt-nr { background: var(--gr-flaeche); border-color: transparent; color: var(--auf-farbe); }
+.schritt.jetzt {
+  background: var(--papier); color: var(--color-text); font-weight: 600;
+  box-shadow: 0 0 0 1px var(--color-neutral-400);
+}
+.schritt.jetzt .schritt-nr { background: var(--color-neutral-900); border-color: transparent; color: var(--auf-haupt); }
+.schritt.jetzt.aussen .schritt-nr { background: var(--bx-flaeche); color: var(--auf-hinaus); }
+.schritt-pfeil { color: var(--color-neutral-500); font-size: 0.8125rem; }
+/* UNTEREINANDER EINE ZEILE (Wunsch des Anwenders, 18.10.2026): die Leiste
+   stapelt nicht, sie rollt seitlich — in der GANZEN gestapelten Ansicht,
+   nicht erst auf dem Handy (bei mittlerer Breite rutschte Schritt 5 sonst
+   auf eine zweite Zeile). Der Schritt in der Mitte ist der
+   aktuelle (oder der zuletzt angetippte), die Nachbarn links und rechts
+   stehen angeschnitten am Rand — man sieht, dass es weitergeht, und kann sie
+   antippen. Das Zentrieren macht `zeichneSchritte()`; der Innenabstand von
+   fast einer halben Breite laesst auch den ersten und den letzten Schritt in
+   die Mitte kommen. */
+@media (max-width: 81.24em), (max-height: 44em) {
+  /* `body .schritte` und nicht `.schritte`: die gestapelte Regel weiter unten
+     setzt `padding` als Kurzform und haette den Innenabstand sonst still
+     ueberschrieben (gemessen: 12px statt einer halben Breite). */
+  body .schritte {
+    flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity; scrollbar-width: none;
+    padding-inline: calc(50% - 2.5rem);
+  }
+  .schritte::-webkit-scrollbar { display: none; }
+  .schritt, .schritt-pfeil { flex: none; }
+  .schritt { scroll-snap-align: center; }
+}
+/* INNEN, nicht aussen: die Spalte schneidet mit `overflow: hidden` einen
+   aeusseren Schatten an drei Seiten ab — bei 01, 02 und 05 blieb nur ein
+   Streifen unten (Feedback 18.10.2026). */
+.bereich.blitz { box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--gr-flaeche) 55%, transparent); }
+.bereich.hinaus.blitz { box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--bx-flaeche) 55%, transparent); }
+
+
 
 .bereich-kopf {
   flex: none; display: flex; align-items: baseline; justify-content: space-between;
   gap: 0.625rem; padding: 0.75rem 1rem 0.5rem;
 }
 .bereich-kopf .titelgruppe { display: flex; align-items: baseline; gap: 0.625rem; }
+/* Seit 2.0 wie im Entwurf: Nummer in Festbreite, Titel in normaler
+   Schreibung — die Grossbuchstaben mit Sperrung waren die alte Hausart. */
 .bereich-nr {
-  font-family: var(--ui-heading); font-size: 0.8125rem; letter-spacing: .18em;
-  color: var(--color-accent-700);
+  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500;
+  color: var(--color-neutral-600);
 }
 .bereich-titel {
-  font-family: var(--font-heading); font-size: 1rem; letter-spacing: .12em;
-  text-transform: uppercase;
+  font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
 }
 .bereich-zahl { font-size: 0.6875rem; color: var(--color-neutral-600); }
 
@@ -907,8 +952,7 @@ footer {
 .plakette {
   display: inline-flex; align-items: center; gap: 0.3125rem; flex: none;
   border-radius: 999px; background: var(--papier); padding: 2px 0.5625rem 2px 0.4375rem;
-  font-family: var(--ui-heading); font-size: 0.6562rem; font-weight: 600;
-  letter-spacing: .1em; text-transform: uppercase;
+  font-family: var(--ui-heading); font-size: 0.6875rem; font-weight: 500;
 }
 .plakette.lokal { border: 1px solid var(--gr-matt); color: var(--gr-schrift); }
 .plakette.online { border: 1px solid var(--bx-kante); color: var(--bx-schrift); }
@@ -987,7 +1031,7 @@ body.zieht .ablage {
  */
 .startbild img { display: block; height: 9.625rem; width: auto; flex: none; }
 .startbild .marke {
-  font-family: var(--font-heading); font-size: 3.875rem; line-height: .95;
+  font-family: var(--font-marke); font-size: 3.875rem; line-height: .95;
   letter-spacing: .1em; text-transform: uppercase; font-weight: 400;
   color: var(--color-text);
 }
@@ -1251,8 +1295,8 @@ body.zieht .ablage {
 button.tat {
   height: 1.9375rem; box-sizing: border-box; display: inline-flex;
   align-items: center; justify-content: center; padding: 0 0.75rem;
-  font-family: var(--ui-heading); font-size: 0.8125rem; letter-spacing: .11em;
-  text-transform: uppercase; white-space: nowrap; cursor: pointer;
+  font-family: var(--ui-heading); font-size: 0.8125rem; font-weight: 500;
+  white-space: nowrap; cursor: pointer;
   border: 1px solid var(--color-neutral-400); background: var(--papier);
   color: var(--color-neutral-800);
   border-radius: var(--radius-md);
@@ -1266,12 +1310,14 @@ button.tat.neben {
   text-transform: none; letter-spacing: 0; font-size: 0.8125rem;
   font-family: var(--ui-schrift); color: var(--color-neutral-700);
 }
+/* Seit 2.0 (Entwurf des UX-Architekten) fast schwarz statt gruen — Gruen
+   bedeutet jetzt «bleibt auf deinem Geraet», nicht «Hauptaktion». */
 button.tat.haupt {
-  position: relative; background: var(--gr-flaeche); color: var(--auf-farbe);
-  border: 1px solid var(--gr-kante);
+  position: relative; background: var(--color-neutral-900); color: var(--auf-haupt);
+  border: 1px solid var(--color-neutral-900);
 }
-button.tat.haupt:hover:not(:disabled) { background: var(--gr-tief); }
-button.tat.haupt:disabled { background: var(--gr-aus); border-color: var(--gr-aus-kante); }
+button.tat.haupt:hover:not(:disabled) { background: var(--color-neutral-800); border-color: var(--color-neutral-800); }
+button.tat.haupt:disabled { background: var(--color-neutral-200); border-color: var(--color-neutral-200); color: var(--color-neutral-500); }
 body.ohne-modell button.tat.haupt:not(:disabled) {
   background: var(--bx-flaeche); border-color: var(--bx-dunkel);
 }
@@ -1300,10 +1346,15 @@ button.tat > svg:first-child:not([class*="rand-"]) + span {
   margin-left: 0.4375rem;
 }
 
+/* Seit 2.0: Festbreite (Plex Mono), gefuellte Flaeche in der Farbe der
+   Gruppe. Einen Rand traegt nur, was NICHT vom Modell kommt — Muster,
+   Pruefsumme, eigene Regel, von Hand (SRC_STYLE in maschera.js): so sieht
+   die Fundstelle des Modells aus wie im Entwurf, und die Herkunft bleibt
+   lesbar. Knoepfe sind weiss mit Rand — die beiden verwechselt man nicht. */
 .ph {
-  border-radius: var(--radius-md); padding: 1px 0.375rem; margin: 0 1px;
-  font-family: var(--ui-heading); font-size: 0.7812rem; font-weight: 600;
-  letter-spacing: .04em; white-space: nowrap;
+  border-radius: var(--radius-md); padding: 1px 0.4375rem; margin: 0 1px;
+  font-family: var(--font-mono); font-size: 0.84em; font-weight: 500;
+  letter-spacing: 0; white-space: nowrap;
 }
 .vok { display: flex; align-items: center; gap: 0.625rem; padding: 0.3125rem 0;
        border-bottom: 1px solid var(--color-neutral-300); font-size: 0.75rem; }
@@ -1336,7 +1387,7 @@ button.tat > svg:first-child:not([class*="rand-"]) + span {
    Fensters. */
 #warnbereich, #fehler { flex: none; margin: 0 1rem; }
 #warnbereich .warnung {
-  padding: 0.5rem 0.75rem; border: 1px solid var(--bx-kante-stark); border-radius: var(--radius-md);
+  padding: 0.5rem 0.75rem; border: 1px solid var(--bx-kante-stark); border-radius: var(--radius-feld);
 }
 #fehler .hinweis, #fehler .fehler-text { padding-left: 0; padding-right: 0; }
 /* DAMIT DER ROLLBALKEN DIE RUNDEN ECKEN FREI LAESST. Ein nativer
@@ -1376,7 +1427,9 @@ html { height: 100%; }
 body {
   margin: 0; height: 100vh; height: 100dvh;
   display: flex; flex-direction: column;
-  background: var(--color-neutral-300);
+  /* Seit 2.0 der Grund der Seite (Karten auf `--color-bg`); bis 1.1 das Grau,
+     das zwischen den Kaesten als 1px-Linie durchschien. */
+  background: var(--color-bg);
   overflow-x: auto; overflow-y: hidden;
 }
 
@@ -1429,8 +1482,8 @@ body {
 }
 .schalter[aria-checked="false"] i { left: 2px; }
 .schalterwort {
-  font-family: var(--ui-heading); font-size: 0.6562rem; letter-spacing: .14em;
-  text-transform: uppercase; color: var(--color-neutral-600);
+  font-family: var(--ui-heading); font-size: 0.75rem;
+  color: var(--color-neutral-600);
 }
 
 /* Oben 0.375rem: die Plaketten sollen nicht an der Kopfzeile kleben. */
@@ -1443,23 +1496,30 @@ body {
  * Tabellenkopfzeile darunter.
  */
 .legende { display: flex; flex-wrap: wrap; gap: 0.375rem; padding-bottom: 1rem; }
+/* Seit 2.0 FILTER-Knoepfe: «Alle» und je Gruppe; gedrueckt fast schwarz. */
 .legende .chip {
+  height: 1.75rem; border: 1px solid var(--color-neutral-300); background: var(--papier);
+  color: var(--color-neutral-700); cursor: pointer;
   display: inline-flex; align-items: center; gap: 0.375rem; border-radius: 999px;
-  padding: 2px 0.625rem 2px 0.5rem; font-family: var(--ui-heading);
-  font-size: 0.6875rem; font-weight: 600; letter-spacing: .06em;
-  text-transform: uppercase; white-space: nowrap;
+  padding: 0 0.625rem 0 0.5rem; font-family: var(--ui-heading);
+  font-size: 0.75rem; font-weight: 500; white-space: nowrap;
 }
 .legende .chip i {
   display: block; width: 0.4375rem; height: 0.4375rem; border-radius: 999px; flex: none;
 }
-.legende .chip b { font-weight: 400; color: var(--color-neutral-600); }
+.legende .chip b { font-weight: 400; color: inherit; opacity: .65; }
+.legende .chip:hover { background: var(--color-neutral-200); }
+.legende .chip[aria-pressed="true"] {
+  background: var(--color-neutral-900); border-color: var(--color-neutral-900); color: var(--auf-haupt);
+}
+.legende .chip i { background: var(--color-neutral-500); }
 
 table.vokabular { width: 100%; border-collapse: collapse; font-size: 0.7812rem; }
 table.vokabular th {
   text-align: left; padding: 0 0.5rem 0.375rem 0; font-family: var(--ui-heading);
-  font-size: 0.625rem; font-weight: 600; letter-spacing: .12em;
-  text-transform: uppercase; color: var(--color-neutral-600);
-  border-bottom: 1px solid var(--color-neutral-400);
+  font-size: 0.6875rem; font-weight: 500;
+  color: var(--color-neutral-600);
+  border-bottom: 1px solid var(--color-neutral-300);
 }
 table.vokabular td {
   padding: 0.25rem 0.5rem 0.25rem 0; vertical-align: middle;
@@ -1549,9 +1609,6 @@ table.vokabular input:focus { outline: none; border-color: var(--gr-matt); }
  * nicht nur die Knopfzeile. Bei drei Spalten ist sie schmal, obwohl die
  * Knoepfe noch Platz haben; die Werte sind darauf gemessen.
  */
-@container teilkopf (max-width: 26rem) {
-  .vorlagen-lokal { display: none; }
-}
 /* Das Vorlagenmenue muss in den PLATZ passen, nicht in seinen Inhalt. Ein
  * `min-width` breiter als die Spalte erzeugte waagrechtes Rollen und
  * schoebe die dritte Spalte beim Oeffnen nach links. Eng wird es so breit
@@ -1576,8 +1633,8 @@ table.vokabular input:focus { outline: none; border-color: var(--gr-matt); }
   #knopf-vorlage-sichern { padding: 0 0.4375rem; }
 }
 .teil-titel {
-  font-family: var(--ui-heading); font-size: 0.75rem; letter-spacing: .14em;
-  text-transform: uppercase; color: var(--bx-schrift);
+  font-family: var(--ui-heading); font-size: 0.75rem; font-weight: 600;
+  color: var(--bx-schrift);
 }
 .teil-zahl { font-size: 0.6875rem; color: var(--color-neutral-600); }
 .feldbox { position: relative; flex: 1 1 0; min-height: 0; display: flex; }
@@ -1633,21 +1690,13 @@ table.vokabular input:focus { outline: none; border-color: var(--gr-matt); }
  * waechst mit dem Schriftregler nicht mit — gerade dieses Zeichen soll man
  * aber sehen und entziffern koennen.
  */
-.onlinewarnung svg { flex: none; width: 1.625rem; height: 1.625rem; }
-/* Wird es eng, bleibt NUR DAS DREIECK, damit der Fuss nicht umbricht und
- * der Spalte Hoehe frisst. Der Satz verschwindet dabei nicht:
- * `maschera.js` setzt ihn zusaetzlich als Tooltip, und er steht weiter im
- * Text — `tests/test_app.py` Punkt 16 liest ihn dort. Der Umschaltpunkt
- * liegt frueher als der der Knoepfe: der Satz ist das laengste Stueck in
- * dieser Zeile.
- */
-@container fuss (max-width: 34rem) {
-  #onlinewarnung-text {
-    position: absolute; width: 1px; height: 1px;
-    margin: -1px; padding: 0; border: 0;
-    clip-path: inset(50%); overflow: hidden; white-space: nowrap;
-  }
-  .onlinewarnung { gap: 0; cursor: help; }
+/* Seit 2.0 steht hier der kurze Satz «Verlaesst dein Geraet» statt eines
+ * Zeichens — er bleibt IMMER sichtbar; der lange Satz mit dem Dienst steht
+ * als Tooltip. Erst ganz eng (Handy) darf er umbrechen, nie verschwinden. */
+.onlinewarnung { color: var(--bx-schrift); font-weight: 500; font-size: 0.8125rem; }
+#onlinewarnung-text { white-space: nowrap; }
+@container fuss (max-width: 22rem) {
+  #onlinewarnung-text { white-space: normal; }
 }
 /* Das Burgermenue in der Kopfzeile — dasselbe Aussehen wie das
    Dienstmenue, nur oben statt unten verankert. */
@@ -1685,13 +1734,13 @@ table.vokabular input:focus { outline: none; border-color: var(--gr-matt); }
    Wort liest sich ein Eintrag, der nichts tut, als Fehler. */
 .burgermenu button.tot { color: var(--color-neutral-600); cursor: default; }
 .burgermenu .spaeter {
-  font-family: var(--ui-heading); font-size: 0.625rem; letter-spacing: .08em;
-  text-transform: uppercase; color: var(--color-neutral-600);
+  font-family: var(--ui-heading); font-size: 0.6875rem;
+  color: var(--color-neutral-600);
 }
 
 .sendegruppe { position: relative; display: flex; align-items: stretch; }
 button.tat.senden {
-  background: var(--bx-flaeche); color: var(--auf-farbe); border: 1px solid var(--bx-tief);
+  background: var(--bx-flaeche); color: var(--auf-hinaus); border: 1px solid var(--bx-flaeche);
   padding: 0 1rem;
 }
 button.tat.senden:hover:not(:disabled) { background: var(--bx-tief); }
@@ -1809,31 +1858,44 @@ button.tat.senden.pfeil:disabled {
 .fuss-04 { justify-content: flex-start; }
 .fuss-04 .weit { margin-left: 0; }
 button.tat.einpflegen {
-  background: var(--gr-flaeche2); color: var(--auf-farbe); border: 1px solid var(--gr-dunkel2);
+  background: var(--color-neutral-900); color: var(--auf-haupt); border: 1px solid var(--color-neutral-900);
 }
-button.tat.einpflegen:hover:not(:disabled) { background: var(--gr-dunkel2); }
-button.tat.einpflegen:disabled { background: var(--gr-aus); border-color: var(--gr-aus-kante); }
+button.tat.einpflegen:hover:not(:disabled) { background: var(--color-neutral-800); }
+button.tat.einpflegen:disabled { background: var(--color-neutral-200); border-color: var(--color-neutral-200); color: var(--color-neutral-500); }
 
 /* ⚠️ `nicht_gefunden` ist der wichtigste Teil der Rueckwandlung. Sprachmodelle
    schreiben Platzhalter um — aus `[FULLNAME_1]` wird `**[FULLNAME_1]**` oder
    `[Fullname_1]`. Was nicht zugeordnet werden konnte, steht im fertigen Text
    noch als Platzhalter drin. Wer das uebersieht, verschickt einen Brief mit
-   `[FULLNAME_1]` darin. Deshalb rot, oben, und nicht wegklickbar. */
+   `[FULLNAME_1]` darin. Deshalb rot und oben.
+   Seit 2.0 mit einem Kreuz zum Schliessen (Wunsch des Anwenders): der Banner
+   steht fest ueber dem Text und nimmt ihm Platz. Geschlossen wird nur DIESER
+   Befund; ein neues Einpflegen zeigt ihn wieder. Kleiner als vorher, mit
+   derselben Rundung und demselben Rand wie die Warnung in 01. */
 .offen {
-  flex: none; margin: 0 1rem 0.5rem; padding: 0.5625rem 0.75rem;
-  border: 2px solid var(--bx-kante-stark);
+  position: relative; flex: none; margin: 0.75rem 1rem 0.5rem;
+  padding: 0.5rem 2.25rem 0.5rem 0.75rem;
+  border: 1px solid var(--bx-kante-stark); border-radius: var(--radius-feld);
   background: color-mix(in srgb, var(--bx-flaeche) 8%, transparent);
-  color: var(--bx-schrift); font-size: 0.7812rem;
+  color: var(--bx-schrift); font-size: 0.7188rem;
 }
-.offen strong { font-family: var(--ui-heading); letter-spacing: .04em; }
+.offen strong { font-family: var(--ui-heading); letter-spacing: .02em; }
 .offen .liste {
-  display: flex; flex-wrap: wrap; gap: 0.3125rem; margin-top: 0.375rem;
+  display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 0.3125rem;
 }
 .offen .liste span {
-  border: 1px solid var(--bx-matt3); border-radius: var(--radius-md); padding: 1px 0.375rem;
-  font-family: var(--ui-heading); font-size: 0.75rem; font-weight: 600;
+  border: 1px solid var(--bx-matt3); border-radius: var(--radius-md); padding: 0 0.3125rem;
+  font-family: var(--font-mono); font-size: 0.6562rem; font-weight: 500;
   background: var(--papier);
 }
+.offen-zu {
+  position: absolute; top: 0.375rem; right: 0.375rem;
+  width: 1.5rem; height: 1.5rem; display: grid; place-items: center;
+  border: 0; border-radius: var(--radius-md); background: transparent;
+  color: var(--bx-schrift); cursor: pointer;
+}
+.offen-zu:hover { background: color-mix(in srgb, var(--bx-flaeche) 14%, transparent); }
+.offen-zu svg { width: 0.75rem; height: 0.75rem; }
 .gutzeile {
   flex: none; padding: 2px 1rem 0.375rem; font-size: 0.7188rem;
   color: var(--gr-schrift);
@@ -1923,8 +1985,7 @@ button.tat.einpflegen:disabled { background: var(--gr-aus); border-color: var(--
   #knopf-einst-zu, #knopf-einst-abbrechen { padding: 0 0.5rem; gap: 0; }
 }
 .einst-kopf h2 {
-  margin: 0; font-family: var(--ui-heading); font-size: 1.1875rem;
-  letter-spacing: .16em; text-transform: uppercase; font-weight: 400;
+  margin: 0; font-family: var(--ui-heading); font-size: 1.0625rem; font-weight: 600;
 }
 .einst-rumpf { flex: 1; overflow: auto; padding: 0.375rem 1.5rem 1.5rem; }
 
@@ -2006,7 +2067,7 @@ button.tat.einpflegen:disabled { background: var(--gr-aus); border-color: var(--
 }
 .seite-kopf img { display: block; height: 3.75rem; width: auto; flex: none; }
 .seite-kopf .marke {
-  font-family: var(--font-heading); font-size: 1.875rem; line-height: .95;
+  font-family: var(--font-marke); font-size: 1.875rem; line-height: .95;
   letter-spacing: .1em; text-transform: uppercase; font-weight: 400;
   color: var(--color-text);
 }
@@ -2050,7 +2111,7 @@ button.tat.einpflegen:disabled { background: var(--gr-aus); border-color: var(--
 .einst-teil:last-child { border-bottom: none; }
 .einst-teil h3 {
   margin: 0 0 0.375rem; font-family: var(--ui-heading); font-size: 0.875rem;
-  letter-spacing: .14em; text-transform: uppercase; font-weight: 600;
+  font-weight: 600;
 }
 .einst-hilfe {
   margin: 0 0 0.75rem; font-size: 0.7812rem; color: var(--color-neutral-700);
@@ -2103,16 +2164,14 @@ button.tat.einpflegen:disabled { background: var(--gr-aus); border-color: var(--
  *
  * Die Familien stehen damit ein zweites Mal im Blatt; die erste Fassung
  * lebt in `SCHRIFTEN` in `maschera.js`. `test_api` Punkt 21 haelt die NAMEN
- * der vier Stufen zusammen — dass beide Seiten dieselben Schriften meinen,
+ * der drei Stufen zusammen — dass beide Seiten dieselben Schriften meinen,
  * kann keine Wache pruefen, nur ein Blick.
  *
  * QtWebEngine zeichnet Auswahlfelder selbst. Traegt es die Familien nicht,
- * stehen dort vier gleich aussehende Eintraege — nicht schlimmer als ohne,
+ * stehen dort drei gleich aussehende Eintraege — nicht schlimmer als ohne,
  * aber ohne den Nutzen.
  */
 .schriftwahl option[value="werk"]  { font-family: var(--font-body); }
-.schriftwahl option[value="sans"]  {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
 .schriftwahl option[value="serif"] {
   font-family: Iowan Old Style, Palatino, Georgia, serif; }
 .schriftwahl option[value="mono"]  {
@@ -2140,18 +2199,14 @@ button.tat.einpflegen:disabled { background: var(--gr-aus); border-color: var(--
 .einst-befund { margin: 0.5rem 0 0; font-size: 0.75rem; overflow-wrap: anywhere; }
 .einst-befund.gut { color: var(--gr-schrift); }
 .einst-befund.schlecht { color: var(--bx-schrift); font-weight: 600; }
-/* `.einst-haken` traegt dieselben Werte wie die Schalterzeile darueber —
- * ohne eigene Regel erbte die Zeile die Grundschrift und stuende groesser
- * als alles daneben.
- */
 /* `[hidden]` ZUERST und mit `display: none`. `display: flex` ist eine
  * Autorenregel und schlaegt das `[hidden] { display: none }` des Browsers;
  * ohne diese Zeile waere `zeile-tray.hidden = true` in `zeichne()`
  * wirkungslos, und im Browser stuenden zwei Schalter, die sich bedienen
  * lassen und nichts bewirken.
  */
-.einst-haken[hidden], .einst-schalterzeile[hidden] { display: none; }
-.einst-haken, .einst-schalterzeile {
+.einst-schalterzeile[hidden] { display: none; }
+.einst-schalterzeile {
   display: flex; align-items: center; gap: 0.5625rem; margin-top: 0.875rem;
   font-size: 0.7812rem; color: var(--color-neutral-700); cursor: pointer;
 }
@@ -2294,9 +2349,8 @@ button.tat.einpflegen:disabled { background: var(--gr-aus); border-color: var(--
   height: 1px; background: var(--color-neutral-300); margin: 0.25rem 0;
 }
 .kontext .gruppe {
-  padding: 0.4375rem 0.75rem 0.1875rem; font-family: var(--ui-heading); font-size: 0.625rem;
-  letter-spacing: .13em; text-transform: uppercase;
-  color: var(--color-neutral-600);
+  padding: 0.4375rem 0.75rem 0.1875rem; font-family: var(--ui-heading); font-size: 0.6875rem;
+  font-weight: 500; color: var(--color-neutral-600);
 }
 .kontext .entfernen { color: var(--bx-schrift); font-weight: 600; }
 .kontext .mehr {
@@ -2369,12 +2423,7 @@ button.tat.einpflegen:disabled { background: var(--gr-aus); border-color: var(--
    erklaert und bedient nicht. Erst danach die Beschriftung des Knopfes:
    ein Knopf ohne Wort ist immer noch ein Knopf, ein fehlender nicht. */
 
-.vorlagen-lokal { font-size: 0.6562rem; color: var(--color-neutral-600); }
 .vorlagenwahl { position: relative; display: inline-flex; }
-.vorlagen-lokal {
-  font-family: var(--ui-heading); font-size: 0.6562rem; letter-spacing: .06em;
-  text-transform: uppercase; color: var(--color-neutral-600);
-}
 /* Wie der Senden-Knopf: der Pfeil ist ein eigenes, quadratisches Segment
  * am rechten Rand, mit einer Naht in der Rahmenfarbe des Knopfs und
  * demselben gezeichneten Pfeil. Der ganze Knopf oeffnet das Menue — das
@@ -2453,7 +2502,6 @@ button.tat.einpflegen:disabled { background: var(--gr-aus); border-color: var(--
 
 h4.tagsgruppe {
   display: block; width: 100%; margin: 1.125rem 0 0.5rem; font-family: var(--ui-heading); font-size: 0.6875rem;
-  letter-spacing: .14em; text-transform: uppercase;
   color: var(--color-neutral-700); font-weight: 600;
 }
 h4.tagsgruppe:first-child { margin-top: 0.25rem; }
@@ -2610,7 +2658,7 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
  * Textfelder und einen Fuss. 44em = 704 px; darunter ist nebeneinander
  * keine Anordnung mehr, sondern eine Quetschung.
  */
-@media (max-width: 59.99em), (max-height: 44em) {
+@media (max-width: 81.24em), (max-height: 44em) {
   /* Der Spruch neben der Wortmarke ist das Erste, was gehen darf: er
      erklaert, was ohnehin auf jedem Kasten steht. Danach der Lokalzeiger —
      er sagt dasselbe wie die Plakette auf jedem einzelnen Kasten. */
@@ -2648,8 +2696,10 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
      Kaesten ist kein Rahmen, sondern der Spalt auf grauem Grund. Dreispaltig
      genuegt 1px und stoert nicht; untereinander, zwischen Kaesten von zwei
      Dritteln Schirmhoehe, war sie kaum zu sehen. `test_oberflaeche` Punkt 86. */
-  main.raster { gap: 0.375rem; }
+  main.raster { gap: 0.75rem; padding: 0 0.75rem 0.75rem; }
   main.raster > .spalte { display: contents; }
+  .schritte { position: sticky; top: var(--kopfhoehe, 3.5rem); z-index: 4;
+    padding: 0.5rem 0.75rem; }
   main.raster > .spalte > .bereich { flex: none; }
 
   /* ⚠️ DIE REIHENFOLGE IST DER ARBEITSWEG, nicht die des HTML. Im HTML
@@ -2669,9 +2719,6 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
   /* Die eingeklappte dritte Spalte gibt es hier nicht mehr: 03 und 04
      stehen im Weg nach unten, nicht daneben. Eine Schiene, die etwas
      ausklappt, was schon offen ist, waere eine Attrappe. */
-  .schiene { display: none; }
-  .einklappen { display: none; }
-  body:not(.drei) .spalte.hinaus { display: contents; }
 
   /* «Fuenf hoehere Fenster» — jeder Kasten fuellt gut zwei Drittel des
      Schirms, damit man beim Tippen etwas sieht und trotzdem merkt, dass
@@ -2697,9 +2744,8 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
      drehen, sonst zeigt er nach oben. */
   #knopf-einpflegen04 svg.richtung { transform: rotate(-90deg); }
 
-  /* Zwei Knoepfe untereinander im Fuss von 05: erst mitnehmen, dann neu
-     anfangen. `.breit` macht den oberen voll breit; der zweite bekommt
-     dieselbe Breite, damit es kein halber Knopf daneben wird. */
+  /* Der Fuss von 05 traegt nur noch «Finalisierten Text kopieren», voll
+     breit; «Neu» steht darunter ausserhalb der Kachel. */
   .fuss-05 { flex-direction: column; align-items: stretch; gap: 0.5rem; }
   button.tat.neu-unten { display: inline-flex; justify-content: center; }
 
@@ -2708,7 +2754,9 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
      steht trotzdem darueber, und sie ist genau dort, wo «Neu» sitzt.
      `env(safe-area-inset-bottom)` ist auf einem Geraet ohne solche Leiste
      null — der Zuschlag kostet dort nichts. */
-  .fuss-05 { padding-bottom: calc(0.875rem + env(safe-area-inset-bottom)); }
+  /* «Neu» steht seit dem Feedback vom 18.10.2026 UNTER der Kachel 05, nicht
+     mehr in ihrem Fuss: neu anfangen gehoert nicht zum finalen Text. */
+  #knopf-neu-unten { order: 7; margin-bottom: env(safe-area-inset-bottom); }
 
   /* KEIN ZWEITER ROLLBALKEN. Untereinander rollen die SEITE und die
    * Textfelder — nicht die Kaesten. `.drei-rumpf` muss nebeneinander rollen
@@ -2722,9 +2770,14 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
    */
   .drei-rumpf { flex: 1 0 auto; overflow: visible; }
   .drei-rumpf .teil { flex: 1 0 auto; }
-  /* Und der Kasten darf wachsen: `min-height` ist ein Mindestmass, aber
-     `overflow: hidden` haette den Ueberhang abgeschnitten. */
-  main.raster > .spalte > .bereich { overflow: visible; }
+  /* Und der Kasten darf wachsen: `min-height` ist ein Mindestmass, die
+     Hoehe folgt dem Inhalt, und ueberstehen kann darum nichts.
+     ⚠️ `clip` und NICHT `visible`: mit `visible` schnitt der Kasten seine
+     Kinder nicht mehr an der Rundung ab, und der eckige Grund der Fusszeile
+     stand unten ueber beide Ecken hinaus (Feedback 18.10.2026, bei 03 und
+     05 gesehen). `clip` schneidet an der Rundung, ohne einen Rollbereich
+     zu machen. Das Dienstmenue ist `fixed` und wird nicht beschnitten. */
+  main.raster > .spalte > .bereich { overflow: clip; }
 
   /* Das Vokabular zugeklappt: nur der Kopf bleibt stehen. */
   #bvok.zu { min-height: 0; }
@@ -2765,13 +2818,11 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
 .spalte.hinaus { --fokus: var(--bx-kante-stark); }
 
 /* Beschriftungen */
-.spalte.hinaus .vorlagen-lokal,
 .spalte.hinaus .ghostknopf { color: var(--bx-schrift); }
 .spalte.hinaus .teil-zahl { color: var(--bx-matt); }
 
 /* Der Fensterrahmen der Textfelder und die Rahmen der Knoepfe und Menues */
 .spalte.hinaus .ghostknopf,
-.spalte.hinaus .einklappen,
 .spalte.hinaus .vorlagen-menu,
 .spalte.hinaus .dienstmenu,
 .spalte.hinaus .feldbox textarea,
@@ -2842,8 +2893,7 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
  * von selbst um.
  */
 .spalte.hinaus .ghostknopf:hover:not(:disabled),
-.spalte.hinaus button.tat:not(.einpflegen):not(.haupt):not(.senden):hover:not(:disabled),
-.spalte.hinaus .einklappen:hover {
+.spalte.hinaus button.tat:not(.einpflegen):not(.haupt):not(.senden):hover:not(:disabled) {
   background: var(--papier); border-color: var(--bx-schrift);
   color: var(--bx-tief);
   box-shadow: inset 0 0 0 1px var(--bx-schrift);
@@ -2867,3 +2917,266 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
 .rand-r-schmal { margin-right: 0.25rem; }
 .rand-l { margin-left: 0.5625rem; }
 .rand-r { margin-right: 0.5625rem; }
+
+/* ====================================================================
+ * 2.0 — KACHELAUFBAU NACH DEM ENTWURF (Feedback des Anwenders, 18.10.2026)
+ *
+ * Kopf und Fuss jeder Kachel mit einer durchgehenden Linie von Rand zu Rand;
+ * die Felder innen ohne eigenen Kasten, sie fuellen die Karte. Die Farben
+ * bleiben die von 2.0 (Ablagefeld gruen getoent, 03/04 orange).
+ * ==================================================================== */
+.bereich-kopf {
+  align-items: center; padding: 0.75rem 1rem; border-bottom: 1px solid var(--color-neutral-300);
+}
+.bereich.hinaus .bereich-kopf { border-bottom-color: var(--bx-kante2); }
+.bereich > .fuss {
+  border-top: 1px solid var(--color-neutral-300); background: var(--color-neutral-100);
+  padding: 0.625rem 1rem;
+}
+.bereich.hinaus > .fuss { border-top-color: var(--bx-kante2); background: var(--bx-grund4); }
+/* Das Ablagefeld schmaler: weniger hoch, Farben wie bisher. */
+.ablage { margin: 0.75rem 1rem 0.25rem; padding: 0.625rem 1rem; border-radius: var(--radius-feld); }
+/* Felder ohne eigenen Kasten — der Text steht in der Karte. */
+.rumpf { padding: 0; }
+.rumpf textarea#orig, #maskiert, .feldbox textarea {
+  border: 0; border-radius: 0; background: transparent;
+}
+.rumpf textarea#orig:focus, .feldbox textarea:focus { border: 0; }
+/* «Das geht hinaus» als getoente Flaeche, wie im Entwurf. */
+#hinaus { border: 0; border-radius: var(--radius-feld); background: var(--bx-grund4); }
+.bereich.hinaus .teil-titel { color: var(--color-neutral-700); }
+/* Der Hinweis am Sendeknopf: oranger Punkt und «Verlaesst dein Geraet». */
+.onlinewarnung i {
+  display: block; flex: none; width: 0.5rem; height: 0.5rem; border-radius: 999px;
+  background: var(--bx-flaeche);
+}
+/* Einstellungen: Rumpf auf dem Grund der Seite, Kopf und Fuss weiss wie
+   die Kopfzeile der Seite (Feedback 18.10.2026, zweite Runde). */
+#einst .einst { background: var(--color-bg); }
+#einst .einst-kopf, #einst .einst-fuss { background: var(--papier); }
+
+/* 2.0 — FEEDBACK VOM 18.10.2026, ZWEITE RUNDE ---------------------------
+ *
+ * Der Ring nach dem Schrittklick liegt UEBER dem Inhalt. Ein innerer
+ * Schatten am Kasten selbst wurde von jedem Kind mit eigenem Grund
+ * zugedeckt — Fusszeile, Antwortfeld, Ablage —, und es blieb nur, was
+ * zufaellig durchsichtig war.
+ */
+.bereich { position: relative; }
+.bereich.blitz { box-shadow: none; }
+/* Die Ueberlage sitzt auf der AUSSENKANTE des Kastens (`inset` = minus
+ * Randbreite) mit derselben Rundung, und der Kasten schneidet sie mit
+ * `overflow: hidden` an seiner Innenkante ab. So laufen Ring und Rand in den
+ * Ecken parallel. Zwei Fehlversuche (Feedback 18.10.2026): mit `inset: 0`
+ * und der aeusseren Rundung liefen sie in den Ecken auseinander; als
+ * `outline` schien zwischen Ring und Rand der Kachelgrund durch.
+ */
+.bereich::after {
+  content: ""; position: absolute; inset: -1px; z-index: 5;
+  border-radius: var(--radius-karte); pointer-events: none;
+  box-shadow: inset 0 0 0 4px transparent; transition: box-shadow .2s;
+}
+.bereich.hinaus::after { inset: -1.5px; }
+.bereich.blitz::after {
+  box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--gr-flaeche) 55%, transparent);
+}
+.bereich.hinaus.blitz::after {
+  box-shadow: inset 0 0 0 4.5px color-mix(in srgb, var(--bx-flaeche) 55%, transparent);
+}
+/* Text buendig unter Titel und Ablage: dieselben 1rem wie der Kachelkopf.
+   Die Ablage steht oben und unten gleich weit vom Weiss ab; unter ihr
+   bleibt der Abstand auch dann, wenn der Text darunter durchrollt. */
+.rumpf textarea#orig, #maskiert, #maskiert-feld, #antwortfeld,
+#antwort04, #final { padding-left: 1rem; padding-right: 1rem; }
+.ablage { margin: 1rem 1rem 0.75rem; }
+#b01 .rumpf textarea#orig { padding-top: 0.25rem; }
+/* 03: die Vorlagenzeile mit gleichem Rand oben und unten. */
+.drei-rumpf { padding-top: 0.75rem; }
+.drei-rumpf .teil { gap: 0.75rem; }
+/* Seitenfuss weiss wie die Kopfzeile. */
+footer { background: var(--papier); }
+/* 03: das Promptfeld steht eingerueckt wie «Das geht hinaus» darunter und
+   traegt dieselbe Rundung — sichtbar am Fokusring (Feedback 18.10.2026). */
+.drei-rumpf .feldbox textarea { border-radius: var(--radius-feld); }
+/* 05: der finale Text randlos wie 01, 02 und 04 — kein gruener Rahmen,
+   auch nicht als Fokus (Feedback 18.10.2026). */
+#final, #final:focus {
+  border: 0; border-radius: 0; box-shadow: none; background: transparent;
+}
+/* Musterfrage dazu: die Bearbeitungsfelder in 02 trugen denselben Kasten
+   aus 1.1. Randlos wie `#maskiert`, an dessen Stelle sie stehen. */
+#maskiert-feld, #antwortfeld {
+  border: 0; border-radius: 0; background: transparent;
+}
+/* Einstellungen: unter dem letzten Abschnitt summierten sich leere
+   Meldezeile, Abschnittspolster und Rumpfpolster zu rund 50 px
+   (Feedback 18.10.2026). Jetzt bleibt das Rumpfpolster allein. */
+#einst .einst-rumpf { padding-bottom: 1rem; }
+#einst .einst-rumpf .einst-teil:last-child { padding-bottom: 0; }
+.einst-rumpf .einst-befund:empty { display: none; }
+
+/* 2.0 — FEEDBACK VOM 18.10.2026, DRITTE RUNDE ----------------------------- */
+
+/* Der Ring nach dem Schrittklick liegt UNTER Kopfzeile (6) und
+   Schrittleiste (4): mit `z-index: 5` lag er beim Zurueckrollen ueber dem
+   Logo. Eins genuegt, um ueber dem Inhalt der Kachel zu liegen.
+   ⚠️ NICHT `isolation: isolate` an der Kachel (so in test.6 und test.7):
+   das sperrte auch die Ablage in die Kachel ein, und beim Ziehen einer Datei
+   hob sie sich nicht mehr ueber den Schleier (z-index 150) — sie blieb so
+   dunkel wie der Rest (Feedback 18.10.2026). */
+.bereich::after { z-index: 1; }
+
+/* Der Haken im erledigten Schritt: kraeftig und gross genug, um im gruenen
+   Kreis zu stehen. */
+.schritt.fertig .schritt-nr svg { width: 0.875rem; height: 0.875rem; }
+
+/* Wo man ist: der angetippte Schritt traegt einen Rahmen. */
+.schritt.mitte {
+  background: var(--papier); color: var(--color-text);
+  box-shadow: 0 0 0 1.5px var(--color-neutral-700);
+}
+.schritt.mitte.aussen { box-shadow: 0 0 0 1.5px var(--bx-flaeche); }
+
+/* Randlose Felder ohne eigenen Rahmen, auch nicht im Fokus: 01, 02 beim
+   Bearbeiten, 04 und 05 fuellen ihre Kachel, und die Kachel IST der Rahmen.
+   Der rote Innenrahmen in 04 doppelte den Kachelrand (Feedback 18.10.2026).
+   Der Fokus bleibt am Schreibstrich sichtbar. Das Promptfeld in 03 steht
+   eingerueckt und behaelt seinen Ring. */
+.rumpf textarea#orig, .rumpf textarea#orig:focus,
+#antwort04, #antwort04:focus,
+#maskiert-feld, #maskiert-feld:focus,
+#antwortfeld, #antwortfeld:focus {
+  border: 0; border-radius: 0; box-shadow: none; background: transparent;
+}
+
+/* Vokabular wie im Entwurf: die Zeile unter der Maus grau hinterlegt, das
+   Kreuz still bis zum Ueberfahren der Zeile und erst dann rot hinterlegt
+   (Feedback 18.10.2026). Was ein Klick bewirkt, sagt der Tooltip. */
+table.vokabular tbody tr:hover > td { background: var(--color-neutral-200); }
+table.vokabular tbody tr:hover > td:first-child {
+  border-top-left-radius: var(--radius-feld); border-bottom-left-radius: var(--radius-feld);
+}
+table.vokabular tbody tr:hover > td:last-child {
+  border-top-right-radius: var(--radius-feld); border-bottom-right-radius: var(--radius-feld);
+}
+table.vokabular .imfeld.loeschen.vok-weg {
+  background: transparent; border-color: transparent; color: var(--color-neutral-600);
+}
+table.vokabular tbody tr:hover .imfeld.loeschen.vok-weg {
+  background: color-mix(in srgb, var(--bx-loeschen) 14%, transparent);
+  color: var(--bx-loeschen);
+}
+table.vokabular .imfeld.loeschen.vok-weg:hover:not(:disabled) {
+  background: var(--bx-loeschen); border-color: var(--bx-loeschen-kante); color: var(--auf-farbe);
+}
+
+/* 02: erkannt, aber bewusst im Klartext gelassen. Hellgrau gerahmt, ohne
+   Fuellung: der Wert steht da wie im Original, nur sichtbar als «gesehen». */
+.klartext-stelle {
+  border: 1px solid var(--color-neutral-400); border-radius: var(--radius-md);
+  padding: 0 0.1875rem; margin: 0 1px;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
+
+/* Die Kopfzeile ueber der Schrittleiste: ihre Menues (Burgermenue,
+   Sprachwahl) haben zwar einen hohen `z-index`, gelten aber nur INNERHALB
+   der Kopfzeile. Mit 3 lag die ganze Kopfzeile samt Menue unter der
+   klebenden Schrittleiste (4), und das Burgermenue verschwand dahinter
+   (Feedback 18.10.2026). */
+.kopfzeile { z-index: 6; }
+
+/* 03: Titel, Vorlagenwahl und Speichern IMMER auf einer Zeile (Feedback
+ * 18.10.2026). Statt umzubrechen kuerzt die Zeile in Stufen: zuerst geht
+ * das Wort am Speichern-Knopf (das Zeichen bleibt, der Zweck steht im
+ * `title`), und der Name der Vorlage wird mit «…» gekuerzt, bis alles
+ * passt. Der volle Name steht im Menue. «lokal gespeichert» steht seit
+ * test.8 nicht mehr daneben, sondern im Knopf: «Lokale Vorlage wählen».
+ */
+.teil-kopf:has(.vorlagenzeile) { flex-wrap: nowrap; align-items: center; }
+.teil-kopf .teil-titel { flex: none; }
+.vorlagenzeile { flex: 0 1 auto; min-width: 0; flex-wrap: nowrap; }
+.vorlagenwahl { flex: 0 1 auto; min-width: 0; }
+#knopf-vorlagen { min-width: 0; max-width: 100%; }
+#vorlagen-anzeige {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#knopf-vorlage-sichern { flex: none; }
+@container teilkopf (max-width: 25rem) {
+  #vorlage-sichern-text { display: none; }
+  #knopf-vorlage-sichern { padding: 0 0.4375rem; }
+}
+
+/* Textmarkierung in 03 und 04 roetlich wie die Zone, die hinausgeht; sonst
+   gruen wie alles Lokale (Feedback 18.10.2026). */
+.bereich.hinaus ::selection {
+  background: color-mix(in srgb, var(--bx-flaeche) 28%, transparent);
+}
+
+/* 2.0 — FEEDBACK VOM 18.10.2026, VIERTE RUNDE ----------------------------- */
+
+/* Alle Kacheln gleich gebaut: Kopf und Fuss weiss, getrennt durch die feine
+ * Linie. Die Zone hinaus erkennt man am orangen Rand und am Sendeknopf, nicht
+ * mehr am getoenten Fuss. Das Vokabular behaelt seinen grauen Inhalt, damit
+ * sich die weissen Eingabefelder davon abheben (Entscheid des Anwenders).
+ */
+.bereich > .fuss, .bereich.hinaus > .fuss { background: var(--papier); }
+.bereich.vokabular .bereich-kopf { background: var(--papier); }
+.vokabular-fuss {
+  flex-wrap: nowrap; padding: 0.625rem 1rem; background: var(--papier);
+  border-top: 1px solid var(--color-neutral-300);
+}
+/* Dieselbe Hoehe wie die Knoepfe in den Fusszeilen daneben (05, 04): die
+   Ober- und Unterkanten liegen auf einer Linie. */
+.vokabular-fuss .ghostknopf { height: 1.9375rem; }
+
+/* Der Rollbalken am Kachelrand wie in 02: das Polster sitzt IM rollenden
+   Teil, nicht um ihn herum. */
+.vokabular-rumpf { padding-left: 0; padding-right: 0; }
+.vokabular-rollen { padding: 0 1rem; }
+
+/* Spalten: die ID so schmal wie die breiteste, der Originalwert bekommt den
+   Platz, der Typ steht klein und nur zur Auskunft. */
+table.vokabular td:first-child { width: 1%; white-space: nowrap; padding-right: 0.75rem; }
+table.vokabular td:nth-child(3) .vok-ph {
+  font-size: 0.625rem; padding: 0 0.3125rem; letter-spacing: .03em;
+}
+
+/* 03: unter «Das geht hinaus» derselbe Abstand bis zur Fusslinie wie oben. */
+.drei-rumpf { padding-bottom: 0.75rem; }
+
+/* 2.0 — FEEDBACK VOM 18.10.2026, FUENFTE RUNDE ---------------------------- */
+
+/* «Bearbeiten» zeigt den Stift, «Fertig» die Diskette wie «Speichern» bei
+   den Vorlagen. Umgeschaltet ueber `.aktiv`, die das Skript schon setzt. */
+#knopf-bearbeiten .zeichen-diskette { display: none; }
+#knopf-bearbeiten.aktiv .zeichen-stift { display: none; }
+#knopf-bearbeiten.aktiv .zeichen-diskette { display: inline; }
+
+/* Vokabular: Herunter- und Hochladen grau wie die Kopieren-Knoepfe, nicht
+   gruen. */
+.vokabular-fuss .ghostknopf.bleibt-hier {
+  background: var(--color-neutral-100); border-color: var(--color-neutral-400);
+  color: var(--color-neutral-700);
+}
+.vokabular-fuss .ghostknopf.bleibt-hier:hover:not(:disabled) {
+  background: var(--color-neutral-200); border-color: var(--color-neutral-400);
+}
+.vokabular-fuss .ghostknopf.bleibt-hier:disabled { opacity: .4; }
+
+/* Vokabular: die ID-Plakette genau wie im Text von 02 (dort 0.84em der
+   Textgroesse), der Typ eine Stufe kleiner. */
+table.vokabular .ph { font-size: calc(var(--textgroesse) * 0.84); margin: 0; }
+table.vokabular .ph.ph-typ { font-size: calc(var(--textgroesse) * 0.7); }
+
+/* Einstellungen: der Fensterschalter auf eigener Zeile unter «Hinzufügen». */
+.einst-schalterzeile.fenster-eigen { margin-top: 0.75rem; }
+/* Die beiden Knoepfe bleiben einzeilig; wird die Spalte eng, kuerzt das Wort
+   mit «…» statt umzubrechen (bei drei Spalten um 1300 px gesehen). */
+.vokabular-fuss .ghostknopf {
+  flex: 0 1 auto; min-width: 0; white-space: nowrap; letter-spacing: .02em;
+}
+.vokabular-fuss .ghostknopf span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.vokabular-fuss .ghostknopf svg { flex: none; }
+/* Reicht die Zeile fuer beide nicht (Handy), rutscht der zweite Knopf in die
+   naechste Zeile, statt dass beide Woerter gekuerzt werden. */
+.vokabular-fuss { flex-wrap: wrap; }

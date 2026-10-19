@@ -6,7 +6,7 @@
  *    sobald jemand den Hilfetext korrigiert.
  *
  * 2. Das Impressum traegt den Namen des Entwicklers, und
- *    `test_veroeffentlichung.py` weist Personennamen zurueck. Die Ausnahme
+ *    die Veroeffentlichungswache weist Personennamen zurueck. Die Ausnahme
  *    dafuer schluesselt auf (Datei, gefundener Text) — in `maschera.js`
  *    waere sie fuer Tausende Zeilen gueltig und die Wache dort blind. Hier
  *    traegt sie eine kleine Datei mit genau diesem Zweck.
@@ -429,7 +429,7 @@ const HILFE_EN = [
 /* Das Impressum nennt nur den Namen — keine Adresse, keine Mail.
  * Erreichbar ist der Entwickler ueber den Quelltextverweis im Menue.
  *
- * `test_veroeffentlichung.py` fuehrt die Ausnahme fuer den Namen in
+ * Die Veroeffentlichungswache fuehrt die Ausnahme fuer den Namen in
  * `ZEILEN_AUSNAHMEN`, gueltig fuer DIESE Datei.
  */
 const IMPRESSUM_DE = [

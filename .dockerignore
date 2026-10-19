@@ -44,15 +44,7 @@ core/injector.py
 packs/*/eval/real/
 packs/*/eval/markup/
 
-# Arbeitsnotizen der Entwicklung. Sie duerfen so wenig in ein Abbild wie
-# ins Repository.
-HANDOVER.md
-UEBERGABE.md
-BETRIEB.md
-GIT.md
-CLAUDE.md
-SITZUNG.md
-VERBOTEN_INTERN.txt
+# Werkzeugeinstellungen der Entwicklung.
 .claude/
 
 # Entwicklung
@@ -61,7 +53,6 @@ release/
 .git/
 .gitignore
 tests/
-site/
 .github/
 beispiele/
 docs/

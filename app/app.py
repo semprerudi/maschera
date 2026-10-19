@@ -107,12 +107,12 @@ def main() -> int:
     prozess.benenne()
 
     ap = argparse.ArgumentParser(
-        description="MASCHERA — Kern und Oberflaeche.")
+        description="MASCHERA: Kern und Oberflaeche.")
     ap.add_argument("--model", default=None, help="Trainingsordner")
     ap.add_argument("--onnx", default=None,
                     help="Release-Ordner mit model.onnx")
     ap.add_argument("--ohne-modell", action="store_true",
-                    help="nur Stufe 1 und 2 — Namen bleiben im Klartext")
+                    help="nur Stufe 1 und 2, Namen bleiben im Klartext")
     ap.add_argument("--pack", default="ch")
     ap.add_argument("--max-length", type=int, default=512)
     ap.add_argument("--regeln", default=None,
@@ -133,19 +133,19 @@ def main() -> int:
     print(f"MASCHERA {VERSION} · Pack {args.pack} · "
           f"Labelvertrag {z.pack.get_label_hash()[:8]}")
     if z.ohne_modell:
-        print("  ⚠ OHNE MODELL — Namen, Daten und Adressen bleiben im "
+        print("  ⚠ OHNE MODELL: Namen, Daten und Adressen bleiben im "
               "Klartext.")
     else:
         print(f"  Modell {z.modellname}")
     if args.host != "127.0.0.1":
-        print(f"  ⚠ Erreichbar auf {args.host} — nicht nur lokal. Ein "
+        print(f"  ⚠ Erreichbar auf {args.host}, nicht nur lokal. Ein "
               f"Werkzeug, das Personendaten\n"
               f"    verarbeitet, gehoert hinter eine Anmeldung.")
         # Und der NAME gehoert dazu. Die Wirtspruefung laesst nur die Namen der
         # eigenen Maschine durch; wer unter einem anderen Namen ankommt, bekommt
         # 403. Das muss beim Start dastehen und nicht erst im Zugriffsprotokoll.
         if not (os.environ.get("MASCHERA_WIRT") or "").strip():
-            print("    ⚠ MASCHERA_WIRT ist nicht gesetzt — unter einem "
+            print("    ⚠ MASCHERA_WIRT ist nicht gesetzt. Unter einem "
                   "anderen Namen als\n"
                   "      127.0.0.1 antwortet der Dienst mit 403.")
     if wirt_warnung():

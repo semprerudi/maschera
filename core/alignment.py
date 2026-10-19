@@ -228,6 +228,6 @@ def verify_roundtrip(
     if want != got:
         only_want = [w for w in want if w not in got][:3]
         only_got = [g for g in got if g not in want][:3]
-        problems.append(f"Abweichung — fehlt: {only_want}, zusaetzlich: {only_got}")
+        problems.append(f"Abweichung. Fehlt: {only_want}, zusaetzlich: {only_got}")
 
     return not problems, problems

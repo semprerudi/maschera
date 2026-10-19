@@ -1,5 +1,12 @@
 # Änderungen
 
+## 2.0.1 – 2026-10-19
+
+### Geändert
+- Klarer formuliert: die Meldungen beim Holen des Modells (erster Start des
+  Flatpaks), die Ausgaben beim Start und mehrere Fehlermeldungen, in allen
+  vier Sprachen. Auch die Anleitungen (README) lesen sich einfacher.
+
 ## 2.0.0 – 2026-10-18
 
 Ein neues Aussehen, entworfen zusammen mit einem UX-Architekten. Alle
@@ -157,8 +164,7 @@ Gefunden beim ersten Test auf macOS und durch CodeQL.
   auf einem Mac von Hand getestet. Nicht signiert: nach dem Ziehen in
   «Programme» einmal `xattr -dr com.apple.quarantine /Applications/MASCHERA.app`
   im Terminal.
-- Die Seite www.maschera.ch zeigt macOS als Download; `site/` im Repository
-  ist der Stand der Seite, `tools/seite.py` vergleicht und lädt hoch.
+- Die Seite www.maschera.ch zeigt macOS als Download.
 
 ### Nachträglich (3.10.2026)
 - Das Docker-Abbild 1.0.2 ist mit cosign signiert; die README erklärt, wie man

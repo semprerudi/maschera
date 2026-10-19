@@ -99,8 +99,8 @@ def legende(pack) -> str:
     Ohne solche Liste ist `--ohne` unbenutzbar: man muesste die Tagnamen
     raten.
     """
-    z = ["Tags dieses Packs. `--ohne TAG` laesst eines im KLARTEXT —",
-         "erkannt wird es weiterhin, nur nicht ersetzt.", ""]
+    z = ["Tags dieses Packs. `--ohne TAG` laesst eines im KLARTEXT.",
+         "Erkannt wird es weiterhin, nur nicht ersetzt.", ""]
     z.append(f"{'Tag':<20}{'St':>3}{'Aktion':>10}{'Budget':>8}  bspd")
     for t in pack.get_tags():
         marke = "  ⚠ besonders schuetzenswert" if t.bspd else ""

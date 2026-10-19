@@ -24,7 +24,6 @@ SUITE = [
     ("dist frisch",     "tests/test_dist_frisch.py"),
     ("Rauschen+Zone",   "tests/test_rauschen.py"),
     ("Vertrag gefroren", "tests/test_labelvertrag_eingefroren.py"),
-    ("Veroeffentlichung", "tests/test_veroeffentlichung.py"),
     ("Vertrauen",       "tests/test_vertrauen.py"),
     ("DOCX",            "tests/test_dokumente_docx.py"),
     ("Mail",            "tests/test_mail.py"),
@@ -36,16 +35,22 @@ SUITE = [
     ("Streuung",        "tests/test_streuung.py"),
     ("Langes Dokument", "tests/test_langes_dokument.py"),
     ("Fenster",         "tests/test_fenster.py"),
-    ("Projektseite",    "tests/test_webseite.py"),
-    ("Seiten-Upload",   "tests/test_seite.py"),
     ("Oberflaechenlogik", "tests/test_oberflaeche.js"),
 ]
 
-# Die Werkzeuge der eigenen Arbeitsumgebung (Server, Abgleich) werden
-# nicht veroeffentlicht und ihre Pruefung auch nicht. Wo `tools/intern.txt`
-# liegt, gehoert sie dazu — fehlt sie dort, schlaegt das an.
-if (ROOT / "tools" / "intern.txt").is_file():
-    SUITE.append(("Intern", "tests/test_intern.py"))
+# Pruefungen der eigenen Arbeitsumgebung werden nicht veroeffentlicht. Sie
+# stehen in `tools/pruefungen_intern.txt` («Name | Pfad» je Zeile); liegt
+# die Datei da, laufen sie mit. Liegt `tools/intern.txt` da, die Liste aber
+# nicht, bricht der Laeufer ab: sonst fehlten sie still.
+_INTERN = ROOT / "tools" / "pruefungen_intern.txt"
+if _INTERN.is_file():
+    for _z in _INTERN.read_text(encoding="utf-8").splitlines():
+        if _z.strip() and not _z.lstrip().startswith("#"):
+            _n, _p = (t.strip() for t in _z.split("|", 1))
+            SUITE.append((_n, _p))
+elif (ROOT / "tools" / "intern.txt").is_file():
+    raise SystemExit("tools/pruefungen_intern.txt fehlt in der "
+                     "Arbeitsumgebung — die internen Pruefungen fielen weg")
 
 # Eine Pruefung, die sich selbst ueberspringt, gibt 0 zurueck und stuende
 # sonst als `OK` in der Liste — «alle bestanden», waehrend eine fehlte.

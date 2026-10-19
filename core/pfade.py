@@ -112,7 +112,7 @@ def _gold_basis() -> Path:
 def gold_schreiben(pack: str, art: str) -> Path:
     """Der Ort, an den neue Golddokumente geschrieben werden."""
     if art not in ARTEN:
-        raise ValueError(f"Art {art!r} gibt es nicht — {ARTEN}")
+        raise ValueError(f"Art {art!r} gibt es nicht. Moeglich: {ARTEN}")
     return _gold_basis() / pack / art
 
 

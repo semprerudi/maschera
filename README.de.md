@@ -3,12 +3,12 @@
 [English](README.md) · **Deutsch**
 
 **Freie Open-Source-Software, die Personendaten (PII) in Schweizer
-Dokumenten maskiert — auf dem eigenen Gerät, auf der CPU, ohne GPU und
+Dokumenten maskiert: auf dem eigenen Gerät, auf der CPU, ohne GPU und
 im Betrieb ohne Netz.** Vier Sprachen: Deutsch, Französisch,
 Italienisch, Englisch.
 
 Du hast ein Schreiben, einen Mailverlauf oder ein PDF und willst ein
-KI-Werkzeug darüber fragen — aber die Namen, AHV-Nummern und Adressen
+KI-Werkzeug darüber fragen, aber die Namen, AHV-Nummern und Adressen
 sollen nicht mit. MASCHERA ersetzt sie durch Platzhalter:
 
     Sehr geehrte Frau Brülhart       ->   Sehr geehrte Frau [FULLNAME_1]
@@ -25,19 +25,19 @@ oder die DSGVO gilt: Personendaten bleiben aus dem Text, den du
 weitergibst. Die eigene Kontrolle ersetzt das nicht.
 
 **Die Erkennung läuft vollständig auf deinem Gerät.** Im Betrieb wird
-nichts nachgeladen und nichts gesendet — auch keine Schriften, keine
+nichts nachgeladen und nichts gesendet, auch keine Schriften, keine
 Symbole, keine Statistik. Einen Endpunkt, der Text verschickt, gibt es
 nicht und wird es nicht geben; der Weg nach draussen führt immer über
 deine Zwischenablage.
 
 ⚠️ **Das Modell ist 1,2 GB gross, und es gibt zwei Zuschnitte.** Die
-AppImage und der Windows-Installer tragen es mit — herunterladen,
+AppImage und der Windows-Installer tragen es mit: herunterladen,
 starten, fertig. Das Flatpak holt es **einmal beim ersten
 Start**: aus einer benannten Quelle, mit Prüfsumme, und erst nachdem du
 zugestimmt hast. Wer gerade kein WLAN hat, lehnt ab und holt es ein
 andermal. **Danach ist beides gleich offline.**
 
-*maschera* ist italienisch für **Maske** — und trägt die Landeskennung
+*maschera* ist italienisch für **Maske** und trägt die Landeskennung
 **CH** in der Mitte.
 
 - Website: [www.maschera.ch](https://www.maschera.ch)
@@ -46,7 +46,7 @@ andermal. **Danach ist beides gleich offline.**
 - Fehler melden: [Issues](https://github.com/semprerudi/maschera/issues)
 
 > ⚠️ **Pseudonymisierung, nicht Anonymisierung.** Solange das Wörterbuch
-> existiert, ist der Vorgang umkehrbar — und die Daten bleiben nach revDSG
+> existiert, ist der Vorgang umkehrbar, und die Daten bleiben nach revDSG
 > Personendaten. Deshalb heisst der Knopf «Maskieren».
 
 Aufbauend auf [rizzo-pii](https://github.com/Rizzo-AI-Academy/rizzo-pii)
@@ -56,12 +56,12 @@ Markenrechte an "Rizzo AI Academy" beansprucht.
 ## Wie gut ist es?
 
 Das mitgelieferte Modell (`runs/ch-v63b`) wurde auf zwei Arten geprüft.
-**Beide Ergebnisse stehen hier — auch das weniger schöne.**
+**Beide Ergebnisse stehen hier, auch das weniger schöne.**
 
 | | Übungstexte (synthetisch) | echte Dokumente (Golddokumente) |
 |---|---|---|
 | Umfang | 2000 erzeugte Texte, 29 210 Personenangaben (Goldspannen) | 9 echte Dokumente, 280 Personenangaben (Goldspannen) |
-| **Sichtbar geblieben** (Leckrate) | **0,02 %** — 13 Angaben ganz oder teilweise übersehen | **1,27 %** — 6 Angaben ganz oder teilweise übersehen |
+| **Sichtbar geblieben** (Leckrate) | **0,02 %**: 13 Angaben ganz oder teilweise übersehen | **1,27 %**: 6 Angaben ganz oder teilweise übersehen |
 | Gesamtnote (Micro-F1, 1 = perfekt) | 0,997 | 0,736 |
 | Zu viel verdeckt | 84 Stellen | 95 Stellen |
 | Kann jeder nachprüfen | **ja** | **nein** |
@@ -85,13 +85,13 @@ die Zahlen mit, und die Tabelle muss neu gemessen werden.
 
 ⚠️ **Die Übungstexte sind dem Modell vertraut.** Sie sind nach denselben
 Vorlagen gebaut wie die Texte, mit denen es gelernt hat. Die Namen und
-Nummern darin hat es allerdings nie gesehen — es muss sie also wirklich
+Nummern darin hat es allerdings nie gesehen. Es muss sie also wirklich
 erkennen und kann sie nicht auswendig wissen. Echte Briefe sind trotzdem
 schwieriger. Deshalb gibt es die zweite Messung.
 
 **Die echten Dokumente** sind neun Schreiben, in denen jede
 Personenangabe von Hand markiert ist. Weil sie echte Personendaten
-enthalten, werden sie nicht veröffentlicht — diese Zahl kann niemand
+enthalten, werden sie nicht veröffentlicht. Diese Zahl kann niemand
 nachprüfen. Sie ist aber die ehrlichste. Wie du eigene Testdokumente
 anlegst: `docs/GOLDDOKUMENTE.md`.
 
@@ -101,7 +101,7 @@ Zufall und keine Verbesserung.
 
 **Was das für dich heisst:** In echten Dokumenten bleibt gut ein Prozent
 der Personenangaben sichtbar, nicht null. MASCHERA nimmt dir die Arbeit
-ab, nicht die Verantwortung — **sieh den maskierten Text an, bevor du ihn
+ab, nicht die Verantwortung: **sieh den maskierten Text an, bevor du ihn
 weitergibst.** Dafür zeigt Bereich 02 jede Fundstelle farbig, mit ihrer
 Herkunft.
 
@@ -114,14 +114,14 @@ preis. Im Zweifel verdeckt MASCHERA deshalb lieber zu viel.
 `ch-v63b`, ein feinjustiertes **ModernBERT** (`jhu-clsp/mmBERT-base`),
 22 Schichten, 308 Mio Parameter. Trainiert auf **synthetischen** Daten,
 die aus den Vorlagen und Nomenklaturen dieses Repositoriums erzeugt
-werden — es hat nie ein echtes Dokument gesehen.
+werden. Es hat nie ein echtes Dokument gesehen.
 
 Die Gewichte liegen auf Hugging Face unter **MIT**:
 [semprerudi/maschera-ch-v63b](https://huggingface.co/semprerudi/maschera-ch-v63b).
-Sie sind nicht Teil dieses Repositoriums — 1,2 GB gehören nicht in Git.
+Sie sind nicht Teil dieses Repositoriums, denn 1,2 GB gehören nicht in Git.
 
 **Der Trainingsweg ist offen.** Die Trainingsdaten liegen nicht als
-Datei bei, sie werden ERZEUGT — Vorlagen, Nomenklaturen und Erzeuger
+Datei bei, sie werden ERZEUGT. Vorlagen, Nomenklaturen und Erzeuger
 stehen in diesem Repositorium:
 
 ```fish
@@ -149,14 +149,14 @@ Vorgaben abgeschrieben:
 | **Keim des Trainings** | **4711** |
 
 ⚠️ **`train.py` hat als Vorgabe den Keim 2026**, der ausgelieferte Lauf
-benutzte **4711** — ohne `--seed` entsteht ein anderes Modell.
+benutzte **4711**. Ohne `--seed` entsteht ein anderes Modell.
 
 ⚠️ **Der Keim des TRAININGSSATZES ist nicht überliefert.**
 `training_args.bin` hält nur fest, wie trainiert wurde, nicht, woraus.
 Der Befehl oben nennt darum 2026; das ist eine Empfehlung für den
 Nachbau, **keine Angabe über den ausgelieferten Lauf**. Der Weg ist
 begehbar, die Spur des einen Laufs ist es nicht ganz. Künftige Läufe
-schreiben beides mit — `generate_dataset.py` legt seinen Keim in den Kopf
+schreiben beides mit: `generate_dataset.py` legt seinen Keim in den Kopf
 der `.jsonl`.
 
 ⚠️ **`--zone` ist nicht optional.** Ohne sie ziehen Trainings- und
@@ -165,7 +165,7 @@ mit «erkennt Namen» und mit «hat die Liste auswendig» gleich gut
 erklären.
 
 ⚠️ **Und derselbe Keim genügt nicht.** Ändert sich der Erzeuger, ergibt
-derselbe Befehl einen anderen Datensatz — der Code-Stand gehört zur
+derselbe Befehl einen anderen Datensatz. Der Code-Stand gehört zur
 Angabe.
 
 ⚠️ **`--ohne-modell` ist kein Betriebszustand.** Ohne Modell greifen nur
@@ -181,7 +181,7 @@ Start geholt?**
 | | Paket | Modell | Für wen |
 |---|---|---|---|
 | **AppImage** | rund 1,7 GB | fährt mit | eine einzige ausführbare Datei; keine Installation, keine Abhängigkeiten |
-| **Flatpak** | rund 0,3 GB, dazu die KDE-Laufzeit von Flathub | wird geholt, 1,2 GB | Debian, Ubuntu, Fedora, openSUSE, Arch — überall, wo Flatpak läuft |
+| **Flatpak** | rund 0,3 GB, dazu die KDE-Laufzeit von Flathub | wird geholt, 1,2 GB | Debian, Ubuntu, Fedora, openSUSE, Arch, überall, wo Flatpak läuft |
 | **Windows-Installer** | rund 1,4 GB | fährt mit | Windows 11, 64 Bit; installiert ohne Administratorrechte |
 | **macOS-Abbild** | rund 1,4 GB | fährt mit | Macs mit Apple-Chip (M1 oder neuer); nicht signiert |
 | **Docker** | rund 4,2 GB | fährt mit | Betrieb als Dienst; Oberfläche im Browser |
@@ -190,7 +190,7 @@ Wird das Modell geholt, **fragt der erste Start vorher**: er nennt
 Quelle, Grösse und Ziel, und «Später» schliesst die Anwendung wieder,
 ohne etwas zu laden. Danach läuft alles ohne Netz. Die eine Ausnahme
 wählst du selbst: «Nach Updates suchen» im Menü fragt GitHub einmal nach
-der neuesten Fassungsnummer — sonst nichts, und nie ohne diesen Klick.
+der neuesten Fassungsnummer, sonst nichts, und nie ohne diesen Klick.
 
 AppImage und Flatpak bringen ihre eigenen Bibliotheken mit und sind
 dadurch unabhängig davon, was auf dem System sonst installiert ist.
@@ -235,7 +235,7 @@ Ein fertiges Abbild, rund 4,2 GB, das Modell fährt mit:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:2.0.0
+    ghcr.io/semprerudi/maschera:2.0.1
 ```
 
 Danach im Browser `http://127.0.0.1:4141` öffnen. Der Server speichert
@@ -243,7 +243,7 @@ nichts: kein Dokument, kein Wörterbuch, kein Protokoll. Wer eigene Regeln
 und Einstellungen über einen Neustart behalten will, ergänzt
 `-v maschera-config:/home/maschera/.config/maschera`. Hinter einem Proxy
 oder unter einem anderen Namen als `127.0.0.1` gehört `MASCHERA_WIRT`
-gesetzt — siehe `tools/paket/LIESMICH.md`.
+gesetzt, siehe `tools/paket/LIESMICH.md`.
 
 ### Downloads prüfen
 
@@ -305,21 +305,21 @@ beschreibt den macOS-Bau, der auf GitHub läuft (Workflow `Pakete bauen`, von Ha
 python3 tools/run_tests.py
 ```
 
-Dreiunddreissig Prüfungen, keine Abhängigkeiten ausser PyYAML und Flask.
-Kein Modell, keine GPU, keine Downloads nötig — **zweiunddreissig laufen in einem
+Dreissig Prüfungen, keine Abhängigkeiten ausser PyYAML und Flask.
+Kein Modell, keine GPU, keine Downloads nötig: **neunundzwanzig laufen in einem
 frischen Klon sofort durch.**
 
-Die dreiunddreissigste braucht das Modell und sagt es; zwei weitere lassen je
+Die dreissigste braucht das Modell und sagt es; zwei weitere lassen je
 einen Punkt aus, solange die Nomenklatur nicht gebaut ist
-(`python3 packs/ch/nomenclatures/build.py`). Beides steht in der Ausgabe
-— **eine übersprungene Prüfung hat nichts geprüft**, und der Läufer
+(`python3 packs/ch/nomenclatures/build.py`). Beides steht in der Ausgabe:
+**eine übersprungene Prüfung hat nichts geprüft**, und der Läufer
 zählt sie nicht als bestanden.
 
 ```fish
 python3 tools/generate_dataset.py --n 20 --show
 ```
 
-Erzeugt Trainingsbeispiele aus den Vorlagen — zeigt, wie das Ergebnis aussieht.
+Erzeugt Trainingsbeispiele aus den Vorlagen und zeigt, wie das Ergebnis aussieht.
 
 ## Vollständige Beschreibung
 
@@ -360,10 +360,9 @@ tools/             Werkzeuge
   build_release.py     ONNX + INT8 (optional, nicht der Auslieferweg)
   paket/               AppImage, Flatpak, Docker
 
-site/              die Projektseite (www.maschera.ch)
 
 train.py           Training (braucht torch + GPU)
-tests/             zweiunddreissig Prüfdateien
+tests/             neunundzwanzig Prüfdateien
 ```
 
 ## Die eine Regel

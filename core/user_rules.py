@@ -200,7 +200,7 @@ def _pruefe_regex(muster: re.Pattern, id: str) -> None:
         raise Abbruch(
             f"Regel {id!r}: das Muster braucht {dauer:.2f} s auf einer "
             f"Probezeile von {len(PROBE)} Zeichen. Das ist zu langsam und "
-            f"deutet auf katastrophales Backtracking hin — meist geschachtelte "
+            f"deutet auf katastrophales Backtracking hin, meist geschachtelte "
             f"Quantoren wie (a+)+. Regel abgelehnt.",
             schluessel="regel_zu_langsam", id=id, dauer=f"{dauer:.2f}")
 
@@ -221,7 +221,7 @@ def _baue(spec: dict, altlasten: set | None = None) -> Regel:
     if not re.fullmatch(r"[A-Za-z0-9]{2,20}", platzhalter):
         raise Abbruch(
             f"Regel {id!r}: Platzhalter {platzhalter!r} muss alphanumerisch "
-            f"sein, 2 bis 20 Zeichen — er landet als [{platzhalter}_1] im Text.",
+            f"sein, 2 bis 20 Zeichen. Er landet als [{platzhalter}_1] im Text.",
             schluessel="regel_platzhalter", id=id, platzhalter=platzhalter)
 
     art = _feld(spec, "type", "label", altlasten)
@@ -255,7 +255,7 @@ def _baue(spec: dict, altlasten: set | None = None) -> Regel:
             raise Abbruch(
                 f"Regel {id!r}: zu kurze Eintraege {kurz}. Unter "
                 f"{MIN_WORTLAENGE} Zeichen zerlegt eine Wortliste den ganzen "
-                f"Text — «AG», «Wil» und «Au» kommen als Silbe ueberall vor.",
+                f"Text. «AG», «Wil» und «Au» kommen als Silbe ueberall vor.",
                 schluessel="regel_woerter_kurz", id=id,
                 kurz=", ".join(kurz), min=MIN_WORTLAENGE)
         # Laengste zuerst, sonst gewinnt das kuerzere Teilwort.
@@ -306,7 +306,7 @@ def _baue(spec: dict, altlasten: set | None = None) -> Regel:
             muster = re.compile(roh)
         except re.error as fehler:
             # Die Stelle ist uebersetzbar, der Text von `re` nicht.
-            raise Abbruch(f"Regel {id!r}: ungueltiges Muster — {fehler}",
+            raise Abbruch(f"Regel {id!r}: ungueltiges Muster: {fehler}",
                           schluessel="regel_muster_ungueltig", id=id,
                           stelle=(fehler.pos or 0) + 1)
         _pruefe_regex(muster, id)
@@ -386,7 +386,7 @@ def lade(pfad: str | Path | None = None, pack=None,
         if kollision:
             raise Abbruch(
                 f"Platzhalter {sorted(kollision)} sind im Pack bereits "
-                f"vergeben. Anderen Namen waehlen — sonst zeigt derselbe "
+                f"vergeben. Anderen Namen waehlen, sonst zeigt derselbe "
                 f"Platzhalter auf zwei verschiedene Werte.",
                 schluessel="regel_platzhalter_vergeben",
                 platzhalter=", ".join(sorted(kollision)))

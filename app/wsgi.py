@@ -63,5 +63,5 @@ print(f"MASCHERA {VERSION} unter gunicorn · "
 if wirt_warnung():
     print(wirt_warnung(), file=sys.stderr)
 if _zustand.ohne_modell:
-    print("  ⚠ OHNE MODELL — Namen, Daten und Adressen bleiben im Klartext.",
+    print("  ⚠ OHNE MODELL: Namen, Daten und Adressen bleiben im Klartext.",
           file=sys.stderr)

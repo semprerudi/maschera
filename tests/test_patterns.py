@@ -73,7 +73,7 @@ POSITIVE = [
     ("fr", "parcelle 1234", "PARCEL"),
     ("de", "Kontakt: rita.bertschi@example.ch", "EMAIL"),
     ("de", "Siehe https://www.example.ch/formular", "URL"),
-    ("de", "Server 192.168.1.186", "IPADDRESS"),
+    ("de", "Server 192.0.2.15", "IPADDRESS"),
     ("de", "Reisepass X1234567 ausgestellt", "IDDOC"),
     ("de", "Versichertenkarte 80756123456789012345", "INSURANCE_CARD"),
     ("de", "Referenz 21 00000 00003 13947 14300 09017", "QR_REFERENCE"),

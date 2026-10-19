@@ -79,7 +79,7 @@ from filter_document import Mitschreiber  # noqa: E402
 # hier heraus. `tests/test_fenster.py` Punkt 7 prueft, dass es bei dieser
 # einen Stelle bleibt. In einem Fehlerbericht sagt sie, welcher Stand
 # gemeint ist.
-VERSION = "2.0.0"
+VERSION = "2.0.1"
 
 # Mehr nimmt der Server nicht an. Ein Dokument ist laut Messung 1500 bis 4500
 # Zeichen; 10 MB fangen auch ein PDF mit Bildern ab, ohne dass ein
@@ -128,7 +128,7 @@ def wirt_warnung() -> str | None:
     """
     if erlaubte_wirte() is not None:
         return None
-    return ("  ⚠⚠ MASCHERA_WIRT=* — die Wirtspruefung ist AUS. Der Dienst "
+    return ("  ⚠⚠ MASCHERA_WIRT=*: die Wirtspruefung ist AUS. Der Dienst "
             "antwortet unter\n"
             "     jedem Namen; eine fremde Webseite koennte ihn ueber "
             "DNS-Rebinding erreichen.\n"
@@ -229,7 +229,7 @@ LEERER_BEFUND = {"pdf_ohne_text", "docx_leer"}
 
 def _hinweise_ohne_modell() -> list[dict]:
     return [hinweis("ohne_modell",
-                    "OHNE MODELL — nur Prüfsummen und Muster. Namen, Daten "
+                    "OHNE MODELL: nur Prüfsummen und Muster. Namen, Daten "
                     "und Adressen bleiben im KLARTEXT.")]
 
 
@@ -714,7 +714,7 @@ def baue(z: Zustand) -> Flask:
         if len(dokumente) > 1:
             hinweise.append(hinweis(
                 "mehrere_nachrichten",
-                f"{len(dokumente)} Nachrichten in der Datei — nur die erste "
+                f"{len(dokumente)} Nachrichten in der Datei. Nur die erste "
                 f"wird verarbeitet.",
                 anzahl=len(dokumente)))
         dok = dokumente[0]
@@ -818,7 +818,7 @@ def baue(z: Zustand) -> Flask:
         if not woerterbuch:
             hinweise.append(hinweis(
                 "ohne_woerterbuch",
-                "Ohne Wörterbuch — endgültig anonymisiert, keine "
+                "Ohne Wörterbuch: endgültig anonymisiert, keine "
                 "Rückwandlung möglich."))
 
         try:
@@ -885,7 +885,7 @@ def baue(z: Zustand) -> Flask:
                 hinweise.append(hinweis(
                     "schreibweise",
                     f"{p} unterscheidet sich von {treffer} nur in der "
-                    f"Schreibweise — nicht ersetzt.",
+                    f"Schreibweise. Nicht ersetzt.",
                     platzhalter=p, treffer=treffer))
 
         return jsonify({
@@ -1039,7 +1039,7 @@ def baue(z: Zustand) -> Flask:
             "pfad": str(vorlieben.PFAD),
             **warnung(schluessel="klartext_gespeichert",
                       text="Gespeichert. Diese Tags bleiben dauerhaft im "
-                           "Klartext — auch in künftigen Dokumenten."),
+                           "Klartext, auch in künftigen Dokumenten."),
         })
 
     # -- Prompt-Vorlagen ----------------------------------------------------
@@ -1130,7 +1130,7 @@ def main() -> int:
     ap.add_argument("--model", default=None, help="Trainingsordner")
     ap.add_argument("--onnx", default=None, help="Release-Ordner mit model.onnx")
     ap.add_argument("--ohne-modell", action="store_true",
-                    help="nur Stufe 1 und 2 — Namen bleiben im Klartext")
+                    help="nur Stufe 1 und 2, Namen bleiben im Klartext")
     ap.add_argument("--pack", default="ch")
     ap.add_argument("--max-length", type=int, default=512)
     ap.add_argument("--regeln", default=None,
@@ -1149,19 +1149,19 @@ def main() -> int:
     print(f"MASCHERA {VERSION} · Pack {args.pack} · "
           f"Labelvertrag {z.pack.get_label_hash()[:8]}")
     if z.ohne_modell:
-        print("  ⚠ OHNE MODELL — Namen, Daten und Adressen bleiben im "
+        print("  ⚠ OHNE MODELL: Namen, Daten und Adressen bleiben im "
               "Klartext.")
     else:
         print(f"  Modell {z.modellname}")
     if args.host != "127.0.0.1":
-        print(f"  ⚠ Erreichbar auf {args.host} — nicht nur lokal. Ein "
+        print(f"  ⚠ Erreichbar auf {args.host}, nicht nur lokal. Ein "
               f"Werkzeug, das Personendaten\n"
               f"    verarbeitet, gehoert hinter eine Anmeldung.")
         # Und der NAME gehoert dazu. Die Wirtspruefung laesst nur die Namen der
         # eigenen Maschine durch; wer unter einem anderen Namen ankommt, bekommt
         # 403. Das muss beim Start dastehen und nicht erst im Zugriffsprotokoll.
         if not (os.environ.get("MASCHERA_WIRT") or "").strip():
-            print("    ⚠ MASCHERA_WIRT ist nicht gesetzt — unter einem "
+            print("    ⚠ MASCHERA_WIRT ist nicht gesetzt. Unter einem "
                   "anderen Namen als\n"
                   "      127.0.0.1 antwortet der Dienst mit 403.")
     if wirt_warnung():

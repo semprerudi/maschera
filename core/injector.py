@@ -776,7 +776,7 @@ def check_template(t: dict) -> list[str]:
         tags = re.findall(r"\{([@~]?\w+)[^}]*\}", m.group(0))
         if len(set(tags)) < len(tags):
             problems.append(
-                f"benachbarte Slots MIT GLEICHEM TAG: {m.group(0)!r} — in BIO "
+                f"benachbarte Slots MIT GLEICHEM TAG: {m.group(0)!r}: in BIO "
                 f"nicht von einer laengeren Entitaet unterscheidbar")
 
     # Das Modell schreibt manchmal die zwei Zeichen '\' und 'n' statt eines
@@ -844,7 +844,7 @@ def pruefe_decoy_stellung(text: str, template_id: str) -> str | None:
     """Ein Etikett unmittelbar vor einem Phrasen-Decoy ergibt keinen Satz."""
     m = _ETIKETT_VOR_DECOY.search(text)
     if m:
-        return (f"{template_id}: {m.group(0)!r} — `{{~amount}}` ist eine "
+        return (f"{template_id}: {m.group(0)!r}: `{{~amount}}` ist eine "
                 f"PHRASE mit Artikel. Ein Etikett davor ergibt "
                 f"«Gebuehr eine Pauschale von …». Etikett weglassen oder "
                 f"ein Verb einsetzen («Erhoben wird {{~amount}}»).")
@@ -882,7 +882,7 @@ def load_templates(lang: str | None = None, strict: bool = False) -> list[dict]:
             if problems:
                 message = f"{t.get('id','?')}: " + "; ".join(problems)
                 if strict:
-                    raise SystemExit(f"Vorlage fehlerhaft — {message}")
+                    raise SystemExit(f"Vorlage fehlerhaft: {message}")
                 print(f"  WARNUNG Vorlage {message}")
                 continue
             out.append(t)

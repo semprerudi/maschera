@@ -2619,7 +2619,7 @@ console.log("1. Alle Knoepfe sind verdrahtet");
   {
     // Was ohne Setzer dastehen DARF, mit Begruendung je Zeile. Nicht
     // durch Weglassen der Pruefung, sondern durch einen Eintrag hier —
-    // dieselbe Regel wie bei `VERBOTEN` in `test_veroeffentlichung.py`.
+    // dieselbe Regel wie bei der Veroeffentlichungswache.
     const OHNE_SETZER = {
       "MASCHERA": "der Name des Werkzeugs, in jeder Sprache derselbe",
       "MAS": "die Wortmarke, in drei Stuecke zerlegt fuer das fette CH",

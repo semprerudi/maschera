@@ -212,13 +212,12 @@ rm -f $ZIEL
 # dass auf jedem neuen Rechner jemand etwas eintippt.
 #
 # ⚠️ DER WIRTSNAME GEHOERT NICHT INS REPOSITORY.
-# `test_veroeffentlichung.py` weist Rechnernamen zurueck, zu Recht. Er
+# Die Veroeffentlichungswache weist Rechnernamen zurueck, zu Recht. Er
 # kommt aus `MASCHERA_UPDATE_URL` oder aus `tools/paket/.env` — beides
 # ausserhalb von Git.
 #
 # ⚠️ Fehlt er, wird OHNE Update-Angabe gebaut — und das wird GESAGT. Ein
-# stiller Sprung waere der Fehler, den `sync.fish` schon einmal gemacht
-# hat: BEREIT melden ueber nichts.
+# stiller Sprung waere der Fehler: BEREIT melden ueber nichts.
 set -l UPDATE_URL $MASCHERA_UPDATE_URL
 if test -z "$UPDATE_URL"; and test -f $STAMM/tools/paket/.env
     set UPDATE_URL (string replace -rf '^MASCHERA_UPDATE_URL=' '' \
@@ -274,19 +273,13 @@ else
     echo "     wieder die Dateigroesse. paru -S zsync"
 end
 
-# Nur in einer Arbeitsumgebung mit Abgleich: liegt `tools/sync.fish` da,
-# geht die fertige AppImage gleich zum Abgleichserver — sonst holt ein
-# zweiter Arbeitsplatz einen alten Stand. Nur das Paar `dist`, nicht der
-# ganze Abgleich. Ohne das Skript gibt es nichts abzugleichen.
-if test -f $STAMM/tools/sync.fish
+# Ein optionaler Schritt der eigenen Umgebung nach dem Bau: liegt
+# `tools/paket/nach_appimage.fish` da, wird es aufgerufen. Im
+# Repository gibt es die Datei nicht; wer keine braucht, merkt nichts.
+if test -f $STAMM/tools/paket/nach_appimage.fish
     echo
-    echo "── Hinauf zum Abgleichserver"
-    fish $STAMM/tools/sync.fish hoch dist --jetzt
-    or begin
-        echo "   ⚠ Der Abgleich ist fehlgeschlagen. Die AppImage liegt hier,"
-        echo "     aber am zweiten Arbeitsplatz kommt der ALTE Stand an."
-        echo "     Von Hand: fish tools/sync.fish hoch dist --jetzt"
-    end
+    fish $STAMM/tools/paket/nach_appimage.fish
+    or echo "   ⚠ nach_appimage.fish ist fehlgeschlagen. Die AppImage liegt hier."
 end
 
 echo

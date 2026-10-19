@@ -23,8 +23,8 @@ sondern die Daten verloren.
 Das Werkzeug ist für alle gedacht, die mit Schweizer Dokumenten arbeiten —
 Verwaltungen von Bund, Kantonen und Gemeinden, Unternehmen, Kanzleien,
 Vereine und Private. Deshalb steht im Repository nichts, was auf eine
-bestimmte Stelle, einen Rechner oder eine Person zeigt;
-`tests/test_veroeffentlichung.py` hält das fest.
+bestimmte Stelle, einen Rechner oder eine Person zeigt; eine Wache bei
+jeder Veröffentlichung hält das fest.
 
 Aufbauend auf [rizzo-pii](https://github.com/Rizzo-AI-Academy/rizzo-pii):
 Schweizer Sprachen und Formate, Nomenklaturen aus offenen Daten des Bundes

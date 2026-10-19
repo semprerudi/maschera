@@ -33,7 +33,7 @@ einem **eigenen** Mac; es bleibt als Anleitung stehen, falls der Bau einmal
 dort laufen soll.
 
 ⚠️ **Kein Rechnername.** Das Rezept ist allgemeingültig; welche Maschine
-und wie man drankommt, steht in `BETRIEB.md` und bleibt intern.
+und wie man drankommt, gehört nicht in dieses Repository.
 
 ---
 

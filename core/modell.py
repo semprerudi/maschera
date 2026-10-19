@@ -129,7 +129,7 @@ def manifest(pack: str = "ch") -> dict:
     fehlend = [d for d in PFLICHT if d not in m.get("dateien", {})]
     if fehlend:
         raise Abgelehnt(
-            f"Das Manifest kennt {fehlend} nicht — ohne sie laeuft die "
+            f"Das Manifest kennt {fehlend} nicht. Ohne sie laeuft die "
             f"Erkennung nicht, und ein halbes Modell zu holen waere "
             f"schlimmer als keines.")
     return m
@@ -167,16 +167,16 @@ def _grund(fehler: Exception) -> str:
     if isinstance(fehler, urllib.error.HTTPError):
         code = fehler.code
         if code in (401, 403):
-            return (f"HTTP {code} — «nicht berechtigt». Das heisst bei "
+            return (f"HTTP {code}: «nicht berechtigt». Das heisst bei "
                     f"Hugging Face AUCH: es gibt das Repositorium noch "
                     f"nicht, oder es ist privat. Ein Zugangsschluessel "
                     f"hilft dann nicht.")
         if code == 404:
-            return (f"HTTP {code} — die Datei gibt es unter dieser Adresse "
+            return (f"HTTP {code}: die Datei gibt es unter dieser Adresse "
                     f"nicht. Meist stimmt der Zweig oder der Dateiname im "
                     f"Manifest nicht.")
         if 500 <= code < 600:
-            return (f"HTTP {code} — die Gegenstelle hat ein Problem, nicht "
+            return (f"HTTP {code}: die Gegenstelle hat ein Problem, nicht "
                     f"du. Spaeter nochmals.")
         return f"HTTP {code}"
     grund = getattr(fehler, "reason", fehler)

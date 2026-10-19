@@ -441,12 +441,12 @@ START_SAETZE = {
         "m_holen": "Jetzt herunterladen",
         "m_spaeter": "Später",
         "m_laedt": "Wird heruntergeladen und geprüft …",
-        "m_ende": "Ohne Modell kein Betrieb — MASCHERA schliesst sich und "
+        "m_ende": "Ohne Modell kein Betrieb. MASCHERA schliesst sich und "
                   "fragt beim nächsten Start wieder.",
         "m_f_abgebrochen":
             "Abgebrochen. Es liegt nichts Halbes auf der Platte.",
         "m_f_pruefsumme":
-            "{datei}: die Prüfsumme stimmt nicht. Die Datei wurde verworfen — was nicht stimmt, wird nicht geflickt.",
+            "{datei}: die Prüfsumme stimmt nicht. Die Datei wurde verworfen. Was nicht stimmt, wird nicht geflickt.",
         "m_f_groesse":
             "{datei}: unerwartete Grösse. Verworfen.",
         "m_f_nicht_berechtigt":
@@ -460,7 +460,7 @@ START_SAETZE = {
         "m_f_keine_verbindung":
             "Keine Verbindung. Netz prüfen und nochmals versuchen.",
         "m_f_nicht_schreibbar":
-            "{datei} lässt sich nicht schreiben — Datenträger voll oder keine Schreibrechte?",
+            "{datei} lässt sich nicht schreiben: Datenträger voll oder keine Schreibrechte?",
         "m_f_unvollstaendig":
             "Nach dem Holen fehlt etwas. Nichts wurde übernommen.",
         "m_abbrechen": "Abbrechen",
@@ -491,12 +491,12 @@ START_SAETZE = {
         "m_holen": "Télécharger maintenant",
         "m_spaeter": "Plus tard",
         "m_laedt": "Téléchargement et vérification …",
-        "m_ende": "Pas de modèle, pas de fonctionnement — MASCHERA se "
+        "m_ende": "Pas de modèle, pas de fonctionnement. MASCHERA se "
                   "ferme et redemandera au prochain démarrage.",
         "m_f_abgebrochen":
             "Interrompu. Rien d’incomplet ne reste sur le disque.",
         "m_f_pruefsumme":
-            "{datei} : la somme de contrôle ne correspond pas. Le fichier a été rejeté — ce qui ne correspond pas n’est pas rafistolé.",
+            "{datei} : la somme de contrôle ne correspond pas. Le fichier a été rejeté. Ce qui ne correspond pas n’est pas rafistolé.",
         "m_f_groesse":
             "{datei} : taille inattendue. Rejeté.",
         "m_f_nicht_berechtigt":
@@ -510,7 +510,7 @@ START_SAETZE = {
         "m_f_keine_verbindung":
             "Pas de connexion. Vérifie le réseau et réessaie.",
         "m_f_nicht_schreibbar":
-            "Impossible d’écrire {datei} — disque plein ou pas de droits d’écriture ?",
+            "Impossible d’écrire {datei} : disque plein ou pas de droits d’écriture ?",
         "m_f_unvollstaendig":
             "Après le téléchargement il manque quelque chose. Rien n’a été repris.",
         "m_abbrechen": "Annuler",
@@ -542,12 +542,12 @@ START_SAETZE = {
         "m_holen": "Scarica ora",
         "m_spaeter": "Più tardi",
         "m_laedt": "Download e verifica in corso …",
-        "m_ende": "Senza modello non si lavora — MASCHERA si chiude e "
+        "m_ende": "Senza modello non si lavora. MASCHERA si chiude e "
                   "chiederà di nuovo al prossimo avvio.",
         "m_f_abgebrochen":
             "Interrotto. Sul disco non resta nulla di incompleto.",
         "m_f_pruefsumme":
-            "{datei}: la somma di controllo non corrisponde. Il file è stato scartato — ciò che non torna non si aggiusta.",
+            "{datei}: la somma di controllo non corrisponde. Il file è stato scartato. Ciò che non torna non si aggiusta.",
         "m_f_groesse":
             "{datei}: dimensione inattesa. Scartato.",
         "m_f_nicht_berechtigt":
@@ -561,7 +561,7 @@ START_SAETZE = {
         "m_f_keine_verbindung":
             "Nessuna connessione. Controlla la rete e riprova.",
         "m_f_nicht_schreibbar":
-            "Impossibile scrivere {datei} — disco pieno o mancano i permessi di scrittura?",
+            "Impossibile scrivere {datei}: disco pieno o mancano i permessi di scrittura?",
         "m_f_unvollstaendig":
             "Dopo il download manca qualcosa. Non è stato preso nulla.",
         "m_abbrechen": "Annulla",
@@ -584,19 +584,19 @@ START_SAETZE = {
         "m_quelle": "Source",
         "m_ziel": "Target",
         "m_danach": "After the download and the integrity check, MASCHERA "
-                    "runs completely locally on this device — also "
+                    "runs completely locally on this device, also "
                     "without an internet connection.",
         "m_kosten": "About {gb} GB will be downloaded. On mobile data "
                     "and/or roaming this can cause real transfer costs.",
         "m_holen": "Download now",
         "m_spaeter": "Later",
         "m_laedt": "Downloading and verifying …",
-        "m_ende": "No model, no operation — MASCHERA closes and will ask "
+        "m_ende": "No model, no operation. MASCHERA closes and will ask "
                   "again on the next start.",
         "m_f_abgebrochen":
             "Cancelled. Nothing half-finished is left on disk.",
         "m_f_pruefsumme":
-            "{datei}: the checksum does not match. The file was discarded — what does not match is not patched up.",
+            "{datei}: the checksum does not match. The file was discarded. What does not match is not patched up.",
         "m_f_groesse":
             "{datei}: unexpected size. Discarded.",
         "m_f_nicht_berechtigt":
@@ -610,7 +610,7 @@ START_SAETZE = {
         "m_f_keine_verbindung":
             "No connection. Check the network and try again.",
         "m_f_nicht_schreibbar":
-            "Cannot write {datei} — disk full or no write permission?",
+            "Cannot write {datei}: disk full or no write permission?",
         "m_f_unvollstaendig":
             "Something is missing after the download. Nothing was taken over.",
         "m_abbrechen": "Cancel",
@@ -700,7 +700,7 @@ def berechtigungen_richten() -> str:
     if seite is None or not hasattr(seite, "onFeaturePermissionRequested"):
         # Kein WebEngine — dann gibt es die Methode nicht und auch den
         # Fehler nicht. Nicht still hinnehmen: der Bau soll es sagen.
-        return "keine WebEngine-Schicht — nichts zu richten"
+        return "keine WebEngine-Schicht, nichts zu richten"
 
     erlaubt = {getattr(Seite.Feature, n) for n in ERLAUBT
                if hasattr(Seite.Feature, n)}
@@ -756,7 +756,7 @@ def downloads_richten() -> str:
 
     sicht = getattr(schicht, "BrowserView", None)
     if sicht is None or not hasattr(sicht, "on_download_requested"):
-        return "keine WebEngine-Schicht — nichts zu richten"
+        return "keine WebEngine-Schicht, nichts zu richten"
 
     def on_download_requested(self, anfrage):
         # Erst hier importieren und nicht weiter oben: ein Import beim Richten
@@ -1022,7 +1022,7 @@ def neustart_ausloesen(fenster) -> None:
     try:
         fenster.destroy()
     except Exception as fehler:  # noqa: BLE001
-        print(f"  ⚠ Fenster nicht geschlossen ({fehler}) — Neustart hart.")
+        print(f"  ⚠ Fenster nicht geschlossen ({fehler}). Neustart hart.")
         neu_starten()
 
 
@@ -1046,7 +1046,7 @@ def port_uebersteuerung(umgebung=None) -> int | None:
     except ValueError:
         port = 0
     if not 1 <= port <= 65535:
-        print(f"  ⚠ MASCHERA_PORT={roh!r} ist keine Portnummer — ignoriert.")
+        print(f"  ⚠ MASCHERA_PORT={roh!r} ist keine Portnummer, ignoriert.")
         return None
     return port
 
@@ -1078,7 +1078,7 @@ def neu_starten() -> None:
     befehl = neustart_befehl(sys.argv, sys.executable,
                              bool(getattr(sys, "frozen", False)),
                              os.environ.get("APPIMAGE"), os.getpid())
-    print(f"MASCHERA: Neustart — {' '.join(befehl)}")
+    print(f"MASCHERA: Neustart: {' '.join(befehl)}")
     optionen: dict = {"stdin": subprocess.DEVNULL,
                       "stdout": subprocess.DEVNULL,
                       "stderr": subprocess.DEVNULL, "close_fds": True}
@@ -1090,7 +1090,7 @@ def neu_starten() -> None:
     try:
         subprocess.Popen(befehl, **optionen)
     except OSError as fehler:
-        print(f"  ⚠ Neustart gescheitert ({fehler}) — bitte von Hand starten.")
+        print(f"  ⚠ Neustart gescheitert ({fehler}). Bitte von Hand starten.")
     sys.stdout.flush()
     os._exit(0)
 
@@ -1221,7 +1221,7 @@ def symbol_richten() -> str:
 
     sicht = getattr(schicht, "BrowserView", None)
     if sicht is None:
-        return "keine WebEngine-Schicht — kein Symbol"
+        return "keine WebEngine-Schicht, kein Symbol"
     if getattr(sicht, "_maschera_symbol", False):
         return "schon gerichtet"
 
@@ -1271,7 +1271,7 @@ def zeigen_richten() -> str:
 
     sicht = getattr(schicht, "BrowserView", None)
     if sicht is None:
-        return "keine WebEngine-Schicht — kein Einmal-Start"
+        return "keine WebEngine-Schicht, kein Einmal-Start"
     if getattr(sicht, "_maschera_zeigen", False):
         return "schon gerichtet"
 
@@ -1310,7 +1310,7 @@ def tray_richten(sprache: str = "de") -> str:
 
     sicht = getattr(schicht, "BrowserView", None)
     if sicht is None:
-        return "keine WebEngine-Schicht — kein Ablagefach"
+        return "keine WebEngine-Schicht, kein Ablagefach"
     if getattr(sicht, "_maschera_tray", False):
         return "schon gerichtet"
 
@@ -1322,7 +1322,7 @@ def tray_richten(sprache: str = "de") -> str:
             # Kein Ablagefach: dann bleibt das X das X. Nicht still — sonst sucht
             # der Anwender eine Einstellung, die nichts tut.
             print("  ⚠ Kein Ablagefach vorhanden (GNOME ohne "
-                  "AppIndicator?) — das Fenster schliesst wie bisher.")
+                  "AppIndicator?). Das Fenster schliesst wie bisher.")
             return
 
         def beenden():
@@ -1447,7 +1447,7 @@ class Onboarding:
         BEENDEN.set()
         faden = self._faden
         if faden is not None and faden.is_alive():
-            print("MASCHERA: Abbruch — es wird aufgeraeumt …")
+            print("MASCHERA: Abbruch, es wird aufgeraeumt …")
             faden.join(timeout=15)
         print("MASCHERA: ohne Modell kein Betrieb. Beendet.")
         # ⚠️ Damit `laden_und_starten` nicht ewig auf das Onboarding
@@ -1663,7 +1663,7 @@ def main() -> int:
         if z.ohne_modell:
             # Auch im Fenster: `--ohne-modell` ist kein Betriebszustand, und die
             # Warnung darf nicht verschwinden, weil kein Terminal sichtbar ist.
-            print("  ⚠ OHNE MODELL — Namen, Daten und Adressen bleiben "
+            print("  ⚠ OHNE MODELL: Namen, Daten und Adressen bleiben "
                   "im Klartext.")
         else:
             print(f"  Modell {z.modellname}")
@@ -1748,7 +1748,7 @@ def main() -> int:
     if not args.im_browser:
         from core import einmalig
         if einmalig.laeuft_schon():
-            print("MASCHERA laeuft bereits — das laufende Fenster kommt "
+            print("MASCHERA laeuft bereits. Das laufende Fenster kommt "
                   "nach vorne.")
             return 0
         einmalig.horche(ZEIGEN.set)
@@ -1757,10 +1757,10 @@ def main() -> int:
     if grund is not None:
         frei = naechster_freier(wirt, port)
         if frei is None:
-            print(f"  ABBRUCH: {wirt}:{port} ist belegt — {grund} — und "
+            print(f"  ABBRUCH: {wirt}:{port} ist belegt ({grund}), und "
                   f"auch die naechsten 50 Ports")
             return 1
-        print(f"  {wirt}:{port} ist belegt ({grund}) — weiche aus auf {frei}")
+        print(f"  {wirt}:{port} ist belegt ({grund}) belegt, weiche aus auf {frei}")
         port = frei
         # ⚠️ Sofort sichern, nicht erst beim Beenden. Wer das Fenster
         # hart schliesst, soll die Wahl trotzdem behalten — sonst fragt
@@ -1774,7 +1774,7 @@ def main() -> int:
         except (est.Abgelehnt, OSError) as e:
             # Kein Abbruch — der Start soll gelingen. Aber nicht still:
             # sonst glaubt der Anwender, es sei gemerkt.
-            print(f"  ⚠ Nicht gesichert ({e}) — gilt nur diese Sitzung.")
+            print(f"  ⚠ Nicht gesichert ({e}). Gilt nur diese Sitzung.")
 
     adresse = f"http://{wirt}:{port}/"
 
@@ -1818,7 +1818,7 @@ def main() -> int:
     # macOS (WebKit) gibt es die Qt-Fehler nicht, die diese Eingriffe
     # beheben — dort waere die Warnung unten eine falsche Faehrte.
     if not sys.platform.startswith("linux"):
-        print(f"  Anzeigeschicht: nicht Qt ({sys.platform}) — Qt-Eingriffe "
+        print(f"  Anzeigeschicht: nicht Qt ({sys.platform}), Qt-Eingriffe "
               f"entfallen")
     else:
         try:
@@ -1897,7 +1897,7 @@ def main() -> int:
                     # Ohne Symbol gibt `beim_schliessen` das Schliessen frei —
                     # die App ist nie unsichtbar und unerreichbar.
                     print(f"  ⚠ Infobereich nicht gebaut "
-                          f"({type(e).__name__}: {e}) — das X beendet")
+                          f"({type(e).__name__}: {e}). Das X beendet")
 
             def symbol_weg():
                 if _WIN_TRAY is not None:

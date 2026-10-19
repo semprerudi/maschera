@@ -27,7 +27,7 @@ packs/*/eval/markup/*
 # committet.
 #
 # Ausgenommen ist NUR `beispiele/`. Was dort liegt, ist erfunden und von
-# `tests/test_veroeffentlichung.py` auf Metadaten geprueft — eine `.docx`
+# einer Wache auf Metadaten geprueft — eine `.docx`
 # traegt in `docProps/` den Verfasser.
 *.docx
 *.doc
@@ -71,16 +71,9 @@ __pycache__/
 *.py[cod]
 .venv/
 
-# Arbeitsnotizen und Werkzeugeinstellungen der Entwicklung — nicht Teil
-# des Projekts. `.claude/` als ganzes Verzeichnis, damit auch
-# Zwischendateien beim Schreiben nicht durchrutschen.
-HANDOVER.md
-GIT.md
-CLAUDE.md
-UEBERGABE.md
-BETRIEB.md
-SITZUNG.md
-VERBOTEN_INTERN.txt
+# Werkzeugeinstellungen der Entwicklung — nicht Teil des Projekts.
+# `.claude/` als ganzes Verzeichnis, damit auch Zwischendateien beim
+# Schreiben nicht durchrutschen.
 .claude/
 
 # Von `tools/paket/bauen.fish` geschrieben: Fassung und Werte dieser

@@ -2,12 +2,12 @@
 
 **English** · [Deutsch](README.de.md)
 
-**Free, open-source PII masking for Swiss documents — on your own
+**Free, open-source PII masking for Swiss documents: on your own
 device, on the CPU, with no GPU and no network while it runs.** Four
 languages: German, French, Italian, English.
 
 You have a letter, an email thread or a PDF and want to ask an AI tool
-about it — but the names, social security numbers and addresses should
+about it, but the names, social security numbers and addresses should
 stay behind. MASCHERA replaces them with placeholders:
 
     Sehr geehrte Frau Brülhart       ->   Sehr geehrte Frau [FULLNAME_1]
@@ -24,17 +24,17 @@ individuals. Useful wherever the Swiss Federal Act on Data Protection
 you share. It does not replace your own check.
 
 **Detection runs entirely on your device.** While it runs, nothing is
-downloaded and nothing is sent — no fonts, no icons, no analytics. There
+downloaded and nothing is sent: no fonts, no icons, no analytics. There
 is no endpoint that sends text anywhere, and there never will be; the way
 out always goes through your clipboard.
 
 ⚠️ **The model is 1.2 GB, and there are two ways to ship it.** The
-AppImage and the Windows installer carry it — download, start, done. The Flatpak fetches it **once, on first start**: from a
+AppImage and the Windows installer carry it: download, start, done. The Flatpak fetches it **once, on first start**: from a
 named source, with a checksum, and only after you agree. If you are not
 on Wi-Fi right now, decline and fetch it later. **After that, both are
 equally offline.**
 
-*maschera* is Italian for **mask** — and carries the Swiss country code
+*maschera* is Italian for **mask** and carries the Swiss country code
 **CH** in the middle.
 
 - Website: [www.maschera.ch](https://www.maschera.ch)
@@ -43,7 +43,7 @@ equally offline.**
 - Report a bug: [Issues](https://github.com/semprerudi/maschera/issues)
 
 > ⚠️ **Pseudonymisation, not anonymisation.** As long as the dictionary
-> exists, the process can be reversed — and under Swiss data protection
+> exists, the process can be reversed, and under Swiss data protection
 > law (revDSG) the data remain personal data. That is why the button says
 > "Mask".
 
@@ -54,12 +54,12 @@ to the "Rizzo AI Academy" name are claimed.
 ## How good is it?
 
 The shipped model (`runs/ch-v63b`) was tested in two ways. **Both results
-are here — including the less flattering one.**
+are here, including the less flattering one.**
 
 | | practice texts (synthetic) | real documents (gold documents) |
 |---|---|---|
 | Size | 2000 generated texts, 29,210 personal details (gold spans) | 9 real documents, 280 personal details (gold spans) |
-| **Left visible** (leak rate) | **0.02 %** — 13 details missed in whole or in part | **1.27 %** — 6 details missed in whole or in part |
+| **Left visible** (leak rate) | **0.02 %**: 13 details missed in whole or in part | **1.27 %**: 6 details missed in whole or in part |
 | Overall score (micro-F1, 1 = perfect) | 0.997 | 0.736 |
 | Masked too much | 84 places | 95 places |
 | Anyone can recheck it | **yes** | **no** |
@@ -83,13 +83,13 @@ numbers change with them, and the table has to be measured again.
 
 ⚠️ **The practice texts are familiar to the model.** They are built from
 the same templates as the texts it learned from. It has never seen the
-names and numbers in them, though — so it really has to recognise them
+names and numbers in them, though, so it really has to recognise them
 and cannot know them by heart. Real letters are still harder. That is why
 there is a second test.
 
 **The real documents** are nine letters in which every personal detail was
 marked by hand. Because they contain real personal data, they are not
-published — nobody can recheck this number. It is the most honest one,
+published, so nobody can recheck this number. It is the most honest one,
 though. How to build your own test documents: `docs/GOLDDOKUMENTE.md`
 (German).
 
@@ -99,7 +99,7 @@ an improvement.
 
 **What this means for you:** in real documents a little over one percent
 of personal details stays visible, not zero. MASCHERA takes the work off
-your hands, not the responsibility — **look at the masked text before you
+your hands, not the responsibility: **look at the masked text before you
 pass it on.** That is why area 02 shows every finding in colour, with
 where it came from.
 
@@ -111,15 +111,15 @@ detail. When in doubt, MASCHERA hides too much.
 
 `ch-v63b`, a fine-tuned **ModernBERT** (`jhu-clsp/mmBERT-base`), 22
 layers, 308 M parameters. Trained on **synthetic** data generated from the
-templates and nomenclatures in this repository — it has never seen a real
+templates and nomenclatures in this repository. It has never seen a real
 document.
 
 The weights are on Hugging Face under **MIT**:
 [semprerudi/maschera-ch-v63b](https://huggingface.co/semprerudi/maschera-ch-v63b).
-They are not part of this repository — 1.2 GB does not belong in Git.
+They are not part of this repository, because 1.2 GB does not belong in Git.
 
 **The training path is open.** The training data is not shipped as a
-file, it is GENERATED — templates, nomenclatures and generators are in
+file, it is GENERATED. Templates, nomenclatures and generators are in
 this repository:
 
 ```fish
@@ -146,14 +146,14 @@ defaults:
 | max_length | 512 |
 | **Training seed** | **4711** |
 
-⚠️ **`train.py` defaults to seed 2026**; the shipped run used **4711** —
-without `--seed` you get a different model.
+⚠️ **`train.py` defaults to seed 2026**; the shipped run used **4711**.
+Without `--seed` you get a different model.
 
 ⚠️ **The seed of the TRAINING SET was not recorded.** `training_args.bin`
 records how the model was trained, not on what. The command above
 therefore uses 2026; that is a recommendation for rebuilding, **not a
 statement about the shipped run**. The path can be walked; the exact
-trail of that one run cannot. Future runs record both —
+trail of that one run cannot. Future runs record both:
 `generate_dataset.py` writes its seed into the header of the `.jsonl`.
 
 ⚠️ **`--zone` is not optional.** Without it, training and evaluation sets
@@ -161,7 +161,7 @@ draw from the same nomenclature, and the numbers would fit "recognises
 names" and "memorised the list" equally well.
 
 ⚠️ **And the same seed is not enough.** If the generator changes, the
-same command produces a different data set — the code version is part of
+same command produces a different data set; the code version is part of
 the recipe.
 
 ⚠️ **`--ohne-modell` (without model) is not an operating mode.** Without
@@ -177,7 +177,7 @@ first start?**
 | | Package | Model | For whom |
 |---|---|---|---|
 | **AppImage** | about 1.7 GB | included | one executable file; no installation, no dependencies |
-| **Flatpak** | about 0.3 GB, plus the KDE runtime from Flathub | fetched, 1.2 GB | Debian, Ubuntu, Fedora, openSUSE, Arch — wherever Flatpak runs |
+| **Flatpak** | about 0.3 GB, plus the KDE runtime from Flathub | fetched, 1.2 GB | Debian, Ubuntu, Fedora, openSUSE, Arch, wherever Flatpak runs |
 | **Windows installer** | about 1.4 GB | included | Windows 11, 64-bit; installs without administrator rights |
 | **macOS disk image** | about 1.4 GB | included | Macs with Apple silicon (M1 or newer); not signed |
 | **Docker** | about 4.2 GB | included | running as a service; interface in the browser |
@@ -186,7 +186,7 @@ If the model is fetched, **the first start asks first**: it names source,
 size and destination, and "Later" closes the application without
 downloading anything. After that everything runs offline. The one exception
 is yours to choose: "Check for updates" in the menu asks GitHub once for the
-newest version number — nothing else, and never without that click.
+newest version number, nothing else, and never without that click.
 
 AppImage and Flatpak bring their own libraries and do not depend on what
 else is installed on the system.
@@ -230,14 +230,14 @@ A ready-made image, about 4.2 GB, the model included:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:2.0.0
+    ghcr.io/semprerudi/maschera:2.0.1
 ```
 
 Then open `http://127.0.0.1:4141` in the browser. The server keeps
 nothing: no document, no dictionary, no log. To keep your own rules and
 settings across restarts, add `-v maschera-config:/home/maschera/.config/maschera`.
 Behind a reverse proxy or under another name than `127.0.0.1`, set
-`MASCHERA_WIRT` — see `tools/paket/LIESMICH.md` (German).
+`MASCHERA_WIRT`; see `tools/paket/LIESMICH.md` (German).
 
 ### Verify the downloads
 
@@ -299,12 +299,12 @@ builds. `WINDOWS.md` (German) describes the Windows build as it was run;
 python3 tools/run_tests.py
 ```
 
-33 checks, no dependencies except PyYAML and Flask. No model, no GPU, no
-downloads needed — **32 pass straight away in a fresh clone.**
+30 checks, no dependencies except PyYAML and Flask. No model, no GPU, no
+downloads needed: **29 pass straight away in a fresh clone.**
 
-The 33rd needs the model and says so; two more skip one point each as
+The 30th needs the model and says so; two more skip one point each as
 long as the nomenclature has not been built
-(`python3 packs/ch/nomenclatures/build.py`). Both show up in the output —
+(`python3 packs/ch/nomenclatures/build.py`). Both show up in the output:
 **a skipped check has checked nothing**, and the runner does not count it
 as passed.
 
@@ -312,7 +312,7 @@ as passed.
 python3 tools/generate_dataset.py --n 20 --show
 ```
 
-Generates training examples from the templates — shows what the result
+Generates training examples from the templates and shows what the result
 looks like.
 
 ## Documentation
@@ -357,10 +357,9 @@ tools/             tools
   build_release.py     ONNX + INT8 (optional, not the shipping path)
   paket/               AppImage, Flatpak, Docker
 
-site/              the project website (www.maschera.ch)
 
 train.py           training (needs torch + GPU)
-tests/             32 test files
+tests/             29 test files
 ```
 
 ## The one rule

@@ -583,12 +583,11 @@ setTimeout(async () => {
 
 console.log("1. Alle Knoepfe sind verdrahtet");
   for (const id of ["knopf-maskieren", "knopf-beispiel", "knopf-neu",
-                    "knopf-kopieren", "knopf-kopieren-orig",
-                    "schalter-vokabular"]) {
+                    "knopf-kopieren", "knopf-kopieren-orig"]) {
     const o = document.getElementById(id);
     pruefe(o && (o._h.click || []).length > 0, `${id} hat keinen Horcher`);
   }
-  if (!fehler) console.log("   OK   6 Knoepfe");
+  if (!fehler) console.log("   OK   5 Knoepfe");
 
   console.log("2. Der Startbildschirm wird verborgen, nicht entfernt");
   // ⚠️ Wird der Startbildschirm entfernt statt versteckt, findet der
@@ -618,38 +617,26 @@ console.log("1. Alle Knoepfe sind verdrahtet");
   pruefe(koerper.woerterbuch === true, "Woerterbuch nicht angefordert");
   if (!fehler) console.log("   OK   " + koerper.text.length + " Zeichen");
 
-  console.log("5. Der Vokabularschalter kippt und wirkt auf die Anfrage");
-  await feuer("schalter-vokabular");
-  pruefe(document.getElementById("schalterwort").textContent.length > 1,
-         "Schalterwort nicht gesetzt");
-  await feuer("knopf-maskieren");
-  await new Promise((r) => setTimeout(r, 30));
-  const k2 = JSON.parse((letzteAnfrage.opt || {}).body || "{}");
-  pruefe(k2.woerterbuch === false,
-         "Schalter aus, aber die Anfrage will trotzdem ein Woerterbuch");
-  if (!fehler) console.log("   OK   woerterbuch: false");
-
-  console.log("6. Ausschalten verwirft das Woerterbuch sofort");
-  // ⚠️ Nicht erst beim naechsten Lauf. Wer die Warnung bestaetigt hat, hat
-  // den Verlust beschlossen — bliebe die Tabelle stehen, saehe es aus, als
-  // waeren die Werte noch da, und man koennte sie sogar noch ablesen.
-  await feuer("knopf-beispiel");
-  // Punkt 5 hat den Schalter ausgeschaltet — erst wieder an, sonst prueft
-  // dieser Punkt das Einschalten statt das Ausschalten.
-  if (document.getElementById("schalter-vokabular")
-        .getAttribute("aria-checked") === "false") {
-    await feuer("schalter-vokabular");
+  console.log("5. Kein Vokabularschalter, keine Plakette «Lokal»");
+  // Seit 2.1 (Feedback 20.10.2026): das Vokabular ist immer an. Wer es nicht
+  // braucht, arbeitet mit der Antwort des KI-Werkzeugs weiter. Und «Lokal»
+  // an jeder Kachel wiederholte nur, was oben im Kopf steht.
+  {
+    const html5 = fs.readFileSync(path.join(WURZEL, "app/static/index.html"), "utf8");
+    pruefe(!/id="(schalter-vokabular|schalterwort)"/.test(html5),
+           "der Schalter des Vokabulars ist wieder im HTML");
+    pruefe(!/class="plakette lokal"|class="p-lokal"/.test(html5),
+           "die Plakette «Lokal» steht wieder an einer Kachel");
   }
+  if (!fehler) console.log("   OK   beide weg");
+
+  console.log("6. Jeder Lauf verlangt ein Woerterbuch");
+  await feuer("knopf-beispiel");
   await feuer("knopf-maskieren");
   await new Promise((r) => setTimeout(r, 30));
-  const vorher = document.getElementById("zahl-vokabular").textContent;
-  pruefe(/\d/.test(vorher) && !/·\s*0\s/.test(vorher),
-         `vor dem Ausschalten steht ${vorher}`);
-  await feuer("schalter-vokabular");
-  const nachher = document.getElementById("zahl-vokabular").textContent;
-  pruefe(/·\s*0\s/.test(nachher),
-         `nach dem Ausschalten steht noch ${nachher}`);
-  if (!fehler) console.log("   OK   " + vorher + "  ->  " + nachher);
+  const k6 = JSON.parse((letzteAnfrage.opt || {}).body || "{}");
+  pruefe(k6.woerterbuch === true, "die Anfrage verlangt kein Woerterbuch");
+  if (!fehler) console.log("   OK   woerterbuch: true");
 
   console.log("7. «Kopieren und öffnen» sendet nichts, sondern oeffnet");
   // ⚠️ `/api/senden` gibt es nicht und wird es nicht geben. Der Knopf legt
@@ -705,18 +692,18 @@ console.log("1. Alle Knoepfe sind verdrahtet");
   }
   if (!fehler) console.log("   OK   immer drei Spalten, keine Klappe");
 
-  console.log("9. «Weg zurück» macht 02 zum Eingabefeld");
-  // ⚠️ Wer die dritte Spalte nicht braucht — weil er selbst mit dem Text
-  // arbeitet —, muss trotzdem zum fertigen Ergebnis kommen.
-  await feuer("schalter-zurueck");
-  pruefe(document.getElementById("antwortfeld").hidden === false,
-         "Antwortfeld bleibt verborgen");
-  pruefe(document.getElementById("maskiert").hidden === true,
-         "der maskierte Text bleibt sichtbar");
-  const feld = document.getElementById("antwortfeld");
-  feld.value = "Antwort mit [DATE_1] und [FULLNAME_1].";
-  for (const f of feld._h.input || []) await f({ target: feld });
-  await feuer("knopf-uebernahme");
+  console.log("9. Zurueck geht es ueber 04, ohne Schalter «Weg zurück»");
+  // Seit 2.1 (Feedback 20.10.2026): der Schalter in 02 ist weg, niemand
+  // verstand ihn. Der Weg zurueck muss trotzdem zum fertigen Ergebnis
+  // fuehren, und der Schalter darf nicht still wiederkommen.
+  {
+    const html9 = fs.readFileSync(path.join(WURZEL, "app/static/index.html"), "utf8");
+    pruefe(!/id="(schalter-zurueck|antwortfeld|knopf-leeren-rueck)"/.test(html9),
+           "der Schalter «Weg zurück» oder sein Feld ist wieder im HTML");
+  }
+  document.getElementById("antwort04").value = "Antwort mit [DATE_1] und [FULLNAME_1].";
+  await feuer("antwort04", "input");
+  await feuer("knopf-einpflegen04");
   await new Promise((r) => setTimeout(r, 30));
   pruefe(letzteAnfrage && letzteAnfrage.url.includes("/api/zurueckwandeln"),
          "kein Aufruf von /api/zurueckwandeln");
@@ -748,7 +735,6 @@ console.log("1. Alle Knoepfe sind verdrahtet");
   // ⚠️ `inZwischenablage` setzt nach 1400 ms auf «Kopieren» zurueck, der
   // Sendeablauf auf die volle Beschriftung nach 3000 ms. Beide zusammen
   // ergaben ein Flackern, je nachdem welcher Zeitgeber zuletzt lief.
-  await feuer("schalter-zurueck");
   geoeffnetZahl = 0;
   await feuer("knopf-senden");
   await new Promise((r) => setTimeout(r, 20));
@@ -940,8 +926,6 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     // faerbt die Anzeige Stellen ein, die es im neuen Text nicht gibt.
     pruefe(M.zustand.antwort.spans.length === 0,
            "alte Spannen ueberlebten das Einlesen");
-    pruefe(M.zustand.vokabular === true,
-           "der Schalter blieb aus, obwohl Eintraege da sind");
   }
   if (!fehler) console.log("   OK   hinaus und zurueck, Werte gleich");
 
@@ -1162,9 +1146,11 @@ console.log("1. Alle Knoepfe sind verdrahtet");
 
     // Die Wortmarke behaelt ihre Schrift — seit 2.0 als EINZIGE (Entscheid
     // 18.10.2026: «Fonts aus dem neuen Designsystem ausser fuer das Logo»).
-    // Drei Stellen: Kopfzeile, Startbildschirm, Kopf der Einseiter.
+    // Vier Stellen: Kopfzeile, Startbildschirm, Kopf der Einseiter und seit
+    // 2.1 «TEST» in der Kopfzeile der Teststufe (Entscheid 21.10.2026: «in
+    // den gleich grossen Buchstaben wie MASCHERA»).
     const marke = (CSS.match(/font-family:\s*var\(--font-marke\)/g) || []).length;
-    pruefe(marke === 3, `${marke} Wortmarken in --font-marke, 3 erwartet`);
+    pruefe(marke === 4, `${marke} Wortmarken in --font-marke, 4 erwartet`);
     pruefe(/--font-marke:\s*"Barlow Condensed"/.test(CSS),
            "die Wortmarke steht nicht mehr in Barlow Condensed");
     pruefe(/--skala/.test(CSS) && /calc\(100% \* var\(--skala\)\)/.test(CSS),
@@ -1499,7 +1485,7 @@ console.log("1. Alle Knoepfe sind verdrahtet");
 
     // Und die vier Sprachen — ein Balken, der nur deutsch beschriftet ist,
     // ist fuer drei Viertel der Oberflaeche keiner.
-    for (const schluessel of ["lWartet", "lModell", "lMaskieren", "lFertig",
+    for (const schluessel of ["lWartet", "lModell", "lMaskieren",
                               "lRest"]) {
       const n = (JS.match(new RegExp(schluessel + ":", "g")) || []).length;
       pruefe(n === 4, `${schluessel} steht ${n}x, viermal erwartet`);
@@ -1780,16 +1766,18 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     pruefe(/behavior:\s*"auto"/.test(ohneK),
            "ohne `requestAnimationFrame` gibt es keinen Rueckfall");
 
-    // Das Vokabular startet zugeklappt.
-    pruefe(M.zustand.vokZu === true,
-           "das Vokabular startet aufgeklappt");
-    M.vokabularKlappe();
-    pruefe(document.getElementById("bvok").classList.contains("zu"),
-           "der Kasten traegt die Klasse `zu` nicht");
+    // Seit 2.1 steht das Vokabular immer offen (Feedback 20.10.2026):
+    // kein Klappknopf, keine Klasse `zu`, die es verstecken koennte.
+    const html40 = fs.readFileSync(path.join(WURZEL, "app/static/index.html"), "utf8");
+    const css40 = fs.readFileSync(path.join(WURZEL, "app/static/maschera.css"), "utf8");
+    pruefe(!/knopf-vok-klappe/.test(html40),
+           "der Klappknopf des Vokabulars ist wieder im HTML");
+    pruefe(!/#bvok\.zu/.test(css40),
+           "das Blatt kann das Vokabular wieder zuklappen");
     window._breite = 1400;
   }
   if (!fehler) console.log("   OK   em-Grenzen, Arbeitsweg-Reihenfolge, "
-                           + "Sprung nur gestapelt, Vokabular zu");
+                           + "Sprung nur gestapelt, Vokabular offen");
 
   console.log("41. «Neu» leert das GANZE Formular, und fragt vorher");
   // ⚠️ «Neu» raeumt ALLE Bereiche, auch Prompt, eingefuegte Antwort und
@@ -2282,7 +2270,9 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     pruefe(!/^\.kontext \{ overflow-x: hidden; scrollbar-gutter/m
              .test(ohneKommentare(css)),
            "der Streifen gilt wieder fuer BEIDE Menues");
-    pruefe(/\.kontext\.tagmenu \{ scrollbar-gutter: stable; \}/.test(css),
+    // Seit 2.1 traegt der Rollbereich `.tagrollen` den Streifen, nicht das
+    // ganze Menue: Kopf und Suche rollen nicht mit.
+    pruefe(/\.kontext \.tagrollen \{[^}]*scrollbar-gutter: stable/.test(css),
            "das Tagmenue hat keinen Streifen — dann springt es beim "
            + "Aufklappen wieder");
     pruefe(/menu\.classList\.add\("tagmenu"\)/.test(js)
@@ -2357,7 +2347,7 @@ console.log("1. Alle Knoepfe sind verdrahtet");
            "die Meldungen werden nicht zusammengezogen");
     // ⚠️ Warnungen NICHT mitreihen — ein roter Satz zwischen Trennpunkten
     // geht unter. Sie stehen weiter als eigene Absaetze davor.
-    pruefe(/el\("p", "hinweis warnhinweis", t\(\)\.verworfenHinweis\)/.test(js),
+    pruefe(/el\("p", "hinweis warnhinweis", z\.vokMeldung\)/.test(js),
            "die Warnung hat ihre eigene Zeile verloren");
     // ⚠️ Eintraege sind Objekte, keine Zeichenketten; ein `h.startsWith`
     // wuerfe.
@@ -2540,7 +2530,11 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     // «Einfuegen» sehen in allen sechs Bereichen gleich aus; einer, der
     // links grau und rechts rot waere, sagte mit der Farbe etwas Falsches.
     // Ausdruecklicher Entscheid des Anwenders.
-    pruefe(!/\.spalte\.hinaus[^{]*\.imfeld/.test(block),
+    // Seit 2.1 EINE Ausnahme, ebenfalls auf Entscheid (21.10.2026): beim
+    // Ueberfahren wird das Zeichen von Kopieren in der roten Spalte rot
+    // statt gruen. Die Ruhefarbe bleibt grau; erlaubt ist nur `:hover`.
+    const feldRegeln = block.match(/\.spalte\.hinaus[^{}]*\.imfeld[^{}]*\{/g) || [];
+    pruefe(feldRegeln.every((r) => /:hover/.test(r)),
            "die Feldknoepfe werden mitgefaerbt — sie sollen grau bleiben");
 
     // ⚠️ Deaktiviert wird HELLER, nicht durchsichtiger: `opacity` legt
@@ -2554,9 +2548,9 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     // verhalten. Die Spaltenregel laesst ihn in Ruhe.
     pruefe(!/\.spalte\.hinaus[^{]*\.senden:hover/.test(block),
            "die rote Spalte faerbt den Hauptknopf wieder um");
-    // Seit 2.0: der fast schwarze Hauptknopf wird beim Ueberfahren eine Stufe
-    // heller (`--color-neutral-800`), der orange Sendeknopf eine Stufe tiefer.
-    for (const [wahl, ton] of [["button.tat.haupt:hover", aufloesen("var(--color-neutral-800)")],
+    // Seit 2.1: der dunkelgruene Hauptknopf wird beim Ueberfahren eine Stufe
+    // tiefer (`--haupt-tief`), der orange Sendeknopf ebenso.
+    for (const [wahl, ton] of [["button.tat.haupt:hover", aufloesen("var(--haupt-tief)")],
                                ["button.tat.senden:hover", aufloesen("var(--bx-tief)")]]) {
       const regel = css.slice(css.indexOf(wahl), css.indexOf(wahl) + 140);
       const hat = (regel.match(/background:\s*([^;}]+)/) || [])[1];
@@ -2970,7 +2964,6 @@ console.log("1. Alle Knoepfe sind verdrahtet");
       woerterbuch: { "[FULLNAME_1]": "Andrea Brülhart",
                      "[STREET_1]": "Lindenstrasse" },
     };
-    M.zustand.zurueck = false;
     M.zustand.bearbeiten = false;
 
     for (const f of knopf._h.click) f({});
@@ -3183,7 +3176,7 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     const JSq = fs.readFileSync(
       path.join(WURZEL, "app/static/maschera.js"), "utf8");
     const teil65 = JSq.slice(JSq.indexOf("function springeZu"),
-                             JSq.indexOf("function vokabularKlappe"));
+                             JSq.indexOf("function knopfTitelSetzen"));
     pruefe(/scrollingElement \|\| document\.documentElement/.test(teil65),
            "springeZu() unterscheidet die Rollwurzel nicht mehr");
     pruefe(/rollen === wurzel \? 0/.test(teil65),
@@ -3200,7 +3193,9 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     pruefe(rumpf.length > 0, "laufen() nicht gefunden");
     const ohneK65 = rumpf.replace(/\/\*[\s\S]*?\*\//g, "")
                          .replace(/^\s*\/\/.*$/gm, "");
-    const spruenge = (ohneK65.match(/springeZu\(/g) || []).length;
+    // Seit 2.1 springt eine Handlung ueber `handlungSprung()` (hebt den
+    // angetippten Schritt auf); gezaehlt werden beide Wege.
+    const spruenge = (ohneK65.match(/(springeZu|handlungSprung)\(/g) || []).length;
     pruefe(spruenge === 1,
            `laufen() springt ${spruenge}-mal statt genau einmal — der `
            + "Sprung gehoert VOR den Lauf, nicht dahinter");
@@ -3326,9 +3321,11 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     pruefe(document.getElementById("antwort04").value
              === "Gruss [FULLNAME_2]",
            "das Feld traegt den reparierten Text nicht");
-    pruefe(/1/.test(M.zustand.vokMeldung || ""),
+    // Seit 2.1 im Kopf von 04, der Kachel, um die es geht.
+    const meldung04 = document.getElementById("meldung-04").textContent || "";
+    pruefe(/1/.test(meldung04),
            "die Reparatur wird nicht gemeldet: "
-           + JSON.stringify(M.zustand.vokMeldung));
+           + JSON.stringify(meldung04));
     // ⚠️ ZERSCHLAGENE PLATZHALTER. Eine Antwort kann auf
     // `GIVENNAME_2]\[FULLNAME_2]GIVENNAME\_2]` enden: der Haelfte fehlt die
     // OEFFNENDE Klammer, und `markdownZurueck()` fasst das zu Recht nicht an.
@@ -3822,7 +3819,8 @@ console.log("1. Alle Knoepfe sind verdrahtet");
       const i = css.indexOf(wahl + " {");
       return i < 0 ? "" : css.slice(i, css.indexOf("}", i));
     };
-    for (const wahl of ["#vorlagen-filter", ".dienstzeile input"]) {
+    // Seit 2.1 tragen alle Suchfelder (auch der Vorlagenfilter) `.suchfeld`.
+    for (const wahl of [".suchfeld", ".dienstzeile input"]) {
       const r = regel(wahl);
       pruefe(r, `die Regel fuer ${wahl} ist fort`);
       pruefe(!r || /background(-color)?:/.test(r),
@@ -3834,7 +3832,7 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     }
     // ⚠️ Und der Platzhalter gehoert dazu: seine Vorgabefarbe ist auf die
     // VORGABEflaeche gerechnet, nicht auf unsere.
-    pruefe(/#vorlagen-filter::placeholder/.test(css),
+    pruefe(/\.suchfeld::placeholder/.test(css),
            "das Suchfeld setzt seine Platzhalterfarbe nicht");
   }
   if (!fehler) console.log("   OK   beide Felder tragen Flaeche, Schrift und Platzhalter");
@@ -4070,11 +4068,12 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     pruefe(neuGeladen === 1, "nach Ja nicht neu geladen");
     M.zustand.antwort = warAntwort;
     M.zustand.sprache = warSprache;
-    // Schmal: Knoepfe untereinander
+    // Schmal: Knoepfe NEBENEINANDER, je die Haelfte (seit 2.1, Feedback
+    // 21.10.2026: uebereinander vertippt man sich leichter).
     const css = fs.readFileSync(
       path.join(WURZEL, "app/static/maschera.css"), "utf8");
-    pruefe(/@media \(max-width: [\d.]+em\) \{\s*\.frage-knoepfe \{[^}]*flex-direction: column/.test(css),
-           "im schmalen Fenster stehen die Knoepfe nicht untereinander");
+    pruefe(/@media \(max-width: [\d.]+em\) \{\s*\.frage-knoepfe \{[^}]*flex-wrap: nowrap[^}]*\}\s*\.frage-knoepfe \.tat \{[^}]*flex: 1 1 0/.test(css),
+           "im schmalen Fenster stehen die Knoepfe nicht nebeneinander je zur Haelfte");
     if (fehler === vorher) {
       console.log("   OK   Ja, Nein, Escape, daneben, Eingabe, schmal gestapelt");
     }
@@ -4500,12 +4499,16 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     const stufen = [
       [{ a: null }, 0], [{ a: { maskiert: "x" }, u: false }, 1],
       [{ a: { maskiert: "x" }, u: true, a4: "" }, 2], [{ a: { maskiert: "x" }, u: true, a4: "Antwort" }, 3],
-      [{ a: { maskiert: "x" }, u: true, a4: "Antwort", f: { text: "y" } }, 5]];
+      [{ a: { maskiert: "x" }, u: true, a4: "Antwort", f: { text: "y" } }, 5],
+      // Ohne «Übernahme in Prompt» weitergearbeitet: der weiteste Stand zaehlt.
+      [{ a: { maskiert: "x" }, u: false, a4: "Antwort" }, 3],
+      [{ a: { maskiert: "x" }, u: false, a4: "Antwort", f: { text: "y" } }, 5]];
     for (const [st, soll] of stufen) {
       M.zustand.antwort = st.a; M.zustand.uebernommen = !!st.u; M.zustand.antwort04 = st.a4 || ""; M.zustand.final = st.f || null;
       pruefe(M.schrittJetzt() === soll, `Schritt ${M.schrittJetzt()} statt ${soll}`);
     }
     M.zustand.antwort = { maskiert: "x" }; M.zustand.uebernommen = false;
+    M.zustand.antwort04 = ""; M.zustand.final = null;
     M.zeichneSchritte();
     const knoepfe = document.getElementById("schritte")._kinder.filter((k) => /^schritt( |$)/.test(k.className));
     pruefe(knoepfe.length === 5, `${knoepfe.length} Schritte statt 5`);
@@ -4523,6 +4526,136 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     pruefe(/z\.schrittMitte = i;\s*schrittZentrieren\(true\)/.test(js88),
            "ein Tippen zentriert den angetippten Schritt nicht");
     if (fehler === vorher) console.log("   OK   folgt dem Zustand, 5 Schritte, einspaltig eine Zeile mit Mitte");
+  }
+
+  console.log("89. Suchfelder mit Lupe, ein Kreuz fuer alles, Tooltips je Sprache");
+  // Seit 2.1 (Feedback 20.10.2026): jedes Suchfeld traegt die Lupe, jedes
+  // Entfernen- und Schliessen-Kreuz ist gezeichnet wie im Vokabular, und die
+  // Knoepfe im Fuss sagen im Tooltip, WAS sie tun — in allen vier Sprachen.
+  {
+    const vorher = fehler;
+    const html89 = fs.readFileSync(path.join(WURZEL, "app/static/index.html"), "utf8");
+    const js89 = fs.readFileSync(path.join(WURZEL, "app/static/maschera.js"), "utf8");
+    const suchen = [...html89.matchAll(/<input type="search"[^>]*>/g)].map((m) => m[0]);
+    pruefe(suchen.length >= 3, `${suchen.length} Suchfelder im HTML, mindestens 3 erwartet`);
+    for (const f of suchen) {
+      pruefe(/class="[^"]*\bsuchfeld\b/.test(f), "Suchfeld ohne Lupe: " + f.slice(0, 60));
+    }
+    pruefe(/className = "tagsuche suchfeld"/.test(js89),
+           "das Suchfeld im Klappmenue hat keine Lupe");
+    // ⚠️ Die Lupe als `data:`-Bild fehlte still: die
+    // Content-Security-Policy (`img-src 'self'`) sperrt eingebettete Bilder.
+    // Der berechnete Stil sah richtig aus, nur der Schirm nicht.
+    const css89 = fs.readFileSync(path.join(WURZEL, "app/static/maschera.css"), "utf8")
+      .replace(/\/\*[\s\S]*?\*\//g, "");
+    pruefe(!/url\(\s*["']?data:/.test(css89),
+           "ein Bild steht als data:-Adresse im CSS, die CSP sperrt es");
+    pruefe(fs.existsSync(path.join(WURZEL, "app/static/lupe.svg")),
+           "app/static/lupe.svg fehlt");
+    // Der Sendeknopf kopiert «Das geht hinaus» schon; ein zweiter Knopf
+    // dafuer war doppelt (Feedback 20.10.2026).
+    pruefe(!/id="knopf-kopieren-hinaus"/.test(html89),
+           "der doppelte Kopierknopf fuer «Das geht hinaus» ist zurueck");
+    const ohneK89 = js89.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+    pruefe(!/"(×|\\u00d7|\\u2715|✕)"/.test(ohneK89),
+           "ein Kreuz steht wieder als Schriftzeichen statt gezeichnet");
+    const ids = ["knopf-kopieren-orig", "knopf-leeren-orig", "knopf-bearbeiten",
+                 "knopf-herunter-mask", "knopf-kopieren", "knopf-kopieren-prompt",
+                 "knopf-leeren-prompt",
+                 "knopf-einfuegen-antwort", "knopf-leeren-antwort",
+                 "knopf-herunter-final", "knopf-leeren-final", "knopf-final-kopieren"];
+    for (const sp of ["de", "fr", "it", "en"]) {
+      const tipps = (M.I18N[sp] || {}).knopfTipps || {};
+      for (const id of ids) {
+        pruefe(typeof tipps[id] === "string" && tipps[id].length > 3,
+               `${sp}: kein Tooltip fuer ${id}`);
+      }
+    }
+    // Knoepfe stehen von Anfang an da und sind grau, statt zu erscheinen und
+    // zu verschwinden (Feedback 20.10.2026). Ausnahme: «Antwort einfuegen»
+    // gibt es nur im eigenen Fenster, weil der Browser die Zwischenablage
+    // oft nicht herausgibt.
+    for (const id of ["knopf-leeren-orig", "knopf-leeren-prompt", "knopf-leeren-antwort",
+                      "knopf-leeren-final", "knopf-herunter-final"]) {
+      pruefe(!new RegExp('\\$\\("' + id + '"\\)\\.hidden').test(ohneK89),
+             id + " wird wieder ausgeblendet statt deaktiviert");
+      pruefe(!new RegExp('id="' + id + '"[^>]*hidden').test(html89),
+             id + " startet wieder versteckt");
+    }
+    // Eine Handlung (Maskieren, Uebernahme, Kopieren und oeffnen, Neu,
+    // Einpflegen) hebt den angetippten Schritt auf; sonst blieb der Ring an
+    // 02 haengen, wer vorher «Prüfen» angetippt hatte (Feedback 20.10.2026).
+    for (const ziel of ["b01", "b02", "b03", "b04"]) {
+      pruefe(new RegExp('handlungSprung\\("' + ziel + '"\\)').test(ohneK89),
+             "die Handlung nach " + ziel + " springt wieder ohne den Schritt aufzuheben");
+    }
+    pruefe(/z\.einpflegenLaeuft = true;\s*z\.schrittMitte = null;/.test(ohneK89),
+           "Einpflegen hebt den angetippten Schritt nicht auf");
+    // «Beispiel» am Ende des Ablaufs beginnt von vorne wie «Neu»: nichts
+    // vom vorigen Durchgang bleibt stehen (Feedback 20.10.2026).
+    M.zustand.antwort = { maskiert: "x", woerterbuch: {}, spans: [] };
+    M.zustand.uebernommen = true; M.zustand.prompt = "P";
+    M.zustand.antwort04 = "Antwort"; M.zustand.final = { text: "y" };
+    await feuer("knopf-beispiel");
+    await new Promise((r) => setTimeout(r, 30));
+    pruefe(!M.zustand.uebernommen && !M.zustand.prompt && !M.zustand.antwort04
+             && !M.zustand.final && !M.zustand.antwort,
+           "«Beispiel» laesst den vorigen Durchgang stehen");
+    pruefe(M.schrittJetzt() === 0 && M.zustand.orig.length > 100,
+           "nach «Beispiel» steht der Ablauf nicht am Anfang mit dem Beispiel in 01");
+    // Die Kopfzeile wird gemessen, nicht an einer festen Breite geschaltet:
+    // zuerst die Sprachwahl zum Pulldown, dann erst der Schriftzug weg
+    // (Feedback 21.10.2026: auf dem Handy fiel er weg, obwohl Platz war).
+    const cssK = fs.readFileSync(path.join(WURZEL, "app/static/maschera.css"), "utf8")
+      .replace(/\/\*[\s\S]*?\*\//g, "");
+    pruefe(!/@media[^{]*\{[^@]*?\.kopfzeile \.marke \{\s*display:\s*none/.test(cssK),
+           "eine feste Breite blendet die Wortmarke wieder aus");
+    pruefe(/kopf\.classList\.add\("sprache-klein"\);\s*if \(passt\(\)\) return;\s*kopf\.classList\.add\("ohne-marke"\)/.test(ohneK89),
+           "die Kopfzeile gibt den Schriftzug nicht mehr zuletzt auf");
+    // Messwerte im Kopf von 02, die Zeile darunter ist weg; in 03 kein
+    // Teiltitel «Prompt» mehr, die Vorlagen-Leiste liegt im Feld
+    // (Feedback 21.10.2026).
+    pruefe(/id="zahl-02"[\s\S]{0,80}id="hinweise-info"[\s\S]{0,1200}<\/div>\s*<div id="hinweise"><\/div>/.test(html89),
+           "die Hinweise von 02 stehen nicht mehr gleich unter dem Kopf");
+    // Seit 2.1 breit: kleiner Titel «Prompt» mit Vorlagen rechts,
+    // darunter das Feld, darunter Leeren und Kopieren (Feedback 21.10.2026).
+    pruefe(/id="titel-prompt"[\s\S]{0,80}class="vorlagenzeile"/.test(html89),
+           "Vorlagen stehen nicht mehr neben dem Titel «Prompt»");
+    pruefe(/<div class="promptknoepfe">/.test(html89),
+           "Leeren und Kopieren stehen nicht mehr unter dem Promptfeld");
+    // Teststufe: das Favicon mit «T» traegt DIESELBEN Pfade wie maske.svg
+    // (eine Kopie; sie darf nicht davonlaufen), und es erscheint nur bei
+    // einer Fassung mit `-test` (Feedback 21.10.2026).
+    const pfade = (f) => (fs.readFileSync(path.join(WURZEL, "app/static", f), "utf8")
+      .match(/<path[^>]*d="[^"]+"/g) || []).join("\n");
+    pruefe(pfade("maske.svg").length > 1000 && pfade("maske.svg") === pfade("maske-test.svg"),
+           "maske-test.svg hat nicht mehr dieselben Pfade wie maske.svg");
+    pruefe(/if \(!\/-test\\b\/\.test\(String\(fassung/.test(ohneK89),
+           "die Teststufe haengt nicht mehr an der Fassung «-test»");
+    // In der roten Spalte kein Gruen im Vorlagenmenue.
+    const css89b = fs.readFileSync(path.join(WURZEL, "app/static/maschera.css"), "utf8")
+      .replace(/\/\*[\s\S]*?\*\//g, "");
+    pruefe(!/\.vorlagen-menu[^{]*\{[^}]*--gr-/.test(css89b),
+           "im Vorlagenmenue steht wieder Gruen");
+    // Und kein Grau als Flaeche: neben Rot kippt es ins Gruene.
+    pruefe(!/\.(vorlagen-menu|dienstmenu)[^{]*\{[^}]*background:\s*var\(--color-neutral/.test(css89b),
+           "im Vorlagen- oder Dienstmenue steht wieder eine graue Flaeche");
+    // Die hellen Rottoene kippten bei Ton 55 bis 60 ins Olivgruene (Feedback
+    // 21.10.2026). Keine `--bx-`-Marke traegt einen Ton ueber 45.
+    const ocker = [...css89b.matchAll(/(--bx-[a-z0-9-]+):\s*oklch\([\d.]+ [\d.]+ ([\d.]+)\)/g)]
+      .filter((m) => parseFloat(m[2]) > 45).map((m) => m[1] + " " + m[2]);
+    pruefe(ocker.length === 0, "Rotton Richtung Ocker: " + ocker.slice(0, 4).join(", "));
+    // Jede der sechs Kacheln laesst sich vergroessern; Escape und der Grund
+    // bringen sie zurueck (Feedback 21.10.2026).
+    for (const k of ["b01", "b02", "bvok", "b03", "b04", "b05"]) {
+      pruefe(new RegExp('class="gross-knopf"[^>]*data-kachel="' + k + '"').test(html89),
+             k + " hat keinen Knopf zum Vergroessern");
+    }
+    pruefe(/\.kachel-grund \{ display: none; \}/.test(css89b) && /\.bereich\.gross \{[^}]*position: fixed/.test(css89b),
+           "die grosse Kachel oder ihr Grund ist nicht mehr gesetzt");
+    pruefe(/function beispielLeuchten\(\)/.test(js89) && /beispielLeuchten\(\);/.test(js89),
+           "«Beispiel» leuchtet beim ersten Start nicht mehr");
+    if (fehler === vorher) console.log("   OK   Lupe, Kreuz, 12 Tooltips je Sprache, Leuchten");
   }
 
   console.log("");

@@ -15,7 +15,6 @@ Modell aussieht.
 """
 import hashlib
 import http.server
-import json
 import os
 import sys
 import tempfile
@@ -333,7 +332,6 @@ print("   OK   beide Wege horchen, erkennen und raeumen die Leiche weg")
 
 print("\n11. Die Orte stimmen auf beiden Plattformen")
 from core import pfade as _pf                                   # noqa: E402
-import importlib                                                # noqa: E402
 
 _alt = {k: os.environ.get(k) for k in
         ("XDG_CONFIG_HOME", "XDG_DATA_HOME", "APPDATA", "LOCALAPPDATA")}

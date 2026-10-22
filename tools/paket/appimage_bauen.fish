@@ -273,15 +273,6 @@ else
     echo "     wieder die Dateigroesse. paru -S zsync"
 end
 
-# Ein optionaler Schritt der eigenen Umgebung nach dem Bau: liegt
-# `tools/paket/nach_appimage.fish` da, wird es aufgerufen. Im
-# Repository gibt es die Datei nicht; wer keine braucht, merkt nichts.
-if test -f $STAMM/tools/paket/nach_appimage.fish
-    echo
-    fish $STAMM/tools/paket/nach_appimage.fish
-    or echo "   ⚠ nach_appimage.fish ist fehlgeschlagen. Die AppImage liegt hier."
-end
-
 echo
 echo "FERTIG: $ZIEL"
 du -h $ZIEL

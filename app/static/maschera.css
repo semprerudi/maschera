@@ -190,34 +190,6 @@ body {
 }
 h1, h2, h3, h4 { font-family: var(--ui-heading); font-weight: var(--font-heading-weight); }
 
-.blueprint {
-  position: relative;
-  border: 1px solid var(--color-divider);
-  border-radius: 0;
-}
-/* The overlay image treatments (halftone, duotone) clip their overlay
-   (overflow:hidden); a blueprint wrapper draws its registration marks
-   outside the box, so when both classes share a wrapper the frame must
-   win. */
-.blueprint.halftone, .blueprint.plate, .blueprint.duotone { overflow: visible; }
-.blueprint > .corner {
-  position: absolute; width: 0.6875rem; height: 0.6875rem;
-  color: color-mix(in srgb, var(--color-text) 55%, transparent);
-}
-.blueprint > .corner::before, .blueprint > .corner::after {
-  content: ""; position: absolute; background: currentColor;
-}
-.blueprint > .corner::before { left: 0.3125rem; top: 0; width: 1px; height: 100%; }
-.blueprint > .corner::after  { top: 0.3125rem; left: 0; width: 100%; height: 1px; }
-.blueprint > .corner.tl { top: -0.375rem; left: -0.375rem; }
-.blueprint > .corner.tr { top: -0.375rem; right: -0.375rem; }
-.blueprint > .corner.bl { bottom: -0.375rem; left: -0.375rem; }
-.blueprint > .corner.br { bottom: -0.375rem; right: -0.375rem; }
-
-.duotone{position:relative;overflow:hidden}
-.duotone::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:var(--color-accent);mix-blend-mode:color}
-
 /* ══════════════════════════════════════════════════════════════════════════
  * Components — built with the tokens above. Plain CSS on plain HTML:
  * no JavaScript, no build step.
@@ -251,7 +223,6 @@ figcaption {
   font-size: 0.6875rem; margin-top: var(--space-1);
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
-.text-muted { color: color-mix(in srgb, var(--color-text) 55%, transparent); }
 /* ══ DIE ZWEI TRAGENDEN FARBEN ═══════════════════════════════════════
  * Gruen heisst «bleibt auf dem Geraet», Rot heisst «geht hinaus». Das ist
  * keine Dekoration, sondern die Aussage der Oberflaeche.
@@ -272,6 +243,19 @@ figcaption {
   --gr-grund:               oklch(0.962 0.02 155);   /* helle gruene Flaeche */
   --gr-grund2:              oklch(0.92 0.04 155);   /* helle gruene Flaeche, Kante */
   --gr-grund3:              oklch(0.98 0.01 155);   /* hellste gruene Flaeche */
+  /* Hauptknoepfe seit 2.1 dunkelgruen (Feedback 20.10.2026), eine Stufe
+     dunkler als der Haken in der Schrittleiste. */
+  --haupt-flaeche:          oklch(0.42 0.09 155);
+  --haupt-tief:             oklch(0.36 0.08 155);   /* Rollover */
+  --test-gelb:              oklch(0.92 0.12 95);   /* Kopfzeile der Teststufe */
+  --beispiel-grund:         oklch(0.97 0.06 95);   /* Knopf «Beispiel», hellgelb */
+  --beispiel-kante:         oklch(0.86 0.09 90);
+  --beispiel-tief:          oklch(0.94 0.08 95);   /* dessen Rollover */
+  /* Die Lupe in den Suchfeldern (seit 2.1). Eine eigene Datei und keine
+     `data:`-Adresse: die Content-Security-Policy (`img-src 'self'`) sperrt
+     eingebettete Bilder, und die Lupe fehlte still. Ein mittleres
+     Grau, das hell und dunkel traegt. */
+  --lupe: url("lupe.svg");
 
   /* Rot — «geht hinaus» */
   --bx-schrift:      oklch(0.48 0.13 45);   /* SCHRIFT in Rot — Titel, Knopfschrift */
@@ -280,24 +264,29 @@ figcaption {
   --bx-dunkel:              oklch(0.44 0.13 42);   /* Kante des Sendeknopfs */
   --bx-tief:                oklch(0.44 0.14 42);   /* Rollover des Sendeknopfs */
   --bx-dunkel2:             oklch(0.44 0.13 42);
-  --bx-matt:                oklch(0.58 0.09 50);   /* Informationstext, Platzhalter */
-  --bx-matt2:               oklch(0.64 0.07 50);
-  --bx-matt3:               oklch(0.7 0.07 50);
-  --bx-aus:                 oklch(0.74 0.05 55);   /* deaktivierte Schrift */
-  --bx-kante:               oklch(0.8 0.07 50);   /* Fensterrahmen, Knopfrahmen */
-  --bx-kante-hell:          oklch(0.84 0.05 55);
-  --bx-kante2:              oklch(0.88 0.03 55);   /* Rahmen von Deaktiviertem */
-  --bx-grund:               oklch(0.962 0.02 60);   /* helle rote Flaeche */
-  --bx-grund2:              oklch(0.955 0.022 60);
-  --bx-grund4:              oklch(0.982 0.008 60);
-  --bx-grund5:              oklch(0.965 0.018 60);
-  --bx-aus-schrift:  oklch(0.66 0.03 55);   /* Schrift auf dem deaktivierten Sendeknopf */
-  --bx-aus-flaeche:         oklch(0.9 0.02 55);   /* deaktivierter Sendeknopf */
-  --bx-aus-kante:           oklch(0.86 0.03 55);   /* dessen Kante */
+  --bx-matt:                oklch(0.58 0.09 38);   /* Informationstext, Platzhalter */
+  --bx-matt2:               oklch(0.64 0.07 38);
+  --bx-matt3:               oklch(0.7 0.07 38);
+  --bx-aus:                 oklch(0.74 0.05 38);   /* deaktivierte Schrift */
+  --bx-kante:               oklch(0.8 0.07 38);   /* Fensterrahmen, Knopfrahmen */
+  --bx-kante-hell:          oklch(0.84 0.05 38);
+  --bx-kante2:              oklch(0.88 0.038 38);   /* Rahmen von Deaktiviertem */
+  --bx-grund:               oklch(0.962 0.026 38);   /* helle rote Flaeche */
+  --bx-grund4:              oklch(0.982 0.012 38);
+  --bx-grund5:              oklch(0.965 0.024 38);
+  --bx-aus-schrift:  oklch(0.66 0.038 38);   /* Schrift auf dem deaktivierten Sendeknopf */
+  --bx-aus-flaeche:         oklch(0.9 0.026 38);   /* deaktivierter Sendeknopf */
+  --bx-aus-kante:           oklch(0.86 0.038 38);   /* dessen Kante */
   --bx-loeschen:            oklch(0.55 0.17 25);   /* der Leeren-Knopf im Feld */
   --bx-loeschen-kante:      oklch(0.48 0.16 25);
-  --bx-senden-aus:          oklch(0.9 0.025 55);   /* deaktivierter Sendeknopf in der roten Spalte */
-  --bx-senden-aus-kante:    oklch(0.86 0.035 55);   /* dessen Kante — UND die des Pfeils daneben */
+  /* ALLE hellen Rottoene liegen seit 2.1 bei Ton 38 (vorher 55 bis 60, ein
+     blasses Ocker, das neben Weiss und Grau oliv-gruenlich wirkte; Feedback
+     21.10.2026). Keine `--bx-`-Marke ueber Ton 45: test_oberflaeche 89.
+     Deaktivierte rote Hauptknoepfe (Senden, Einpflegen). Seit 2.1 roeter:
+     das fruehere blasse Ocker (Ton 55) wirkte neben Weiss oliv-gruenlich
+     (Feedback 21.10.2026). */
+  --bx-senden-aus:          oklch(0.87 0.045 35);
+  --bx-senden-aus-kante:    oklch(0.83 0.055 35);   /* dessen Kante, auch die des Pfeils daneben */
 
   /* Einzelne */
   /* Der Ton, aus dem Schleier und Schatten gemischt werden — als Marke, auch
@@ -405,29 +394,34 @@ figcaption {
     --gr-grund: oklch(0.25 0.03 155);
     --gr-grund2: oklch(0.3 0.045 155);
     --gr-grund3: oklch(0.22 0.02 155);
-    --bx-dunkel: oklch(0.62 0.13 48);
-    --bx-tief: oklch(0.76 0.13 48);
-    --bx-dunkel2: oklch(0.62 0.13 48);
-    --bx-matt: oklch(0.68 0.08 55);
-    --bx-matt2: oklch(0.6 0.07 55);
-    --bx-matt3: oklch(0.55 0.06 55);
-    --bx-aus: oklch(0.5 0.04 55);
-    --bx-kante: oklch(0.52 0.08 50);
-    --bx-kante-hell: oklch(0.45 0.06 55);
-    --bx-kante2: oklch(0.36 0.04 55);
-    --bx-grund: oklch(0.235 0.028 55);
-    --bx-grund2: oklch(0.25 0.03 55);
-    --bx-grund4: oklch(0.21 0.015 60);
-    --bx-grund5: oklch(0.24 0.025 58);
-    --bx-aus-flaeche: oklch(0.3 0.02 55);
-    --bx-aus-kante: oklch(0.36 0.03 55);
+    --haupt-flaeche: oklch(0.5 0.1 155);
+    --haupt-tief: oklch(0.44 0.09 155);
+    --test-gelb: oklch(0.42 0.09 95);
+    --beispiel-grund: oklch(0.32 0.05 95);
+    --beispiel-kante: oklch(0.45 0.07 90);
+    --beispiel-tief: oklch(0.36 0.06 95);
+    --bx-dunkel: oklch(0.62 0.13 38);
+    --bx-tief: oklch(0.76 0.13 38);
+    --bx-dunkel2: oklch(0.62 0.13 38);
+    --bx-matt: oklch(0.68 0.08 38);
+    --bx-matt2: oklch(0.6 0.07 38);
+    --bx-matt3: oklch(0.55 0.06 38);
+    --bx-aus: oklch(0.5 0.05 38);
+    --bx-kante: oklch(0.52 0.08 38);
+    --bx-kante-hell: oklch(0.45 0.06 38);
+    --bx-kante2: oklch(0.36 0.05 38);
+    --bx-grund: oklch(0.235 0.036 38);
+    --bx-grund4: oklch(0.21 0.02 38);
+    --bx-grund5: oklch(0.24 0.032 38);
+    --bx-aus-flaeche: oklch(0.3 0.026 38);
+    --bx-aus-kante: oklch(0.36 0.038 38);
     --bx-loeschen: oklch(0.68 0.16 25);
     --bx-loeschen-kante: oklch(0.6 0.15 25);
-    --bx-senden-aus: oklch(0.3 0.02 55);
-    --bx-senden-aus-kante: oklch(0.36 0.03 55);
+    --bx-senden-aus: oklch(0.3 0.026 38);
+    --bx-senden-aus-kante: oklch(0.36 0.038 38);
     --manuell: oklch(0.75 0.12 300);
     --muster: oklch(0.68 0.08 250);
-    --gr-flaeche: oklch(0.62 0.13 155);  --gr-flaeche2: oklch(0.56 0.12 155);  --gr-schrift: oklch(0.78 0.1 155);  --gr-kante: oklch(0.62 0.12 155);  --bx-flaeche: oklch(0.7 0.14 48);  --bx-schrift: oklch(0.8 0.11 55);  --bx-kante-stark: oklch(0.68 0.13 50);  --bx-aus-schrift: oklch(0.55 0.03 55);
+    --gr-flaeche: oklch(0.62 0.13 155);  --gr-flaeche2: oklch(0.56 0.12 155);  --gr-schrift: oklch(0.78 0.1 155);  --gr-kante: oklch(0.62 0.12 155);  --bx-flaeche: oklch(0.7 0.14 38);  --bx-schrift: oklch(0.8 0.11 38);  --bx-kante-stark: oklch(0.68 0.13 38);  --bx-aus-schrift: oklch(0.55 0.038 38);
     --schatten-grund: #000000;
     --color-accent: oklch(0.76 0.1 155);
     --color-accent-100: oklch(0.28 0.04 155);  --color-accent-600: oklch(0.74 0.1 155);  --color-accent-700: oklch(0.8 0.09 155);  --color-accent-800: oklch(0.88 0.06 155);  --color-accent-2-100: oklch(0.28 0.04 155);  --color-accent-2-800: oklch(0.88 0.06 155);
@@ -481,29 +475,34 @@ figcaption {
     --gr-grund: oklch(0.25 0.03 155);
     --gr-grund2: oklch(0.3 0.045 155);
     --gr-grund3: oklch(0.22 0.02 155);
-    --bx-dunkel: oklch(0.62 0.13 48);
-    --bx-tief: oklch(0.76 0.13 48);
-    --bx-dunkel2: oklch(0.62 0.13 48);
-    --bx-matt: oklch(0.68 0.08 55);
-    --bx-matt2: oklch(0.6 0.07 55);
-    --bx-matt3: oklch(0.55 0.06 55);
-    --bx-aus: oklch(0.5 0.04 55);
-    --bx-kante: oklch(0.52 0.08 50);
-    --bx-kante-hell: oklch(0.45 0.06 55);
-    --bx-kante2: oklch(0.36 0.04 55);
-    --bx-grund: oklch(0.235 0.028 55);
-    --bx-grund2: oklch(0.25 0.03 55);
-    --bx-grund4: oklch(0.21 0.015 60);
-    --bx-grund5: oklch(0.24 0.025 58);
-    --bx-aus-flaeche: oklch(0.3 0.02 55);
-    --bx-aus-kante: oklch(0.36 0.03 55);
+    --haupt-flaeche: oklch(0.5 0.1 155);
+    --haupt-tief: oklch(0.44 0.09 155);
+    --test-gelb: oklch(0.42 0.09 95);
+    --beispiel-grund: oklch(0.32 0.05 95);
+    --beispiel-kante: oklch(0.45 0.07 90);
+    --beispiel-tief: oklch(0.36 0.06 95);
+    --bx-dunkel: oklch(0.62 0.13 38);
+    --bx-tief: oklch(0.76 0.13 38);
+    --bx-dunkel2: oklch(0.62 0.13 38);
+    --bx-matt: oklch(0.68 0.08 38);
+    --bx-matt2: oklch(0.6 0.07 38);
+    --bx-matt3: oklch(0.55 0.06 38);
+    --bx-aus: oklch(0.5 0.05 38);
+    --bx-kante: oklch(0.52 0.08 38);
+    --bx-kante-hell: oklch(0.45 0.06 38);
+    --bx-kante2: oklch(0.36 0.05 38);
+    --bx-grund: oklch(0.235 0.036 38);
+    --bx-grund4: oklch(0.21 0.02 38);
+    --bx-grund5: oklch(0.24 0.032 38);
+    --bx-aus-flaeche: oklch(0.3 0.026 38);
+    --bx-aus-kante: oklch(0.36 0.038 38);
     --bx-loeschen: oklch(0.68 0.16 25);
     --bx-loeschen-kante: oklch(0.6 0.15 25);
-    --bx-senden-aus: oklch(0.3 0.02 55);
-    --bx-senden-aus-kante: oklch(0.36 0.03 55);
+    --bx-senden-aus: oklch(0.3 0.026 38);
+    --bx-senden-aus-kante: oklch(0.36 0.038 38);
     --manuell: oklch(0.75 0.12 300);
     --muster: oklch(0.68 0.08 250);
-    --gr-flaeche: oklch(0.62 0.13 155);  --gr-flaeche2: oklch(0.56 0.12 155);  --gr-schrift: oklch(0.78 0.1 155);  --gr-kante: oklch(0.62 0.12 155);  --bx-flaeche: oklch(0.7 0.14 48);  --bx-schrift: oklch(0.8 0.11 55);  --bx-kante-stark: oklch(0.68 0.13 50);  --bx-aus-schrift: oklch(0.55 0.03 55);
+    --gr-flaeche: oklch(0.62 0.13 155);  --gr-flaeche2: oklch(0.56 0.12 155);  --gr-schrift: oklch(0.78 0.1 155);  --gr-kante: oklch(0.62 0.12 155);  --bx-flaeche: oklch(0.7 0.14 38);  --bx-schrift: oklch(0.8 0.11 38);  --bx-kante-stark: oklch(0.68 0.13 38);  --bx-aus-schrift: oklch(0.55 0.038 38);
     --schatten-grund: #000000;
     --color-accent: oklch(0.76 0.1 155);
     --color-accent-100: oklch(0.28 0.04 155);  --color-accent-600: oklch(0.74 0.1 155);  --color-accent-700: oklch(0.8 0.09 155);  --color-accent-800: oklch(0.88 0.06 155);  --color-accent-2-100: oklch(0.28 0.04 155);  --color-accent-2-800: oklch(0.88 0.06 155);
@@ -542,161 +541,6 @@ figcaption {
 :focus { outline: none; }
 :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 ::selection { background: color-mix(in srgb, var(--color-accent) 30%, transparent); }
-
-/* — rules — */
-.hr {
-  height: 1px; border: 0; margin: var(--space-4) 0;
-  background: var(--color-divider);
-}
-
-/* — buttons — */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem;
-  cursor: pointer; text-decoration: none;
-  font-family: var(--ui-heading); font-weight: var(--font-heading-weight);
-  font-size: 0.875rem; line-height: 1.2; color: var(--color-text); /* matches the.input's 14px —
-                                                                      the pair sits side by side in sign-up rows */
-  background: transparent; border: 1px solid transparent;
-  padding: var(--space-2) calc(var(--space-3) * 1.2);
-  border-radius: var(--radius-md);
-}
-.btn svg { display: block; }
-.btn:disabled { opacity: 0.45; cursor: not-allowed; }
-.btn-primary { background: var(--color-accent); color: var(--color-bg); }
-.btn-primary:hover { background: var(--color-accent-600); }
-.btn-primary:active { background: var(--color-accent-700); }
-.btn-secondary { border-color: var(--color-divider); }
-.btn-secondary:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
-.btn-secondary:active { background: color-mix(in srgb, var(--color-text) 14%, transparent); }
-.btn-ghost { color: var(--color-accent); padding-inline: var(--space-1); }
-.btn-ghost:hover { background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
-.btn-ghost:active { background: color-mix(in srgb, var(--color-accent) 18%, transparent); }
-.btn-icon { width: 2.25rem; height: 2.25rem; padding: 0; }
-.btn-block { width: 100%; margin-top: var(--space-2); }
-
-/* — forms — */
-.field > label {
-  display: block; font-size: 0.75rem; margin-bottom: 0.3125rem;
-  color: color-mix(in srgb, var(--color-text) 70%, transparent);
-}
-.input {
-  width: 100%; min-height: 2.25rem; padding: 0.375rem 0.625rem; font: inherit;
-  font-size: 0.875rem; color: var(--color-text); caret-color: var(--color-accent);
-  background: var(--color-surface);
-  border: 1px solid var(--color-divider); border-radius: var(--radius-md);
-}
-.input:hover { border-color: color-mix(in srgb, var(--color-text) 45%, transparent); }
-.input:focus-visible { border-color: var(--color-accent); outline-offset: 0; }
-textarea.input { min-height: 5.625rem; resize: vertical; }
-.radio { display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.875rem; }
-.radio input, .seg-opt input {
-  position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;
-}
-.radio .dot {
-  width: 1rem; height: 1rem; flex: none; border-radius: 50%;
-  border: 1.5px solid var(--color-divider);
-}
-.radio:hover .dot { border-color: var(--color-accent); }
-.radio input:checked + .dot {
-  border-color: var(--color-accent); background: var(--color-accent);
-  box-shadow: inset 0 0 0 4px var(--color-bg);
-}
-.radio input:focus-visible + .dot { outline: 2px solid var(--color-accent); outline-offset: 2px; }
-.seg {
-  display: inline-flex; overflow: hidden;
-  border: 1px solid var(--color-divider); border-radius: var(--radius-md);
-}
-.seg-opt {
-  display: inline-flex; align-items: center; gap: 0.375rem;
-  padding: 0.4375rem 0.75rem; font-size: 0.8125rem; cursor: pointer;
-}
-.seg-opt + .seg-opt { border-left: 1px solid var(--color-divider); }
-.seg-opt:has(input:checked) { background: var(--color-accent); color: var(--color-bg); }
-.seg-opt:not(:has(input:checked)):hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
-.seg-opt:has(input:focus-visible) { outline: 2px solid var(--color-accent); outline-offset: -2px; }
-
-/* — cards — */
-.card {
-  display: flex; flex-direction: column; gap: var(--space-2);
-  padding: var(--space-3); border-radius: var(--radius-md); background: var(--color-surface);
-}
-.card-kicker { font-size: 0.625rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent); }
-.card-title {
-  font-family: var(--ui-heading); font-weight: var(--font-heading-weight);
-  font-size: 1.0625rem; line-height: 1.2;
-}
-.card-body { margin: 0; font-size: 0.8125rem; opacity: 0.8; flex: 1; }
-.card-meta {
-  display: flex; align-items: center; gap: 0.375rem; font-size: 0.6875rem;
-  color: color-mix(in srgb, var(--color-text) 50%, transparent);
-}
-.elev-sm { box-shadow: var(--shadow-sm); }
-.elev-md { box-shadow: var(--shadow-md); }
-.elev-lg { box-shadow: var(--shadow-lg); }
-
-/* — tags — */
-.tag {
-  display: inline-flex; align-items: center; font-size: 0.6875rem;
-  letter-spacing: 0.02em; padding: 0.1875rem 0.625rem;
-  border-radius: var(--radius-md);
-}
-.tag-accent { background: var(--color-accent-100); color: var(--color-accent-800); }
-.tag-accent-2 { background: var(--color-accent-2-100); color: var(--color-accent-2-800); }
-.tag-neutral { background: var(--color-neutral-100); color: var(--color-neutral-800); }
-.tag-outline { border: 1px solid var(--color-accent); color: var(--color-accent); }
-
-/* — navigation — */
-.nav {
-  display: flex; align-items: center; gap: var(--space-4);
-  padding: var(--space-3) var(--space-4);
-  border-bottom: none;
-}
-.nav-brand {
-  font-family: var(--ui-heading); font-weight: var(--font-heading-weight);
-  font-size: 1.125rem; margin-right: auto;
-}
-.nav a { color: inherit; text-decoration: none; font-size: 0.875rem; }
-.nav a:hover, .nav a[aria-current='page'] { color: var(--color-accent); }
-
-/* — tables — */
-.table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
-.table th {
-  text-align: left; font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase;
-  color: color-mix(in srgb, var(--color-text) 60%, transparent);
-  padding: var(--space-2); border-bottom: 1px solid var(--color-divider);
-}
-.table td {
-  padding: var(--space-2);
-  border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
-}
-.table tbody tr:hover { background: color-mix(in srgb, var(--color-text) 4%, transparent); }
-
-/* — dialog — */
-.dialog-backdrop {
-  position: fixed; inset: 0; display: grid; place-items: center;
-  padding: var(--space-4);
-  background: color-mix(in srgb, var(--color-neutral-900) 50%, transparent);
-}
-.dialog {
-  width: min(27.5rem, 100%); display: flex; flex-direction: column; gap: var(--space-3);
-  padding: var(--space-4); border-radius: var(--radius-md);
-  background: var(--color-surface); box-shadow: var(--shadow-lg);
-}
-.dialog-title {
-  font-family: var(--ui-heading); font-weight: var(--font-heading-weight);
-  font-size: 1.25rem;
-}
-.dialog-body { font-size: 0.875rem; opacity: 0.85; }
-.dialog-actions { display: flex; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-2); }
-
-/* — blueprint frame: components are wireframe objects (see.blueprint
-   and.corner above) — square, transparent, hairline-bordered — */
-.card, .btn, .input, .tag, .seg, .dialog { border-radius: 0; }
-.card, .dialog { background: transparent; border: 1px solid var(--color-divider); }
-.btn { border: 1px solid var(--color-divider); }
-.btn-primary { border-color: var(--color-accent); }
-.btn-ghost { border-color: transparent; }
-
 
 /* ========================================================================
  * Geruest
@@ -803,6 +647,14 @@ textarea.input { min-height: 5.625rem; resize: vertical; }
   font-size: 0.75rem; font-weight: 500;
 }
 #sprachen.gruppe button:hover { background: transparent; color: var(--color-text); }
+/* Das Pulldown steht nur bei wenig Breite da, siehe unten. */
+.sprachwahl {
+  display: none; height: 1.6875rem; box-sizing: border-box;
+  border: 1px solid var(--color-neutral-400); border-radius: var(--radius-md);
+  background: var(--papier); color: var(--color-text); padding: 0 0.375rem;
+  font-family: var(--ui-heading); font-size: 0.75rem; font-weight: 500;
+  cursor: pointer;
+}
 #sprachen.gruppe button.aktiv {
   background: var(--papier); color: var(--color-text);
   box-shadow: 0 1px 2px color-mix(in srgb, var(--schatten-grund) 14%, transparent);
@@ -930,8 +782,6 @@ footer {
 .bereich.blitz { box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--gr-flaeche) 55%, transparent); }
 .bereich.hinaus.blitz { box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--bx-flaeche) 55%, transparent); }
 
-
-
 .bereich-kopf {
   flex: none; display: flex; align-items: baseline; justify-content: space-between;
   gap: 0.625rem; padding: 0.75rem 1rem 0.5rem;
@@ -948,15 +798,9 @@ footer {
 }
 .bereich-zahl { font-size: 0.6875rem; color: var(--color-neutral-600); }
 
-/* --- Die Plaketten: das gestalterische Herzstueck ---------------------- */
-.plakette {
-  display: inline-flex; align-items: center; gap: 0.3125rem; flex: none;
-  border-radius: 999px; background: var(--papier); padding: 2px 0.5625rem 2px 0.4375rem;
-  font-family: var(--ui-heading); font-size: 0.6875rem; font-weight: 500;
-}
-.plakette.lokal { border: 1px solid var(--gr-matt); color: var(--gr-schrift); }
-.plakette.online { border: 1px solid var(--bx-kante); color: var(--bx-schrift); }
-.plakette svg { flex: none; }
+/* Die Plaketten «Lokal» an den Kacheln sind seit 2.1 weg (Feedback
+ * 20.10.2026): oben steht «100 % lokal», und an jeder Kachel wiederholt
+ * verwirrte es nur. */
 
 /* --- Ablageflaeche ----------------------------------------------------- */
 .ablage {
@@ -1310,13 +1154,13 @@ button.tat.neben {
   text-transform: none; letter-spacing: 0; font-size: 0.8125rem;
   font-family: var(--ui-schrift); color: var(--color-neutral-700);
 }
-/* Seit 2.0 (Entwurf des UX-Architekten) fast schwarz statt gruen — Gruen
-   bedeutet jetzt «bleibt auf deinem Geraet», nicht «Hauptaktion». */
+/* Seit 2.1 wieder dunkelgruen (Feedback 20.10.2026); 2.0 hatte sie nach
+   dem Entwurf fast schwarz. Weisse Schrift in beiden Modi. */
 button.tat.haupt {
-  position: relative; background: var(--color-neutral-900); color: var(--auf-haupt);
-  border: 1px solid var(--color-neutral-900);
+  position: relative; background: var(--haupt-flaeche); color: var(--auf-farbe);
+  border: 1px solid var(--haupt-flaeche);
 }
-button.tat.haupt:hover:not(:disabled) { background: var(--color-neutral-800); border-color: var(--color-neutral-800); }
+button.tat.haupt:hover:not(:disabled) { background: var(--haupt-tief); border-color: var(--haupt-tief); }
 button.tat.haupt:disabled { background: var(--color-neutral-200); border-color: var(--color-neutral-200); color: var(--color-neutral-500); }
 body.ohne-modell button.tat.haupt:not(:disabled) {
   background: var(--bx-flaeche); border-color: var(--bx-dunkel);
@@ -1356,9 +1200,6 @@ button.tat > svg:first-child:not([class*="rand-"]) + span {
   font-family: var(--font-mono); font-size: 0.84em; font-weight: 500;
   letter-spacing: 0; white-space: nowrap;
 }
-.vok { display: flex; align-items: center; gap: 0.625rem; padding: 0.3125rem 0;
-       border-bottom: 1px solid var(--color-neutral-300); font-size: 0.75rem; }
-.vok-wert { margin-left: auto; font-family: ui-monospace, monospace; }
 .pill {
   border-radius: 999px; padding: 2px 0.5625rem; font-family: var(--ui-heading);
   font-size: 0.6875rem; font-weight: 600; letter-spacing: .06em;
@@ -1383,6 +1224,16 @@ button.tat > svg:first-child:not([class*="rand-"]) + span {
    vielen Meldungen bricht sie um — das ist gewollt: lieber zwei Zeilen als
    ein waagrechter Rollbalken unter dem Kasten. */
 .hinweiszeile { text-wrap: pretty; }
+/* Unter dem maskierten Text doppelt abgesetzt (seit 2.1, Feedback
+ * 20.10.2026): eine eigene Linie und dunkelgruen, damit niemand die Zeile
+ * fuer einen Teil des Textes haelt. Gruen wie «Lokal», denn sie beschreibt,
+ * was auf diesem Geraet geschah. Im Dunkeln traegt `--gr-schrift` ein
+ * helleres Gruen.
+ */
+#hinweise:not(:empty) {
+  border-top: 1px solid var(--color-neutral-300); padding: 0.5rem 0;
+}
+#hinweise .hinweiszeile { color: var(--gr-schrift); line-height: 1.5; }
 /* In der Spalte ist der Rand der Ablageflaeche das Mass, nicht der des
    Fensters. */
 #warnbereich, #fehler { flex: none; margin: 0 1rem; }
@@ -1433,7 +1284,6 @@ body {
   overflow-x: auto; overflow-y: hidden;
 }
 
-
 /* ========================================================================
  * Vokabular
  * ====================================================================
@@ -1481,10 +1331,6 @@ body {
   background: var(--color-neutral-300); border-color: var(--color-neutral-400);
 }
 .schalter[aria-checked="false"] i { left: 2px; }
-.schalterwort {
-  font-family: var(--ui-heading); font-size: 0.75rem;
-  color: var(--color-neutral-600);
-}
 
 /* Oben 0.375rem: die Plaketten sollen nicht an der Kopfzeile kleben. */
 .vokabular-rumpf {
@@ -1539,10 +1385,6 @@ table.vokabular input {
   font-family: var(--ui-schrift); color: var(--color-text); border-radius: var(--radius-md);
 }
 table.vokabular input:focus { outline: none; border-color: var(--gr-matt); }
-.vok-ph {
-  border-radius: var(--radius-md); padding: 1px 0.375rem; font-family: var(--ui-heading);
-  font-size: 0.75rem; font-weight: 600; letter-spacing: .04em; white-space: nowrap;
-}
 .vokabular-leer {
   border: 1px dashed var(--color-neutral-400); border-radius: var(--radius-md);
   padding: 1rem; color: var(--color-neutral-600); font-size: 0.7812rem;
@@ -1636,7 +1478,6 @@ table.vokabular input:focus { outline: none; border-color: var(--gr-matt); }
   font-family: var(--ui-heading); font-size: 0.75rem; font-weight: 600;
   color: var(--bx-schrift);
 }
-.teil-zahl { font-size: 0.6875rem; color: var(--color-neutral-600); }
 .feldbox { position: relative; flex: 1 1 0; min-height: 0; display: flex; }
 .feldbox textarea {
   flex: 1; resize: none; border: 1px solid var(--color-neutral-400);
@@ -1809,27 +1650,16 @@ button.tat.senden.pfeil:disabled {
   padding: 0.5625rem 0.8125rem; font-size: 0.7812rem; color: var(--color-text);
   cursor: pointer; white-space: nowrap;
 }
-.dienstmenu button:hover { background: var(--color-neutral-200); }
-.dienstmenu button.aktiv { background: var(--color-neutral-200); }
+/* In der roten Spalte roetlich, nicht grau: das warme Grau kippte neben
+ * den Rottoenen ins Gruene (Feedback 21.10.2026). */
+.dienstmenu button:hover { background: var(--bx-grund5); }
+.dienstmenu button.aktiv { background: var(--bx-grund); }
 
-/* --- Weg zurueck und Uebernahme ------------------------------------ */
-.fuss-02 { align-items: center; gap: 0.5rem; }
-#antwortfeld {
-  flex: 1; resize: none; border: 1px solid var(--color-neutral-400);
-  border-radius: var(--radius-md); background: var(--papier); padding: 0.75rem 0.75rem 2.125rem;
-  font-family: var(--textschrift); font-size: var(--textgroesse);
-  line-height: 1.7; color: var(--color-text); outline: none;
-}
-#antwortfeld:focus { border-color: var(--gr-matt); }
-#antwortfeld[hidden] { display: none; }
+/* --- Uebernahme --------------------------------------------------- */
+/* Seit 2.1 steht der Knopf allein im Fuss: der Schalter «Weg zurueck» ist
+ * weg (Feedback 20.10.2026). */
+.fuss-02 { align-items: center; gap: 0.5rem; justify-content: flex-end; }
 #maskiert[hidden] { display: none; }
-/* Im Rueckweg steht der maskierte Text als reiner Text — ohne Plaketten.
-   Was zurueckkommt, ist Text eines Sprachmodells und keine Fundstelle. */
-#maskiert.schlicht .ph {
-  background: none !important; border: none !important; padding: 0;
-  color: inherit !important; font-family: inherit; font-size: inherit;
-  font-weight: inherit; letter-spacing: inherit;
-}
 /* Ein `textarea` bricht selbst um. `resize: none` — die Groesse kommt aus
  * dem Raster, und ein Ziehgriff in der Ecke saehe in dieser Oberflaeche nach
  * Fremdkoerper aus.
@@ -1857,11 +1687,15 @@ button.tat.senden.pfeil:disabled {
  */
 .fuss-04 { justify-content: flex-start; }
 .fuss-04 .weit { margin-left: 0; }
+/* Dunkelgruen wie jeder Hauptknopf (seit 2.1): Einpflegen ist die
+   Haupthandlung von 04, und gruen heisst «zurueck auf dein Geraet». */
+/* Seit 2.1 rot wie der Sendeknopf (Feedback 21.10.2026: «sieht besser
+   aus»). Vorher gruen, als einziger Knopf der roten Spalte, der nach innen
+   zeigt; der Entscheid ist umgekehrt. */
 button.tat.einpflegen {
-  background: var(--color-neutral-900); color: var(--auf-haupt); border: 1px solid var(--color-neutral-900);
+  background: var(--bx-flaeche); color: var(--auf-farbe); border: 1px solid var(--bx-dunkel);
 }
-button.tat.einpflegen:hover:not(:disabled) { background: var(--color-neutral-800); }
-button.tat.einpflegen:disabled { background: var(--color-neutral-200); border-color: var(--color-neutral-200); color: var(--color-neutral-500); }
+button.tat.einpflegen:hover:not(:disabled) { background: var(--bx-tief); border-color: var(--bx-tief); }
 
 /* ⚠️ `nicht_gefunden` ist der wichtigste Teil der Rueckwandlung. Sprachmodelle
    schreiben Platzhalter um — aus `[FULLNAME_1]` wird `**[FULLNAME_1]**` oder
@@ -1896,10 +1730,14 @@ button.tat.einpflegen:disabled { background: var(--color-neutral-200); border-co
 }
 .offen-zu:hover { background: color-mix(in srgb, var(--bx-flaeche) 14%, transparent); }
 .offen-zu svg { width: 0.75rem; height: 0.75rem; }
+/* Seit 2.1 im Kopf von 05, neben dem Titel (Feedback 20.10.2026): die
+ * gute Nachricht braucht keine eigene Zeile ueber dem Text. */
 .gutzeile {
-  flex: none; padding: 2px 1rem 0.375rem; font-size: 0.7188rem;
-  color: var(--gr-schrift);
+  min-width: 0; font-size: 0.75rem; color: var(--gr-schrift);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.gutzeile:empty { display: none; }
+#b05 .bereich-kopf .titelgruppe { min-width: 0; }
 
 /* ========================================================================
  * Einstellungen
@@ -1928,9 +1766,15 @@ button.tat.einpflegen:disabled { background: var(--color-neutral-200); border-co
 .frage-knoepfe {
   display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.5rem;
 }
+/* Schmal NEBENEINANDER, je die Haelfte (Feedback 21.10.2026):
+ * uebereinander vertippt man sich leichter. Abbrechen links, Weiter rechts.
+ * Wird es sehr eng, verliert Abbrechen sein Wort; Weiter behaelt es. */
 @media (max-width: 30em) {
-  .frage-knoepfe { flex-direction: column-reverse; align-items: stretch; }
-  .frage-knoepfe .tat { width: 100%; justify-content: center; }
+  .frage-knoepfe { flex-wrap: nowrap; }
+  .frage-knoepfe .tat { flex: 1 1 0; min-width: 0; justify-content: center; }
+}
+@media (max-width: 20em) {
+  #frage-nein > span { display: none; }
 }
 /* Die Meldung im Dialog. Leer nimmt sie keinen Platz — kein `hidden`,
    also auch keine `display`-Gegenregel noetig. */
@@ -1987,6 +1831,11 @@ button.tat.einpflegen:disabled { background: var(--color-neutral-200); border-co
 .einst-kopf h2 {
   margin: 0; font-family: var(--ui-heading); font-size: 1.0625rem; font-weight: 600;
 }
+.suchweg { display: none !important; }
+.einst-keintreffer {
+  margin: 0.75rem 0 0; font-size: 0.8125rem; color: var(--color-neutral-600);
+}
+.einst-keintreffer:empty { display: none; }
 .einst-rumpf { flex: 1; overflow: auto; padding: 0.375rem 1.5rem 1.5rem; }
 
 /* HILFE UND IMPRESSUM teilen sich die Huelle des Einstellungsdialogs —
@@ -2007,7 +1856,7 @@ button.tat.einpflegen:disabled { background: var(--color-neutral-200); border-co
   border-radius: var(--radius-md); background: var(--papier);
   padding: 0.75rem 0.75rem 2.125rem;
   font-family: var(--textschrift); font-size: var(--textgroesse);
-  /* 2.0 wie `#maskiert` und NICHT 1.7 wie `#antwortfeld`: der Kasten braucht
+  /* 2.0 wie `#maskiert` und NICHT 1.7 wie das fruehere Antwortfeld in 02: der Kasten braucht
    * die Hoehe fuer die Plaketten, und beim Umschalten soll keine Zeile
    * rucken.
    */
@@ -2279,9 +2128,14 @@ button.tat.einpflegen:disabled { background: var(--color-neutral-200); border-co
  * Kontextmenue
  * ====================================================================
  */
+/* Breiter und kuerzer seit 2.1 (Feedback 20.10.2026): die Bezeichnungen
+ * stehen ohne Auslassungspunkte, und das Menue deckt weniger vom Text zu.
+ * Auf dem Handy nie breiter als das Fenster.
+ */
 .kontext {
-  position: fixed; z-index: 300; min-width: 15.625rem; max-width: 18.75rem;
-  max-height: 72vh; max-height: 72dvh; overflow: auto; background: var(--papier);
+  position: fixed; z-index: 300; min-width: 15.625rem;
+  max-width: min(25rem, calc(100vw - 1rem));
+  max-height: 55vh; max-height: 55dvh; overflow: auto; background: var(--papier);
   border: 1px solid var(--color-neutral-500); box-shadow: var(--shadow-lg);
   font-size: 0.7812rem;
   border-radius: var(--radius-md);
@@ -2291,9 +2145,10 @@ button.tat.einpflegen:disabled { background: var(--color-neutral-200); border-co
   padding: 0.5625rem 0.75rem 0.4375rem; border-bottom: 1px solid var(--color-neutral-300);
   background: var(--color-neutral-100);
 }
+/* Der Originalwert faellt auf (seit 2.1): Titelschrift, fett, Titelfarbe. */
 .kontext .kopf .wert {
-  font-family: ui-monospace, monospace; font-size: 0.75rem;
-  word-break: break-all; color: var(--color-text);
+  font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
+  word-break: break-word; color: var(--color-text);
 }
 .kontext .kopf .unter {
   margin-top: 0.1875rem; font-size: 0.6875rem; color: var(--color-neutral-600);
@@ -2314,7 +2169,19 @@ button.tat.einpflegen:disabled { background: var(--color-neutral-200); border-co
  * Inhaltsfeld in genau diesem Augenblick um 17 px, und die rechtsbuendigen
  * Bezeichnungen wanderten mit.
  */
-.kontext.tagmenu { scrollbar-gutter: stable; }
+/* Seit 2.1 rollt im Tagmenue nur `.tagrollen`: Kopf, «Maske entfernen» und
+ * Suche stehen fest. Der Streifen ist reserviert, damit beim Aufklappen
+ * nichts springt, und 0.1875rem (3 px) Innenabstand halten den Inhalt vom Rollbalken
+ * fern (Feedback 20.10.2026).
+ */
+.kontext.tagmenu { display: flex; flex-direction: column; overflow: hidden; }
+.kontext.tagmenu[hidden] { display: none; }
+.kontext.tagmenu > * { flex: none; }
+.kontext .tagrollen {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden;
+  scrollbar-gutter: stable; padding-right: 0.1875rem;
+  overscroll-behavior: contain;
+}
 /* `width: 100%`, und `.kontext` ist ein BLOCK, kein Flexbehaelter —
  * `align-self: stretch` wirkte dort nie, und jede Gruppe waere so breit wie
  * ihr Name. Die Breite des Inhaltsfeldes rechnet den senkrechten
@@ -2348,13 +2215,27 @@ button.tat.einpflegen:disabled { background: var(--color-neutral-200); border-co
 .kontext .trenner {
   height: 1px; background: var(--color-neutral-300); margin: 0.25rem 0;
 }
-.kontext .gruppe {
-  padding: 0.4375rem 0.75rem 0.1875rem; font-family: var(--ui-heading); font-size: 0.6875rem;
-  font-weight: 500; color: var(--color-neutral-600);
-}
 .kontext .entfernen { color: var(--bx-schrift); font-weight: 600; }
 .kontext .mehr {
   color: var(--color-neutral-700); font-style: italic;
+}
+/* Tooltip am Platzhalter (seit 2.1): weisse Karte wie die Menues.
+ * `pointer-events: none`, sonst schoebe er sich unter die Maus und loeste
+ * selbst ein `mouseleave` aus.
+ */
+.tipp {
+  position: fixed; z-index: 310; max-width: min(22rem, calc(100vw - 1rem));
+  padding: 0.5rem 0.75rem; background: var(--papier);
+  border: 1px solid var(--color-neutral-400); border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg); pointer-events: none;
+}
+.tipp[hidden] { display: none; }
+.tipp-wert {
+  font-family: var(--font-mono); font-size: 0.8125rem;
+  color: var(--color-text); word-break: break-word;
+}
+.tipp-herkunft {
+  margin-top: 0.1875rem; font-size: 0.6875rem; color: var(--color-neutral-600);
 }
 /* Der maskierte Text nimmt Rechtsklicks entgegen; die Platzhalter sind die
    Ziele. */
@@ -2461,13 +2342,6 @@ button.tat.einpflegen:disabled { background: var(--color-neutral-200); border-co
  * Der Platzhalter braucht seine eigene Farbe, sonst nimmt der Browser
  * wieder seine Vorgabe.
  */
-#vorlagen-filter {
-  flex: none; border: none; border-bottom: 1px solid var(--color-neutral-300);
-  padding: 0.5rem 0.625rem; font-family: var(--ui-schrift); font-size: 0.7812rem;
-  background: var(--color-neutral-100); color: var(--color-text);
-  outline: none;
-}
-#vorlagen-filter::placeholder { color: var(--color-neutral-600); }
 /* Der Streifen nur, wenn wirklich gerollt wird — `maschera.js` setzt
  * `rollend` nach dem Zeichnen. Anders als beim Feldmenue ein ZUSTAND: die
  * Liste kann beim Filtern kuerzer werden. Sie steht beim Oeffnen fest, und
@@ -2482,20 +2356,18 @@ button.tat.einpflegen:disabled { background: var(--color-neutral-200); border-co
   display: flex; align-items: center;
   border-bottom: 1px solid var(--color-neutral-200);
 }
-.vorlagen-menu .zeile.aktiv { background: var(--gr-grund); }
+/* In der roten Spalte rot, nicht gruen (seit 2.1). */
+.vorlagen-menu .zeile.aktiv { background: var(--bx-grund); }
 .vorlagen-menu .waehlen {
   flex: 1; min-width: 0; text-align: left; border: none; background: none;
   padding: 0.5rem 0.625rem; font-family: var(--ui-schrift); font-size: 0.7812rem;
   color: var(--color-text); cursor: pointer; overflow: hidden;
   text-overflow: ellipsis; white-space: nowrap;
 }
-.vorlagen-menu .waehlen:hover { background: var(--color-neutral-200); }
+/* Die ganze Zeile grau beim Ueberfahren, wie im Vokabular. */
+.vorlagen-menu .zeile:hover { background: var(--bx-grund5); }
 /* Der Papierkorb steht am Ende der Zeile, beim Eintrag, den er trifft. */
-.vorlagen-menu .weg {
-  flex: none; border: none; background: none; padding: 0.5rem 0.625rem;
-  color: var(--bx-schrift); cursor: pointer; line-height: 1;
-}
-.vorlagen-menu .weg:hover { background: var(--bx-grund2); }
+.vorlagen-menu .weg { flex: none; cursor: pointer; line-height: 1; }
 .vorlagen-menu .leer {
   padding: 0.625rem 0.75rem; font-size: 0.75rem; color: var(--color-neutral-600);
 }
@@ -2521,21 +2393,18 @@ h4.tagsgruppe:first-child { margin-top: 0.25rem; }
 }
 .tagwolke button[aria-pressed="true"] .tagwort { color: inherit; opacity: .8; }
 
-/* Kontextmenue: Gruppenkopf zum Aufklappen. Immer nur eine Gruppe offen —
-   bei acht Gruppen und 45 Tags waere alles offen wieder eine Liste, die
-   laenger ist als der Bildschirm. */
+/* Kontextmenue: Gruppenkopf zum Aufklappen. Seit 2.1 jede Gruppe fuer sich,
+   offene bleiben offen; die Liste rollt in `.tagrollen`. */
+/* Seit 2.1 wie die Titel der Kacheln und Einstellungen: Titelschrift,
+ * normale Gross- und Kleinschreibung, keine Sperrung (Feedback 20.10.2026).
+ */
 .kontext .gruppenkopf {
   box-sizing: border-box; width: 100%; display: flex; align-items: center;
   justify-content: space-between; gap: 0.5rem; text-align: left; border: none;
   border-top: 1px solid var(--color-neutral-200);
-  background: var(--color-neutral-100); padding: 0.4375rem 0.6875rem;
-  font-family: var(--ui-heading); font-size: 0.625rem; letter-spacing: .14em;
-  /* Fett: zehn Pixel gesperrte Versalien ohne Fettung sind an der Grenze
-   * des Lesbaren — Grossbuchstaben haben keine Ober- und Unterlaengen, an
-   * denen das Auge Woerter erkennt.
-   */
-  font-weight: 600;
-  text-transform: uppercase; color: var(--color-text); cursor: pointer;
+  background: var(--color-neutral-100); padding: 0.5rem 0.75rem;
+  font-family: var(--font-heading); font-size: 0.8125rem; font-weight: 600;
+  color: var(--color-text); cursor: pointer;
 }
 .kontext .gruppenkopf:hover { background: var(--color-neutral-200); }
 /* `.aufgeklappt`, nicht `.offen`: `.offen` ist die rote Warnbox der nicht
@@ -2545,7 +2414,14 @@ h4.tagsgruppe:first-child { margin-top: 0.25rem; }
 .kontext .gruppenkopf.aufgeklappt {
   background: var(--color-neutral-200); color: var(--color-text);
 }
-.kontext .gruppenkopf .pfeil { font-size: 0.8125rem; line-height: 1; }
+.kontext .gruppenkopf .pfeil {
+  display: inline-flex; font-size: 0.9375rem; line-height: 1;
+  color: var(--color-neutral-600);
+}
+.kontext .keintreffer {
+  margin: 0; padding: 0.625rem 0.75rem; font-size: 0.75rem;
+  color: var(--color-neutral-600);
+}
 
 /* Schriftwahl in den Einstellungen. Die Probe zeigt, was die Wahl bewirkt —
    ein Auswahlfeld mit vier Wortern zeigt es nicht. */
@@ -2556,8 +2432,14 @@ h4.tagsgruppe:first-child { margin-top: 0.25rem; }
   color: var(--color-text); cursor: pointer;
   border-radius: var(--radius-md);
 }
-.schriftprobe {
-  flex: 1 1 12.5rem; min-width: 0; align-self: flex-end; padding-bottom: 0.375rem;
+/* Die Probe steht seit 2.1 unter einem eigenen Etikett «Vorschau», wie
+ * Schriftart und Groesse daneben (Feedback 20.10.2026). Sie ist so hoch wie
+ * ein Auswahlfeld, damit die drei unten buendig stehen. Genauer als
+ * `.feld > span`, das sonst die Etikettengroesse vererbte.
+ */
+.feld.vorschau { flex: 1 1 12.5rem; }
+.feld.vorschau > .schriftprobe {
+  min-width: 0; line-height: 1.9375rem; letter-spacing: 0;
   font-family: var(--textschrift); font-size: var(--textgroesse);
   color: var(--color-neutral-700); white-space: nowrap; overflow: hidden;
   text-overflow: ellipsis;
@@ -2614,29 +2496,12 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
    einem 1px-Rahmen ueberall sagt nicht, wohin das naechste Zeichen geht.
    Kein dickerer Rahmen, sondern ein zweiter darueber: eine Randbreite zu
    aendern verschoebe den Text um ein Pixel bei jedem Hineinklicken. */
-.rumpf textarea:focus, .feldbox textarea:focus, #antwortfeld:focus,
+.rumpf textarea:focus, .feldbox textarea:focus,
 #antwort04:focus, #prompt:focus, #einst-regeln:focus {
   border-color: var(--fokus);
   box-shadow: 0 0 0 1px var(--fokus);
   outline: none;
 }
-
-/* Der Klappknopf existiert nur in der einspaltigen Ansicht.
- * Diese Grundregel steht VOR den Medienabfragen: dahinter gewaenne ihr
- * `display: none` gegen das `inline-flex` in der Abfrage.
- */
-.vok-klappe {
-  display: none; align-items: center; justify-content: center;
-  flex: none; width: 1.75rem; height: 1.75rem; margin-left: auto;
-  border: 1px solid var(--gr-matt);
-  background: var(--gr-grund); color: var(--gr-schrift);
-  border-radius: var(--radius-md); cursor: pointer;
-}
-.vok-klappe:hover {
-  background: var(--gr-grund2); border-color: var(--gr-hell);
-}
-.vok-klappe:hover { background: var(--color-neutral-200); }
-.vok-klappe svg { transition: transform .15s ease; }
 
 /* ===== Zwei Stufen: drei Spalten — oder alles untereinander ============
  *
@@ -2744,9 +2609,11 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
      drehen, sonst zeigt er nach oben. */
   #knopf-einpflegen04 svg.richtung { transform: rotate(-90deg); }
 
-  /* Der Fuss von 05 traegt nur noch «Finalisierten Text kopieren», voll
-     breit; «Neu» steht darunter ausserhalb der Kachel. */
-  .fuss-05 { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+  /* «Neu» steht darunter ausserhalb der Kachel.
+     Seit 2.1 eine Zeile wie die anderen Fuesse: links Leeren und
+     Herunterladen, rechts «Kopieren» wachsend. Untereinander drueckte
+     `flex: 1` den Kopierknopf in Spaltenrichtung flach. */
+  .fuss-05 { align-items: center; gap: 0.5rem; }
   button.tat.neu-unten { display: inline-flex; justify-content: center; }
 
   /* ⚠️ Der unterste Knopf braucht Luft unter sich. `100dvh` haelt die
@@ -2756,7 +2623,12 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
      null — der Zuschlag kostet dort nichts. */
   /* «Neu» steht seit dem Feedback vom 18.10.2026 UNTER der Kachel 05, nicht
      mehr in ihrem Fuss: neu anfangen gehoert nicht zum finalen Text. */
-  #knopf-neu-unten { order: 7; margin-bottom: env(safe-area-inset-bottom); }
+  /* Hoeher und mit mehr Luft darueber (Feedback 21.10.2026): ein Ziel fuer
+     den Finger, nicht am Kasten darueber klebend. */
+  #knopf-neu-unten {
+    order: 7; margin-bottom: env(safe-area-inset-bottom);
+    height: 2.75rem; margin-top: 0.5rem;
+  }
 
   /* KEIN ZWEITER ROLLBALKEN. Untereinander rollen die SEITE und die
    * Textfelder — nicht die Kaesten. `.drei-rumpf` muss nebeneinander rollen
@@ -2778,22 +2650,7 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
      05 gesehen). `clip` schneidet an der Rundung, ohne einen Rollbereich
      zu machen. Das Dienstmenue ist `fixed` und wird nicht beschnitten. */
   main.raster > .spalte > .bereich { overflow: clip; }
-
-  /* Das Vokabular zugeklappt: nur der Kopf bleibt stehen. */
-  #bvok.zu { min-height: 0; }
-  #bvok.zu > :not(.bereich-kopf) { display: none; }
-  #bvok.zu .bereich-kopf { border-bottom: none; }
-  .vok-klappe { display: inline-flex; }
-  #bvok.zu .vok-klappe svg { transform: rotate(-90deg); }
 }
-
-/* Der Pfeil der Uebernahme wird ueber eine KLASSE gedreht, nicht ueber
- * `style.transform` aus dem JavaScript. Inline schlaegt jede Stilvorlage —
- * und in der einspaltigen Ansicht dreht das CSS oben alle Pfeile nach
- * unten.
- */
-#uebernahme-pfeil.gedreht { transform: rotate(90deg); }
-
 
 /* ========================================================================
  * DIE ROTE SPALTE SPRICHT ROT
@@ -2819,7 +2676,6 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
 
 /* Beschriftungen */
 .spalte.hinaus .ghostknopf { color: var(--bx-schrift); }
-.spalte.hinaus .teil-zahl { color: var(--bx-matt); }
 
 /* Der Fensterrahmen der Textfelder und die Rahmen der Knoepfe und Menues */
 .spalte.hinaus .ghostknopf,
@@ -2838,11 +2694,10 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
 /* ⚠️ Deaktiviert wird HELLER, nicht durchsichtiger. `opacity` legt einen
    Schleier ueber Schrift UND Rahmen und ergibt auf rosa Grund einen
    schmutzigen Ton; eigene helle Werte bleiben sauber rot. */
-/* `:not(.einpflegen)` — GRUEN IST VON DIESER LEITER AUSGENOMMEN. Rot sagt
- * «geht hinaus», Gruen «bleibt lokal». «Vokabular einpflegen» fuehrt vom
- * Antwortfeld zurueck nach Bereich 05 und ist der einzige Knopf in der
- * roten Spalte, der nach INNEN zeigt. Ohne die Ausnahme gewaenne diese Regel
- * gegen `button.tat.einpflegen` (mehr Klassen).
+/* `:not(.einpflegen)`: «Vokabular einpflegen» ist ein Hauptknopf und hat
+ * seinen eigenen deaktivierten Zustand (seit 2.1 rot wie der Sendeknopf,
+ * siehe `button.tat.einpflegen:disabled`). Ohne die Ausnahme gewaenne diese
+ * Regel gegen `button.tat.einpflegen` (mehr Klassen).
  */
 .spalte.hinaus .ghostknopf:disabled,
 .spalte.hinaus button.tat:not(.einpflegen):not(.haupt):disabled {
@@ -2977,16 +2832,19 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
   box-shadow: inset 0 0 0 4px transparent; transition: box-shadow .2s;
 }
 .bereich.hinaus::after { inset: -1.5px; }
-.bereich.blitz::after {
+/* `.amzug` (seit 2.1, Feedback 20.10.2026): die Kachel des aktuellen
+ * Schritts traegt den Ring DAUERHAFT, nicht nur kurz nach dem Klick. So hebt
+ * sie sich von den anderen ab. */
+.bereich.blitz::after, .bereich.amzug::after {
   box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--gr-flaeche) 55%, transparent);
 }
-.bereich.hinaus.blitz::after {
+.bereich.hinaus.blitz::after, .bereich.hinaus.amzug::after {
   box-shadow: inset 0 0 0 4.5px color-mix(in srgb, var(--bx-flaeche) 55%, transparent);
 }
 /* Text buendig unter Titel und Ablage: dieselben 1rem wie der Kachelkopf.
    Die Ablage steht oben und unten gleich weit vom Weiss ab; unter ihr
    bleibt der Abstand auch dann, wenn der Text darunter durchrollt. */
-.rumpf textarea#orig, #maskiert, #maskiert-feld, #antwortfeld,
+.rumpf textarea#orig, #maskiert, #maskiert-feld,
 #antwort04, #final { padding-left: 1rem; padding-right: 1rem; }
 .ablage { margin: 1rem 1rem 0.75rem; }
 #b01 .rumpf textarea#orig { padding-top: 0.25rem; }
@@ -3005,7 +2863,7 @@ footer { background: var(--papier); }
 }
 /* Musterfrage dazu: die Bearbeitungsfelder in 02 trugen denselben Kasten
    aus 1.1. Randlos wie `#maskiert`, an dessen Stelle sie stehen. */
-#maskiert-feld, #antwortfeld {
+#maskiert-feld {
   border: 0; border-radius: 0; background: transparent;
 }
 /* Einstellungen: unter dem letzten Abschnitt summierten sich leere
@@ -3020,7 +2878,7 @@ footer { background: var(--papier); }
 /* Der Ring nach dem Schrittklick liegt UNTER Kopfzeile (6) und
    Schrittleiste (4): mit `z-index: 5` lag er beim Zurueckrollen ueber dem
    Logo. Eins genuegt, um ueber dem Inhalt der Kachel zu liegen.
-   ⚠️ NICHT `isolation: isolate` an der Kachel (so in test.6 und test.7):
+   ⚠️ NICHT `isolation: isolate` an der Kachel (so in zwei Testbauten 2.0):
    das sperrte auch die Ablage in die Kachel ein, und beim Ziehen einer Datei
    hob sie sich nicht mehr ueber den Schleier (z-index 150) — sie blieb so
    dunkel wie der Rest (Feedback 18.10.2026). */
@@ -3044,8 +2902,7 @@ footer { background: var(--papier); }
    eingerueckt und behaelt seinen Ring. */
 .rumpf textarea#orig, .rumpf textarea#orig:focus,
 #antwort04, #antwort04:focus,
-#maskiert-feld, #maskiert-feld:focus,
-#antwortfeld, #antwortfeld:focus {
+#maskiert-feld, #maskiert-feld:focus {
   border: 0; border-radius: 0; box-shadow: none; background: transparent;
 }
 
@@ -3089,8 +2946,7 @@ table.vokabular .imfeld.loeschen.vok-weg:hover:not(:disabled) {
  * 18.10.2026). Statt umzubrechen kuerzt die Zeile in Stufen: zuerst geht
  * das Wort am Speichern-Knopf (das Zeichen bleibt, der Zweck steht im
  * `title`), und der Name der Vorlage wird mit «…» gekuerzt, bis alles
- * passt. Der volle Name steht im Menue. «lokal gespeichert» steht seit
- * test.8 nicht mehr daneben, sondern im Knopf: «Lokale Vorlage wählen».
+ * passt. Der volle Name steht im Menue.
  */
 .teil-kopf:has(.vorlagenzeile) { flex-wrap: nowrap; align-items: center; }
 .teil-kopf .teil-titel { flex: none; }
@@ -3137,9 +2993,6 @@ table.vokabular .imfeld.loeschen.vok-weg:hover:not(:disabled) {
 /* Spalten: die ID so schmal wie die breiteste, der Originalwert bekommt den
    Platz, der Typ steht klein und nur zur Auskunft. */
 table.vokabular td:first-child { width: 1%; white-space: nowrap; padding-right: 0.75rem; }
-table.vokabular td:nth-child(3) .vok-ph {
-  font-size: 0.625rem; padding: 0 0.3125rem; letter-spacing: .03em;
-}
 
 /* 03: unter «Das geht hinaus» derselbe Abstand bis zur Fusslinie wie oben. */
 .drei-rumpf { padding-bottom: 0.75rem; }
@@ -3180,3 +3033,506 @@ table.vokabular .ph.ph-typ { font-size: calc(var(--textgroesse) * 0.7); }
 /* Reicht die Zeile fuer beide nicht (Handy), rutscht der zweite Knopf in die
    naechste Zeile, statt dass beide Woerter gekuerzt werden. */
 .vokabular-fuss { flex-wrap: wrap; }
+
+/* 2.1 — SCHMALE BREITE (Feedback 20.10.2026) -------------------------------
+ * Auf dem Handy bleibt von der Wortmarke nur die Maske, und die Sprachwahl
+ * wird zum Pulldown: vier Knoepfe, Zahnrad und Menue passten nicht mehr
+ * neben das Logo.
+ */
+/* Gemessen statt an einer festen Breite (Feedback 21.10.2026:
+ * auf dem Handy fiel die Wortmarke weg, obwohl Platz war). `kopfEinpassen()`
+ * setzt die Stufen: zuerst wird die Sprachwahl zum Pulldown, erst wenn es
+ * dann noch nicht passt, geht der Schriftzug neben der Maske.
+ */
+.kopfzeile.sprache-klein #sprachen.gruppe { display: none; }
+.kopfzeile.sprache-klein .sprachwahl { display: block; }
+.kopfzeile.ohne-marke .marke { display: none; }
+
+/* 2.1 — KACHEL 03 (Feedback 20.10.2026) -------------------------------------
+ * Das Promptfeld traegt seinen roten Rahmen IMMER, nicht nur im Fokus: so
+ * sieht man, dass hier geschrieben wird. Feld, Vorlagenwahl samt Menue und
+ * Suchfeld und «Speichern» sind weiss; Kopf und Fuss ebenfalls. Der Inhalt
+ * der Kachel dazwischen ist leicht roetlich, damit sich das Weisse abhebt.
+ * «Das geht hinaus» eine Stufe roetlicher als der Grund: es ist kein
+ * Eingabefeld und soll nicht weiss aussehen wie eines.
+ */
+#b03 > .bereich-kopf, #b03 > .fuss { background: var(--papier); }
+#b03 .drei-rumpf { background: var(--bx-grund4); padding-bottom: 0.75rem; }
+#b03 .drei-rumpf .feldbox textarea#prompt {
+  background: var(--papier); border: 1px solid var(--bx-kante-stark);
+  border-radius: var(--radius-feld);
+}
+#b03 .drei-rumpf .feldbox textarea#prompt:focus {
+  border-color: var(--bx-kante-stark); box-shadow: 0 0 0 1px var(--bx-kante-stark);
+}
+#b03 .ghostknopf, #b03 .ghostknopf:disabled,
+#b03 .vorlagen-menu, #b03 #vorlagen-filter { background-color: var(--papier); }
+#b03 #hinaus { background: var(--color-neutral-100); }
+
+/* 2.1 — SUCHFELDER (Feedback 20.10.2026) -------------------------------------
+ * Jedes Suchfeld ist eine Pille wie die Schritte und Filter und traegt
+ * rechts eine graue Lupe. Das Loeschkreuz des Browsers
+ * faellt weg: Escape und Ruecktaste leeren das Feld, und zwei Zeichen an
+ * derselben Stelle waeren eines zu viel.
+ */
+.suchfeld {
+  -webkit-appearance: none; appearance: none; box-sizing: border-box;
+  height: 2rem; border: 1px solid var(--color-neutral-400); border-radius: 999px;
+  background-color: var(--papier); background-image: var(--lupe);
+  background-repeat: no-repeat; background-size: 0.9375rem 0.9375rem;
+  background-position: right 0.625rem center; padding: 0 2rem 0 0.875rem;
+  font-family: var(--ui-schrift); font-size: 0.8125rem; color: var(--color-text);
+  outline: none;
+}
+.suchfeld::placeholder { color: var(--color-neutral-600); }
+/* Fokus als Ring INNEN: aussen wuerde er am Rand eines Rollbereichs
+ * (Vokabular, Klappmenue) abgeschnitten. */
+.suchfeld:focus { border-color: var(--gr-hell); box-shadow: inset 0 0 0 1px var(--gr-hell); }
+.suchfeld::-webkit-search-cancel-button,
+.suchfeld::-webkit-search-decoration { -webkit-appearance: none; display: none; }
+
+/* 2.1 — EIN KREUZ FUER ALLES (Feedback 20.10.2026) ---------------------------
+ * Jedes Entfernen- und Schliessen-Kreuz sieht aus wie das im Vokabular:
+ * gezeichnet, still grau; faehrt man ueber die Zeile, toent es sich rot,
+ * ueber dem Kreuz selbst wird es rot gefuellt. `.mit-kreuz` ist die Zeile,
+ * zu der es gehoert. Im Klappmenue ist die ganze Zeile der Knopf, deshalb
+ * fuellt sich dort das Kreuz schon beim Ueberfahren der Zeile.
+ */
+.kreuz {
+  flex: none; display: inline-grid; place-items: center;
+  width: 1.5rem; height: 1.5rem; box-sizing: border-box; padding: 0;
+  border: 1px solid transparent; border-radius: var(--radius-md);
+  background: transparent; color: var(--color-neutral-600); cursor: pointer;
+  line-height: 1;
+}
+.kreuz svg { width: 0.75rem; height: 0.75rem; }
+.mit-kreuz:hover .kreuz {
+  background: color-mix(in srgb, var(--bx-loeschen) 14%, transparent);
+  color: var(--bx-loeschen);
+}
+.kreuz:hover, .mit-kreuz .kreuz:hover,
+.kontext button.mit-kreuz:hover .kreuz {
+  background: var(--bx-loeschen); border-color: var(--bx-loeschen-kante);
+  color: var(--auf-farbe);
+}
+.kontext .entfernen .kreuz { width: 1.25rem; height: 1.25rem; margin-left: -0.25rem; }
+.dienstzeile button.kreuz, .vorlagen-menu .weg.kreuz {
+  width: 1.875rem; height: 1.875rem; padding: 0; border-color: transparent;
+  background: transparent; color: var(--color-neutral-600);
+}
+.vorlagen-menu .weg.kreuz { margin-right: 0.25rem; }
+.offen-zu.kreuz { color: var(--color-neutral-600); }
+
+/* 2.1 — «BEISPIEL» LEUCHTET BEIM ERSTEN START ---------------------------------
+ * Ein gruener Schein, der ruhig atmet, bis irgendein Knopf geklickt wird.
+ */
+@keyframes beispiel-atmen {
+  0%, 100% { box-shadow: 0 0 0 0.1875rem color-mix(in srgb, var(--gr-flaeche) 25%, transparent); }
+  50% { box-shadow: 0 0 0 0.4375rem color-mix(in srgb, var(--gr-flaeche) 10%, transparent),
+                    0 0 0.875rem 0.125rem color-mix(in srgb, var(--gr-flaeche) 45%, transparent); }
+}
+button.tat.neben.leuchtet {
+  border-color: var(--gr-hell); color: var(--gr-schrift);
+  animation: beispiel-atmen 2.4s ease-in-out infinite;
+}
+
+/* 2.1 — KNOEPFE IM FUSS STATT IM FELD (Feedback 20.10.2026, probeweise) -----
+ * Leeren, Kopieren, Bearbeiten, Herunterladen und Einfuegen stehen nicht
+ * mehr ueber dem Text, sondern im Fuss der Kachel, links; die Haupthandlung
+ * bleibt rechts. In 03 mit seinen zwei Feldern stehen sie im Kopf des
+ * jeweiligen Teils. Jeder Tooltip sagt genau, WAS kopiert, geleert oder
+ * heruntergeladen wird.
+ *
+ * Die Grundregel `.feldknoepfe { position: absolute }` bleibt fuer den Fall,
+ * dass ein Feld seine Knoepfe wieder bei sich traegt; hier wird sie fuer
+ * Fuss und Teilkopf zurueckgenommen.
+ */
+.fuss .feldknoepfe, .teil-kopf .feldknoepfe {
+  position: static; right: auto; bottom: auto; z-index: auto;
+  display: flex; align-items: center; gap: 0.375rem;
+}
+.fuss .imfeld {
+  min-height: 1.9375rem; padding: 0 0.625rem; font-size: 0.8125rem;
+}
+.fuss-02 { justify-content: flex-start; }
+.fuss-04 .feldknoepfe { margin-left: auto; }
+.fuss-05 .feldknoepfe { flex: none; }
+.fuss-05 #knopf-final-kopieren { flex: 1; }
+.teil-kopf .feldknoepfe { margin-left: auto; }
+.teil-kopf .feldknoepfe + .vorlagenzeile { margin-left: 0; }
+/* Im Teilkopf von 03 ist kein Platz fuer Woerter: nur Zeichen, der
+ * Tooltip sagt den Rest. */
+.teil-kopf .feldknoepfe button > span { display: none; }
+.teil-kopf .feldknoepfe button { padding: 0 0.4375rem; }
+/* Der Platz, den die Knoepfe im Feld brauchten, ist frei. */
+.rumpf textarea#orig, #maskiert, #maskiert-feld, #antwort04, #final,
+.feldbox textarea, #hinaus { padding-bottom: 0.75rem; }
+
+/* Passt ein Fuss nicht auf eine Zeile, verlieren zuerst die Nebenknoepfe
+ * ihr Wort (Zeichen und Tooltip bleiben); die Hauptknoepfe behalten es so
+ * lange wie moeglich und kuerzen erst in der Abfrage bei 13rem weiter oben.
+ * `.eng` setzt `fussEinpassen()` nach Messung — eine feste Breite passte
+ * nie fuer alle fuenf Fuesse, weil jeder andere Knoepfe traegt.
+ */
+.fuss.eng .feldknoepfe button > span,
+.fuss.eng button.tat.neben > span { display: none; }
+.fuss.eng .feldknoepfe button { padding: 0 0.5rem; }
+.fuss.eng button.tat.neben { padding: 0 0.5625rem; }
+.fuss.eng button.tat.neben svg { margin-right: 0 !important; }
+
+/* 2.1 — KACHEL 03, VORSCHAU (Feedback 20.10.2026) --------------------------
+ * Beide Felder gleich gross: oben der Prompt, unten der ganze Text, der
+ * hinausgeht. Die Teile teilen sich die Hoehe zu gleichen Teilen statt 3:2.
+ * Der Zaehlsatz steht UNTER dem Text, ohne Ueberschrift: er sagt selbst,
+ * was der Kasten ist — schwarz und eine Stufe groesser, damit man ihn nicht
+ * ueberliest. «Prompt leeren» und «Nur Prompt kopieren» stehen im Fuss,
+ * links, mit Wort, solange es passt; der Sendeknopf daneben kopiert alles.
+ */
+.drei-rumpf .teil, .drei-rumpf .teil + .teil { flex: 1 1 0; }
+.drei-rumpf .teil .feldbox { flex: 1 1 0; }
+.fuss-03 .feldknoepfe { margin-right: auto; }
+/* Der kurze Hinweis «Verlässt dein Gerät» weicht nicht:
+ * der lange Satz ist weg, und er ist nun die einzige Stelle in Worten, die
+ * sagt, dass der Text das Geraet verlaesst. */
+
+/* 2.1 — VORLAGEN WIE DER PFEIL AM SENDEKNOPF (Feedback 20.10.2026) ---------
+ * Vorlagenwahl und «Speichern» tragen dieselbe kraeftige Kante wie der
+ * Pfeil neben «Alles kopieren …» und reagieren gleich: Kante dunkler, ein
+ * innerer Strich dazu. Die Naht vor dem Pfeil erbt die Kante. Deaktiviert
+ * bleibt sie hell.
+ */
+#b03 #knopf-vorlagen, #b03 #knopf-vorlage-sichern { border-color: var(--bx-tief); }
+#b03 #knopf-vorlagen:hover:not(:disabled),
+#b03 #knopf-vorlage-sichern:hover:not(:disabled) {
+  background-color: var(--papier); border-color: var(--bx-schrift);
+  box-shadow: inset 0 0 0 1px var(--bx-schrift);
+}
+#b03 #knopf-vorlage-sichern:disabled { border-color: var(--bx-aus-kante); }
+
+/* 2.1 — «WIRD ANGEWENDET» NEBEN DEM VOKABULAR --------------------------------
+ * Waehrend des Einpflegens: Ladezeichen und Wort neben dem Titel. Eine
+ * Klasse und nicht `hidden` (Punkt 64). Das Zeichen ist ein Kreis mit einer
+ * farbigen Kante, der sich dreht — kein Bild, nichts von aussen.
+ */
+.anwenden {
+  display: none; align-items: center; gap: 0.375rem;
+  font-size: 0.75rem; color: var(--gr-schrift);
+}
+.anwenden.an { display: inline-flex; }
+.dreher {
+  display: block; flex: none; width: 0.75rem; height: 0.75rem;
+  border-radius: 999px; border: 2px solid var(--gr-grund2);
+  border-top-color: var(--gr-flaeche);
+  animation: dreher-drehen 0.7s linear infinite;
+}
+@keyframes dreher-drehen { to { transform: rotate(360deg); } }
+
+/* 2.1 — DEAKTIVIERT STATT VERSTECKT (Feedback 20.10.2026) --------------------
+ * Die Leerknoepfe stehen immer da. Grau, solange nichts zu leeren ist; erst
+ * mit Inhalt tragen sie ihr Rot. */
+.imfeld.loeschen:disabled {
+  background: var(--color-neutral-100); border-color: var(--color-neutral-400);
+  color: var(--color-neutral-700);
+}
+
+/* 2.1 — «MASKE ENTFERNEN» UND SUCHE AUF EINER ZEILE ---------------------------
+ * Links der Entfernen-Knopf so breit wie sein Wort, rechts die Suche, die den
+ * Rest nimmt. Eine Linie darunter trennt die Zeile von den Gruppen.
+ */
+.kontext .werkzeile {
+  display: flex; align-items: stretch;
+  border-bottom: 1px solid var(--color-neutral-300);
+}
+.kontext .werkzeile .entfernen {
+  flex: none; width: auto; white-space: nowrap;
+  border-right: 1px solid var(--color-neutral-300);
+}
+
+/* Im Klappmenue steht die Pille mit Luft in ihrer Zeile, nicht randlos. */
+.kontext .werkzeile { align-items: center; }
+.kontext .werkzeile .suchhuelle { flex: 1 1 auto; min-width: 0; margin: 0.375rem 0.5rem; }
+.kontext .werkzeile .entfernen { align-self: stretch; }
+/* Im Vorlagenmenue ebenso, mit einer Linie darunter wie bisher. */
+.vorlagen-menu .suchhuelle { flex: none; margin: 0.5rem; }
+
+/* 2.1 — SUCHE UND FILTER IM VOKABULAR AUF EINER REIHE (Feedback 20.10.2026)
+ * Die Suche ist die erste Pille der Filterreihe, ein Drittel breit, gleich
+ * hoch wie die Filterknoepfe; die Filter folgen auf derselben Zeile. So
+ * reichen bei kurzen Bezeichnungen zwei Zeilen. `#legende` wird mit
+ * `display: contents` aufgeloest: das Skript zeichnet die Filter weiter
+ * dort hinein, ohne die Suche anzufassen — sie behaelt beim Tippen den
+ * Fokus.
+ */
+.legende-reihe {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.375rem;
+  padding-bottom: 1rem;
+}
+.legende-reihe .legende { display: contents; }
+.legende-reihe .suchhuelle { flex: 0 0 calc(33.333% - 0.25rem); min-width: 9rem; }
+.legende-reihe .vok-suche { height: 1.75rem; margin: 0; }
+@media (max-width: 30em) {
+  .legende-reihe .suchhuelle { flex-basis: 100%; }
+}
+
+/* 2.1 — MENUES UND TAFELN MIT DER KACHELRUNDUNG (Feedback 20.10.2026) --------
+ * Klappmenue und Feldmenue, Vorlagen, Splitbutton, Burgermenue und alle
+ * Dialoge (Einstellungen, Hilfe, Impressum, Rueckfrage) tragen dieselben
+ * Ecken wie die Kacheln. Alle schneiden ihren Inhalt an der Rundung ab
+ * (`overflow` steht bei jedem schon). Die aufgeklappte Liste eines
+ * `select` zeichnet das Betriebssystem; ihre Ecken lassen sich nicht setzen.
+ */
+.kontext, .vorlagen-menu, .dienstmenu, .burgermenu, .einst {
+  border-radius: var(--radius-karte);
+}
+/* Die kleine Zeile unter dem Originalwert im Klappmenue schwarz. */
+.kontext .kopf .unter { color: var(--color-text); }
+
+/* 2.1 — SUCHFELD MIT KREUZ, RANGFOLGE IM FUSS (Feedback 21.10.2026) ---------
+ * Suchfeld mit Kreuz: die Huelle traegt die Lage, das Feld fuellt sie. Das
+ * Kreuz steht, wo sonst die Lupe ist, und nur solange etwas darin steht.
+ */
+.suchhuelle { position: relative; display: block; min-width: 0; }
+.suchhuelle > input { display: block; width: 100%; margin: 0; }
+.einst-kopf .suchhuelle { flex: 0 1 14rem; }
+.suchhuelle .such-leeren {
+  position: absolute; right: 0.3125rem; top: 50%; transform: translateY(-50%);
+  width: 1.375rem; height: 1.375rem; display: none;
+}
+.suchhuelle.voll .such-leeren { display: inline-grid; }
+.suchhuelle.voll > input { background-image: none; }
+
+/* Rangfolge im Fuss: `.kurz` setzt `fussEinpassen()`, Rang um Rang. */
+.fuss .kurz > span:not(.marke) { display: none; }
+.fuss .imfeld.kurz { padding: 0 0.5rem; }
+.fuss button.tat.neben.kurz { padding: 0 0.5625rem; }
+.fuss button.tat.neben.kurz svg { margin-right: 0 !important; }
+
+/* In der roten Spalte wird Kopieren beim Ueberfahren rot, nicht gruen. Die
+ * Ruhefarbe bleibt grau wie ueberall (Wache 52). */
+.spalte.hinaus .imfeld.kopieren:hover:not(:disabled) svg { color: var(--bx-flaeche); }
+
+/* «Vokabular einpflegen» deaktiviert: hell wie der deaktivierte Sendeknopf. */
+button.tat.einpflegen:disabled {
+  background: var(--bx-senden-aus); border-color: var(--bx-senden-aus-kante);
+  color: var(--auf-farbe);
+}
+
+/* Untereinander leuchtet beim Einpflegen eine Zeile zwischen 04 und 05 auf,
+ * weil das Vokabular weit oben steht. Nebeneinander nie. */
+.einpflegen-zeile { display: none; }
+@media (max-width: 81.24em), (max-height: 44em) {
+  .einpflegen-zeile {
+    order: 5; align-items: center; justify-content: center; gap: 0.5rem;
+    margin: 0; padding: 0.625rem 1rem; border-radius: var(--radius-karte);
+    background: var(--gr-grund); color: var(--gr-schrift);
+    font-size: 0.8125rem; font-weight: 500;
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--gr-flaeche) 55%, transparent);
+  }
+  .einpflegen-zeile.an { display: flex; }
+}
+
+/* Danach bleibt die Zeile mit gruenem Haken statt Ladezeichen stehen. */
+.einpflegen-zeile .haken { display: none; flex: none; color: var(--gr-flaeche); }
+.einpflegen-zeile.fertig .haken { display: block; }
+.einpflegen-zeile.fertig .dreher { display: none; }
+.einpflegen-zeile.fertig { box-shadow: none; }
+
+/* 2.1 — MESSWERTE IM KOPF, KACHEL 03 (Feedback 21.10.2026) ------------------
+ * 02: Alle Messwerte im Kopf; die uebrigen ruhigen Hinweise hinter einem
+ * Info-Zeichen, aufgeklappt unter dem Kopf. Ohne Hinweise kein Zeichen.
+ */
+.info-knopf {
+  display: none; flex: none; place-items: center; width: 1.625rem; height: 1.625rem;
+  margin-left: -0.25rem; padding: 0; border: 1px solid transparent;
+  border-radius: 999px; background: transparent; color: var(--color-neutral-600);
+  cursor: pointer;
+}
+.info-knopf.da { display: inline-grid; }
+.info-knopf:hover, .info-knopf.aktiv { color: var(--gr-schrift); background: var(--gr-grund); }
+#b02 .bereich-kopf .bereich-zahl { margin-left: auto; }
+#hinweise:not(:empty) {
+  border-top: 0; border-bottom: 1px solid var(--color-neutral-300); padding: 0.5rem 0;
+}
+
+/* 03: Vorlage und Speichern als Leiste oben rechts IM Promptfeld; der
+ * Teiltitel «Prompt» ist weg, das Feld gewinnt seine Hoehe. Ueber dem
+ * Kasten darunter der Titel «Prompt + maskierter Text» und klein die Zahl.
+ */
+
+/* Der Kasten zeigt die Platzhalter wie 02: gleiche Zeilenhoehe, Text in
+ * der normalen Farbe, nur der Grund hellgrau. */
+#b03 #hinaus { line-height: 2; color: var(--color-text); }
+#hinaus .anhang { color: var(--color-text); }
+
+/* Teststufe: gelbe Kopfzeile, nur wenn die Fassung `-test` traegt
+ * (`teststufeZeigen()`). */
+:root.teststufe .kopfzeile { background: var(--test-gelb); }
+
+/* Meldung im Kopf einer Kachel: blendet ein, steht fuenf Sekunden, blendet
+ * aus (`meldeKopf()`). In der roten Spalte rot, sonst gruen. Gekuerzt mit
+ * «…», der volle Satz im Tooltip. */
+.kopfmeldung {
+  min-width: 0; font-size: 0.75rem; color: var(--gr-schrift);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  opacity: 0; transition: opacity .3s ease;
+}
+.kopfmeldung.an { opacity: 1; }
+.kopfmeldung:empty { display: none; }
+.spalte.hinaus .kopfmeldung { color: var(--bx-schrift); }
+.bereich-kopf .titelgruppe { min-width: 0; }
+
+/* 2.1 — 03: PROMPTZUSAMMENFUEHRUNG (Feedback 21.10.2026), breit:
+ * oben der kleine Titel «Prompt» und rechts Vorlagen und Vorlage speichern,
+ * darunter das Promptfeld ueber die ganze Breite, darunter rechts Prompt
+ * leeren und Prompt kopieren, zuunterst der Balken «Prompt + maskierter
+ * Text». Der Kasten dahinter legt sich aufgeklappt als Tafel UEBER alles
+ * andere; das Promptfeld behaelt dabei Groesse und Lage.
+ */
+#b03 .drei-rumpf { position: relative; }
+#b03 .drei-rumpf .teil:first-child { flex: 1 1 auto; min-height: 0; }
+#b03 .drei-rumpf .teil:first-child .feldbox { flex: 1 1 auto; min-height: 6rem; }
+#b03 .drei-rumpf .feldbox textarea#prompt,
+#b03 .drei-rumpf .feldbox textarea#prompt:focus {
+  flex: 1 1 auto; min-width: 0; min-height: 0;
+  border: 1px solid var(--bx-kante-stark); border-radius: var(--radius-feld);
+  background: var(--papier); padding: 0.5rem 0.75rem;
+}
+#b03 .drei-rumpf .feldbox textarea#prompt:focus { box-shadow: 0 0 0 1px var(--bx-kante-stark); }
+#b03 .teil-kopf .vorlagenzeile { flex-wrap: nowrap; }
+#b03 #knopf-vorlagen { width: 12rem; max-width: 100%; justify-content: space-between; }
+.promptknoepfe {
+  display: flex; justify-content: flex-end; gap: 0.375rem; flex-wrap: wrap;
+}
+.promptknoepfe .imfeld { min-height: 1.9375rem; padding: 0 0.625rem; font-size: 0.8125rem; }
+
+/* 01: «Beispiel» rechts neben der Ablage, gleich hoch. */
+.ablagezeile {
+  display: flex; align-items: stretch; gap: 0.5rem; margin: 0.75rem 1rem 0.25rem;
+}
+.ablagezeile .ablage { flex: 1 1 auto; min-width: 0; margin: 0; }
+.ablagezeile #knopf-beispiel { flex: none; height: auto; }
+
+/* Kreuze in Zeilen wie im Vokabular (Feedback 21.10.2026): Zeile grau beim
+ * Ueberfahren, das Kreuz der Zeile wird ein rot gefuelltes, abgerundetes
+ * Quadrat mit weissem Zeichen; sonst grau ohne Flaeche. Eine Regel fuer
+ * Vorlagen, Dienste und Banner. */
+.vorlagen-menu .weg.kreuz, .dienstzeile button.kreuz {
+  width: 1.75rem; height: 1.75rem; border-radius: var(--radius-md);
+}
+.vorlagen-menu .zeile:hover .kreuz, .dienstzeile:hover .kreuz {
+  background: var(--bx-loeschen); border-color: var(--bx-loeschen-kante);
+  color: var(--auf-farbe);
+}
+.dienstzeile { padding: 0.25rem; margin-left: -0.25rem; margin-right: -0.25rem;
+  border-radius: var(--radius-feld); }
+.dienstzeile:hover { background: var(--color-neutral-200); }
+/* Suchfelder in der roten Spalte: Fokus rot, nicht gruen. */
+.spalte.hinaus .suchfeld:focus {
+  border-color: var(--bx-kante-stark); box-shadow: inset 0 0 0 1px var(--bx-kante-stark);
+}
+
+/* Die Spalte steht RECHTS vom Text (im HTML davor); `order` stellt sie
+ * hinter das Feld. */
+
+/* Teststufe: «TEST» mittig in der gelben Kopfzeile, Schrift und Groesse der
+ * Wortmarke. Weicht bei Platzmangel (`kopfEinpassen()`: zuerst der
+ * Untertitel, dann «TEST»). */
+.teststufe-marke { display: none; }
+:root.teststufe .teststufe-marke {
+  display: block; position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%); pointer-events: none;
+  font-family: var(--font-marke); font-size: 1.625rem; letter-spacing: .06em;
+  line-height: 1; font-weight: 700; color: var(--color-text);
+}
+.kopfzeile.ohne-spruch .spruch { display: none; }
+:root.teststufe .kopfzeile.ohne-test .teststufe-marke { display: none; }
+
+/* 2.1 — KNOEPFE IN KACHEL 03 (Feedback 21.10.2026) --------------------------
+ * «Prompt kopieren» in denselben Farben wie «Vorlage speichern»: weiss,
+ * rote Kante und Schrift; beim Ueberfahren dieselbe Bewegung. Deaktiviert
+ * hell wie dieser, ohne Schleier. «Prompt leeren» bleibt der Leerknopf.
+ */
+#b03 #knopf-kopieren-prompt {
+  background: var(--papier); border-color: var(--bx-tief); color: var(--bx-schrift);
+}
+#b03 #knopf-kopieren-prompt:hover:not(:disabled) {
+  background: var(--papier); border-color: var(--bx-schrift);
+  box-shadow: inset 0 0 0 1px var(--bx-schrift);
+}
+#b03 #knopf-kopieren-prompt:disabled {
+  opacity: 1; color: var(--bx-aus); border-color: var(--bx-aus-kante);
+}
+
+/* Das Vorlagenmenue frei ueber der Seite; `vorlagenMenuSetzen()` setzt Lage
+ * und Breite. */
+.vorlagen-menu, .vorlagenwahl .vorlagen-menu {
+  position: fixed; z-index: 300; max-width: min(24rem, calc(100vw - 1rem));
+}
+
+/* «Prompt + maskierter Text» als Balken, der auf- und zuklappt. Zugeklappt
+ * (Vorgabe) bekommt das Promptfeld die ganze Hoehe; die vier Knoepfe
+ * bleiben oben rechts. */
+.klappkopf {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+  width: 100%; box-sizing: border-box; margin: 0; padding: 0.4375rem 0.75rem;
+  border: 1px solid var(--bx-kante2); border-radius: var(--radius-feld);
+  background: var(--papier); cursor: pointer; text-align: left; font: inherit;
+}
+.klappkopf:hover { border-color: var(--bx-kante); }
+.klappkopf .pfeil { flex: none; color: var(--bx-schrift); transition: transform .15s ease; }
+.klappkopf[aria-expanded="true"] .pfeil { transform: rotate(180deg); }
+/* Der Balken steht immer unten; der Kasten ist zugeklappt weg und liegt
+ * aufgeklappt als Tafel ueber dem Rumpf, von oben bis knapp ueber den
+ * Balken, weiss, mit Schatten. Darunter bleibt alles, wie es ist. */
+#b03 .drei-rumpf .teil + .teil { flex: 0 0 auto; }
+#b03.vorschau-zu .drei-rumpf .teil + .teil .feldbox { display: none; }
+#b03 .klappkopf { height: 2.375rem; }
+#b03:not(.vorschau-zu) .drei-rumpf .teil + .teil .feldbox {
+  position: absolute; z-index: 5; left: 1rem; right: 1rem; top: 0.75rem;
+  bottom: calc(0.75rem + 2.375rem + 0.375rem);
+  min-height: 0; display: flex;
+  box-shadow: var(--shadow-lg); border-radius: var(--radius-feld);
+}
+#b03 #hinaus, #b03:not(.vorschau-zu) #hinaus {
+  background: var(--papier); border: 1px solid var(--bx-kante2);
+}
+
+/* Kachel vergroessern: Knopf oben rechts im Kopf jeder Kachel; die grosse
+ * Kachel liegt als Tafel ueber der Seite, ein abgedunkelter Grund dahinter.
+ * Menues und Tooltips liegen weiter darueber (z-index 300 ff.). Auf dem
+ * Handy ohne Knopf: einspaltig ist jede Kachel schon so breit wie moeglich.
+ */
+.gross-knopf {
+  flex: none; display: inline-grid; place-items: center; width: 1.75rem; height: 1.75rem;
+  margin-left: 0.25rem; padding: 0; border: 1px solid transparent;
+  border-radius: var(--radius-md); background: transparent;
+  color: var(--color-neutral-600); cursor: pointer;
+}
+.gross-knopf:hover { background: var(--color-neutral-200); color: var(--color-text); }
+.spalte.hinaus .gross-knopf:hover { background: var(--bx-grund); color: var(--bx-schrift); }
+/* Zahl und Knoepfe rechts, der Titel links: die Zahl schiebt sich nach
+ * rechts, der Knopf folgt ihr. Ohne Zahl (03, 04) schiebt der Knopf. */
+.bereich-kopf .bereich-zahl, .bereich-kopf .zahlen { margin-left: auto; }
+.bereich-kopf .titelgruppe + .gross-knopf { margin-left: auto; }
+.kachel-grund { display: none; }
+.kachel-grund.an {
+  display: block; position: fixed; inset: 0; z-index: 240;
+  background: color-mix(in srgb, var(--schatten-grund) 35%, transparent);
+}
+main.raster > .spalte > .bereich.gross, .bereich.gross {
+  position: fixed; inset: 1.25rem; z-index: 250; margin: 0;
+  max-height: none; min-height: 0; box-shadow: var(--shadow-lg);
+}
+@media (max-width: 40em) {
+  .gross-knopf { display: none; }
+}
+
+/* 01: Das Ablagefeld mit derselben Rundung wie der Knopf daneben, und
+ * «Beispiel» hellgelb, damit man ihn findet (Feedback 22.10.2026). */
+.ablagezeile .ablage { border-radius: var(--radius-md); }
+.ablagezeile #knopf-beispiel {
+  background: var(--beispiel-grund); border-color: var(--beispiel-kante);
+}
+.ablagezeile #knopf-beispiel:hover:not(:disabled) {
+  background: var(--beispiel-tief); border-color: var(--beispiel-kante);
+}

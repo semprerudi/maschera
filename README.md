@@ -230,7 +230,7 @@ A ready-made image, about 4.2 GB, the model included:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:2.0.1
+    ghcr.io/semprerudi/maschera:2.1.0
 ```
 
 Then open `http://127.0.0.1:4141` in the browser. The server keeps

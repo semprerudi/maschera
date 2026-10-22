@@ -71,7 +71,7 @@ const HILFE_DE = [
     ["03 Prompt",
      ["Deine Frage an das KI-Werkzeug. Darunter steht, was wirklich "
     + "hinausgeht. Die orange gestrichelte Zone bedeutet: ab hier verlässt es das Gerät. ",
-      ["b", "Kopieren"], " legt beides in die Zwischenablage und öffnet "
+      ["b", "Alles kopieren und … öffnen"], " legt beides in die Zwischenablage und öffnet "
     + "den gewählten Dienst."]],
   ]],
 
@@ -172,7 +172,7 @@ const HILFE_FR = [
     ["03 Prompt",
      ["Ta question à l’outil IA. En dessous s’affiche ce qui sort "
     + "réellement. La zone orange en pointillés signifie : à partir d’ici, cela quitte "
-    + "l’appareil. ", ["b", "Copier"], " met le tout dans le "
+    + "l’appareil. ", ["b", "Tout copier et ouvrir …"], " met le tout dans le "
     + "presse-papiers et ouvre le service choisi."]],
   ]],
 
@@ -272,7 +272,7 @@ const HILFE_IT = [
     ["03 Prompt",
      ["La tua domanda allo strumento IA. Sotto si vede ciò che esce "
     + "davvero. La zona arancione tratteggiata significa: da qui in poi lascia il "
-    + "dispositivo. ", ["b", "Copia"], " mette tutto negli appunti e apre "
+    + "dispositivo. ", ["b", "Copia tutto e apri …"], " mette tutto negli appunti e apre "
     + "il servizio scelto."]],
   ]],
 
@@ -371,7 +371,7 @@ const HILFE_EN = [
     ["03 Prompt",
      ["Your question to the AI tool. Below it stands what actually goes "
     + "out. The dashed orange zone means: from here on it leaves the device. ",
-      ["b", "Copy"], " puts both on the clipboard and opens the chosen "
+      ["b", "Copy all and open …"], " puts both on the clipboard and opens the chosen "
     + "service."]],
   ]],
 

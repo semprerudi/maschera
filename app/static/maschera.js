@@ -175,12 +175,35 @@ function entwerteteReste(text) {
 }
 
 const I18N = {
-  de: { zurueckW: "Weg zurück", uebernahme: "Übernahme in Prompt",
-        einpflegen: "Vokabular einpflegen", rueckPlatz: "Antwort deines KI-Werkzeugs hier einfügen …", kopiertK: "Kopiert",
-        ersetztN: "{} Platzhalter zurückgesetzt", nichtGefunden: "Nicht zugeordnet: {}",
+  de: { uebernahme: "Übernahme in Prompt",
+        einpflegen: "Vokabular einpflegen", kopiertK: "Kopiert",
         maskeWeg: "Maske entfernen",
         haeufig: "Häufig",
-        alleTags: "Alle Typen …",
+        maskiertDurch: { model: "durch das KI-Modell maskiert", propagation: "maskiert, weil derselbe Wert schon erkannt war", manuell: "von Hand maskiert", checksum: "durch Prüfziffer bestätigt und maskiert", regex: "durch ein Muster maskiert", rule: "durch eine eigene Regel maskiert" },
+        maskiertSonst: "maskiert",
+        spracheW: "Sprache",
+        sicherheit: "{} % sicher",
+        knopfTipps: {
+          "knopf-kopieren-orig": "Originaltext kopieren",
+          "knopf-leeren-orig": "Originaltext leeren",
+          "knopf-bearbeiten": "Maskierten Text bearbeiten",
+          "knopf-herunter-mask": "Maskierten Text herunterladen",
+          "knopf-kopieren": "Maskierten Text kopieren",
+          "knopf-kopieren-prompt": "Nur Prompt kopieren",
+          "knopf-leeren-prompt": "Prompt leeren",
+          "knopf-einfuegen-antwort": "Antwort einfügen",
+          "knopf-leeren-antwort": "Antwort leeren",
+          "knopf-herunter-final": "Finalen Text herunterladen",
+          "knopf-leeren-final": "Finalen Text leeren",
+          "knopf-final-kopieren": "Finalen Text kopieren" },
+        anwenden: "wird angewendet",
+        suchLeeren: "Suche leeren", einpflegenZeile: "Vokabular wird eingepflegt",
+        eingepflegtZeile: "Vokabular eingepflegt",
+        davonMaskiert: "davon {} maskiert", inDauer: "in {}", hinweiseInfo: "Hinweise zum Lauf",
+        dienstWeg: "Dienst entfernen",
+        spalteSichern: "Vorlage speichern", spalteKopieren: "Prompt kopieren", spalteLeeren: "Prompt leeren",
+        vergroessern: "Vergrössern", verkleinern: "Verkleinern",
+        suchen: "Suchen …", keinTreffer: "Kein Treffer",
         nichtMaskiert: "nicht maskiert",
         bspdWeg: "Maske wirklich entfernen?\n{} ist ein besonders schützenswertes Personendatum.",
         bspdSetzen: "Als {} maskieren?\nDas ist ein besonders schützenswertes Personendatum.",
@@ -200,7 +223,7 @@ const I18N = {
         keinDienstDa: "Unter {} antwortet kein MASCHERA.",
         diensteT: "Dienste",
         diensteH: "Diese Dienste stehen im Menü neben dem Sendeknopf. Beim Kopieren öffnet MASCHERA die Adresse des gewählten Dienstes. Der zuletzt gewählte bleibt auch für künftige Sitzungen gespeichert.",
-        hinzu: "Hinzufügen",
+        hinzu: "Hinzufügen", vorgabenZurueck: "Vorgaben wiederherstellen",
         entfernen: "Entfernen",
         vokWeg: "{} entfernen: Der Platzhalter verschwindet im ganzen Text, dort steht wieder der Originalwert. Gibst du den Text danach weiter, geht er unmaskiert mit.",
         fensterWort: "Dienste in neuem Fenster öffnen statt im Reiter",
@@ -225,11 +248,9 @@ const I18N = {
         antwortPlatz: "Antwort deines KI-Werkzeugs hier einfügen (Ctrl+V) …",
         offenText: "{} Platzhalter blieben stehen. Im fertigen Text nachsehen:",
         gutText: "{} Platzhalter zurückgesetzt.",
-        promptT: "Prompt", hinausT: "Das geht hinaus", trenner: "den oberen Prompt auf folgenden Text anwenden",
-        sendenZu: "Kopieren und {} öffnen", onlineWarnung: "In {} arbeitest du online, sei vorsichtig!", origPlatz: "Originaltext hier einfügen …", promptPlatz: "Dein Prompt, z. B. «Beantworte diese E-Mail freundlich.»", hinausLeer: "Erst «Übernahme in Prompt», dann steht hier, was hinausgeht.",
-        hinausZahl: "Genau diese {} Zeichen gehen zu {dienst}, sobald du sie kopierst und dort einfügst.",
-        verworfenHinweis: "Wörterbuch verworfen. Der maskierte Text lässt sich nicht mehr zurückwandeln.",
-        an: "An", aus: "Aus", spalteId: "ID",
+        hinausT: "Prompt + maskierter Text", trenner: "den oberen Prompt auf folgenden Text anwenden",
+        sendenZu: "Alles kopieren und {} öffnen", onlineWarnung: "In {} arbeitest du online, sei vorsichtig!", origPlatz: "Originaltext hier einfügen …", promptPlatz: "Dein Prompt, z. B. «Beantworte diese E-Mail freundlich.»", hinausLeer: "Erst «Übernahme in Prompt», dann steht hier, was hinausgeht.",
+        spalteId: "ID",
         spalteWert: "Originalwert", spalteTyp: "Typ", anteilW: "Maskierter Anteil",
         keinVokabular: "Noch kein Vokabular. Es entsteht beim Maskieren.",
         gruppen: { person: "Person", herkunft: "Herkunft und Zugehörigkeit",
@@ -241,13 +262,13 @@ const I18N = {
         darstellungT: "Darstellung", themaEtikett: "Farben",
         themaH: "«Automatisch» folgt der Einstellung deines Systems.",
         themaAuto: "Automatisch", themaHell: "Hell", themaDunkel: "Dunkel",
-        schriftT: "Schrift", schriftart: "Schriftart",
+        schriftT: "Schriftart", schriftart: "Schriftfamilie",
         schriftgroesse: "Grösse",
         schriftH: "Gilt für die Textflächen: Originaltext, maskierter Text, Prompt und Antwort.",
-        schriftprobe: "Sehr geehrte Damen und Herren",
+        schriftprobe: "Sehr geehrte Damen und Herren", vorschauE: "Vorschau",
         schriftSerif: "Serifen",
         schriftMono: "Feste Breite",
-        herunterladen: "Herunterladen", einfuegen: "Einfügen",
+        herunterladen: "Herunterladen", hochladen: "Hochladen", einfuegen: "Einfügen",
         einfuegenHinweis: "Zwischenablage gesperrt. Bitte Ctrl+V drücken.",
         drop_ohne_datei: "Aus diesem Programm kommt keine Datei an. Ziehe die Nachricht zuerst auf den Schreibtisch und dann hierher.",
         mUpdate: "Nach Updates suchen", neuesteSucht: "Frage GitHub nach der neuesten Fassung …", neuesteAktuell: "Du hast {aktuell}. Das ist die neueste Fassung.", neuesteNeu: "Fassung {neueste} ist da. Du hast {aktuell}.", neuesteSeite: "Zur Download-Seite",
@@ -258,17 +279,17 @@ const I18N = {
         mGithub: "Quellcode auf GitHub", mDownload: "Herunterladen",
         mFehler: "Fehler melden",
         mImpressum: "Impressum", mKontakt: "Kontakt",
-        finalKopieren: "Finalisierten Text kopieren",
+        finalKopieren: "Kopieren",
         vokHerunter: "Vokabular herunterladen",
         vokHoch: "Vokabular hochladen",
-        tplMenu: "Vorlagen", tplSichern: "Speichern",
-        tplWaehlen: "Lokale Vorlage wählen ({})",
+        tplSichern: "Speichern",
+        tplWaehlen: "Vorlagen ({})",
         tplSuchen: "Suchen …", tplNichts: "Keine Vorlage passt.",
         tplLeer: "Noch keine lokale Vorlage gespeichert",
         tplName: "Name der Vorlage",
         tplWarnung: "Vorlagen liegen dauerhaft im Klartext auf der Platte. "
           + "Keine Personendaten in eine Vorlage schreiben.",
-        tplWeg: "Vorlage «{}» löschen?", tplWegT: "Löschen",
+        tplWeg: "Vorlage «{}» löschen?", tplWegT: "Vorlage löschen",
         tplGesichert: "Vorlage «{}» gespeichert.",
         tplFehler: "Vorlage nicht gespeichert: {}",
         sichernWarnung: "Die Datei enthält {} Originalwerte im Klartext, "
@@ -298,8 +319,8 @@ const I18N = {
         phKaputt: "Diese Stellen sehen aus wie Platzhalter, sind aber keine: {liste}. Sie werden am Ende NICHT ersetzt. Bitte im Text nachsehen.",
         fussLinks: "MASCHERA · Verarbeitung auf diesem Gerät · keine Online-Verbindung zu den KI-Diensten", bereitS: "Bereit",
         orig: "Originaltext", masked: "Maskiert", run: "Maskieren",
-        fertig: "Finaler Text", prompt: "Prompt",
-        antwort: "Antwort", neu: "Neu", lokal: "Lokal", online: "Online",
+        fertig: "Finaler Text", prompt: "Promptzusammenführung", promptT: "Prompt",
+        antwort: "Antwort", neu: "Neu",
         hundert: "100% lokal", einst: "Einstellungen",
         spruch: "Maskiere deine Daten, bevor du sie mit anderen teilst! · "
               + "Lokales Modell · DSG / GDPR",
@@ -309,23 +330,18 @@ const I18N = {
         keinStart: "Kein Server auf /api/zustand: {}",
         zeichenN: (n) => n + " Zeichen",
         eintraegeN: (n) => n + " Einträge",
-        maskiertN: (n) => n + " maskiert",
         leer05: "Hier landet der fertige Text, sobald du das Vokabular "
               + "einpflegst.",
         leer02: "Noch nichts maskiert. Text in Spalte 1 einfügen und "
               + "«Maskieren» drücken.",
-        dropN: "PDF, DOCX, TXT oder Mail hierher ziehen, oder klicken",
-        laeuft: "läuft …", lWartet: "Text wird vorbereitet …", lModell: "Fenster {} von {}", lMaskieren: "Maskieren, Wörterbuch wird gebaut …", lRest: "noch etwa {}", lFertig: "in {} maskiert", drop: "Datei hierher ziehen oder wählen",
+        dropN: "Klicken oder Textdatei bzw. Mail hierher ziehen", dropT: "Unterstützt: PDF, DOCX, TXT, MD, LOG, CSV, JSON und Mails als EML, MSG oder MBOX. Ein Klick öffnet die Dateiauswahl.",
+        laeuft: "läuft …", lWartet: "Text wird vorbereitet …", lModell: "Fenster {} von {}", lMaskieren: "Maskieren, Wörterbuch wird gebaut …", lRest: "noch etwa {}", drop: "Datei hierher ziehen oder wählen",
         portFehlt: "Kein Port angegeben.",
         verwerfenVok: "Wirklich fortfahren?\n{} Vokabulareinträge gehen verloren.",
         verwerfenText: "Wirklich fortfahren?\nDer Text in Spalte 1 geht verloren.",
         neuAlles: "Willst du wirklich neu beginnen?\nAlle Daten werden zurückgesetzt!",
-        liestDatei: "Datei wird gelesen …",
-        beispiel: "Beispiel", leeren: "Leeren", kopieren: "Kopieren",
-        kopiert: "Kopiert", funde: "Fundstellen", vokabular: "Vokabular",
-        verworfen: "Knapp verworfen", nichts: "nichts",
-        bereit: "bereit", quelle: "Quelle", vertrauen: "Vertrauen",
-        zeichen: "Zeichen", anteil: "maskiert",
+        beispiel: "Beispiel", kopieren: "Kopieren",
+        kopiert: "Kopiert", vokabular: "Vokabular",
         ohneModell: "OHNE MODELL: nur Prüfsummen und Muster. Namen, "
                   + "Daten und Adressen bleiben im Klartext.",
         // Hinweise des Servers. Er schickt den Schluessel und die
@@ -447,12 +463,35 @@ const I18N = {
           word_alt: "Das alte Word-Format (.doc) wird nicht gelesen. In Word oder LibreOffice als .docx speichern.",
         },
         leer: "Noch nichts maskiert." },
-  fr: { zurueckW: "Retour", uebernahme: "Reprise dans le prompt",
-        einpflegen: "Appliquer le vocabulaire", rueckPlatz: "Colle ici la réponse de ton outil IA …", kopiertK: "Copié",
-        ersetztN: "{} marqueurs rétablis", nichtGefunden: "Non attribué : {}",
+  fr: { uebernahme: "Reprise dans le prompt",
+        einpflegen: "Appliquer le vocabulaire", kopiertK: "Copié",
         maskeWeg: "Retirer le masque",
         haeufig: "Fréquents",
-        alleTags: "Tous les types …",
+        maskiertDurch: { model: "masqué par le modèle d’IA", propagation: "masqué, car la même valeur avait déjà été détectée", manuell: "masqué à la main", checksum: "confirmé par chiffre de contrôle et masqué", regex: "masqué par un motif", rule: "masqué par une règle personnelle" },
+        maskiertSonst: "masqué",
+        spracheW: "Langue",
+        sicherheit: "sûr à {} %",
+        knopfTipps: {
+          "knopf-kopieren-orig": "Copier le texte original",
+          "knopf-leeren-orig": "Vider le texte original",
+          "knopf-bearbeiten": "Modifier le texte masqué",
+          "knopf-herunter-mask": "Télécharger le texte masqué",
+          "knopf-kopieren": "Copier le texte masqué",
+          "knopf-kopieren-prompt": "Copier seulement le prompt",
+          "knopf-leeren-prompt": "Vider le prompt",
+          "knopf-einfuegen-antwort": "Coller la réponse",
+          "knopf-leeren-antwort": "Vider la réponse",
+          "knopf-herunter-final": "Télécharger le texte final",
+          "knopf-leeren-final": "Vider le texte final",
+          "knopf-final-kopieren": "Copier le texte final" },
+        anwenden: "application en cours",
+        suchLeeren: "Effacer la recherche", einpflegenZeile: "Application du vocabulaire",
+        eingepflegtZeile: "Vocabulaire appliqué",
+        davonMaskiert: "dont {} masqués", inDauer: "en {}", hinweiseInfo: "Remarques sur le traitement",
+        dienstWeg: "Retirer le service",
+        spalteSichern: "Enregistrer le modèle", spalteKopieren: "Copier le prompt", spalteLeeren: "Vider le prompt",
+        vergroessern: "Agrandir", verkleinern: "Réduire",
+        suchen: "Rechercher …", keinTreffer: "Aucun résultat",
         nichtMaskiert: "non masqué",
         bspdWeg: "Retirer vraiment le masque ?\n{} est une donnée sensible.",
         bspdSetzen: "Masquer comme {} ?\nC'est une donnée sensible.",
@@ -472,7 +511,7 @@ const I18N = {
         keinDienstDa: "Aucun MASCHERA ne répond à {}.",
         diensteT: "Services",
         diensteH: "Ces services figurent dans le menu à côté du bouton d’envoi. Lors de la copie, MASCHERA ouvre l’adresse du service choisi. Le dernier choisi reste enregistré pour les prochaines sessions.",
-        hinzu: "Ajouter",
+        hinzu: "Ajouter", vorgabenZurueck: "Rétablir les services par défaut",
         entfernen: "Supprimer",
         vokWeg: "Supprimer {} : le substitut disparaît de tout le texte et la valeur originale revient à sa place. Si tu transmets ensuite le texte, elle part sans masque.",
         fensterWort: "Ouvrir les services dans une nouvelle fenêtre plutôt qu’un onglet",
@@ -497,11 +536,9 @@ const I18N = {
         antwortPlatz: "Colle ici la réponse de ton outil d’IA (Ctrl+V) …",
         offenText: "{} substituts sont restés. À vérifier dans le texte final :",
         gutText: "{} substituts rétablis.",
-        promptT: "Prompt", hinausT: "Ce qui sort", trenner: "appliquer le prompt ci-dessus au texte suivant",
-        sendenZu: "Copier et ouvrir {}", onlineWarnung: "Dans {}, tu travailles en ligne, sois prudent !", origPlatz: "Coller ici le texte original …", promptPlatz: "Ton prompt, p. ex. « Réponds à ce courriel poliment. »", hinausLeer: "D’abord « Reprise dans le prompt », ensuite tu verras ici ce qui sort.",
-        hinausZahl: "Ces {} caractères précisément iront à {dienst} dès que tu les colles là-bas.",
-        verworfenHinweis: "Vocabulaire supprimé. Le texte masqué ne peut plus être rétabli.",
-        an: "Activé", aus: "Désactivé", spalteId: "ID",
+        hinausT: "Prompt + texte masqué", trenner: "appliquer le prompt ci-dessus au texte suivant",
+        sendenZu: "Tout copier et ouvrir {}", onlineWarnung: "Dans {}, tu travailles en ligne, sois prudent !", origPlatz: "Coller ici le texte original …", promptPlatz: "Ton prompt, p. ex. « Réponds à ce courriel poliment. »", hinausLeer: "D’abord « Reprise dans le prompt », ensuite tu verras ici ce qui sort.",
+        spalteId: "ID",
         spalteWert: "Valeur d’origine", spalteTyp: "Type", anteilW: "Part masquée",
         keinVokabular: "Pas encore de vocabulaire. Il naît au masquage.",
         gruppen: { person: "Personne", herkunft: "Origine et appartenance",
@@ -513,13 +550,13 @@ const I18N = {
         darstellungT: "Apparence", themaEtikett: "Couleurs",
         themaH: "« Automatique » suit le réglage de ton système.",
         themaAuto: "Automatique", themaHell: "Clair", themaDunkel: "Sombre",
-        schriftT: "Police", schriftart: "Police",
+        schriftT: "Police", schriftart: "Famille",
         schriftgroesse: "Taille",
         schriftH: "S'applique aux zones de texte : texte original, texte masqué, prompt et réponse.",
-        schriftprobe: "Madame, Monsieur",
+        schriftprobe: "Madame, Monsieur", vorschauE: "Aperçu",
         schriftSerif: "Avec empattement",
         schriftMono: "Largeur fixe",
-        herunterladen: "Télécharger", einfuegen: "Coller",
+        herunterladen: "Télécharger", hochladen: "Téléverser", einfuegen: "Coller",
         einfuegenHinweis: "Presse-papiers bloqué. Utilise Ctrl+V.",
         drop_ohne_datei: "Ce programme ne fournit aucun fichier. Glisse d’abord le message sur le bureau, puis ici.",
         mUpdate: "Rechercher des mises à jour", neuesteSucht: "Je demande à GitHub la version la plus récente …", neuesteAktuell: "Tu as la {aktuell}. C’est la version la plus récente.", neuesteNeu: "La version {neueste} est disponible. Tu as la {aktuell}.", neuesteSeite: "Vers la page de téléchargement",
@@ -530,17 +567,17 @@ const I18N = {
         mGithub: "Code source sur GitHub", mDownload: "Télécharger",
         mFehler: "Signaler un problème",
         mImpressum: "Mentions légales", mKontakt: "Contact",
-        finalKopieren: "Copier le texte final",
+        finalKopieren: "Copier",
         vokHerunter: "Télécharger le vocabulaire",
         vokHoch: "Téléverser le vocabulaire",
-        tplMenu: "Modèles", tplSichern: "Enregistrer",
-        tplWaehlen: "Choisir un modèle local ({})",
+        tplSichern: "Enregistrer",
+        tplWaehlen: "Modèles ({})",
         tplSuchen: "Chercher …", tplNichts: "Aucun modèle ne correspond.",
         tplLeer: "Aucun modèle local enregistré",
         tplName: "Nom du modèle",
         tplWarnung: "Les modèles restent en clair sur le disque. "
           + "N'y écrivez pas de données personnelles.",
-        tplWeg: "Supprimer le modèle « {} » ?", tplWegT: "Supprimer",
+        tplWeg: "Supprimer le modèle « {} » ?", tplWegT: "Supprimer le modèle",
         tplGesichert: "Modèle « {} » enregistré.",
         tplFehler: "Modèle non enregistré : {}",
         sichernWarnung: "Le fichier contient {} valeurs originales en clair, "
@@ -570,8 +607,8 @@ const I18N = {
         phKaputt: "Ces passages ressemblent à des marqueurs sans en être : {liste}. Ils ne seront PAS rétablis. À vérifier dans le texte.",
         fussLinks: "MASCHERA · traitement sur cet appareil · aucune connexion en ligne aux services IA", bereitS: "Prêt",
         orig: "Texte original", masked: "Masqué", run: "Masquer",
-        fertig: "Texte final", prompt: "Prompt",
-        antwort: "Réponse", neu: "Nouveau", lokal: "Local", online: "En ligne",
+        fertig: "Texte final", prompt: "Assemblage du prompt", promptT: "Prompt",
+        antwort: "Réponse", neu: "Nouveau",
         hundert: "100% local", einst: "Réglages",
         spruch: "Masque tes données avant de les partager ! · "
               + "Modèle local · LPD / RGPD",
@@ -581,23 +618,18 @@ const I18N = {
         keinStart: "Aucun serveur sur /api/zustand : {}",
         zeichenN: (n) => n + " caractères",
         eintraegeN: (n) => n + " entrées",
-        maskiertN: (n) => n + " masqués",
         leer05: "Le texte final apparaîtra ici dès que tu appliques le "
               + "vocabulaire.",
         leer02: "Rien de masqué. Colle un texte dans la colonne 1 puis "
               + "presse « Masquer ».",
-        dropN: "Glisser un PDF, DOCX, TXT ou courriel, ou cliquer",
-        laeuft: "en cours …", lWartet: "Préparation du texte …", lModell: "Fenêtre {} sur {}", lMaskieren: "Masquage, création du glossaire …", lRest: "encore environ {}", lFertig: "masqué en {}", drop: "Glisser un fichier ou choisir",
+        dropN: "Cliquer ou glisser ici un fichier texte ou un courriel", dropT: "Pris en charge : PDF, DOCX, TXT, MD, LOG, CSV, JSON et courriels EML, MSG ou MBOX. Un clic ouvre le choix de fichier.",
+        laeuft: "en cours …", lWartet: "Préparation du texte …", lModell: "Fenêtre {} sur {}", lMaskieren: "Masquage, création du glossaire …", lRest: "encore environ {}", drop: "Glisser un fichier ou choisir",
         portFehlt: "Aucun port indiqué.",
         verwerfenVok: "Continuer vraiment ?\n{} entrées de vocabulaire seront perdues.",
         verwerfenText: "Continuer vraiment ?\nLe texte de la colonne 1 sera perdu.",
         neuAlles: "Veux-tu vraiment recommencer ?\nToutes les données seront réinitialisées !",
-        liestDatei: "Lecture du fichier …",
-        beispiel: "Exemple", leeren: "Vider", kopieren: "Copier",
-        kopiert: "Copié", funde: "Occurrences", vokabular: "Vocabulaire",
-        verworfen: "Rejeté de peu", nichts: "rien",
-        bereit: "prêt", quelle: "Source", vertrauen: "Confiance",
-        zeichen: "Caractères", anteil: "masqué",
+        beispiel: "Exemple", kopieren: "Copier",
+        kopiert: "Copié", vokabular: "Vocabulaire",
         ohneModell: "SANS MODÈLE : seulement sommes de contrôle et motifs. "
                   + "Noms, dates et adresses restent en clair.",
         // Hinweise des Servers. Er schickt den Schluessel und die
@@ -710,12 +742,35 @@ const I18N = {
           word_alt: "L'ancien format Word (.doc) n'est pas lu. Enregistre-le en .docx dans Word ou LibreOffice.",
         },
         leer: "Rien de masqué pour l’instant." },
-  it: { zurueckW: "Ritorno", uebernahme: "Riprendi nel prompt",
-        einpflegen: "Applica il vocabolario", rueckPlatz: "Incolla qui la risposta del tuo strumento IA …", kopiertK: "Copiato",
-        ersetztN: "{} segnaposto ripristinati", nichtGefunden: "Non assegnato: {}",
+  it: { uebernahme: "Riprendi nel prompt",
+        einpflegen: "Applica il vocabolario", kopiertK: "Copiato",
         maskeWeg: "Togli la maschera",
         haeufig: "Frequenti",
-        alleTags: "Tutti i tipi …",
+        maskiertDurch: { model: "mascherato dal modello di IA", propagation: "mascherato perché lo stesso valore era già stato rilevato", manuell: "mascherato a mano", checksum: "confermato da cifra di controllo e mascherato", regex: "mascherato da un modello di testo", rule: "mascherato da una regola personale" },
+        maskiertSonst: "mascherato",
+        spracheW: "Lingua",
+        sicherheit: "sicuro al {} %",
+        knopfTipps: {
+          "knopf-kopieren-orig": "Copia il testo originale",
+          "knopf-leeren-orig": "Svuota il testo originale",
+          "knopf-bearbeiten": "Modifica il testo mascherato",
+          "knopf-herunter-mask": "Scarica il testo mascherato",
+          "knopf-kopieren": "Copia il testo mascherato",
+          "knopf-kopieren-prompt": "Copia solo il prompt",
+          "knopf-leeren-prompt": "Svuota il prompt",
+          "knopf-einfuegen-antwort": "Incolla la risposta",
+          "knopf-leeren-antwort": "Svuota la risposta",
+          "knopf-herunter-final": "Scarica il testo finale",
+          "knopf-leeren-final": "Svuota il testo finale",
+          "knopf-final-kopieren": "Copia il testo finale" },
+        anwenden: "in applicazione",
+        suchLeeren: "Svuota la ricerca", einpflegenZeile: "Applicazione del vocabolario",
+        eingepflegtZeile: "Vocabolario applicato",
+        davonMaskiert: "di cui {} mascherati", inDauer: "in {}", hinweiseInfo: "Note sull’elaborazione",
+        dienstWeg: "Rimuovi il servizio",
+        spalteSichern: "Salva il modello", spalteKopieren: "Copia il prompt", spalteLeeren: "Svuota il prompt",
+        vergroessern: "Ingrandisci", verkleinern: "Riduci",
+        suchen: "Cerca …", keinTreffer: "Nessun risultato",
         nichtMaskiert: "non mascherato",
         bspdWeg: "Togliere davvero la maschera?\n{} è un dato personale degno di particolare protezione.",
         bspdSetzen: "Mascherare come {}?\nÈ un dato degno di particolare protezione.",
@@ -735,7 +790,7 @@ const I18N = {
         keinDienstDa: "MASCHERA non risponde sul IP {}",
         diensteT: "Servizi",
         diensteH: "Questi servizi compaiono nel menu accanto al pulsante di invio. Alla copia MASCHERA apre l’indirizzo del servizio scelto. L’ultimo scelto resta salvato anche per le sessioni future.",
-        hinzu: "Aggiungi",
+        hinzu: "Aggiungi", vorgabenZurueck: "Ripristina i servizi predefiniti",
         entfernen: "Rimuovi",
         vokWeg: "Rimuovi {}: il segnaposto scompare da tutto il testo e al suo posto torna il valore originale. Se poi inoltri il testo, esce senza maschera.",
         fensterWort: "Aprire i servizi in una nuova finestra invece che in una scheda",
@@ -760,11 +815,9 @@ const I18N = {
         antwortPlatz: "Incolla qui la risposta del tuo strumento IA (Ctrl+V) …",
         offenText: "{} segnaposto sono rimasti. Da controllare nel testo finale:",
         gutText: "{} segnaposto ripristinati.",
-        promptT: "Prompt", hinausT: "Questo esce", trenner: "applica il prompt qui sopra al testo seguente",
-        sendenZu: "Copia e apri {}", onlineWarnung: "In {} lavori online, fai attenzione!", origPlatz: "Incolla qui il testo originale …", promptPlatz: "Il tuo prompt, p. es. «Rispondi a questa e-mail gentilmente.»", hinausLeer: "Prima «Riprendi nel prompt», poi qui vedrai cosa esce.",
-        hinausZahl: "Esattamente questi {} caratteri andranno a {dienst} appena li incolli lì.",
-        verworfenHinweis: "Vocabolario eliminato. Il testo mascherato non è più ripristinabile.",
-        an: "Attivo", aus: "Spento", spalteId: "ID",
+        hinausT: "Prompt + testo mascherato", trenner: "applica il prompt qui sopra al testo seguente",
+        sendenZu: "Copia tutto e apri {}", onlineWarnung: "In {} lavori online, fai attenzione!", origPlatz: "Incolla qui il testo originale …", promptPlatz: "Il tuo prompt, p. es. «Rispondi a questa e-mail gentilmente.»", hinausLeer: "Prima «Riprendi nel prompt», poi qui vedrai cosa esce.",
+        spalteId: "ID",
         spalteWert: "Valore originale", spalteTyp: "Tipo", anteilW: "Quota mascherata",
         keinVokabular: "Nessun vocabolario. Nasce con la mascheratura.",
         gruppen: { person: "Persona", herkunft: "Origine e appartenenza",
@@ -776,13 +829,13 @@ const I18N = {
         darstellungT: "Aspetto", themaEtikett: "Colori",
         themaH: "«Automatico» segue l’impostazione del tuo sistema.",
         themaAuto: "Automatico", themaHell: "Chiaro", themaDunkel: "Scuro",
-        schriftT: "Carattere", schriftart: "Carattere",
+        schriftT: "Carattere", schriftart: "Famiglia",
         schriftgroesse: "Dimensione",
         schriftH: "Vale per le aree di testo: testo originale, testo mascherato, prompt e risposta.",
-        schriftprobe: "Gentili signore, egregi signori",
+        schriftprobe: "Gentili signore, egregi signori", vorschauE: "Anteprima",
         schriftSerif: "Con grazie",
         schriftMono: "Larghezza fissa",
-        herunterladen: "Scarica", einfuegen: "Incolla",
+        herunterladen: "Scarica", hochladen: "Carica", einfuegen: "Incolla",
         einfuegenHinweis: "Appunti bloccati. Usa Ctrl+V.",
         drop_ohne_datei: "Da questo programma non arriva alcun file. Trascina prima il messaggio sulla scrivania, poi qui.",
         mUpdate: "Cerca aggiornamenti", neuesteSucht: "Chiedo a GitHub la versione più recente …", neuesteAktuell: "Hai la {aktuell}. È la versione più recente.", neuesteNeu: "È disponibile la versione {neueste}. Tu hai la {aktuell}.", neuesteSeite: "Alla pagina di download",
@@ -793,17 +846,17 @@ const I18N = {
         mGithub: "Codice sorgente su GitHub", mDownload: "Scarica",
         mFehler: "Segnala un problema",
         mImpressum: "Note legali", mKontakt: "Contatto",
-        finalKopieren: "Copiare il testo finale",
+        finalKopieren: "Copia",
         vokHerunter: "Scarica il vocabolario",
         vokHoch: "Carica il vocabolario",
-        tplMenu: "Modelli", tplSichern: "Salva",
-        tplWaehlen: "Scegli un modello locale ({})",
+        tplSichern: "Salva",
+        tplWaehlen: "Modelli ({})",
         tplSuchen: "Cerca …", tplNichts: "Nessun modello corrisponde.",
         tplLeer: "Nessun modello locale salvato",
         tplName: "Nome del modello",
         tplWarnung: "I modelli restano in chiaro sul disco. "
           + "Non scrivervi dati personali.",
-        tplWeg: "Eliminare il modello «{}»?", tplWegT: "Elimina",
+        tplWeg: "Eliminare il modello «{}»?", tplWegT: "Elimina il modello",
         tplGesichert: "Modello «{}» salvato.",
         tplFehler: "Modello non salvato: {}",
         sichernWarnung: "Il file contiene {} valori originali in chiaro, "
@@ -833,8 +886,8 @@ const I18N = {
         phKaputt: "Questi punti sembrano segnaposto ma non lo sono: {liste}. NON verranno ripristinati. Da controllare nel testo.",
         fussLinks: "MASCHERA · elaborazione su questo dispositivo · nessuna connessione online ai servizi IA", bereitS: "Pronto",
         orig: "Testo originale", masked: "Mascherato", run: "Maschera",
-        fertig: "Testo finale", prompt: "Prompt",
-        antwort: "Risposta", neu: "Nuovo", lokal: "Locale", online: "Online",
+        fertig: "Testo finale", prompt: "Composizione del prompt", promptT: "Prompt",
+        antwort: "Risposta", neu: "Nuovo",
         hundert: "100% locale", einst: "Impostazioni",
         spruch: "Maschera i tuoi dati prima di condividerli! · "
               + "Modello locale · LPD / GDPR",
@@ -844,22 +897,17 @@ const I18N = {
         keinStart: "Nessun server su /api/zustand: {}",
         zeichenN: (n) => n + " caratteri",
         eintraegeN: (n) => n + " voci",
-        maskiertN: (n) => n + " mascherati",
         leer05: "Il testo finale apparirà qui appena applichi il vocabolario.",
         leer02: "Niente mascherato. Incolla un testo nella colonna 1 e premi "
               + "«Maschera».",
-        dropN: "Trascina PDF, DOCX, TXT o e-mail, oppure clicca",
-        laeuft: "in corso …", lWartet: "Preparazione del testo …", lModell: "Finestra {} di {}", lMaskieren: "Mascheratura, creazione del glossario …", lRest: "ancora circa {}", lFertig: "mascherato in {}", drop: "Trascina un file o scegli",
+        dropN: "Clicca o trascina qui un file di testo o un’e-mail", dropT: "Supportati: PDF, DOCX, TXT, MD, LOG, CSV, JSON ed e-mail EML, MSG o MBOX. Un clic apre la scelta del file.",
+        laeuft: "in corso …", lWartet: "Preparazione del testo …", lModell: "Finestra {} di {}", lMaskieren: "Mascheratura, creazione del glossario …", lRest: "ancora circa {}", drop: "Trascina un file o scegli",
         portFehlt: "Nessuna porta indicata.",
         verwerfenVok: "Continuare davvero?\n{} voci di vocabolario andranno perse.",
         verwerfenText: "Continuare davvero?\nIl testo nella colonna 1 andrà perso.",
         neuAlles: "Vuoi davvero ricominciare?\nTutti i dati verranno azzerati!",
-        liestDatei: "Lettura del file …",
-        beispiel: "Esempio", leeren: "Svuota", kopieren: "Copia",
-        kopiert: "Copiato", funde: "Occorrenze", vokabular: "Vocabolario",
-        verworfen: "Scartato per poco", nichts: "niente",
-        bereit: "pronto", quelle: "Fonte", vertrauen: "Fiducia",
-        zeichen: "Caratteri", anteil: "mascherato",
+        beispiel: "Esempio", kopieren: "Copia",
+        kopiert: "Copiato", vokabular: "Vocabolario",
         ohneModell: "SENZA MODELLO: solo checksum e pattern. Nomi, date e "
                   + "indirizzi restano in chiaro.",
         // Hinweise des Servers. Er schickt den Schluessel und die
@@ -972,12 +1020,35 @@ const I18N = {
           word_alt: "Il vecchio formato Word (.doc) non viene letto. Salvalo come .docx in Word o LibreOffice.",
         },
         leer: "Niente mascherato finora." },
-  en: { zurueckW: "Way back", uebernahme: "Take into prompt",
-        einpflegen: "Apply vocabulary", rueckPlatz: "Paste your AI tool’s answer here …", kopiertK: "Copied",
-        ersetztN: "{} placeholders restored", nichtGefunden: "Unmatched: {}",
+  en: { uebernahme: "Take into prompt",
+        einpflegen: "Apply vocabulary", kopiertK: "Copied",
         maskeWeg: "Remove mask",
         haeufig: "Frequent",
-        alleTags: "All types …",
+        maskiertDurch: { model: "masked by the AI model", propagation: "masked because the same value was already detected", manuell: "masked by hand", checksum: "confirmed by check digit and masked", regex: "masked by a pattern", rule: "masked by a custom rule" },
+        maskiertSonst: "masked",
+        spracheW: "Language",
+        sicherheit: "{}% certain",
+        knopfTipps: {
+          "knopf-kopieren-orig": "Copy original text",
+          "knopf-leeren-orig": "Clear original text",
+          "knopf-bearbeiten": "Edit masked text",
+          "knopf-herunter-mask": "Download masked text",
+          "knopf-kopieren": "Copy masked text",
+          "knopf-kopieren-prompt": "Copy prompt only",
+          "knopf-leeren-prompt": "Clear prompt",
+          "knopf-einfuegen-antwort": "Paste answer",
+          "knopf-leeren-antwort": "Clear answer",
+          "knopf-herunter-final": "Download final text",
+          "knopf-leeren-final": "Clear final text",
+          "knopf-final-kopieren": "Copy final text" },
+        anwenden: "applying",
+        suchLeeren: "Clear search", einpflegenZeile: "Applying vocabulary",
+        eingepflegtZeile: "Vocabulary applied",
+        davonMaskiert: "{} of them masked", inDauer: "in {}", hinweiseInfo: "Notes on this run",
+        dienstWeg: "Remove service",
+        spalteSichern: "Save template", spalteKopieren: "Copy prompt", spalteLeeren: "Clear prompt",
+        vergroessern: "Enlarge", verkleinern: "Shrink",
+        suchen: "Search …", keinTreffer: "No match",
         nichtMaskiert: "not masked",
         bspdWeg: "Really remove the mask?\n{} is sensitive personal data.",
         bspdSetzen: "Mask as {}?\nThis is sensitive personal data.",
@@ -997,7 +1068,7 @@ const I18N = {
         keinDienstDa: "No MASCHERA answers at {}.",
         diensteT: "Services",
         diensteH: "These services appear in the menu next to the send button. When you copy, MASCHERA opens the address of the chosen service. The last one you chose is kept for future sessions.",
-        hinzu: "Add",
+        hinzu: "Add", vorgabenZurueck: "Restore defaults",
         entfernen: "Remove",
         vokWeg: "Remove {}: the placeholder disappears from the whole text and the original value is back in its place. If you pass the text on afterwards, it goes out unmasked.",
         fensterWort: "Open services in a new window rather than a tab",
@@ -1022,11 +1093,9 @@ const I18N = {
         antwortPlatz: "Paste your AI tool’s answer here (Ctrl+V) …",
         offenText: "{} placeholders remained. Check them in the final text:",
         gutText: "{} placeholders restored.",
-        promptT: "Prompt", hinausT: "This goes out", trenner: "apply the prompt above to the following text",
-        sendenZu: "Copy and open {}", onlineWarnung: "In {} you are working online, be careful!", origPlatz: "Paste the original text here …", promptPlatz: "Your prompt, e.g. \u00abReply to this e-mail politely.\u00bb", hinausLeer: "First «Take into prompt», then you see here what goes out.",
-        hinausZahl: "Exactly these {} characters go to {dienst} once you paste them there.",
-        verworfenHinweis: "Vocabulary discarded. The masked text can no longer be restored.",
-        an: "On", aus: "Off", spalteId: "ID",
+        hinausT: "Prompt + masked text", trenner: "apply the prompt above to the following text",
+        sendenZu: "Copy all and open {}", onlineWarnung: "In {} you are working online, be careful!", origPlatz: "Paste the original text here …", promptPlatz: "Your prompt, e.g. \u00abReply to this e-mail politely.\u00bb", hinausLeer: "First «Take into prompt», then you see here what goes out.",
+        spalteId: "ID",
         spalteWert: "Original value", spalteTyp: "Type", anteilW: "Masked share",
         keinVokabular: "No vocabulary yet. It appears when you mask.",
         gruppen: { person: "Person", herkunft: "Origin and status",
@@ -1038,13 +1107,13 @@ const I18N = {
         darstellungT: "Appearance", themaEtikett: "Colours",
         themaH: "“Automatic” follows your system setting.",
         themaAuto: "Automatic", themaHell: "Light", themaDunkel: "Dark",
-        schriftT: "Type", schriftart: "Typeface",
+        schriftT: "Typeface", schriftart: "Family",
         schriftgroesse: "Size",
         schriftH: "Applies to the text areas: original, masked text, prompt and reply.",
-        schriftprobe: "Dear Sir or Madam",
+        schriftprobe: "Dear Sir or Madam", vorschauE: "Preview",
         schriftSerif: "Serif",
         schriftMono: "Monospace",
-        herunterladen: "Download", einfuegen: "Paste",
+        herunterladen: "Download", hochladen: "Upload", einfuegen: "Paste",
         einfuegenHinweis: "Clipboard blocked. Press Ctrl+V.",
         drop_ohne_datei: "This program does not hand over a file. Drag the message to the desktop first, then here.",
         mUpdate: "Check for updates", neuesteSucht: "Asking GitHub for the newest version …", neuesteAktuell: "You have {aktuell}. That is the newest version.", neuesteNeu: "Version {neueste} is out. You have {aktuell}.", neuesteSeite: "To the download page",
@@ -1055,17 +1124,17 @@ const I18N = {
         mGithub: "Source code on GitHub", mDownload: "Download",
         mFehler: "Report an issue",
         mImpressum: "Legal notice", mKontakt: "Contact",
-        finalKopieren: "Copy final text",
+        finalKopieren: "Copy",
         vokHerunter: "Download vocabulary",
         vokHoch: "Upload vocabulary",
-        tplMenu: "Templates", tplSichern: "Save",
-        tplWaehlen: "Choose a local template ({})",
+        tplSichern: "Save",
+        tplWaehlen: "Templates ({})",
         tplSuchen: "Search …", tplNichts: "No template matches.",
         tplLeer: "No local template saved yet",
         tplName: "Template name",
         tplWarnung: "Templates stay in plain text on disk. "
           + "Do not put personal data into a template.",
-        tplWeg: "Delete template “{}”?", tplWegT: "Delete",
+        tplWeg: "Delete template “{}”?", tplWegT: "Delete template",
         tplGesichert: "Template “{}” saved.",
         tplFehler: "Template not saved: {}",
         sichernWarnung: "The file holds {} original values in plain text, "
@@ -1095,8 +1164,8 @@ const I18N = {
         phKaputt: "These passages look like placeholders but are not: {liste}. They will NOT be restored. Please check them in the text.",
         fussLinks: "MASCHERA · processed on this device · no online connection to the AI services", bereitS: "Ready",
         orig: "Original text", masked: "Masked", run: "Mask",
-        fertig: "Final text", prompt: "Prompt",
-        antwort: "Answer", neu: "New", lokal: "Local", online: "Online",
+        fertig: "Final text", prompt: "Prompt assembly", promptT: "Prompt",
+        antwort: "Answer", neu: "New",
         hundert: "100% local", einst: "Settings",
         spruch: "Mask your data before you share it! · "
               + "Local model · FADP / GDPR",
@@ -1106,22 +1175,17 @@ const I18N = {
         keinStart: "No server on /api/zustand: {}",
         zeichenN: (n) => n + " characters",
         eintraegeN: (n) => n + " entries",
-        maskiertN: (n) => n + " masked",
         leer05: "The final text appears here once you apply the vocabulary.",
         leer02: "Nothing masked yet. Paste text into column 1 and press "
               + "\u00abMask\u00bb.",
-        dropN: "Drop a PDF, DOCX, TXT or e-mail, or click",
-        laeuft: "running …", lWartet: "Preparing the text …", lModell: "Window {} of {}", lMaskieren: "Masking, building the glossary …", lRest: "about {} left", lFertig: "masked in {}", drop: "Drop a file or choose one",
+        dropN: "Click or drop a text file or e-mail here", dropT: "Supported: PDF, DOCX, TXT, MD, LOG, CSV, JSON and e-mails as EML, MSG or MBOX. A click opens the file picker.",
+        laeuft: "running …", lWartet: "Preparing the text …", lModell: "Window {} of {}", lMaskieren: "Masking, building the glossary …", lRest: "about {} left", drop: "Drop a file or choose one",
         portFehlt: "No port given.",
         verwerfenVok: "Really continue?\n{} vocabulary entries will be lost.",
         verwerfenText: "Really continue?\nThe text in column 1 will be lost.",
         neuAlles: "Do you really want to start over?\nAll data will be reset!",
-        liestDatei: "Reading file …",
-        beispiel: "Example", leeren: "Clear", kopieren: "Copy",
-        kopiert: "Copied", funde: "Findings", vokabular: "Vocabulary",
-        verworfen: "Narrowly discarded", nichts: "none",
-        bereit: "ready", quelle: "Source", vertrauen: "Confidence",
-        zeichen: "Characters", anteil: "masked",
+        beispiel: "Example", kopieren: "Copy",
+        kopiert: "Copied", vokabular: "Vocabulary",
         ohneModell: "NO MODEL: checksums and patterns only. Names, dates "
                   + "and addresses stay in the clear.",
         // Hinweise des Servers. Er schickt den Schluessel und die
@@ -1342,8 +1406,6 @@ const z = {
   orig: "",
   antwort: null,          // /api/anonymisieren
   laeuft: false,
-  vokabular: true,
-  vokabularVerworfen: false,
   sendeUhr: null,
   // Haelt den Ziehschleier, solange `dragover` nachkommt.
   ziehUhr: null,
@@ -1353,19 +1415,20 @@ const z = {
   // die dritte Spalte. Vorher steht dort NICHTS von diesem Dokument: die
   // Spalte, die hinausgeht, fuellt sich nicht von selbst.
   uebernommen: false,
-  // Das Vokabular startet in der einspaltigen Ansicht ZUGEKLAPPT. Es steht
-  // dort am Ende des Weges und wird selten gebraucht.
-  vokZu: true,
   prompt: "",
   antwort04: "",
-  zurueck: false,
-  antwortText: "",
   final: null,
   // Das Ergebnis, dessen Banner «Platzhalter blieben stehen» geschlossen ist.
   offenZu: null,
   dienst: "claude",
   kontext: null,
-  kontextGruppe: null,   // welche Gruppe im Kontextmenue offen ist
+  // Offene Gruppen im Kontextmenue, jede von Hand auf- und zugeklappt
+  // (seit 2.1); «Häufig» steht zu Beginn offen. Gilt fuer die Sitzung.
+  kontextOffen: new Set(["haeufig"]),
+  kontextSuche: "",      // Suchwort im Kontextmenue, gilt bis zum Schliessen
+  gross: null,           // Kennung der vergroesserten Kachel, sonst null
+  hinweiseAuf: false,    // ruhige Hinweise unter dem Kopf von 02 offen
+  hinausAuf: false,      // «Prompt + maskierter Text» in 03 aufgeklappt
   dienste: DIENSTE.map((d) => ({ ...d })),
   eigenesFenster: true,
   schriftgroesse: 100,
@@ -1373,7 +1436,6 @@ const z = {
   klartext: [],
   bspdTags: [],
   regelnYaml: "",
-  dateiname: "",
   vokMeldung: null,
   // Die Meldung des Einstellungsdialogs — ein eigener Kanal, siehe meldeVok().
   einstMeldung: "",
@@ -1381,7 +1443,7 @@ const z = {
   vorlage: null,          // Name der gewaehlten Vorlage
   vorlagenOffen: false,
   vorlagenFilter: "",
-  offen: { funde: true, vokabular: false, verworfen: false }
+  vokSuche: "",           // Suchwort im Vokabular (seit 2.1)
 };
 
 function t() { return I18N[z.sprache] || I18N.de; }
@@ -1615,7 +1677,7 @@ async function maskiere(text) {
   const a = await fetch("/api/anonymisieren", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text: text, woerterbuch: z.vokabular,
+    body: JSON.stringify({ text: text, woerterbuch: true,
                            regeln: true })
   });
   const d = await a.json().catch(() => ({}));
@@ -1741,16 +1803,62 @@ function platzhalter(text, span) {
   s.style.background = c[0];
   s.style.color = c[2];
   s.style.border = (span && SRC_STYLE[span.quelle]) || ("1px solid " + c[1]);
+  // Kein `title` mehr (seit 2.1): der Browser-Tooltip blieb ueber dem
+  // Klappmenue haengen und zeigte eine Konfidenz, die niemand lesen konnte.
+  // Den eigenen zeigt `tippZeigen()`: Originalwert und Herkunft.
+  s.addEventListener("mouseenter", () => tippZeigen(s));
+  s.addEventListener("mouseleave", tippWeg);
   if (span) {
-    const teile = [span.tag, span.quelle];
-    if (span.vertrauen != null) teile.push(span.vertrauen.toFixed(2));
-    if (span.bspd) teile.push("bsPD");
-    s.title = teile.join(" · ");
+    if (span.vertrauen != null) s.dataset.vertrauen = String(span.vertrauen);
     s.dataset.tag = span.tag;
     s.dataset.quelle = span.quelle;
     s.dataset.ph = span.platzhalter || text;
   }
   return s;
+}
+
+/* Der Tooltip am Platzhalter (seit 2.1, Feedback 20.10.2026).
+ *
+ * Erste Zeile der Originalwert, denn danach sucht, wer ueber eine Maske
+ * faehrt. Zweite Zeile, WODURCH maskiert wurde, als Satz statt als
+ * Kennwort. Die Konfidenz des Modells steht nicht mehr da: sie half bei
+ * keiner Entscheidung.
+ *
+ * Ein eigenes Element statt `title`, damit es zum Design passt und beim
+ * Oeffnen des Klappmenues verschwindet. Gesetzt wird nur `textContent`.
+ */
+function tippZeigen(ph) {
+  const tipp = $("tipp");
+  if (!tipp || !$("kontext").hidden) return;
+  const schluessel = ph.dataset.ph;
+  const wert = ((z.antwort && z.antwort.woerterbuch) || {})[schluessel];
+  if (wert === undefined) return;
+  const st = t();
+  const herkunft = (st.maskiertDurch || {})[ph.dataset.quelle] || st.maskiertSonst;
+  // Im Vokabular steht der Originalwert in der Spalte daneben; dort zeigt
+  // der Tooltip nur, wodurch und wie sicher (Feedback 20.10.2026).
+  const zeilen = ph.dataset.ohneWert ? [] : [el("div", "tipp-wert", wert)];
+  zeilen.push(el("div", "tipp-herkunft", herkunft));
+  // Die Sicherheit in Prozent, wie Menschen sie lesen. Nur wo das Modell
+  // eine liefert; Muster und Regeln kennen keine.
+  const v = parseFloat(ph.dataset.vertrauen);
+  if (Number.isFinite(v)) {
+    zeilen.push(el("div", "tipp-herkunft",
+      st.sicherheit.replace("{}", String(Math.round(v * 100)))));
+  }
+  tipp.replaceChildren(...zeilen);
+  tipp.hidden = false;
+  const r = ph.getBoundingClientRect();
+  const k = tipp.getBoundingClientRect();
+  const links = Math.max(8, Math.min(r.left, window.innerWidth - k.width - 8));
+  const unten = r.bottom + 6 + k.height > window.innerHeight - 8;
+  tipp.style.left = links + "px";
+  tipp.style.top = (unten ? r.top - 6 - k.height : r.bottom + 6) + "px";
+}
+
+function tippWeg() {
+  const tipp = $("tipp");
+  if (tipp) tipp.hidden = true;
 }
 
 /* Was erkannt, aber bewusst nicht ersetzt wurde, rahmt 02 hellgrau. Gibt
@@ -1795,8 +1903,15 @@ function zeichneMaskiert() {
     ziel.append(el("p", "leer", t().leer02));
     return;
   }
-  const text = z.antwort.maskiert || "";
-  const spans = (z.antwort.spans || []).slice();
+  maskiertSetzen(ziel, z.antwort.maskiert || "", z.antwort.spans || []);
+}
+
+/* Maskierten Text mit farbigen Platzhaltern in `ziel` setzen. Dieselbe
+ * Darstellung in 02 und, seit 2.1, in der Vorschau von 03 (Feedback
+ * 21.10.2026: «genau gleiche Optik»). Nur `textContent` und Elemente.
+ */
+function maskiertSetzen(ziel, text, alleSpannen) {
+  const spans = alleSpannen.slice();
 
   // Platzhalter -> Spanne. Die Nummer ist ueber das Dokument stabil, also
   // genuegt normalerweise eine Zuordnung nach Platzhaltertext.
@@ -1994,6 +2109,9 @@ const KNOPFBILDER = {
          "m6.3 17.7-1.4 1.4", "m19.1 4.9-1.4 1.4"],
   // Mond
   dunkel: ["M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"],
+  // Winkel: Rubrik auf- und zuklappen, wie die Pfeile im Kopf
+  runter: ["m6 9 6 6 6-6"],
+  hoch: ["m18 15-6-6-6 6"],
 };
 
 const SINNBILDER = {
@@ -2188,6 +2306,7 @@ function pruefePlatzhalter() {
 
 function kontextSchliessen() {
   z.kontext = null;
+  z.kontextSuche = "";
   $("kontext").hidden = true;
 }
 
@@ -2267,6 +2386,7 @@ function tagWechseln(ph, neuTag) {
 
 /* Das Menue zeichnen. */
 function zeichneKontext(x, y, lage, lageBehalten) {
+  tippWeg();
   const menu = $("kontext");
   const st = t();
   menu.replaceChildren();
@@ -2280,22 +2400,25 @@ function zeichneKontext(x, y, lage, lageBehalten) {
   kopf.append(el("div", "wert", lage.ph
     ? (z.antwort.woerterbuch[lage.ph] || lage.ph) : lage.wort));
   kopf.append(el("div", "unter", lage.ph
-    ? lage.ph + " · " + (lage.quelle || "?")
+    ? lage.ph + " · " + ((st.maskiertDurch || {})[lage.quelle] || st.maskiertSonst)
     : st.nichtMaskiert));
   menu.append(kopf);
 
+  let weg = null;
   if (lage.ph) {
-    const weg = el("button", "entfernen");
+    weg = el("button", "entfernen");
     weg.type = "button";
-    weg.append(el("span", "marke", "×"),
-               document.createTextNode(st.maskeWeg));
+    // Dasselbe Kreuz wie im Vokabular (seit 2.1), kein Schriftzeichen.
+    const kreuz = el("span", "marke kreuz");
+    kreuz.append(zeichenSinnbild("schliessen", KNOPFBILDER));
+    weg.classList.add("mit-kreuz");
+    weg.append(kreuz, document.createTextNode(st.maskeWeg));
     weg.addEventListener("click", () => handlungEntfernen(lage));
-    menu.append(weg, el("div", "trenner"));
   }
 
   const eintrag = (tag) => {
     const meta = z.tags[tag] || {};
-    const b = el("button");
+    const b = el("button", "tagwahl");
     b.type = "button";
     // Drei Zeichen, drei Aussagen — nie zwei gleichzeitig, sonst wird die
     // Spalte unlesbar. Reihenfolge: gesetzt schlaegt bsPD schlaegt Pruefsumme.
@@ -2327,33 +2450,76 @@ function zeichneKontext(x, y, lage, lageBehalten) {
     return b;
   };
 
-  menu.append(el("div", "gruppe", st.haeufig));
-  for (const tag of FREQUENT) {
-    if (z.tags[tag]) menu.append(eintrag(tag));
-  }
+  /* Suche (Feedback 20.10.2026): filtert nach Tag und Bezeichnung. Treffer
+   * bleiben in ihren Gruppen, und jede Gruppe mit Treffern steht offen — wer
+   * «adr» tippt, sieht die Anschrift und nicht eine neue, flache Liste.
+   *
+   * Das Menue zeichnet sich bei jedem Zeichen neu; das Feld bekommt danach
+   * Fokus und Einfuegemarke zurueck.
+   */
+  const suche = (z.kontextSuche || "").trim().toLowerCase();
+  const passt = (tag) => !suche || tag.toLowerCase().includes(suche)
+    || ((z.tags[tag] || {}).bezeichnung || "").toLowerCase().includes(suche);
+  const feld = document.createElement("input");
+  feld.type = "search";
+  feld.className = "tagsuche suchfeld";
+  feld.id = "kontext-suche";
+  feld.placeholder = st.suchen;
+  feld.setAttribute("aria-label", st.suchen);
+  feld.autocomplete = "off";
+  feld.spellcheck = false;
+  feld.value = z.kontextSuche || "";
+  feld.addEventListener("input", () => {
+    z.kontextSuche = feld.value;
+    const pos = feld.selectionStart;
+    zeichneKontext(x, y, lage, true);
+    const neu = $("kontext-suche");
+    if (neu) { neu.focus(); neu.setSelectionRange(pos, pos); }
+  });
+  // Enter nimmt den einzigen Treffer — sonst nichts.
+  feld.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter") return;
+    const k = [...menu.querySelectorAll("button.tagwahl:not(:disabled)")];
+    if (k.length === 1) { e.preventDefault(); k[0].click(); }
+  });
+  // «Maske entfernen» und die Suche auf EINER Zeile (Feedback 20.10.2026).
+  // Ohne Platzhalter gibt es nichts zu entfernen; dann hat die Suche die
+  // Zeile fuer sich.
+  const werkzeile = el("div", "werkzeile");
+  if (weg) werkzeile.append(weg);
+  werkzeile.append(feld);
+  menu.append(werkzeile);
+  suchfeldMitKreuz(feld);
+  // Nur die Gruppen rollen (seit 2.1): Kopf und Suche stehen fest, und der
+  // Rollbalken laeuft nicht mehr ueber alles (Feedback 20.10.2026).
+  const rollen = el("div", "tagrollen");
+  menu.append(rollen);
 
-  /* Alle 45 Tags, in Gruppen, jede aufklappbar.
+  /* Gruppen, jede aufklappbar — auch «Häufig» (Feedback 20.10.2026).
    *
    * Die Reihenfolge ist die von `TAG_GRUPPEN`, nicht alphabetisch. Sie folgt
    * dem Dokument: Person, Herkunft, Anschrift, Erreichbarkeit — so sucht
    * jemand, der einen Brief vor sich hat.
    *
-   * Immer nur EINE Gruppe offen: bei acht Gruppen und 45 Tags waere alles
-   * offen eine Liste, die laenger ist als der Bildschirm.
+   * Jede Rubrik wird von Hand auf- und zugeklappt, und offene bleiben offen
+   * (seit 2.1, Feedback 21.10.2026: wer eine zweite oeffnet und die erste
+   * dabei verliert, kommt nicht mehr mit). Bis 2.0 war nur EINE offen.
    */
-  menu.append(el("div", "trenner"));
   const uebrig = new Set(Object.keys(z.tags));
   for (const g of Object.keys(TAG_GRUPPEN)) {
     for (const tag of TAG_GRUPPEN[g]) uebrig.delete(tag);
   }
-  const gruppen = Object.keys(TAG_GRUPPEN).concat(
-    uebrig.size ? ["rest"] : []);
-
+  const gruppen = ["haeufig"].concat(Object.keys(TAG_GRUPPEN),
+                                     uebrig.size ? ["rest"] : []);
+  let treffer = 0;
   for (const g of gruppen) {
-    const tags = (g === "rest" ? [...uebrig].sort()
-                               : TAG_GRUPPEN[g].filter((x) => z.tags[x]));
+    const tags = (g === "haeufig" ? FREQUENT
+                  : g === "rest" ? [...uebrig].sort()
+                  : TAG_GRUPPEN[g]).filter((x) => z.tags[x] && passt(x));
     if (!tags.length) continue;
-    const offen = z.kontextGruppe === g;
+    treffer += tags.length;
+    const offen = suche ? true
+      : z.kontextOffen.has(g);
     // `aufgeklappt` und NICHT `offen`: die Klasse `.offen` gehoert der roten
     // Warnbox fuer nicht zugeordnete Platzhalter und traegt einen Rand, den der
     // Gruppenkopf sonst still miterbte.
@@ -2361,18 +2527,37 @@ function zeichneKontext(x, y, lage, lageBehalten) {
                          "gruppenkopf" + (offen ? " aufgeklappt" : ""));
     kopfKnopf.type = "button";
     kopfKnopf.setAttribute("aria-expanded", String(offen));
-    kopfKnopf.append(document.createTextNode((st.gruppen || {})[g] || g),
-                     el("span", "pfeil", offen ? "\u2303" : "\u2304"));
+    kopfKnopf.dataset.gruppe = g;
+    const pfeil = el("span", "pfeil");
+    pfeil.append(zeichenSinnbild(offen ? "hoch" : "runter", KNOPFBILDER));
+    kopfKnopf.append(document.createTextNode(
+      g === "haeufig" ? st.haeufig : ((st.gruppen || {})[g] || g)), pfeil);
     kopfKnopf.addEventListener("click", (e) => {
       e.stopPropagation();
-      z.kontextGruppe = offen ? null : g;
+      if (suche) return;
+      if (offen) z.kontextOffen.delete(g);
+      else z.kontextOffen.add(g);
+      // Der Kopf bleibt unter der Maus (Feedback 21.10.2026): vorher seine
+      // Lage merken, neu zeichnen, und den Rollbereich so stellen, dass der
+      // Kopf wieder genau dort steht. Sonst begann die neue Liste bei
+      // `scrollTop = 0`, und alles sprang.
+      const vorher = kopfKnopf.getBoundingClientRect().top;
+      const rollVorher = rollen.scrollTop;
       // Neu zeichnen an derselben Stelle — das Menue bleibt, wo es ist. Der
       // vierte Wert haelt die Lage fest.
       zeichneKontext(x, y, lage, true);
+      const neuRollen = menu.querySelector(".tagrollen");
+      const neuKopf = neuRollen && neuRollen.querySelector(
+        '.gruppenkopf[data-gruppe="' + g + '"]');
+      if (neuRollen && neuKopf) {
+        neuRollen.scrollTop = rollVorher;
+        neuRollen.scrollTop += neuKopf.getBoundingClientRect().top - vorher;
+      }
     });
-    menu.append(kopfKnopf);
-    if (offen) for (const tag of tags) menu.append(eintrag(tag));
+    rollen.append(kopfKnopf);
+    if (offen) for (const tag of tags) rollen.append(eintrag(tag));
   }
+  if (suche && !treffer) rollen.append(el("p", "keintreffer", st.keinTreffer));
 
   // Erst zeigen, dann einpassen — die Hoehe steht vorher nicht fest.
   menu.hidden = false;
@@ -2410,6 +2595,12 @@ function zeichneKontext(x, y, lage, lageBehalten) {
   z.kontextLage = { x: Math.max(8, bx), y: Math.max(8, by) };
   menu.style.left = z.kontextLage.x + "px";
   menu.style.top = z.kontextLage.y + "px";
+  // Mit der Maus gleich lostippen. Auf dem Handy nicht: dort schoebe die
+  // Tastatur das halbe Menue aus dem Bild.
+  if (typeof matchMedia === "function"
+      && matchMedia("(pointer: fine)").matches) {
+    feld.focus({ preventScroll: true });
+  }
 }
 
 async function handlungEntfernen(lage) {
@@ -2486,11 +2677,25 @@ function zeichneVokabular() {
                   (TAG_GRUPPEN[g] || [])[0]);
     }
   }
+  // Die Suche erst ab elf Eintraegen (Feedback 20.10.2026: lange Listen
+  // durchsuchbar). Bei einer Handvoll ist sie nur ein Feld mehr.
+  const lang = schluessel.length > 10;
+  $("vok-suche").classList.toggle("suchweg", !lang);
+  const vh = $("vok-suche").parentElement;
+  if (vh && vh.classList && vh.classList.contains("suchhuelle")) {
+    vh.classList.toggle("suchweg", !lang);
+  }
+  $("vok-suche").placeholder = s.suchen;
+  $("vok-suche").setAttribute("aria-label", s.suchen);
+  if (!lang && z.vokSuche) {
+    z.vokSuche = ""; $("vok-suche").value = ""; suchStand($("vok-suche"));
+  }
+  const suche = z.vokSuche.trim().toLowerCase();
   const ziel = $("vokabular-inhalt");
   ziel.replaceChildren();
   if (!schluessel.length) {
     ziel.append(el("p", "vokabular-leer",
-      z.vokabular ? s.keinVokabular : s.keinVokabularAus || s.keinVokabular));
+      s.keinVokabular));
     return;
   }
 
@@ -2513,17 +2718,22 @@ function zeichneVokabular() {
 
   // Sortiert nach Platzhalter, nicht nach Fundreihenfolge — sonst springt
   // die Tabelle bei jedem Lauf, und man sucht Zeilen statt sie zu lesen.
+  let treffer = 0;
   for (const ph of schluessel.sort()) {
     const typ = typOf(ph);
     if (z.vokFilter !== "alle" && (GRUPPE_VON[typ] || "rest") !== z.vokFilter) continue;
-    const c = farbe(typ);
+    // Gesucht wird in Platzhalter, Originalwert und Typ.
+    if (suche && !(ph + " " + w[ph] + " " + typ).toLowerCase().includes(suche)) continue;
+    treffer++;
     const tr = el("tr");
 
     // DIESELBE Plakette wie im Text von 02, aus derselben Funktion: Farbe,
     // Schrift, Groesse und die Umrandung nach Herkunft koennen so nicht
     // auseinanderlaufen (Feedback 18.10.2026).
     const td1 = el("td");
-    td1.append(platzhalter(ph, spanZu[ph]));
+    const marke = platzhalter(ph, spanZu[ph]);
+    marke.dataset.ohneWert = "1";
+    td1.append(marke);
 
     // Der Originalwert ist aenderbar. Wer beim Zurueckwandeln einen anderen
     // Wert einsetzen will — etwa einen bewusst erfundenen —, soll das hier tun
@@ -2543,6 +2753,7 @@ function zeichneVokabular() {
     const art = platzhalter(ph, spanZu[ph]);
     art.textContent = typ;
     art.classList.add("ph-typ");
+    art.dataset.ohneWert = "1";
     td3.append(art);
 
     // Entfernen von HIER aus, nicht nur ueber das Klappmenue in 02: bei einem
@@ -2567,6 +2778,7 @@ function zeichneVokabular() {
   }
   tab.append(thead, tbody);
   ziel.append(tab);
+  if (suche && !treffer) ziel.append(el("p", "vokabular-leer", s.keinTreffer));
 }
 
 function zeichneHinweise() {
@@ -2579,10 +2791,6 @@ function zeichneHinweise() {
   //
   // Der eigene Hinweis steht vor denen des Servers: er betrifft den Zustand
   // hier, nicht den letzten Lauf.
-  if (z.vokabularVerworfen) {
-    const p = el("p", "hinweis warnhinweis", t().verworfenHinweis);
-    ziel.append(p);
-  }
   if (z.vokMeldung) {
     ziel.append(el("p", "hinweis warnhinweis", z.vokMeldung));
   }
@@ -2604,17 +2812,17 @@ function zeichneHinweise() {
     }
     ruhig.push(hinweisText(h));
   }
-  // Die GEMESSENE Dauer, vom Server — ohne Zahl stuende in einem
-  // Fehlerbericht «es war langsam». Sie steht am Schluss, weil sie den Lauf
-  // beschreibt und nicht den Text.
-  const ms = z.antwort && z.antwort.kennzahlen
-    && z.antwort.kennzahlen.dauer_ms;
-  if (typeof ms === "number") {
-    ruhig.push(t().lFertig.replace("{}", dauerWort(ms)));
-  }
+  // Die gemessene Dauer steht seit 2.1 im Kopf von 02, nicht mehr hier.
+  // Die uebrigen ruhigen Hinweise stehen hinter dem Info-Zeichen im Kopf
+  // und klappen auf Klick unter dem Kopf auf (Feedback 21.10.2026: «alle
+  // Meldungen in den Header»). Warnungen oben bleiben immer sichtbar.
   // Das Trennzeichen ist `·` — dasselbe wie im Untertitel der Kopfzeile und
   // in der Fusszeile.
-  if (ruhig.length) {
+  const info = $("hinweise-info");
+  info.classList.toggle("da", ruhig.length > 0);
+  info.setAttribute("aria-expanded", String(!!z.hinweiseAuf));
+  info.classList.toggle("aktiv", !!z.hinweiseAuf);
+  if (ruhig.length && z.hinweiseAuf) {
     const zeile = ruhig.join(" · ");
     const p = el("p", "hinweis hinweiszeile");
     // Im Hinweis zu den Vorlieben traegt das Wort «Klartext» denselben
@@ -2645,10 +2853,18 @@ function zeichneBeschriftung() {
   $("titel-03").textContent = s.prompt;
   $("titel-04").textContent = s.antwort;
   $("titel-vokabular").textContent = s.vokabular;
-  $("vok-herunter-text").textContent = s.vokHerunter;
-  $("vok-hoch-text").textContent = s.vokHoch;
+  // Kurz am Knopf, genau im Tooltip (Feedback 21.10.2026), wie in den
+  // anderen Fuessen.
+  $("vok-herunter-text").textContent = s.herunterladen;
+  $("vok-hoch-text").textContent = s.hochladen;
+  for (const [kid, satz] of [["knopf-vok-herunter", s.vokHerunter],
+                             ["knopf-vok-hoch", s.vokHoch]]) {
+    $(kid).title = satz;
+    $(kid).setAttribute("aria-label", satz);
+    $(kid).setAttribute("data-autotitel", "0");
+  }
   $("vorlagen-filter").placeholder = s.tplSuchen;
-  $("vorlage-sichern-text").textContent = s.tplSichern;
+  $("vorlage-sichern-text").textContent = s.spalteSichern;
   // BEIDES im Tooltip, und die Reihenfolge ist Absicht.
   //
   // Wird die Spalte eng, verschwindet die Beschriftung und nur das Zeichen
@@ -2659,7 +2875,9 @@ function zeichneBeschriftung() {
   $("knopf-vorlage-sichern").title = s.tplSichern + ". " + s.tplWarnung;
   $("spruch").textContent = s.spruch;
   $("lokalzeiger").textContent = s.hundert;
+  // Kurz und einzeilig im Feld, die Formate im Tooltip (Feedback 22.10.2026).
   $("ablage-text").textContent = s.dropN;
+  $("ablage").title = s.dropT;
   // Zuletzt: erst stehen alle Beschriftungen, dann werden daraus die
   // Tooltips. Vorher gerufen traege der Tooltip die Sprache von vorhin.
   knopfTitelSetzen();
@@ -2672,20 +2890,13 @@ function zeichneBeschriftung() {
     document.createTextNode(s.spruch1), el("br"),
     document.createTextNode(s.spruch2));
   $("knopf-einstellungen").title = s.einst;
-  for (const e of document.querySelectorAll(".p-lokal")) {
-    e.textContent = s.lokal;
-  }
-  for (const e of document.querySelectorAll(".p-online")) {
-    e.textContent = s.online;
-  }
   $("neu-text").textContent = s.neu;
   $("neu-unten-text").textContent = s.neu;
-  $("knopf-beispiel").textContent = s.beispiel;
+  $("beispiel-text").textContent = s.beispiel;
   $("maskieren-text").textContent = z.laeuft ? s.laeuft : s.run;
   $("kopieren-text").textContent = s.kopieren;
   $("bearbeiten-text").textContent =
     z.bearbeiten ? s.bearbeitenFertig : s.bearbeiten;
-  $("knopf-bearbeiten").title = s.bearbeitenHilfe;
   $("maskiert-feld").placeholder = s.bearbeitenHilfe;
   $("kopieren-orig-text").textContent = s.kopieren;
   // In Stuecke zerlegt, damit die Zeile nur ZWISCHEN den Aussagen bricht
@@ -2700,37 +2911,51 @@ function zeichneBeschriftung() {
   const fussTeile = s.fussLinks.split(" · ");
   $("fuss-links").replaceChildren(...fussTeile.map((teil, i) =>
     el("span", "fuss-teil",
-       i < fussTeile.length - 1 ? teil + " · " : teil)));
-  $("zurueck-wort").textContent = s.zurueckW;
-  // Bereich 02 und Bereich 04 sind zwei Felder mit zwei Schluesseln — in
-  // 02 wird eingefuegt UND getippt.
-  $("antwortfeld").placeholder = s.rueckPlatz;
-  $("uebernahme-text").textContent =
-    z.zurueck ? s.einpflegen : s.uebernahme;
+       // Ein geschuetztes Leerzeichen nach dem Punkt: das gewoehnliche am
+       // Ende eines `inline-block` faellt weg, und es stand «MASCHERA
+       // ·Verarbeitung» da (gesehen 20.10.2026).
+       i < fussTeile.length - 1 ? teil + " ·\u00a0" : teil)));
+  $("uebernahme-text").textContent = s.uebernahme;
   $("herunter-mask-text").textContent = s.herunterladen;
   $("herunter-final-text").textContent = s.herunterladen;
   $("einfuegen-antwort-text").textContent = s.einfuegen;
-  for (const kid of ["knopf-leeren-orig", "knopf-leeren-prompt",
-                     "knopf-leeren-antwort", "knopf-leeren-rueck"]) {
-    $(kid).title = s.leerenA;
-    $(kid).setAttribute("aria-label", s.leerenA);
+  // Seit 2.1 stehen diese Knoepfe im Fuss, oft nur als Zeichen. Der Tooltip
+  // sagt deshalb genau, WAS kopiert, geleert oder heruntergeladen wird
+  // (Feedback 20.10.2026). Nach `knopfTitelSetzen()`, damit er gewinnt.
+  for (const [kid, wort] of Object.entries(s.knopfTipps || {})) {
+    const k = $(kid);
+    if (!k) continue;
+    k.title = wort;
+    k.setAttribute("aria-label", wort);
+    k.setAttribute("data-autotitel", "0");
   }
   $("final-kopieren-text").textContent = s.finalKopieren;
-  $("titel-prompt").textContent = s.promptT;
+  for (const id of ["leeren-orig-text", "leeren-final-text",
+                    "leeren-antwort-text"]) {
+    $(id).textContent = s.leerenA;
+  }
+  $("leeren-prompt-text").textContent = s.spalteLeeren;
   $("titel-hinaus").textContent = s.hinausT;
+  $("titel-prompt").textContent = s.promptT;
+  grossKnoepfeZeichnen();
+  $("hinweise-info").title = s.hinweiseInfo;
+  $("hinweise-info").setAttribute("aria-label", s.hinweiseInfo);
   // Bereich 01: auch der Platzhalter eines Textfelds wird uebersetzt. Punkt
   // 60 prueft den Text von Elementen UND ihre Platzhalter-Attribute.
   $("orig").placeholder = s.origPlatz;
   $("prompt").placeholder = s.promptPlatz;
-  $("kopieren-prompt-text").textContent = s.kopieren;
-  $("kopieren-hinaus-text").textContent = s.kopieren;
+  $("kopieren-prompt-text").textContent = s.spalteKopieren;
   $("einst-titel").textContent = s.einstT;
+  $("einst-suche").placeholder = s.suchen;
+  $("sprachwahl").setAttribute("aria-label", s.spracheW);
+  $("einst-suche").setAttribute("aria-label", s.suchen);
   // Die Zeichen an den nachgeruesteten Knoepfen. Sie kommen hierher und
   // nicht ins HTML, weil `KNOPFBILDER` die eine Quelle ist. Gesetzt wird
   // EINMAL: `zeichneBeschriftung()` laeuft bei jedem Sprachwechsel, und ein
   // zweiter Aufruf haengte ein zweites Zeichen an.
   for (const [kennung, bild] of [["knopf-regeln-speichern", "speichern"],
                                  ["knopf-dienst-neu", "hinzufuegen"],
+                                 ["knopf-dienste-vorgabe", "neustart"],
                                  ["knopf-seite-zu", "schliessen"],
                                  ["knopf-einst-abbrechen", "schliessen"]]) {
     const k = $(kennung);
@@ -2772,6 +2997,7 @@ function zeichneBeschriftung() {
   $("einst-schrift-hilfe").textContent = s.schriftH;
   $("einst-schriftart-etikett").textContent = s.schriftart;
   $("einst-schriftgroesse-etikett").textContent = s.schriftgroesse;
+  $("einst-vorschau-etikett").textContent = s.vorschauE;
   $("einst-schriftprobe").textContent = s.schriftprobe;
   // Die Eintraege der Schriftwahl wechseln die Sprache mit. «IBM Plex» bleibt,
   // wie es ist: der Name der Hausschrift, in jeder Sprache derselbe.
@@ -2786,6 +3012,7 @@ function zeichneBeschriftung() {
   $("einst-dienste-titel").textContent = s.diensteT;
   $("einst-dienste-hilfe").textContent = s.diensteH;
   $("dienst-neu-text").textContent = s.hinzu;
+  $("dienste-vorgabe-text").textContent = s.vorgabenZurueck;
   // `schliessen` und nicht `einstZu`: der Einstellungsdialog sagt
   // «Speichern & Schliessen», weil er speichert; ein Einseiter hat nichts zu
   // speichern.
@@ -2825,24 +3052,26 @@ function ausgehend() {
 
 function zeichneHinaus() {
   const s = t();
+  $("b03").classList.toggle("vorschau-zu", !z.hinausAuf);
+  $("hinaus-klappe").setAttribute("aria-expanded", String(!!z.hinausAuf));
   const ziel = $("hinaus");
   ziel.replaceChildren();
   const anhang = uebernommenerText();
   if (!z.prompt && !anhang) {
     ziel.classList.add("istleer");
     ziel.append(document.createTextNode(s.hinausLeer));
-    $("zahl-hinaus").textContent = "";
     return;
   }
   ziel.classList.remove("istleer");
   if (z.prompt) ziel.append(document.createTextNode(z.prompt));
   if (anhang) {
     ziel.append(el("span", "trenner", "———— " + s.trenner + " ————"));
-    ziel.append(el("span", "anhang", anhang));
+    const teil = el("span", "anhang");
+    maskiertSetzen(teil, anhang, (z.antwort && z.antwort.spans) || []);
+    ziel.append(teil);
   }
-  $("zahl-hinaus").textContent =
-    s.hinausZahl.replace("{}", String(ausgehend().length))
-                .replace("{dienst}", dienstJetzt().name);
+  // Keine Zeichenzahl mehr hinter dem Titel (Feedback 21.10.2026: sie
+  // irritierte nur).
 }
 
 /* Was NICHT zurueckgewandelt werden konnte, ist der wichtigste Teil der
@@ -2865,8 +3094,8 @@ function zeichneOffen() {
   // dem das Kreuz geklickt wurde. Ein neues «Vokabular einpflegen» bringt
   // ein neues Ergebnis und damit den Banner wieder (Entscheid 18.10.2026).
   if (fehlend.length && z.offenZu !== z.final) {
-    const kasten = el("div", "offen");
-    const zu = el("button", "offen-zu");
+    const kasten = el("div", "offen mit-kreuz");
+    const zu = el("button", "offen-zu kreuz");
     zu.type = "button";
     zu.title = s.schliessen;
     zu.setAttribute("aria-label", s.schliessen);
@@ -2900,6 +3129,7 @@ function finalText() {
 
 function zeichneFinal() {
   zeichneOffen();
+  zeichneEinpflegenZeile();
   const hat = !!(z.final && z.final.text);
   $("leer-05").hidden = hat;
   $("final").hidden = !hat;
@@ -2929,7 +3159,7 @@ function zeichneFinal() {
   // `zeichne()`. Dort laese er den ALTEN Feldinhalt, und der Knopf kaeme erst
   // beim naechsten Zeichnen. Die Anzeige darf nicht aus dem DOM lesen, was
   // derselbe Durchgang erst schreibt.
-  $("knopf-leeren-final").hidden = !hat;
+  $("knopf-leeren-final").disabled = !hat;
 }
 
 /* ========================================================================
@@ -2951,9 +3181,12 @@ function zeichneDienstliste() {
     if (d.falsch === "name") name.classList.add("falsch");
     if (d.falsch === "url") url.classList.add("falsch");
     url.addEventListener("change", (e) => { d.url = e.target.value; });
-    const weg = el("button", null, "×");
+    const weg = el("button", "kreuz");
     weg.type = "button";
-    weg.title = t().entfernen;
+    weg.append(zeichenSinnbild("schliessen", KNOPFBILDER));
+    weg.title = t().dienstWeg;
+    weg.setAttribute("aria-label", t().dienstWeg);
+    zeile.classList.add("mit-kreuz");
     weg.addEventListener("click", () => {
       z.dienste.splice(z.dienste.indexOf(d), 1);
       if (!z.dienste.some((x) => x.id === z.dienst) && z.dienste.length) {
@@ -2964,6 +3197,12 @@ function zeichneDienstliste() {
     zeile.append(name, url, weg);
     ziel.append(zeile);
   });
+  // Nur aktiv, wenn ein Vorgabedienst fehlt.
+  const vorgabe = $("knopf-dienste-vorgabe");
+  if (vorgabe) {
+    const da = new Set(z.dienste.map((d) => d.id));
+    vorgabe.disabled = DIENSTE.every((d) => da.has(d.id));
+  }
 }
 
 /* Alle 45 Tags, die besonders schuetzenswerten sichtbar anders. `CANTON`
@@ -2988,6 +3227,8 @@ function zeichneTagwolke() {
     }
     ziel.append(wolke);
   }
+  // Neu gezeichnet nach jedem Umlegen: das Suchwort gilt weiter.
+  einstFiltern();
 }
 
 /* Die Beschreibung steht IM Knopf, nicht im Titel. Wer `ZSR_RCC` oder
@@ -3226,6 +3467,67 @@ async function einstellungenOeffnen() {
   } catch (e) { /* Regeln fehlen: leeres Feld ist die richtige Anzeige */ }
   zeichneTagwolke();
   zeichneDienstliste();
+  $("einst-suche").value = "";
+  suchStand($("einst-suche"));
+  einstFiltern();
+}
+
+/* Die Einstellungen durchsuchen (seit 2.1, Feedback 20.10.2026).
+ *
+ * Trifft das Wort einen Abschnittstitel oder seine Erklaerung, steht der
+ * ganze Abschnitt da. Sonst bleibt ein Abschnitt, in dem es vorkommt — in
+ * einer Beschriftung, einem Dienstnamen, einem Feldwert. In den Klartext-
+ * Tags, der laengsten Liste, wird je Tag gefiltert, und Gruppen ohne
+ * Treffer verschwinden mit ihrer Ueberschrift.
+ *
+ * Eine KLASSE (`suchweg`) und nicht `hidden`: die Fensterabschnitte setzt
+ * das Skript schon ueber `hidden`, und die Suche darf keinen davon zeigen.
+ */
+let einstSucheAktiv = false;
+function einstFiltern() {
+  const feld = $("einst-suche");
+  const q = ((feld && feld.value) || "").trim().toLowerCase();
+  if (!q && !einstSucheAktiv) return;
+  einstSucheAktiv = !!q;
+  const rumpf = $("einst-rumpf");
+  const enthaelt = (knoten) => {
+    let text = (knoten.textContent || "").toLowerCase();
+    for (const f of knoten.querySelectorAll("input")) {
+      text += " " + String(f.value || "").toLowerCase();
+    }
+    return text.includes(q);
+  };
+  const zeigen = (k, ja) => k.classList.toggle("suchweg", !ja);
+  let irgendwo = false;
+  for (const teil of rumpf.querySelectorAll(".einst-teil")) {
+    const kopf = [...teil.querySelectorAll("h3, .einst-hilfe")]
+      .some((k) => (k.textContent || "").toLowerCase().includes(q));
+    const wolken = [...teil.querySelectorAll(".tagwolke")];
+    let sichtbar;
+    if (!q || kopf) {
+      for (const k of teil.querySelectorAll(".suchweg")) zeigen(k, true);
+      sichtbar = true;
+    } else if (wolken.length) {
+      sichtbar = false;
+      for (const w of wolken) {
+        let n = 0;
+        for (const b of w.children) {
+          const ja = enthaelt(b);
+          zeigen(b, ja);
+          if (ja) n++;
+        }
+        zeigen(w, n > 0);
+        const h = w.previousElementSibling;
+        if (h && h.classList.contains("tagsgruppe")) zeigen(h, n > 0);
+        if (n) sichtbar = true;
+      }
+    } else {
+      sichtbar = enthaelt(teil);
+    }
+    zeigen(teil, sichtbar);
+    if (sichtbar && !teil.hidden) irgendwo = true;
+  }
+  $("einst-keintreffer").textContent = q && !irgendwo ? t().keinTreffer : "";
 }
 
 /* Die Dienste alphabetisch nach Name, ohne Rücksicht auf Gross- und
@@ -3574,12 +3876,17 @@ function zeichneDienstmenu() {
  */
 const SCHRITT_ZIEL = ["b01", "b02", "b03", "b04", "b05"];
 
+/* Der WEITESTE erreichte Stand zaehlt, nicht der erste fehlende. Wer ohne
+ * «Übernahme in Prompt» eine Antwort einpflegt, ist trotzdem bei 05 — vorher
+ * blieb der Ring an 02 stehen und Schritt 5 ohne Haken (Feedback
+ * 20.10.2026).
+ */
 function schrittJetzt() {
   if (!(z.antwort && z.antwort.maskiert)) return 0;
-  if (!z.uebernommen) return 1;
-  if (!String(z.antwort04 || "").trim()) return 2;
-  if (!z.final) return 3;
-  return 5;
+  if (z.final) return 5;
+  if (String(z.antwort04 || "").trim()) return 3;
+  if (z.uebernommen) return 2;
+  return 1;
 }
 
 function schrittAnspringen(i) {
@@ -3608,6 +3915,14 @@ function schrittMitteMarkieren() {
   const jetzt = schrittJetzt();
   (nav.querySelectorAll(".schritt") || []).forEach((b, i) => {
     b.classList.toggle("mitte", z.schrittMitte === i && i !== jetzt);
+  });
+  // Dieselbe Aussage an der Kachel: angetippt schlaegt aktuell, und der
+  // Ring bleibt stehen, bis der Ablauf weiterrueckt (Feedback 20.10.2026).
+  const gemeint = Math.min(z.schrittMitte == null ? jetzt : z.schrittMitte,
+                           SCHRITT_ZIEL.length - 1);
+  SCHRITT_ZIEL.forEach((kennung, i) => {
+    const k = $(kennung);
+    if (k) k.classList.toggle("amzug", i === gemeint && !z.einpflegenLaeuft);
   });
 }
 
@@ -3684,9 +3999,14 @@ function zeichne() {
   // behauptete etwas anderes als die Tabelle daneben. Lieber die Laenge
   // zeigen und den Anteil weglassen.
   const mt = (z.antwort && z.antwort.maskiert) || "";
-  $("zahl-02").textContent = k
-    ? s.zeichenN(mt.length) + " · " + s.maskiertN(k.maskiert)
-    : s.zeichenN(mt.length);
+  // Alles, was der Lauf zu sagen hat, steht im Kopf (Feedback 21.10.2026):
+  // Laenge, davon maskiert, Dauer. Die Zeile darunter ist weg.
+  const teile02 = [s.zeichenN(mt.length)];
+  if (k) teile02.push(s.davonMaskiert.replace("{}", String(k.maskiert)));
+  if (k && typeof k.dauer_ms === "number") {
+    teile02.push(s.inDauer.replace("{}", dauerWort(k.dauer_ms)));
+  }
+  $("zahl-02").textContent = teile02.join(" · ");
   const w = (z.antwort && z.antwort.woerterbuch) || {};
   const eintraege = s.eintraegeN(Object.keys(w).length);
   $("zahl-vokabular").textContent = k
@@ -3696,8 +4016,6 @@ function zeichne() {
   // Auskunft, kein Bedienelement. Der volle Text steht im Tooltip.
   $("zahl-vokabular").title = $("zahl-vokabular").textContent;
   $("zahl-02").title = $("zahl-02").textContent;
-  $("schalterwort").textContent = z.vokabular ? s.an : s.aus;
-  $("schalter-vokabular").setAttribute("aria-checked", String(z.vokabular));
   $("knopf-maskieren").disabled = z.laeuft || !z.orig.trim();
   $("knopf-kopieren").disabled = !z.antwort;
   $("knopf-vok-herunter").disabled = !hatWoerterbuch();
@@ -3740,41 +4058,28 @@ function zeichne() {
   $("knopf-einfuegen-antwort").hidden = !imEigenenFenster();
   $("knopf-kopieren-orig").disabled = !z.orig.trim();
   $("knopf-kopieren-prompt").disabled = !z.prompt.trim();
-  // Im Rueckweg wird Bereich 02 zum Eingabefeld. Wer die dritte Spalte
-  // nicht braucht — weil er selbst mit dem Text arbeitet —, kommt so
-  // trotzdem zum fertigen Ergebnis.
-  //
-  // DREI Ansichten in EINEM Kasten, und sie schliessen einander aus: die
-  // gesetzte Ansicht, das Schreibfeld zum Korrigieren und der «Weg zurueck».
-  // Der Rueckweg gewinnt — wer ihn einschaltet, arbeitet nicht mehr am
-  // maskierten Text.
-  const bearbeitet = z.bearbeiten && !z.zurueck && !!z.antwort;
-  $("maskiert").hidden = z.zurueck || bearbeitet;
+  // ZWEI Ansichten in EINEM Kasten, und sie schliessen einander aus: die
+  // gesetzte Ansicht und das Schreibfeld zum Korrigieren. Der «Weg zurueck»
+  // als dritte ist seit 2.1 weg (Feedback 20.10.2026: niemand verstand ihn);
+  // zurueck geht es ueber 04.
+  const bearbeitet = z.bearbeiten && !!z.antwort;
+  $("maskiert").hidden = bearbeitet;
   $("maskiert-feld").hidden = !bearbeitet;
-  $("antwortfeld").hidden = !z.zurueck;
-  $("knopf-kopieren").hidden = z.zurueck;
-  $("knopf-bearbeiten").hidden = z.zurueck;
   $("knopf-bearbeiten").disabled = !(z.antwort && z.antwort.maskiert);
   $("knopf-bearbeiten").classList.toggle("aktiv", bearbeitet);
-  $("schalter-zurueck").setAttribute("aria-checked", String(z.zurueck));
-  $("knopf-uebernahme").disabled = z.zurueck
-    ? !(z.antwortText.trim() && hatWoerterbuch())
-    : !(z.antwort && z.antwort.maskiert);
-  // Eine KLASSE, kein `style.transform`. Inline schlaegt jede Stilvorlage —
-  // und in der einspaltigen Ansicht dreht das CSS alle Pfeile nach unten.
-  $("uebernahme-pfeil").classList.toggle("gedreht", z.zurueck);
+  $("knopf-uebernahme").disabled = !(z.antwort && z.antwort.maskiert);
   zeichneFinal();
-  $("knopf-kopieren-hinaus").disabled = !ausgehend().trim();
   $("knopf-einpflegen04").disabled =
     !z.antwort04.trim() || !hatWoerterbuch();
-  $("knopf-leeren-antwort").hidden = !z.antwort04.trim();
-  // Im Rueckweg der Papierkorb fuer das eingefuegte Antwortfeld in 02.
-  $("knopf-leeren-rueck").hidden = !(z.zurueck && z.antwortText.trim());
-  $("knopf-leeren-orig").hidden = !z.orig.trim();
-  $("knopf-leeren-prompt").hidden = !z.prompt.trim();
+  // Seit 2.1 stehen die Leerknoepfe immer da und sind grau, solange nichts
+  // zu leeren ist (Feedback 20.10.2026) — ein Knopf, der erscheint und
+  // verschwindet, verschiebt seine Nachbarn im Fuss.
+  $("knopf-leeren-antwort").disabled = !z.antwort04.trim();
+  $("knopf-leeren-orig").disabled = !z.orig.trim();
+  $("knopf-leeren-prompt").disabled = !z.prompt.trim();
   $("knopf-herunter-mask").disabled = !(z.antwort && z.antwort.maskiert);
   const fertig = !!(z.final && z.final.text);
-  $("knopf-herunter-final").hidden = !fertig;
+  $("knopf-herunter-final").disabled = !fertig;
   $("knopf-final-kopieren").disabled = !fertig;
   // Der Pfeil daempft mit, aber er wird NICHT deaktiviert: die Dienstwahl
   // ist auch dann sinnvoll, wenn noch nichts zu senden ist — man stellt sie
@@ -3796,7 +4101,7 @@ function zeichne() {
   $("onlinewarnung-text").textContent = s.zoneHinaus;
   $("onlinewarnung").title = warnsatz;
   $("maskiert").classList.toggle("istleer", !z.antwort);
-  vokabularKlappe();
+  fussEinpassenBald();
 }
 
 /* --- Handlungen --------------------------------------------------------- */
@@ -3974,6 +4279,9 @@ function rollBehaelter() {
 }
 
 function springeZu(kennung) {
+  // Wer springt, will die Kachel im Raster sehen: eine vergroesserte geht
+  // zuerst zurueck an ihren Platz.
+  if (z.gross && z.gross !== kennung) kachelGross(null);
   if (!gestapelt()) return;
   const ziel = $(kennung);
   const rollen = rollBehaelter();
@@ -4041,17 +4349,35 @@ function springeZu(kennung) {
     if (t < 1) requestAnimationFrame(schritt);
   };
   requestAnimationFrame(schritt);
+  // Absicherung (gemessen 21.10.2026): ein angefordertes Bild kam im
+  // eingebauten Browser beim ersten Sprung nach dem Laden nie, und die Seite
+  // blieb stehen. Nach der Bewegungszeit steht der Sprung auf jeden Fall am
+  // Ziel; lief die Bewegung, aendert das nichts mehr.
+  setTimeout(() => { rollen.scrollTop = nach; }, dauer + 120);
 }
 
-/* Das Vokabular auf- und zuklappen. Sichtbar ist der Knopf nur in der
- * einspaltigen Ansicht; der Zustand wird trotzdem immer gefuehrt, damit
- * beim Wechsel der Breite nichts springt. */
-function vokabularKlappe() {
-  const kasten = $("bvok");
-  if (kasten) kasten.classList.toggle("zu", z.vokZu);
-  const knopf = $("knopf-vok-klappe");
-  if (knopf) knopf.setAttribute("aria-expanded", String(!z.vokZu));
+/* Die Sprachwahl hat zwei Gesichter: Knopfreihe und, bei wenig Breite,
+ * ein Pulldown (seit 2.1, Feedback 20.10.2026). Beide zeigen dieselbe Wahl. */
+function spracheMarkieren() {
+  for (const k of document.querySelectorAll("[data-sprache]")) {
+    k.classList.toggle("aktiv", k.dataset.sprache === z.sprache);
+  }
+  const wahl = $("sprachwahl");
+  if (wahl) wahl.value = z.sprache;
 }
+
+async function spracheWaehlen(sprache) {
+  if (!I18N[sprache]) return;
+  z.sprache = sprache;
+  spracheMarkieren();
+  await ladeTags();
+  zeichne();
+  merkeSprache();
+}
+
+/* Das Vokabular steht seit 2.1 auch einspaltig immer offen (Feedback
+ * 20.10.2026): das Auf- und Zuklappen war ein Handgriff mehr, und zugeklappt
+ * sah niemand, was maskiert ist. */
 
 /* Die Beschriftung des Sendeknopfes: der Dienstname FETT, damit man sieht,
  * wohin es geht.
@@ -4116,12 +4442,11 @@ async function laufen() {
   // Schon jetzt springen, nicht erst am Ende. Der Balken steht ueber dem
   // Textfeld von 02; wer untereinander arbeitet, saehe ihn sonst gar nicht.
   // So steht der Kasten still da, und der Balken laeuft sichtbar darin.
-  springeZu("b02");
+  handlungSprung("b02");
   fortschrittHolen();
   try {
     z.antwort = await maskiere(z.orig);
     z.bearbeiten = false;
-    z.vokabularVerworfen = false;
     z.vokMeldung = null;
   } catch (e) {
     z.antwort = null;
@@ -4169,7 +4494,6 @@ async function ablegen(datei) {
     // Was vorher da war, gehoert nicht zu diesem Text.
     z.antwort = null;
     z.bearbeiten = false;
-    z.vokabularVerworfen = false;
     z.vokMeldung = null;
     // Hinweise des Lesers — mehrere Nachrichten in einer Mailbox, eine
     // ungewoehnliche Kodierung — gehoeren angezeigt, auch wenn das Lesen
@@ -4202,13 +4526,17 @@ function verbinde() {
     zeichne();
   });
   $("knopf-maskieren").addEventListener("click", () => laufen());
+  // «Beispiel» beginnt von vorne wie «Neu» (seit 2.1, Feedback
+  // 20.10.2026): dieselbe eine Frage, dann ALLES leer und das Beispiel in 01.
+  // Vorher blieben Prompt, Uebernahme, Antwort und Ergebnis stehen, und
+  // nach der naechsten Uebernahme waren gleich alle fuenf Schritte erledigt.
   $("knopf-beispiel").addEventListener("click", async () => {
-    if (!(await verwerfenOk())) return;
+    if (!(await neuOk())) return;
+    allesLeeren();
     z.orig = BEISPIEL[z.sprache] || BEISPIEL.de;
     $("orig").value = z.orig;
-    z.antwort = null;
-    z.bearbeiten = false;
     zeichne();
+    handlungSprung("b01");
   });
   // EIN Ablauf, mehrere Einstiege — der Knopf unten in 05, der oben in 01
   // und die Wortmarke tun dasselbe, samt Rueckfrage. Zwei Wege zu derselben
@@ -4220,7 +4548,7 @@ function verbinde() {
       if (!(await neuOk())) return;
       allesLeeren();
       zeichne();
-      springeZu("b01");
+      handlungSprung("b01");
     });
   }
   $("knopf-kopieren").addEventListener("click", async () => {
@@ -4316,16 +4644,10 @@ function verbinde() {
   });
 
   for (const knopf of document.querySelectorAll("[data-sprache]")) {
-    knopf.addEventListener("click", async () => {
-      z.sprache = knopf.dataset.sprache;
-      for (const k of document.querySelectorAll("[data-sprache]")) {
-        k.classList.toggle("aktiv", k.dataset.sprache === z.sprache);
-      }
-      await ladeTags();
-      zeichne();
-      merkeSprache();
-    });
+    knopf.addEventListener("click", () => spracheWaehlen(knopf.dataset.sprache));
   }
+  $("sprachwahl").addEventListener("change",
+                                   (e) => spracheWaehlen(e.target.value));
 
   zeichneDienstmenu();
 
@@ -4352,7 +4674,7 @@ function verbinde() {
 
   // Eine Eigenschaft statt einer Liste: jedes Schreibfeld bekommt das Menue,
   // ohne dass jemand daran denkt — Dialog, Regeleditor, Vokabulartabelle,
-  // Vorlagenfeld und «Weg zurueck» eingeschlossen.
+  // und Vorlagenfeld eingeschlossen.
   //
   // `#maskiert` faellt NICHT darunter: es ist kein Schreibfeld, sondern eine
   // gesetzte Ansicht mit eigenem, reicherem Menue — und es wirkt auf beiden
@@ -4393,14 +4715,9 @@ function verbinde() {
   const kopfMessen = () => document.documentElement.style.setProperty(
     "--kopfhoehe", $("kopfzeile").offsetHeight + "px");
   window.addEventListener("resize", kopfMessen);
+  window.addEventListener("resize", fussEinpassenBald);
   window.addEventListener("resize", () => schrittZentrieren(false));
   kopfMessen();
-
-  $("knopf-vok-klappe").addEventListener("click", () => {
-    z.vokZu = !z.vokZu;
-    vokabularKlappe();
-    if (!z.vokZu) springeZu("bvok");
-  });
 
   document.addEventListener("click", (e) => {
     const menu = $("kontext");
@@ -4411,6 +4728,64 @@ function verbinde() {
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") kontextSchliessen();
   });
+  $("einst-suche").addEventListener("input", einstFiltern);
+  // «Prompt + maskierter Text» klappt auf und zu (Feedback 21.10.2026);
+  // zugeklappt gehoert die ganze Hoehe dem Promptfeld.
+  $("hinaus-klappe").addEventListener("click", () => {
+    z.hinausAuf = !z.hinausAuf;
+    zeichne();
+  });
+  for (const b of document.querySelectorAll(".gross-knopf")) {
+    b.addEventListener("click", (e) => {
+      e.stopPropagation();
+      kachelGross(z.gross === b.dataset.kachel ? null : b.dataset.kachel);
+    });
+  }
+  $("kachel-grund").addEventListener("click", () => kachelGross(null));
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || !z.gross || e.defaultPrevented) return;
+    // Erst ein offenes Menue oder ein Dialog, dann die grosse Kachel.
+    if (!$("kontext").hidden || !$("einst").hidden || !$("frage").hidden
+        || !$("seite").hidden || z.vorlagenOffen) return;
+    kachelGross(null);
+  });
+  $("hinweise-info").addEventListener("click", () => {
+    z.hinweiseAuf = !z.hinweiseAuf;
+    zeichneHinweise();
+  });
+  $("vok-suche").addEventListener("input", (e) => {
+    z.vokSuche = e.target.value;
+    zeichneVokabular();
+  });
+  // Bei offenem Tagmenue rollt NUR seine Liste, wo die Maus auch steht
+  // (Feedback 20.10.2026). Ohne das reichte der Browser das Rad ueber Kopf
+  // und Suchzeile, und am Ende der Liste, an die Seite dahinter weiter.
+  // `passive: false`, sonst gilt `preventDefault()` nicht.
+  document.addEventListener("wheel", (e) => {
+    const menu = $("kontext");
+    if (!menu || menu.hidden || !menu.classList.contains("tagmenu")) return;
+    e.preventDefault();
+    const rollen = menu.querySelector(".tagrollen");
+    if (!rollen) return;
+    const zeile = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? rollen.clientHeight : 1;
+    rollen.scrollTop += e.deltaY * zeile;
+  }, { passive: false });
+  document.addEventListener("touchmove", (e) => {
+    const menu = $("kontext");
+    if (!menu || menu.hidden || !menu.classList.contains("tagmenu")) return;
+    const rollen = menu.querySelector(".tagrollen");
+    if (rollen && rollen.contains(e.target)) return;
+    e.preventDefault();
+  }, { passive: false });
+  // Das Vorlagenmenue haengt an einer festen Stelle: beim Rollen der Seite
+  // (nicht seiner eigenen Liste) und bei Groessenaenderung geht es zu.
+  document.addEventListener("scroll", (e) => {
+    const menu = $("vorlagen-menu");
+    if (z.vorlagenOffen && menu && !menu.contains(e.target)) vorlagenAuf(false);
+  }, true);
+  window.addEventListener("resize", () => { if (z.vorlagenOffen) vorlagenAuf(false); });
+  // Der Tooltip haengt an einer festen Stelle; beim Rollen gehoert er weg.
+  document.addEventListener("scroll", tippWeg, true);
 
   // --- Einstellungen ---
   $("knopf-einstellungen").addEventListener("click", einstellungenOeffnen);
@@ -4525,6 +4900,15 @@ function verbinde() {
     }
   });
 
+  // Vorgabedienste zurueckholen (seit 2.1, Feedback 21.10.2026): wer sie
+  // beim Aufraeumen entfernt und gespeichert hat, hatte keinen Weg zurueck.
+  // Fehlende werden angefuegt, eigene Dienste bleiben, nichts wird ersetzt.
+  // Gespeichert wird erst mit «Speichern & schliessen», wie bei allem hier.
+  $("knopf-dienste-vorgabe").addEventListener("click", () => {
+    const da = new Set(z.dienste.map((d) => d.id));
+    for (const d of DIENSTE) if (!da.has(d.id)) z.dienste.push({ ...d });
+    zeichneDienstliste(); zeichneDienstmenu(); zeichne();
+  });
   $("knopf-dienst-neu").addEventListener("click", () => {
     z.dienste.push({ id: "eigen" + Date.now(), name: "", url: "" });
     zeichneDienstliste();
@@ -4566,11 +4950,6 @@ function verbinde() {
     }
   });
 
-  $("antwortfeld").addEventListener("input", (e) => {
-    z.antwortText = e.target.value;
-    zeichne();
-  });
-
   // Bereich 02 von Hand korrigieren: falsch markierte Bereiche oder
   // einzelne Woerter lassen sich im Text selbst berichtigen.
   //
@@ -4602,26 +4981,13 @@ function verbinde() {
     zeichne();
   });
 
-  $("schalter-zurueck").addEventListener("click", () => {
-    z.zurueck = !z.zurueck;
+  // Der maskierte Text wandert in den Anhang, und es geht weiter zu 03.
+  $("knopf-uebernahme").addEventListener("click", () => {
+    // ⚠️ HIER wandert der maskierte Text hinueber, nirgends sonst.
+    z.uebernommen = true;
     zeichne();
-    if (z.zurueck) $("antwortfeld").focus();
-  });
-
-  // ⚠️ Zwei Handlungen an einem Knopf, je nach Richtung. Hin: der maskierte
-  // Text wandert in den Anhang und die dritte Spalte klappt auf. Zurueck:
-  // die eingefuegte Antwort wird ueber `POST /api/zurueckwandeln` aufgeloest
-  // und landet in 05.
-  $("knopf-uebernahme").addEventListener("click", async () => {
-    if (!z.zurueck) {
-      // ⚠️ HIER wandert der maskierte Text hinueber, nirgends sonst.
-      z.uebernommen = true;
-      zeichne();
-      springeZu("b03");
-      $("prompt").focus();
-      return;
-    }
-    einpflegen(z.antwortText);
+    handlungSprung("b03");
+    $("prompt").focus();
   });
 
   $("antwort04").addEventListener("input", (e) => {
@@ -4641,12 +5007,6 @@ function verbinde() {
   $("knopf-leeren-antwort").addEventListener("click", () => {
     z.antwort04 = ""; $("antwort04").value = ""; zeichne();
   });
-  // Derselbe Papierkorb im Rueckweg von 02: leert NUR das eingefuegte
-  // Antwortfeld. Woerterbuch und maskierter Text bleiben, wie bei 04.
-  $("knopf-leeren-rueck").addEventListener("click", () => {
-    z.antwortText = ""; $("antwortfeld").value = ""; zeichne();
-    $("antwortfeld").focus();
-  });
   // Der Papierkorb in 05 leert NUR Bereich 05. Das Woerterbuch bleibt, und
   // der Text in 04 bleibt: wer mit dem Ergebnis unzufrieden ist, will es neu
   // einpflegen, nicht von vorne anfangen. Dafuer gibt es «Neu», und der fragt
@@ -4657,8 +5017,7 @@ function verbinde() {
     $("final").value = "";
     zeichne();
   });
-  // Derselbe Weg wie ueber «Weg zurück» in Spalte 2 — eine Auflösung, zwei
-  // Einstiege. Wer die dritte Spalte nicht braucht, arbeitet links.
+  // Der einzige Weg zurueck seit 2.1: die Antwort in 04 einpflegen.
   $("knopf-einpflegen04").addEventListener("click", () => {
     einpflegen(z.antwort04);
   });
@@ -4682,7 +5041,9 @@ function verbinde() {
       await navigator.clipboard.writeText(text);
       const alt = $(spanne).textContent;
       $(spanne).textContent = t().kopiert;
-      setTimeout(() => { $(spanne).textContent = t().kopieren; }, 1400);
+      // Zurueck auf das, was vorher dastand: nicht jeder Kopierknopf heisst
+      // «Kopieren» (in 03 «Prompt kopieren»).
+      setTimeout(() => { $(spanne).textContent = alt; }, 1400);
       return true;
     } catch (e) { return false; }
   }
@@ -4690,10 +5051,8 @@ function verbinde() {
   $("knopf-kopieren-prompt").addEventListener("click", () => {
     if (z.prompt.trim()) inZwischenablage(z.prompt, "kopieren-prompt-text");
   });
-  $("knopf-kopieren-hinaus").addEventListener("click", () => {
-    const t2 = ausgehend();
-    if (t2.trim()) inZwischenablage(t2, "kopieren-hinaus-text");
-  });
+  // Kein eigener Kopierknopf fuer «Das geht hinaus» mehr (seit 2.1): der
+  // Sendeknopf kopiert genau diesen Text.
 
   /* Das Dienstmenue unter den Knopf stellen.
    * NACH UNTEN, weil der Pfeil nach unten zeigt. Nach oben weicht es nur aus,
@@ -4809,7 +5168,7 @@ function verbinde() {
     }
     // Untereinander steht 04 als Naechstes: dort wird die Antwort
     // eingefuegt, wenn der Anwender aus dem Dienst zurueckkommt.
-    springeZu("b04");
+    handlungSprung("b04");
   });
 
   // ⚠️ Steht der Schalter auf aus, entsteht gar kein Woerterbuch — die
@@ -4903,22 +5262,6 @@ function verbinde() {
     if (datei) vokabularEinlesen(datei);
   });
 
-  $("schalter-vokabular").addEventListener("click", async () => {
-    if (z.vokabular && !(await verwerfenOk())) return;
-    z.vokabular = !z.vokabular;
-    // ⚠️ Beim Ausschalten das Woerterbuch SOFORT wegwerfen, nicht erst beim
-    // naechsten Lauf. Wer die Warnung bestaetigt hat, hat den Verlust
-    // beschlossen — bliebe die Tabelle stehen, sähe es aus, als waeren die
-    // Werte noch da, und man koennte sie sogar noch ablesen. Der maskierte
-    // Text bleibt gueltig, nur der Weg zurueck ist zu.
-    if (!z.vokabular && z.antwort) {
-      z.antwort.woerterbuch = {};
-      z.vokabularVerworfen = true;
-    }
-    if (z.vokabular) z.vokabularVerworfen = false;
-    zeichne();
-  });
-
 
   // Nichts wird auf die Festplatte geschrieben. Damit ist das Woerterbuch
   // nach dem Schliessen unwiederbringlich weg, und ein maskierter Text ohne
@@ -4961,17 +5304,209 @@ function abgleichOrig() {
   return true;
 }
 
-/* Eine Aufloesung, zwei Einstiege: «Weg zurück» in Spalte 2 und der Knopf
- * in Bereich 04. */
+/* Eine HANDLUNG springt in eine Kachel: dann gilt wieder der Ablauf, nicht
+ * der zuletzt angetippte Schritt. Sonst blieb der Ring an 02 haengen, wer
+ * vorher «Prüfen» angetippt hatte (Feedback 20.10.2026). Das Antippen in
+ * der Schrittleiste springt weiter ueber `springeZu()` und behaelt seine
+ * Mitte.
+ */
+function handlungSprung(kennung) {
+  z.schrittMitte = null;
+  schrittMitteMarkieren();
+  springeZu(kennung);
+}
+
+/* Die Zeile zwischen 04 und 05 (nur untereinander sichtbar): waehrend des
+ * Einpflegens mit Ladezeichen, danach bleibt sie mit gruenem Haken stehen,
+ * solange 05 ein Ergebnis traegt (Feedback 21.10.2026). Mit «Neu»,
+ * «Beispiel», einem neuen Lauf oder geleertem 05 geht sie.
+ */
+function zeichneEinpflegenZeile() {
+  const zeile = $("einpflegen-zeile");
+  const text = $("einpflegen-zeile-text");
+  if (!zeile || !text) return;
+  const laeuft = !!z.einpflegenLaeuft;
+  const fertig = !laeuft && !!z.final;
+  zeile.classList.toggle("an", laeuft || fertig);
+  zeile.classList.toggle("fertig", fertig);
+  text.textContent = laeuft ? t().einpflegenZeile
+    : fertig ? t().eingepflegtZeile : "";
+}
+
+/* Eine Kachel vergroessern (seit 2.1, Feedback 21.10.2026): sie legt sich
+ * als schwebende Tafel ueber die ganze Seite, um darin besser zu arbeiten.
+ * Es bleibt DIESELBE Kachel, nur anders gesetzt (Klasse `.gross`): Text,
+ * Einfuegemarke, Rollstand und Horcher bleiben erhalten. Zurueck ueber den
+ * Knopf, Escape oder einen Klick auf den Grund.
+ */
+const GROSS_AUF = ["M15 3h6v6", "M9 21H3v-6", "m21 3-7 7", "m3 21 7-7"];
+const GROSS_ZU = ["M4 14h6v6", "M20 10h-6V4", "m14 10 7-7", "m3 21 7-7"];
+/* Die Bewegung ist die der Webseite beim Bildschirmfoto (Feedback
+ * 22.10.2026): 320 ms, schnell los und stark abbremsend
+ * (`cubic-bezier(.2,.7,.2,1)`, wie `site/zoom.js`). Lage vorher und
+ * nachher messen und den Rahmen der festen Tafel vom alten Rechteck ins neue
+ * laufen lassen. Beim Schliessen umgekehrt, und erst am Ende kehrt sie ins
+ * Raster zurueck.
+ */
+const GROSS_DAUER = 320, GROSS_KURVE = "cubic-bezier(.2,.7,.2,1)";
+let grossVon = null;
+let grossPlatz = null;
+function grossBewegung(kachel, von, nach, zurueck) {
+  if (typeof kachel.animate !== "function" || !von || !nach) return null;
+  // Nur der RAHMEN bewegt sich: Lage, Breite und Hoehe der festen Tafel.
+  // Mit `transform: scale` schrumpften Kopf, Knoepfe und Schrift mit, und
+  // das ruckelte (Feedback 22.10.2026). So ordnet sich der Inhalt in jedem
+  // Bild neu an und behaelt seine Groesse.
+  const rahmen = (r) => ({
+    left: r.left + "px", top: r.top + "px",
+    width: r.width + "px", height: r.height + "px",
+    right: "auto", bottom: "auto",
+  });
+  return kachel.animate(
+    zurueck ? [rahmen(nach), rahmen(von)] : [rahmen(von), rahmen(nach)],
+    { duration: GROSS_DAUER, easing: GROSS_KURVE, fill: zurueck ? "forwards" : "none" });
+}
+function kachelGross(kennung) {
+  const vorher = z.gross;
+  const neu = kennung || null;
+  if (vorher === neu) return;
+  const grund = $("kachel-grund");
+  const fertigSetzen = () => {
+    z.gross = neu;
+    for (const k of document.querySelectorAll(".bereich.gross")) k.classList.remove("gross");
+    if (z.gross && $(z.gross)) $(z.gross).classList.add("gross");
+    grund.classList.toggle("an", !!z.gross);
+    grossKnoepfeZeichnen();
+    fussEinpassenBald();
+  };
+  // Zuerst eine offene schliessen, mit Bewegung zurueck an ihren Platz.
+  if (vorher && $(vorher)) {
+    const kachel = $(vorher);
+    // `von` ist das Ziel der Bewegung (der Platz im Raster), `nach` die Lage,
+    // in der die Kachel gerade steht: die Verschiebung rechnet vom
+    // jetzigen Rechteck aus. Vertauscht wuchs die Kachel beim Schliessen
+    // noch weiter (Feedback 22.10.2026).
+    const a = grossBewegung(kachel, grossVon, kachel.getBoundingClientRect(), true);
+    if (typeof grund.animate === "function" && !neu) {
+      grund.animate([{ opacity: 1 }, { opacity: 0 }],
+                    { duration: GROSS_DAUER, easing: "ease-in", fill: "forwards" });
+    }
+    let erledigt = false;
+    const weiter = () => {
+      if (erledigt) return;
+      erledigt = true;
+      if (a) a.cancel();
+      z.gross = null;
+      kachel.classList.remove("gross");
+      if (grossPlatz) { grossPlatz.remove(); grossPlatz = null; }
+      grund.classList.remove("an");
+      grund.getAnimations && grund.getAnimations().forEach((x) => x.cancel());
+      if (neu) kachelGross(neu); else fertigSetzen();
+    };
+    if (a) {
+      a.onfinish = weiter;
+      // Absicherung wie bei `springeZu`: liefert die Ansicht keine Bilder,
+      // laeuft keine Animation zu Ende. Dann eben ohne Bewegung zurueck.
+      setTimeout(weiter, GROSS_DAUER + 120);
+    } else {
+      weiter();
+    }
+    return;
+  }
+  // Oeffnen: Lage im Raster merken, gross setzen, vom alten Rechteck her.
+  const kachel = $(neu);
+  if (!kachel) return;
+  grossVon = kachel.getBoundingClientRect();
+  // Ein Platzhalter haelt ihren Platz im Raster frei (Feedback 22.10.2026):
+  // ohne ihn rueckte die Nachbarkachel derselben Spalte nach oben, lag
+  // hinter der Tafel, und beim Zurueckgehen fehlte sie.
+  const stil = getComputedStyle(kachel);
+  grossPlatz = el("div", "kachel-platz");
+  grossPlatz.style.height = grossVon.height + "px";
+  grossPlatz.style.flex = stil.flex;
+  grossPlatz.style.order = stil.order;
+  grossPlatz.style.margin = stil.margin;
+  kachel.parentNode.insertBefore(grossPlatz, kachel);
+  fertigSetzen();
+  const auf = grossBewegung(kachel, grossVon, kachel.getBoundingClientRect(), false);
+  if (auf) setTimeout(() => auf.cancel(), GROSS_DAUER + 120);
+  if (typeof grund.animate === "function") {
+    grund.animate([{ opacity: 0 }, { opacity: 1 }], { duration: GROSS_DAUER, easing: "ease-out" });
+  }
+}
+function grossKnoepfeZeichnen() {
+  const s = t();
+  for (const b of document.querySelectorAll(".gross-knopf")) {
+    const an = z.gross === b.dataset.kachel;
+    b.setAttribute("aria-pressed", String(an));
+    b.title = an ? s.verkleinern : s.vergroessern;
+    b.setAttribute("aria-label", b.title);
+    const bild = zeichenSinnbild("x", { x: an ? GROSS_ZU : GROSS_AUF });
+    bild.setAttribute("width", "15");
+    bild.setAttribute("height", "15");
+    b.replaceChildren(bild);
+  }
+}
+
+/* Eine Kachel kurz mit dem Ring zeigen. */
+function blitzen(kennung, ms) {
+  const k = $(kennung);
+  if (!k) return;
+  k.classList.add("blitz");
+  setTimeout(() => k.classList.remove("blitz"), ms);
+}
+
+/* Die Aufloesung der Antwort aus Bereich 04.
+ *
+ * Seit 2.1 sieht man, was geschieht (Feedback 20.10.2026): eine Sekunde
+ * lang leuchtet zuerst das Vokabular, das angewendet wird, daneben «wird
+ * angewendet» mit Ladezeichen; danach leuchtet 05, wo das Ergebnis steht.
+ * Das Ergebnis selbst wartet nicht auf die Bewegung — nur Ring, Wort und
+ * Sprung folgen dem Takt.
+ */
+/* Takt (Feedback 20.10.2026: 05 erst, wenn das Vokabular erloschen ist):
+ * Ring am Vokabular bis 450 ms, dann 0.2 s Ausblenden (`transition` an
+ * `.bereich::after`), erst danach der Ring an 05. Waehrenddessen haelt
+ * `z.einpflegenLaeuft` den Dauerring `.amzug` von 05 zurueck — er kaeme
+ * sonst mit dem Ergebnis sofort, gleichzeitig mit dem Vokabular.
+ */
+const EINPFLEGEN_VOK = 450;
+const EINPFLEGEN_05 = 650;
 async function einpflegen(text) {
   if (!text || !text.trim()) return;
   const w = (z.antwort && z.antwort.woerterbuch) || {};
+  const beginn = Date.now();
+  const wort = $("vok-anwenden");
+  $("vok-anwenden-text").textContent = t().anwenden;
+  wort.classList.add("an");
+  // Untereinander steht das Vokabular weit oben. Damit man den Schritt
+  // trotzdem sieht, leuchtet zwischen 04 und 05 eine eigene Zeile auf
+  // (Feedback 21.10.2026). Nebeneinander blendet das CSS sie aus.
+  z.einpflegenLaeuft = true;
+  z.schrittMitte = null;
+  zeichneEinpflegenZeile();
+  schrittMitteMarkieren();
+  blitzen("bvok", EINPFLEGEN_VOK);
   try {
     z.final = await zurueckwandeln(text, w);
     zeichne();
-    // Das Ende des Weges: untereinander steht 05 zuunterst.
-    springeZu("b05");
+    setTimeout(() => {
+      wort.classList.remove("an");
+      z.einpflegenLaeuft = false;
+      zeichneEinpflegenZeile();
+      // Das Ende des Weges. Untereinander GANZ nach unten, nicht nur an den
+      // Anfang von 05: sonst blieben Knoepfe, «+ Neu» und Fusszeile unter
+      // dem Rand (Feedback 21.10.2026).
+      // Ziel ist die Fassungsnummer in der Fusszeile; der Rollstand wird am
+      // Seitenende von selbst begrenzt. Nebeneinander tut `springeZu` nichts.
+      springeZu("version");
+      schrittMitteMarkieren();
+    }, Math.max(0, EINPFLEGEN_05 - (Date.now() - beginn)));
   } catch (e) {
+    wort.classList.remove("an");
+    z.einpflegenLaeuft = false;
+    zeichneEinpflegenZeile();
+    schrittMitteMarkieren();
     $("fehler").replaceChildren(
       el("p", "fehler-text", fehlerText(e)));
   }
@@ -4996,15 +5531,12 @@ function allesLeeren() {
   z.antwort = null;
   z.bearbeiten = false;
   z.uebernommen = false;
-  z.vokabularVerworfen = false;
   z.vokMeldung = null;
   z.prompt = "";
   z.vorlage = null;
   z.antwort04 = "";
-  z.antwortText = "";
-  z.zurueck = false;
   z.final = null;
-  for (const feld of ["orig", "prompt", "antwort04", "antwortfeld"]) {
+  for (const feld of ["orig", "prompt", "antwort04"]) {
     const e = $(feld);
     if (e) e.value = "";
   }
@@ -5042,7 +5574,6 @@ async function neuOk() {
     || ($("orig").value || "").trim()
     || (z.prompt || "").trim()
     || (z.antwort04 || "").trim()
-    || (z.antwortText || "").trim()
     || (z.final && z.final.text);
   if (weiteres) return frage(t().neuAlles);
   return true;
@@ -5117,6 +5648,29 @@ function textHerunter(text, name) {
  * Dialog) einen Knopf, der nichts tut. Ist er zu, gehoert die Meldung in
  * den Vokabularbereich und NICHT in den Dialog, auch nicht beim naechsten
  * Oeffnen. EINE Funktion entscheidet, zwei Kanaele tragen. */
+/* Eine Meldung im Kopf DER Kachel, um die es geht (seit 2.1, Feedback
+ * 21.10.2026: «Vorlage gespeichert» stand in 02). Einblenden, fuenf
+ * Sekunden stehen lassen, ausblenden. Der volle Satz steht im Tooltip,
+ * falls der Kopf ihn kuerzt. Ist der Einstellungsdialog offen, geht die
+ * Meldung dorthin wie bei `meldeVok()`.
+ */
+const KOPFMELDUNG_MS = 5000;
+const kopfmeldungUhr = {};
+function meldeKopf(kennung, text) {
+  if (!$("einst").hidden) { meldeVok(text); return; }
+  const ziel = $(kennung);
+  if (!ziel) return;
+  ziel.textContent = text;
+  ziel.title = text;
+  ziel.classList.add("an");
+  clearTimeout(kopfmeldungUhr[kennung]);
+  kopfmeldungUhr[kennung] = setTimeout(() => {
+    ziel.classList.remove("an");
+    // Erst nach dem Ausblenden leeren, sonst springt der Kopf.
+    setTimeout(() => { if (!ziel.classList.contains("an")) ziel.textContent = ""; }, 300);
+  }, KOPFMELDUNG_MS);
+}
+
 function meldeVok(text) {
   if (!$("einst").hidden) z.einstMeldung = text;
   else z.vokMeldung = text;
@@ -5180,29 +5734,24 @@ function uebernimmVokabular(o) {
     hinweise: [],
     kennzahlen: null
   };
-  // ⚠️ Der Schalter muss mit. Stuende er auf «Aus», zeigte die Tabelle
-  // Eintraege, die der naechste Lauf mit `"woerterbuch": false` sofort
-  // wieder wegwirft — eine Anzeige, die ihrem eigenen Schalter widerspricht.
-  z.vokabular = true;
-  z.vokabularVerworfen = false;
   return Object.keys(z.antwort.woerterbuch).length;
 }
 
 function vokabularEinlesen(datei) {
   const leser = new FileReader();
-  leser.onerror = () => meldeVok(t().vokKaputt);
+  leser.onerror = () => meldeKopf("meldung-vok", t().vokKaputt);
   leser.onload = async () => {
     let o = null;
     try { o = JSON.parse(String(leser.result)); }
-    catch (e) { meldeVok(t().vokKaputt); return; }
+    catch (e) { meldeKopf("meldung-vok", t().vokKaputt); return; }
     const grund = pruefeVokabular(o);
-    if (grund) { meldeVok(grund); return; }
+    if (grund) { meldeKopf("meldung-vok", grund); return; }
     // Erst pruefen, dann fragen: wer eine kaputte Datei erwischt, soll
     // nicht vorher entscheiden muessen, ob er sein Woerterbuch dafuer
     // hergibt.
     if (!(await verwerfenOk())) return;
     const n = uebernimmVokabular(o);
-    meldeVok(t().vokGeladen.replace("{}", String(n)));
+    meldeKopf("meldung-vok", t().vokGeladen.replace("{}", String(n)));
   };
   leser.readAsText(datei);
 }
@@ -5326,9 +5875,7 @@ async function ladeEinstellungen() {
     }
     if (d.sprache && I18N[d.sprache]) {
       z.sprache = d.sprache;
-      for (const k of document.querySelectorAll("[data-sprache]")) {
-        k.classList.toggle("aktiv", k.dataset.sprache === z.sprache);
-      }
+      spracheMarkieren();
     }
     if (d.adresse) $("einst-adresse").value = d.adresse;
     if (d.port) $("einst-port").value = String(d.port);
@@ -5441,7 +5988,7 @@ async function antwortEinfuegen() {
     if (!text) return;
     antwortUebernehmen(text);
   } catch (e) {
-    meldeVok(t().einfuegenHinweis);
+    meldeKopf("meldung-04", t().einfuegenHinweis);
   }
 }
 
@@ -5466,14 +6013,14 @@ function antwortUebernehmen(roh) {
   z.antwort04 = text;
   zeichne();
   const s = t();
-  if (anzahl) meldeVok(s.phEntwertet.replace("{}", String(anzahl)));
+  if (anzahl) meldeKopf("meldung-04", s.phEntwertet.replace("{}", String(anzahl)));
   if (ergaenzt.length) {
-    meldeVok(s.phErgaenzt.replace("{}", String(ergaenzt.length))
+    meldeKopf("meldung-04", s.phErgaenzt.replace("{}", String(ergaenzt.length))
                          .replace("{liste}", ergaenzt.slice(0, 6).join(", ")));
   }
   const reste = entwerteteReste(text);
   if (reste.length) {
-    meldeVok(s.phKaputt.replace("{liste}", reste.slice(0, 6).join(", ")));
+    meldeKopf("meldung-04", s.phKaputt.replace("{liste}", reste.slice(0, 6).join(", ")));
   }
 }
 
@@ -5520,8 +6067,8 @@ async function vorlageSpeichern() {
   const grund = await sichereVorlagen(
     [{ name: name.trim(), text: text }].concat(rest));
   if (!grund) z.vorlage = name.trim();
-  meldeVok(grund ? s.tplFehler.replace("{}", grund)
-                 : s.tplGesichert.replace("{}", name.trim()));
+  meldeKopf("meldung-03", grund ? s.tplFehler.replace("{}", grund)
+                                : s.tplGesichert.replace("{}", name.trim()));
 }
 
 async function vorlageLoeschen(name) {
@@ -5529,7 +6076,7 @@ async function vorlageLoeschen(name) {
   if (!(await frage(s.tplWeg.replace("{}", name)))) return;
   const grund = await sichereVorlagen(
     z.vorlagen.filter((v) => v.name !== name));
-  if (grund) meldeVok(s.tplFehler.replace("{}", grund));
+  if (grund) meldeKopf("meldung-03", s.tplFehler.replace("{}", grund));
   else {
     if (z.vorlage === name) z.vorlage = null;
     zeichne();
@@ -5587,7 +6134,9 @@ function zeichneVorlagen() {
     weg.type = "button";
     weg.title = st.tplWegT;
     weg.setAttribute("aria-label", st.tplWegT + ": " + v.name);
-    weg.textContent = "\u2715";
+    weg.classList.add("kreuz");
+    weg.append(zeichenSinnbild("schliessen", KNOPFBILDER));
+    zeile.classList.add("mit-kreuz");
     weg.addEventListener("click", (e) => {
       e.stopPropagation();
       vorlageLoeschen(v.name);
@@ -5605,8 +6154,35 @@ function vorlagenAuf(offen) {
   z.vorlagenOffen = offen;
   z.vorlagenFilter = "";
   $("vorlagen-filter").value = "";
+  suchStand($("vorlagen-filter"));
   zeichne();
-  if (offen) $("vorlagen-filter").focus();
+  if (offen) {
+    vorlagenMenuSetzen();
+    $("vorlagen-filter").focus();
+  }
+}
+
+/* Das Vorlagenmenue liegt seit 2.1 frei ueber der Seite (`position: fixed`)
+ * und wird an den Knopf gesetzt: rechtsbuendig darunter, bei Platzmangel
+ * darueber, nie ueber den Fensterrand (Feedback 21.10.2026: in der Spalte
+ * rechts schnitt die Kachel es ab).
+ */
+function vorlagenMenuSetzen() {
+  const menu = $("vorlagen-menu");
+  const knopf = $("knopf-vorlagen");
+  if (!menu || !knopf || menu.hidden) return;
+  const k = knopf.getBoundingClientRect();
+  menu.style.width = "";
+  const breite = Math.max(k.width, menu.getBoundingClientRect().width);
+  menu.style.width = breite + "px";
+  const hoehe = menu.getBoundingClientRect().height;
+  const links = Math.max(8, Math.min(k.right - breite, window.innerWidth - breite - 8));
+  let oben = k.bottom + 4;
+  if (oben + hoehe > window.innerHeight - 8 && k.top - 4 - hoehe >= 8) {
+    oben = k.top - 4 - hoehe;
+  }
+  menu.style.left = links + "px";
+  menu.style.top = oben + "px";
 }
 
 async function ladeTags() {
@@ -5619,8 +6195,197 @@ async function ladeTags() {
   } catch (e) { z.tags = {}; }
 }
 
+/* Nebenknoepfe nur so lange mit Wort, wie der Fuss auf eine Zeile passt
+ * (seit 2.1, Feedback 20.10.2026). Gemessen statt geschaetzt: erst ohne
+ * `.eng` legen, dann pruefen, ob ein Kind in eine zweite Zeile rutscht oder
+ * der Fuss ueberlaeuft. Ein Fuss in Spaltenrichtung (05 gestapelt) steht
+ * absichtlich untereinander und zaehlt nicht.
+ */
+function fussEinpassen() {
+  const passt = (f) => {
+    const kinder = [...f.children].filter((k) => k.offsetWidth > 0);
+    if (!kinder.length) return true;
+    const oben = kinder[0].offsetTop;
+    return !kinder.some((k) => k.offsetTop > oben + 2)
+      && f.scrollWidth <= f.clientWidth + 1;
+  };
+  for (const f of document.querySelectorAll(".fuss")) {
+    f.classList.remove("eng");
+    const gerankt = [...f.querySelectorAll("[data-rang]")];
+    for (const k of gerankt) k.classList.remove("kurz");
+    if (getComputedStyle(f).flexDirection === "column") continue;
+    if (passt(f)) continue;
+    // Rangfolge (Feedback 21.10.2026): der Hauptknopf behaelt sein Wort am
+    // laengsten, dann Kopieren (Rang 2), dann Bearbeiten, Leeren und
+    // Herunterladen (3 und 4). Gekuerzt wird von hinten, Rang um Rang, und
+    // nach jedem Schritt neu gemessen.
+    let fertig = false;
+    for (const rang of ["4", "3", "2"]) {
+      const diese = gerankt.filter((k) => k.dataset.rang === rang);
+      if (!diese.length) continue;
+      for (const k of diese) k.classList.add("kurz");
+      if (passt(f)) { fertig = true; break; }
+    }
+    if (!fertig) f.classList.add("eng");
+  }
+}
+let fussGeplant = false;
+function fussEinpassenBald() {
+  if (fussGeplant) return;
+  fussGeplant = true;
+  // Die Kopfzeile mit: ein Sprachwechsel aendert ihre Breite, nicht ihre
+  // Groesse, und ihr Beobachter merkte es nicht.
+  setTimeout(() => { fussGeplant = false; fussEinpassen(); kopfEinpassen(); }, 0);
+}
+
+/* Jedes Suchfeld bekommt ein kleines Kreuz zum Leeren, sobald etwas darin
+ * steht; es steht dort, wo sonst die Lupe ist (Feedback 21.10.2026). Ein
+ * `input` hat keine Kinder, deshalb eine Huelle, die die Lage des Feldes
+ * uebernimmt. `suchStand()` nach jedem Setzen von aussen aufrufen.
+ */
+function suchStand(feld) {
+  const h = feld && feld.parentElement;
+  if (h && h.classList && h.classList.contains("suchhuelle")) {
+    h.classList.toggle("voll", !!feld.value);
+  }
+}
+function suchfeldMitKreuz(feld) {
+  if (!feld || !feld.parentNode || typeof feld.parentNode.insertBefore !== "function") return;
+  if (feld.parentElement && feld.parentElement.classList
+      && feld.parentElement.classList.contains("suchhuelle")) return;
+  const huelle = el("span", "suchhuelle");
+  feld.parentNode.insertBefore(huelle, feld);
+  huelle.append(feld);
+  const x = el("button", "kreuz such-leeren");
+  x.type = "button";
+  x.title = t().suchLeeren;
+  x.setAttribute("aria-label", t().suchLeeren);
+  x.append(zeichenSinnbild("schliessen", KNOPFBILDER));
+  // Den Fokus im Feld lassen: weitertippen soll gleich gehen.
+  x.addEventListener("mousedown", (e) => e.preventDefault());
+  x.addEventListener("click", (e) => {
+    e.stopPropagation();
+    feld.value = "";
+    feld.dispatchEvent(new Event("input", { bubbles: true }));
+    suchStand(feld);
+    const neu = feld.id ? $(feld.id) : feld;
+    if (neu) neu.focus();
+  });
+  huelle.append(x);
+  feld.addEventListener("input", () => suchStand(feld));
+  suchStand(feld);
+}
+
+/* Die Kopfzeile in Stufen einpassen (Feedback 21.10.2026). Vorrang hat
+ * die Wortmarke mit Schrift, danach die Sprachwahl als Knopfreihe. Passt
+ * nicht alles, wird zuerst die Sprachwahl zum Pulldown, erst dann faellt
+ * der Schriftzug. Gemessen wird die Summe der beiden Seiten gegen die
+ * verfuegbare Breite, nach jeder Stufe neu.
+ */
+function kopfEinpassen() {
+  const kopf = $("kopfzeile");
+  if (!kopf) return;
+  const links = kopf.querySelector(".links");
+  const rechts = kopf.querySelector(".rechts");
+  if (!links || !rechts) return;
+  // In der Teststufe steht mittig «TEST». Dann muss jede Seite in ihre
+  // Haelfte passen, abzueglich der halben Breite des Schriftzugs.
+  const test = $("teststufe-marke");
+  const passt = () => {
+    const st = getComputedStyle(kopf);
+    const lueke = parseFloat(st.columnGap) || 0;
+    const platz = kopf.clientWidth - parseFloat(st.paddingLeft)
+      - parseFloat(st.paddingRight) - lueke;
+    const mitte = test && test.offsetWidth > 0 ? test.offsetWidth + 2 * lueke : 0;
+    if (!mitte) return links.scrollWidth + rechts.scrollWidth <= platz;
+    const haelfte = (platz + lueke - mitte) / 2;
+    return links.scrollWidth <= haelfte && rechts.scrollWidth <= haelfte;
+  };
+  kopf.classList.remove("sprache-klein", "ohne-marke", "ohne-spruch", "ohne-test");
+  if (passt()) return;
+  // Teststufe: zuerst geht der Untertitel neben der Wortmarke, dann «TEST»;
+  // erst danach die Stufen, die es auch sonst gibt.
+  const wurzelKl = document.documentElement && document.documentElement.classList;
+  if (wurzelKl && wurzelKl.contains("teststufe")) {
+    kopf.classList.add("ohne-spruch");
+    if (passt()) return;
+    kopf.classList.add("ohne-test");
+    if (passt()) return;
+  }
+  kopf.classList.add("sprache-klein");
+  if (passt()) return;
+  kopf.classList.add("ohne-marke");
+}
+
+/* Nicht nur bei `zeichne()` und `resize` messen (Feedback 20.10.2026: in 02
+ * blieb `.eng` haengen, obwohl Platz war). Die Breite eines Fusses aendert
+ * sich auch, wenn die Schriften fertig geladen sind oder eine Kachel ihre
+ * Breite ohne Fensteraenderung verschiebt. Deshalb ein Beobachter je Fuss
+ * und ein Lauf, sobald die Schriften da sind. Ohne Beobachter (alte
+ * Browser, die Pruefung) bleibt es bei den zwei anderen Anlaessen.
+ */
+function fussBeobachten() {
+  if (typeof ResizeObserver === "function") {
+    const beob = new ResizeObserver(fussEinpassenBald);
+    for (const f of document.querySelectorAll(".fuss")) beob.observe(f);
+    if ($("kopfzeile")) new ResizeObserver(kopfEinpassen).observe($("kopfzeile"));
+  }
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(fussEinpassenBald);
+    document.fonts.ready.then(kopfEinpassen);
+  }
+  kopfEinpassen();
+}
+
+/* Die Teststufe sieht man sofort (seit 2.1, Feedback 21.10.2026): gelbe
+ * Kopfzeile und ein Favicon mit «T». Die Bedingung ist die FASSUNG des
+ * Servers (`2.1.0-test.N`), kein Schalter: ein echter Bau traegt nie
+ * `-test` (auf_server.fish haelt das fest), also zeigt er beides nie.
+ */
+function teststufeZeigen(fassung) {
+  if (!/-test\b/.test(String(fassung || ""))) return;
+  document.documentElement.classList.add("teststufe");
+  const icon = document.querySelector('link[rel="icon"]');
+  if (icon) icon.setAttribute("href", "maske-test.svg");
+  kopfEinpassen();
+}
+
+/* Beim allerersten Start leuchtet «Beispiel» (seit 2.1, Feedback
+ * 20.10.2026), bis irgendein Knopf geklickt wird — wer MASCHERA zum ersten
+ * Mal sieht, soll merken, dass er es ausprobieren kann.
+ *
+ * Die Marke liegt im Speicher des BROWSERS, nicht in den Einstellungen: auf
+ * dem Server teilten sich sonst alle Nutzer eine Marke. Sie traegt keinen
+ * Inhalt, nur «gesehen». Fehlt der Speicher (privates Fenster, gesperrt),
+ * leuchtet der Knopf bei jedem Start; das ist harmlos.
+ */
+const BEISPIEL_MARKE = "maschera.beispielGesehen";
+function beispielLeuchten() {
+  let gesehen = false;
+  try { gesehen = window.localStorage.getItem(BEISPIEL_MARKE) === "1"; }
+  catch (e) { /* kein Speicher: leuchten */ }
+  if (gesehen) return;
+  const knopf = $("knopf-beispiel");
+  knopf.classList.add("leuchtet");
+  const aus = (e) => {
+    let k = e.target;
+    while (k && k.tagName !== "BUTTON") k = k.parentElement;
+    if (!k) return;
+    knopf.classList.remove("leuchtet");
+    try { window.localStorage.setItem(BEISPIEL_MARKE, "1"); }
+    catch (e2) { /* kein Speicher: beim naechsten Start wieder */ }
+    document.removeEventListener("click", aus, true);
+  };
+  document.addEventListener("click", aus, true);
+}
+
 async function start() {
   verbinde();
+  for (const id of ["einst-suche", "vok-suche", "vorlagen-filter"]) {
+    suchfeldMitKreuz($(id));
+  }
+  beispielLeuchten();
+  fussBeobachten();
   // ⚠️ Frueh, aber NACH `verbinde`: der Probeklotz braucht den Koerper.
   // Der gemessene Wert steckt danach in `--rollbalken` und bestimmt den
   // Abstand der Knoepfe in den Textfeldern.
@@ -5670,6 +6435,7 @@ async function start() {
   }
   $("version").textContent = z.zustand.version
     ? "v" + z.zustand.version : "";
+  teststufeZeigen(z.zustand.version);
   // ⚠️ Ein Server, der still ohne Modell laeuft, waere eine Leckquelle mit
   // gruener Anzeige. Der Balken ist nicht wegklickbar, solange es gilt.
   if (z.zustand.ohne_modell) {
@@ -5713,7 +6479,7 @@ if (typeof module !== "undefined" && module.exports) {
     zerschlageneErgaenzen,
     ausgehend, uebernommenerText,
     laufAnzeigen, laufAus, dauerWort, restWort, fortschrittHolen,
-    springeZu, vokabularKlappe, gestapelt, einspaltig,
+    springeZu, gestapelt, einspaltig,
     zeichneSchritte, schrittJetzt, SCHRITT_ZIEL,
     zeichneBeschriftung,
     zeichne, zeichneFinal,

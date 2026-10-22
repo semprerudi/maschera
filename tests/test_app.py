@@ -309,8 +309,12 @@ print("16. Die Oberflaeche sagt, wo die Grenze verlaeuft")
 # Dienst beim Namen nennt — nicht eine Plakette an den Titeln von 03 und
 # 04: dort geht noch nichts hinaus, erst der Knopf schickt. Der Grundsatz
 # bleibt derselbe: die Oberflaeche muss die Grenze zeigen.
-check(seite2.count("plakette lokal") == 4,
-      f"{seite2.count('plakette lokal')} LOKAL-Plaketten statt 4")
+# Seit 2.1 (Feedback 20.10.2026) ohne «Lokal» an jeder Kachel: das sagt
+# der Zeiger im Kopf einmal fuer alle, und die Plakette an vier Kacheln
+# verwirrte nur. Die Grenze zeigt weiter die rote Spalte mit ihrem Hinweis.
+check(seite2.count("plakette lokal") == 0,
+      f"{seite2.count('plakette lokal')} LOKAL-Plaketten, seit 2.1 keine")
+check('id="lokalzeiger"' in seite2, "kein Lokalzeiger im Kopf")
 check(seite2.count("plakette online") == 0,
       f"{seite2.count('plakette online')} ONLINE-Plaketten — sie sind zum "
       f"Sendeknopf gewandert")
@@ -324,7 +328,7 @@ check(js.count("onlineWarnung:") == 4,
       f"{js.count('onlineWarnung:')} Sprachen mit ONLINE-Hinweis statt 4")
 check(js.count('s.onlineWarnung.replace("{}"') == 1,
       "der Hinweis nennt den Dienst nicht oder an mehr als einer Stelle")
-print("   OK   4x Lokal, Spalte 3 abgesetzt, ONLINE-Hinweis am Knopf in "
+print("   OK   Lokal im Kopf, Spalte 3 abgesetzt, ONLINE-Hinweis am Knopf in "
       "4 Sprachen")
 
 print("17. Beim Schliessen wird vor Datenverlust gewarnt")

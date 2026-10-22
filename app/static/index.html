@@ -47,6 +47,9 @@
     <div class="spruch" id="spruch">Maskiere deine Daten, bevor du sie mit
       anderen teilst! · Lokales Modell · DSG / GDPR</div>
   </button>
+  <!-- Test stage only (teststufeZeigen()): "TEST" centred, same type as
+       the wordmark. -->
+  <div class="teststufe-marke" id="teststufe-marke" aria-hidden="true">TEST</div>
   <div class="rechts">
     <div class="lokalzeiger"><i></i><span id="lokalzeiger">100% lokal</span></div>
     <div class="gruppe" id="sprachen">
@@ -55,6 +58,14 @@
       <button data-sprache="it">IT</button>
       <button data-sprache="en">EN</button>
     </div>
+    <!-- Narrow screens only (since 2.1): the same choice as a pulldown.
+         maschera.css swaps the two; spracheWaehlen() keeps them in step. -->
+    <select class="sprachwahl" id="sprachwahl" aria-label="Sprache">
+      <option value="de">DE</option>
+      <option value="fr">FR</option>
+      <option value="it">IT</option>
+      <option value="en">EN</option>
+    </select>
     <button class="zahnrad" id="knopf-einstellungen" title="Einstellungen">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
            stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
@@ -88,20 +99,29 @@
         <div class="titelgruppe">
           <span class="bereich-nr">01</span>
           <span class="bereich-titel" id="titel-01">Originaltext</span>
-          <span class="plakette lokal"><svg width="12" height="12"
-            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-            ><path d="M20 6 9 17l-5-5"/></svg><span
-            class="p-lokal">Lokal</span></span>
         </div>
         <span class="bereich-zahl" id="zahl-01">0 Zeichen</span>
+        <button class="gross-knopf" type="button" data-kachel="b01"
+                aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path
+          d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></button>
       </div>
-      <label class="ablage" id="ablage">
-        <span id="ablage-text">PDF, DOCX, TXT oder Mail hierher ziehen,
-          oder klicken</span>
-        <input type="file" id="datei"
-               accept=".pdf,.docx,.txt,.md,.log,.csv,.json,.eml,.msg,.mbox">
-      </label>
+      <div class="ablagezeile">
+        <label class="ablage" id="ablage">
+          <span id="ablage-text">Klicken oder Textdatei bzw. Mail hierher ziehen</span>
+          <input type="file" id="datei"
+                 accept=".pdf,.docx,.txt,.md,.log,.csv,.json,.eml,.msg,.mbox">
+        </label>
+        <button class="tat neben" id="knopf-beispiel" data-rang="3">
+          <svg class="rand-r-schmal" width="15" height="15" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round"><path
+            d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8Z"/>
+            <path d="M19 15v4"/><path d="M17 17h4"/></svg><span
+            id="beispiel-text">Beispiel</span>
+        </button>
+      </div>
       <!-- Model warning and run messages, under the drop area of column 1. -->
       <div id="warnbereich"></div>
       <div id="fehler"></div>
@@ -109,21 +129,6 @@
         <textarea id="orig" spellcheck="false" autofocus
           autocomplete="off"
           placeholder="Originaltext hier einfügen …"></textarea>
-        <div class="feldknoepfe">
-        <button class="imfeld nurbild loeschen" id="knopf-leeren-orig" hidden>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/>
-            <path d="M19 6l-1 14H6L5 6"/></svg>
-        </button>
-        <button class="imfeld kopieren" id="knopf-kopieren-orig" disabled>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round"><rect x="9" y="9" width="11" height="11"
-            rx="1"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
-          <span id="kopieren-orig-text">Kopieren</span>
-        </button>
-        </div>
       </div>
       <div class="fuss" id="fuss-01">
         <button class="tat haupt" id="knopf-neu">
@@ -133,7 +138,22 @@
             d="M12 5v14"/><path d="M5 12h14"/></svg><span
             id="neu-text">Neu</span>
         </button>
-        <button class="tat neben" id="knopf-beispiel">Beispiel</button>
+        <div class="feldknoepfe">
+        <button class="imfeld loeschen" id="knopf-leeren-orig" data-rang="3" disabled>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/>
+            <path d="M19 6l-1 14H6L5 6"/></svg>
+          <span id="leeren-orig-text">Leeren</span>
+        </button>
+        <button class="imfeld kopieren" id="knopf-kopieren-orig" data-rang="2" disabled>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round"><rect x="9" y="9" width="11" height="11"
+            rx="1"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
+          <span id="kopieren-orig-text">Kopieren</span>
+        </button>
+        </div>
         <button class="tat haupt weit" id="knopf-maskieren" disabled>
           <span id="maskieren-text">Maskieren</span><svg class="richtung rand-l" width="20"
             height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -148,31 +168,34 @@
         <div class="titelgruppe">
           <span class="bereich-nr">05</span>
           <span class="bereich-titel" id="titel-05">Finaler Text</span>
-          <span class="plakette lokal"><svg width="12" height="12"
-            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-            ><path d="M20 6 9 17l-5-5"/></svg><span
-            class="p-lokal">Lokal</span></span>
+          <span class="gutzeile" id="gut05"></span>
         </div>
         <span class="bereich-zahl" id="zahl-05">0 Zeichen</span>
+        <button class="gross-knopf" type="button" data-kachel="b05"
+                aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path
+          d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></button>
       </div>
       <div id="offen05"></div>
-      <div class="gutzeile" id="gut05"></div>
       <div class="rumpf">
         <p class="leer" id="leer-05">Hier landet der fertige Text, sobald du
           das Vokabular einpflegst.</p>
         <!-- A real textarea: plain text must be selectable in the app window. -->
         <textarea id="final" spellcheck="false" autocomplete="off"
                   hidden></textarea>
+      </div>
+      <div class="fuss fuss-05">
         <div class="feldknoepfe">
         <!-- Clear the final text when the answer was not good enough. -->
-        <button class="imfeld nurbild loeschen" id="knopf-leeren-final" hidden>
+        <button class="imfeld loeschen" id="knopf-leeren-final" data-rang="4" disabled>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/>
             <path d="M19 6l-1 14H6L5 6"/></svg>
+          <span id="leeren-final-text">Leeren</span>
         </button>
-        <button class="imfeld" id="knopf-herunter-final" hidden>
+        <button class="imfeld" id="knopf-herunter-final" data-rang="3" disabled>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round"><path d="M12 3v13"/>
@@ -180,15 +203,13 @@
           <span id="herunter-final-text">Herunterladen</span>
         </button>
         </div>
-      </div>
-      <div class="fuss fuss-05">
         <button class="tat haupt breit" id="knopf-final-kopieren" disabled>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round"><rect x="9" y="9" width="11" height="11"
             rx="1"/><path
             d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
-          <span id="final-kopieren-text">Finalisierten Text kopieren</span>
+          <span id="final-kopieren-text">Kopieren</span>
         </button>
       </div>
     </div>
@@ -210,14 +231,21 @@
         <div class="titelgruppe">
           <span class="bereich-nr">02</span>
           <span class="bereich-titel" id="titel-02">Maskiert</span>
-          <span class="plakette lokal"><svg width="12" height="12"
-            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-            ><path d="M20 6 9 17l-5-5"/></svg><span
-            class="p-lokal">Lokal</span></span>
         </div>
         <span class="bereich-zahl" id="zahl-02">0 Zeichen</span>
+        <button class="info-knopf" id="hinweise-info" type="button"
+                aria-expanded="false"><svg width="15" height="15"
+          viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path
+          d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z"/><path d="M12 11v5"/><path
+          d="M12 8h.01"/></svg></button>
+        <button class="gross-knopf" type="button" data-kachel="b02"
+                aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path
+          d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></button>
       </div>
+      <div id="hinweise"></div>
       <!-- Progress above the field. The count is measured, not estimated. -->
       <div class="lauf" id="lauf" hidden>
         <div class="lauf-balken"><i id="lauf-fuellung"></i></div>
@@ -229,17 +257,10 @@
              elements, and typing between them would produce markup. -->
         <textarea id="maskiert-feld" spellcheck="false" autocomplete="off"
           hidden></textarea>
-        <textarea id="antwortfeld" spellcheck="false" autocomplete="off"
-          hidden placeholder="Antwort deines KI-Werkzeugs hier einfügen …"></textarea>
+      </div>
+      <div class="fuss fuss-02">
         <div class="feldknoepfe">
-        <!-- Way back only: empties the pasted answer, nothing else. -->
-        <button class="imfeld nurbild loeschen" id="knopf-leeren-rueck" hidden>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/>
-            <path d="M19 6l-1 14H6L5 6"/></svg>
-        </button>
-        <button class="imfeld bearbeiten" id="knopf-bearbeiten" disabled>
+        <button class="imfeld bearbeiten" id="knopf-bearbeiten" data-rang="3" disabled>
           <svg class="zeichen-stift" width="12" height="12" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round"><path d="M12 20h9"/>
@@ -252,14 +273,14 @@
             <path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
           <span id="bearbeiten-text">Bearbeiten</span>
         </button>
-        <button class="imfeld" id="knopf-herunter-mask" disabled>
+        <button class="imfeld" id="knopf-herunter-mask" data-rang="4" disabled>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round"><path d="M12 3v13"/>
             <path d="m7 11 5 5 5-5"/><path d="M4 21h16"/></svg>
           <span id="herunter-mask-text">Herunterladen</span>
         </button>
-        <button class="imfeld kopieren" id="knopf-kopieren" disabled>
+        <button class="imfeld kopieren" id="knopf-kopieren" data-rang="2" disabled>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round"><rect x="9" y="9" width="11" height="11"
@@ -267,17 +288,11 @@
           <span id="kopieren-text">Kopieren</span>
         </button>
         </div>
-      </div>
-      <div id="hinweise"></div>
-      <div class="fuss fuss-02">
-        <button class="schalter" id="schalter-zurueck" role="switch"
-                aria-checked="false"><i></i></button>
-        <span class="schalterwort" id="zurueck-wort">Weg zurück</span>
         <button class="tat haupt weit" id="knopf-uebernahme" disabled>
           <span id="uebernahme-text">Übernahme in Prompt</span>
           <svg class="richtung rand-l" width="18" height="18" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-            stroke-linejoin="round" id="uebernahme-pfeil"
+            stroke-linejoin="round"
             ><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         </button>
       </div>
@@ -287,27 +302,24 @@
       <div class="bereich-kopf breit">
         <div class="titelgruppe">
           <span class="bereich-titel" id="titel-vokabular">Vokabular</span>
-          <button class="schalter" id="schalter-vokabular" role="switch"
-                  aria-checked="true"><i></i></button>
-          <span class="schalterwort" id="schalterwort">An</span>
-          <span class="plakette lokal"><svg width="12" height="12"
-            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-            ><path d="M20 6 9 17l-5-5"/></svg><span
-            class="p-lokal">Lokal</span></span>
+          <span class="kopfmeldung" id="meldung-vok" aria-live="polite"></span>
+          <span class="anwenden" id="vok-anwenden"><i class="dreher"
+            aria-hidden="true"></i><span id="vok-anwenden-text"></span></span>
         </div>
         <span class="zahlen" id="zahl-vokabular">0 Einträge</span>
-        <!-- Single-column view only. -->
-        <button class="vok-klappe" id="knopf-vok-klappe"
-                aria-expanded="false" aria-controls="bvok">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-            stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-        </button>
+        <button class="gross-knopf" type="button" data-kachel="bvok"
+                aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path
+          d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></button>
       </div>
       <div class="vokabular-rumpf">
         <div class="vokabular-rollen">
-          <div class="legende" id="legende"></div>
+          <div class="legende-reihe">
+            <input type="search" class="vok-suche suchfeld suchweg"
+                   id="vok-suche" autocomplete="off" spellcheck="false">
+            <div class="legende" id="legende"></div>
+          </div>
           <div id="vokabular-inhalt"></div>
         </div>
       </div>
@@ -338,8 +350,14 @@
       <div class="bereich-kopf">
         <div class="titelgruppe">
           <span class="bereich-nr">03</span>
-          <span class="bereich-titel" id="titel-03">Prompt</span>
+          <span class="bereich-titel" id="titel-03">Promptzusammenführung</span>
+          <span class="kopfmeldung" id="meldung-03" aria-live="polite"></span>
         </div>
+        <button class="gross-knopf" type="button" data-kachel="b03"
+                aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path
+          d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></button>
       </div>
       <div class="drei-rumpf">
         <div class="teil">
@@ -357,7 +375,8 @@
                     d="m6 9 6 6 6-6"/></svg></span>
                 </button>
                 <div class="vorlagen-menu" id="vorlagen-menu" hidden>
-                  <input type="text" id="vorlagen-filter" autocomplete="off">
+                  <input type="search" class="suchfeld" id="vorlagen-filter"
+                         autocomplete="off">
                   <div id="vorlagen-liste"></div>
                 </div>
               </div>
@@ -375,12 +394,14 @@
           <div class="feldbox">
             <textarea id="prompt" spellcheck="false" autocomplete="off"
               placeholder="Dein Prompt …"></textarea>
-            <div class="feldknoepfe">
-            <button class="imfeld nurbild loeschen" id="knopf-leeren-prompt" hidden>
+          </div>
+          <div class="promptknoepfe">
+            <button class="imfeld loeschen" id="knopf-leeren-prompt" disabled>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
                 stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/>
                 <path d="M19 6l-1 14H6L5 6"/></svg>
+              <span id="leeren-prompt-text">Leeren</span>
             </button>
             <button class="imfeld kopieren" id="knopf-kopieren-prompt" disabled>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
@@ -390,27 +411,20 @@
                 d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
               <span id="kopieren-prompt-text">Kopieren</span>
             </button>
-            </div>
           </div>
         </div>
 
         <div class="teil">
-          <div class="teil-kopf">
-            <span class="teil-titel" id="titel-hinaus">Das geht hinaus</span>
-            <span class="teil-zahl" id="zahl-hinaus"></span>
-          </div>
+          <button class="teil-kopf klappkopf" id="hinaus-klappe" type="button"
+                  aria-expanded="false" aria-controls="hinaus">
+            <span class="teil-titel" id="titel-hinaus">Prompt + maskierter Text</span>
+            <svg class="pfeil" width="15" height="15" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round"
+              aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
           <div class="feldbox">
             <div id="hinaus"></div>
-            <div class="feldknoepfe">
-            <button class="imfeld kopieren" id="knopf-kopieren-hinaus" disabled>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round"><rect x="9" y="9" width="11"
-                height="11" rx="1"/><path
-                d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
-              <span id="kopieren-hinaus-text">Kopieren</span>
-            </button>
-            </div>
           </div>
         </div>
       </div>
@@ -446,28 +460,18 @@
         <div class="titelgruppe">
           <span class="bereich-nr">04</span>
           <span class="bereich-titel" id="titel-04">Antwort</span>
+          <span class="kopfmeldung" id="meldung-04" aria-live="polite"></span>
         </div>
+        <button class="gross-knopf" type="button" data-kachel="b04"
+                aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path
+          d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></button>
       </div>
       <div class="rumpf">
         <textarea id="antwort04" spellcheck="false" autocomplete="off"
           placeholder="Antwort deines KI-Werkzeugs hier einfügen (Ctrl+V) …"
           ></textarea>
-        <div class="feldknoepfe">
-        <button class="imfeld nurbild loeschen" id="knopf-leeren-antwort" hidden>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/>
-            <path d="M19 6l-1 14H6L5 6"/></svg>
-        </button>
-        <button class="imfeld" id="knopf-einfuegen-antwort">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round"><rect x="8" y="2" width="8" height="4"
-            rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0
-            0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
-          <span id="einfuegen-antwort-text">Einfügen</span>
-        </button>
-        </div>
       </div>
       <div class="fuss fuss-04">
         <button class="tat einpflegen weit" id="knopf-einpflegen04" disabled>
@@ -477,8 +481,30 @@
             d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg><span
             id="einpflegen04-text">Vokabular einpflegen</span>
         </button>
+        <div class="feldknoepfe">
+        <button class="imfeld loeschen" id="knopf-leeren-antwort" data-rang="3" disabled>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/>
+            <path d="M19 6l-1 14H6L5 6"/></svg>
+          <span id="leeren-antwort-text">Leeren</span>
+        </button>
+        <button class="imfeld" id="knopf-einfuegen-antwort" data-rang="2">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round"><rect x="8" y="2" width="8" height="4"
+            rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0
+            0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
+          <span id="einfuegen-antwort-text">Einfügen</span>
+        </button>
+        </div>
       </div>
     </div>
+    <p class="einpflegen-zeile" id="einpflegen-zeile"><i class="dreher"
+      aria-hidden="true"></i><svg class="haken" width="16" height="16"
+      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
+      d="M5 12.5 10 17.5 19 7"/></svg><span id="einpflegen-zeile-text"></span></p>
   </div>
 
 
@@ -540,12 +566,79 @@
        aria-labelledby="einst-titel">
     <div class="einst-kopf">
       <h2 id="einst-titel">Einstellungen</h2>
+      <input type="search" class="einst-suche suchfeld" id="einst-suche"
+             autocomplete="off" spellcheck="false">
     </div>
     <div class="einst-rumpf" id="einst-rumpf">
+
+      <p class="einst-keintreffer" id="einst-keintreffer"></p>
 
       <!-- Messages raised while this dialog is open. Same source as the
          one in section 05, which the dialog covers. -->
       <p class="einst-meldung" id="einst-meldung"></p>
+
+      <!-- Appearance, first since 2.1 (feedback 20.10.2026). Applies in the
+         browser too, so the section is never hidden. -->
+      <section class="einst-teil">
+        <h3 id="einst-darstellung-titel">Darstellung</h3>
+        <p class="einst-hilfe" id="einst-thema-hilfe">«Automatisch» folgt
+          der Einstellung deines Systems.</p>
+        <div class="einst-zeile">
+          <!-- A row of buttons, not a select: an <option> cannot carry an
+             SVG, and the language row next to it is already built this
+             way. The icons are filled in by maschera.js from one source. -->
+          <div class="feld">
+            <span id="einst-thema-etikett">Farben</span>
+            <div class="themawahl" id="einst-thema" role="radiogroup">
+              <button type="button" class="themaknopf" data-thema="automatisch"
+                      id="thema-automatisch" role="radio" aria-checked="true">
+                <span id="thema-automatisch-text">Automatisch</span></button>
+              <button type="button" class="themaknopf" data-thema="hell"
+                      id="thema-hell" role="radio" aria-checked="false">
+                <span id="thema-hell-text">Hell</span></button>
+              <button type="button" class="themaknopf" data-thema="dunkel"
+                      id="thema-dunkel" role="radio" aria-checked="false">
+                <span id="thema-dunkel-text">Dunkel</span></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="einst-teil">
+        <h3 id="einst-schrift-titel">Schriftart</h3>
+        <p class="einst-hilfe" id="einst-schrift-hilfe">Gilt für die
+          Textflächen: Originaltext, maskierter Text, Prompt und Antwort.</p>
+        <div class="einst-zeile">
+          <label class="feld">
+            <span id="einst-schriftart-etikett">Schriftfamilie</span>
+            <!-- Each option is set in the face it names: showing beats
+               labelling. The families repeat SCHRIFTEN in maschera.js;
+               test_api point 21 holds the two together. -->
+            <select id="einst-schriftart" class="schriftwahl">
+              <option value="werk">IBM Plex</option>
+              <option value="serif" id="schriftart-serif">Serifen</option>
+              <option value="mono" id="schriftart-mono">Feste Breite</option>
+            </select>
+          </label>
+          <label class="feld schmal">
+            <span id="einst-schriftgroesse-etikett">Grösse</span>
+            <select id="einst-schriftgroesse">
+              <option value="70">70 %</option>
+              <option value="80">80 %</option>
+              <option value="90">90 %</option>
+              <option value="100">100 %</option>
+              <option value="110">110 %</option>
+              <option value="125">125 %</option>
+              <option value="140">140 %</option>
+            </select>
+          </label>
+          <div class="feld vorschau">
+            <span id="einst-vorschau-etikett">Vorschau</span>
+            <span class="schriftprobe" id="einst-schriftprobe">Sehr geehrte
+              Damen und Herren</span>
+          </div>
+        </div>
+      </section>
 
       <!-- Window-only switches. maschera.js hides the whole section in the
          browser: a switch that does nothing is worse than none. -->
@@ -604,6 +697,9 @@
           <button class="tat" id="knopf-dienst-neu">
             <span id="dienst-neu-text">Hinzufügen</span>
           </button>
+          <button class="tat" id="knopf-dienste-vorgabe">
+            <span id="dienste-vorgabe-text">Vorgaben wiederherstellen</span>
+          </button>
         </div>
         <!-- The window switch belongs with the services it applies to, on a
              line of its own under «Add». -->
@@ -614,65 +710,6 @@
         </label>
       </section>
 
-      <!-- Appearance. Unlike the window switches above, this applies in
-         the browser too, so the section is never hidden. -->
-      <section class="einst-teil">
-        <h3 id="einst-darstellung-titel">Darstellung</h3>
-        <p class="einst-hilfe" id="einst-thema-hilfe">«Automatisch» folgt
-          der Einstellung deines Systems.</p>
-        <div class="einst-zeile">
-          <!-- A row of buttons, not a select: an <option> cannot carry an
-             SVG, and the language row next to it is already built this
-             way. The icons are filled in by maschera.js from one source. -->
-          <div class="feld">
-            <span id="einst-thema-etikett">Farben</span>
-            <div class="themawahl" id="einst-thema" role="radiogroup">
-              <button type="button" class="themaknopf" data-thema="automatisch"
-                      id="thema-automatisch" role="radio" aria-checked="true">
-                <span id="thema-automatisch-text">Automatisch</span></button>
-              <button type="button" class="themaknopf" data-thema="hell"
-                      id="thema-hell" role="radio" aria-checked="false">
-                <span id="thema-hell-text">Hell</span></button>
-              <button type="button" class="themaknopf" data-thema="dunkel"
-                      id="thema-dunkel" role="radio" aria-checked="false">
-                <span id="thema-dunkel-text">Dunkel</span></button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="einst-teil">
-        <h3 id="einst-schrift-titel">Schrift</h3>
-        <p class="einst-hilfe" id="einst-schrift-hilfe">Gilt für die
-          Textflächen: Originaltext, maskierter Text, Prompt und Antwort.</p>
-        <div class="einst-zeile">
-          <label class="feld">
-            <span id="einst-schriftart-etikett">Schriftart</span>
-            <!-- Each option is set in the face it names: showing beats
-               labelling. The families repeat SCHRIFTEN in maschera.js;
-               test_api point 21 holds the two together. -->
-            <select id="einst-schriftart" class="schriftwahl">
-              <option value="werk">IBM Plex</option>
-              <option value="serif" id="schriftart-serif">Serifen</option>
-              <option value="mono" id="schriftart-mono">Feste Breite</option>
-            </select>
-          </label>
-          <label class="feld schmal">
-            <span id="einst-schriftgroesse-etikett">Grösse</span>
-            <select id="einst-schriftgroesse">
-              <option value="70">70 %</option>
-              <option value="80">80 %</option>
-              <option value="90">90 %</option>
-              <option value="100">100 %</option>
-              <option value="110">110 %</option>
-              <option value="125">125 %</option>
-              <option value="140">140 %</option>
-            </select>
-          </label>
-          <span class="schriftprobe" id="einst-schriftprobe">Sehr geehrte
-            Damen und Herren</span>
-        </div>
-      </section>
 
       <section class="einst-teil">
         <h3 id="einst-klartext-titel">Klartext-Tags</h3>
@@ -722,7 +759,11 @@
   </div>
 </div>
 
+<div class="kachel-grund" id="kachel-grund"></div>
 <div class="kontext" id="kontext" hidden></div>
+<!-- Tooltip of a placeholder: original value and source. Filled by
+     tippZeigen() in maschera.js, text only. -->
+<div class="tipp" id="tipp" role="tooltip" hidden></div>
 
 <!-- Help and imprint: one source, four languages. -->
 <script src="seiten.js"></script>

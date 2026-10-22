@@ -116,6 +116,17 @@
     <!-- Die erste Angabe muss zur Fassung in app/serve.py passen
          (test_fenster 12). Testbauten tragen `X.Y.Z-test.N` mit
          type="development"; Software-Stores zeigen das nicht als Release. -->
+    <release version="2.1.0" date="2026-10-22">
+      <description>
+        <p>Polish after the first feedback on 2.0. New: search in the
+        right-click menu, the settings and the vocabulary; every card can be
+        enlarged to fill the page; the placeholder tooltip shows the original
+        value, how it was masked and how certain the model was; default
+        services can be restored. Card 03 is laid out anew, buttons sit in the
+        footer of each card, and messages appear in the card they concern.
+        The «way back» switch and the vocabulary on/off switch are gone.</p>
+      </description>
+    </release>
     <release version="2.0.1" date="2026-10-19">
       <description>
         <p>Clearer wording: messages when fetching the model on first start,

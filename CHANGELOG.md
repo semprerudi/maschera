@@ -1,5 +1,49 @@
 # Änderungen
 
+## 2.1.0 – 2026-10-22
+
+Feinschliff nach den ersten Rückmeldungen zu 2.0, getestet zusammen mit dem
+UX-Architekten.
+
+### Neu
+- **Suchen:** im Rechtsklickmenü, in den Einstellungen und im Vokabular. Jedes
+  Suchfeld lässt sich mit einem Kreuz leeren.
+- **Kacheln vergrössern:** Jede Kachel hat oben rechts einen Knopf, der sie
+  über die ganze Seite legt. Escape, derselbe Knopf oder ein Klick daneben
+  bringen sie zurück.
+- **Tooltip am Platzhalter:** zeigt den Originalwert und, in Worten, wodurch
+  maskiert wurde, dazu die Sicherheit des Modells in Prozent.
+- **Vorgaben wiederherstellen** bei den Diensten holt entfernte Standarddienste
+  zurück.
+- Das Einpflegen zeigt, was geschieht: Erst leuchtet das Vokabular auf, dann
+  der finale Text.
+- Beim ersten Start leuchtet «Beispiel», damit man MASCHERA gleich ausprobieren
+  kann.
+
+### Geändert
+- **Rechtsklickmenü:** breiter und kürzer, Titel in normaler Schreibweise.
+  Gruppen öffnen und schliessen einzeln, und das Menü springt dabei nicht.
+- **Kachel 03 heisst «Promptzusammenführung»:** Prompt über die ganze Breite,
+  Vorlagen und Speichern darüber, Kopieren und Leeren darunter. «Prompt +
+  maskierter Text» lässt sich aufklappen und zeigt die Platzhalter farbig wie
+  in 02. Der Sendeknopf heisst «Alles kopieren und … öffnen».
+- **Knöpfe im Fuss jeder Kachel** statt im Textfeld, jeder mit genauem
+  Tooltip. Wird es eng, verlieren zuerst die Nebenknöpfe ihr Wort.
+- **Meldungen im Kopf der Kachel,** um die es geht, etwa Zeichenzahl, Anteil
+  und Dauer in 02.
+- Hauptknöpfe dunkelgrün, in der Spalte «hinaus» rot. Hellere Rottöne ohne
+  Stich ins Grüne.
+- Auf dem Handy bleiben Wortmarke und Sprachwahl, solange Platz ist; sonst
+  wird die Sprachwahl zum Auswahlfeld. Rückfragen zeigen ihre Knöpfe
+  nebeneinander.
+- Einstellungen in der Reihenfolge Darstellung, Schriftart, Dienste.
+- Die aktuelle Kachel bleibt umrandet.
+
+### Entfernt
+- Der Schalter «Weg zurück» in 02. Zurück geht es über 04.
+- Der Schalter, um das Vokabular auszuschalten, und die Plaketten «Lokal» an
+  den Kacheln.
+
 ## 2.0.1 – 2026-10-19
 
 ### Geändert

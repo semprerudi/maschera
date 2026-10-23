@@ -1,5 +1,20 @@
 # Änderungen
 
+## 2.1.1 (2026-10-23)
+
+Kleiner Feinschliff an Kachel 03. Wie MASCHERA maskiert, bleibt gleich.
+
+### Geändert
+- **«Prompt & maskierter Text»** (vorher «Prompt + maskierter Text») zeigt, ob
+  schon etwas übernommen ist: vorher ein leerer Kreis und blasser Text, nach
+  «Übernahme in Prompt» dreht es kurz, dann steht ein Haken.
+- «Neu», «Beispiel» und anderes Zurücksetzen klappen den aufgeklappten Text in
+  03 und die Hinweise in 02 wieder zu.
+- Auf schmalen Bildschirmen hat «Vokabular eingepflegt» einen dünnen grünen
+  Rand.
+- Das Docker-Abbild baut und signiert jetzt der Release-Workflow auf GitHub;
+  der Prüfbefehl für die Signatur steht in der README.
+
 ## 2.1.0 – 2026-10-22
 
 Feinschliff nach den ersten Rückmeldungen zu 2.0, getestet zusammen mit dem

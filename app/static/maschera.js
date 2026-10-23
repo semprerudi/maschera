@@ -248,7 +248,7 @@ const I18N = {
         antwortPlatz: "Antwort deines KI-Werkzeugs hier einfügen (Ctrl+V) …",
         offenText: "{} Platzhalter blieben stehen. Im fertigen Text nachsehen:",
         gutText: "{} Platzhalter zurückgesetzt.",
-        hinausT: "Prompt + maskierter Text", trenner: "den oberen Prompt auf folgenden Text anwenden",
+        hinausT: "Prompt & maskierter Text", trenner: "den oberen Prompt auf folgenden Text anwenden",
         sendenZu: "Alles kopieren und {} öffnen", onlineWarnung: "In {} arbeitest du online, sei vorsichtig!", origPlatz: "Originaltext hier einfügen …", promptPlatz: "Dein Prompt, z. B. «Beantworte diese E-Mail freundlich.»", hinausLeer: "Erst «Übernahme in Prompt», dann steht hier, was hinausgeht.",
         spalteId: "ID",
         spalteWert: "Originalwert", spalteTyp: "Typ", anteilW: "Maskierter Anteil",
@@ -536,7 +536,7 @@ const I18N = {
         antwortPlatz: "Colle ici la réponse de ton outil d’IA (Ctrl+V) …",
         offenText: "{} substituts sont restés. À vérifier dans le texte final :",
         gutText: "{} substituts rétablis.",
-        hinausT: "Prompt + texte masqué", trenner: "appliquer le prompt ci-dessus au texte suivant",
+        hinausT: "Prompt & texte masqué", trenner: "appliquer le prompt ci-dessus au texte suivant",
         sendenZu: "Tout copier et ouvrir {}", onlineWarnung: "Dans {}, tu travailles en ligne, sois prudent !", origPlatz: "Coller ici le texte original …", promptPlatz: "Ton prompt, p. ex. « Réponds à ce courriel poliment. »", hinausLeer: "D’abord « Reprise dans le prompt », ensuite tu verras ici ce qui sort.",
         spalteId: "ID",
         spalteWert: "Valeur d’origine", spalteTyp: "Type", anteilW: "Part masquée",
@@ -815,7 +815,7 @@ const I18N = {
         antwortPlatz: "Incolla qui la risposta del tuo strumento IA (Ctrl+V) …",
         offenText: "{} segnaposto sono rimasti. Da controllare nel testo finale:",
         gutText: "{} segnaposto ripristinati.",
-        hinausT: "Prompt + testo mascherato", trenner: "applica il prompt qui sopra al testo seguente",
+        hinausT: "Prompt & testo mascherato", trenner: "applica il prompt qui sopra al testo seguente",
         sendenZu: "Copia tutto e apri {}", onlineWarnung: "In {} lavori online, fai attenzione!", origPlatz: "Incolla qui il testo originale …", promptPlatz: "Il tuo prompt, p. es. «Rispondi a questa e-mail gentilmente.»", hinausLeer: "Prima «Riprendi nel prompt», poi qui vedrai cosa esce.",
         spalteId: "ID",
         spalteWert: "Valore originale", spalteTyp: "Tipo", anteilW: "Quota mascherata",
@@ -1093,7 +1093,7 @@ const I18N = {
         antwortPlatz: "Paste your AI tool’s answer here (Ctrl+V) …",
         offenText: "{} placeholders remained. Check them in the final text:",
         gutText: "{} placeholders restored.",
-        hinausT: "Prompt + masked text", trenner: "apply the prompt above to the following text",
+        hinausT: "Prompt & masked text", trenner: "apply the prompt above to the following text",
         sendenZu: "Copy all and open {}", onlineWarnung: "In {} you are working online, be careful!", origPlatz: "Paste the original text here …", promptPlatz: "Your prompt, e.g. \u00abReply to this e-mail politely.\u00bb", hinausLeer: "First «Take into prompt», then you see here what goes out.",
         spalteId: "ID",
         spalteWert: "Original value", spalteTyp: "Type", anteilW: "Masked share",
@@ -1428,7 +1428,8 @@ const z = {
   kontextSuche: "",      // Suchwort im Kontextmenue, gilt bis zum Schliessen
   gross: null,           // Kennung der vergroesserten Kachel, sonst null
   hinweiseAuf: false,    // ruhige Hinweise unter dem Kopf von 02 offen
-  hinausAuf: false,      // «Prompt + maskierter Text» in 03 aufgeklappt
+  hinausAuf: false,      // «Prompt & maskierter Text» in 03 aufgeklappt
+  uebernahmeLaeuft: false, // Dreher im Balken, kurz nach «Übernahme in Prompt»
   dienste: DIENSTE.map((d) => ({ ...d })),
   eigenesFenster: true,
   schriftgroesse: 100,
@@ -3054,6 +3055,12 @@ function zeichneHinaus() {
   const s = t();
   $("b03").classList.toggle("vorschau-zu", !z.hinausAuf);
   $("hinaus-klappe").setAttribute("aria-expanded", String(!!z.hinausAuf));
+  const zeichen03 = $("uebernahme-zeichen");
+  // Leer: blasser Balken mit leerem Kreis. Nach der Uebernahme dreht es
+  // kurz, dann steht ein schwarzer Haken und der Balken ist voll gesetzt.
+  $("hinaus-klappe").classList.toggle("leer", !z.uebernommen);
+  zeichen03.classList.toggle("dreht", z.uebernahmeLaeuft);
+  zeichen03.classList.toggle("fertig", z.uebernommen && !z.uebernahmeLaeuft);
   const ziel = $("hinaus");
   ziel.replaceChildren();
   const anhang = uebernommenerText();
@@ -4729,7 +4736,7 @@ function verbinde() {
     if (e.key === "Escape") kontextSchliessen();
   });
   $("einst-suche").addEventListener("input", einstFiltern);
-  // «Prompt + maskierter Text» klappt auf und zu (Feedback 21.10.2026);
+  // «Prompt & maskierter Text» klappt auf und zu (Feedback 21.10.2026);
   // zugeklappt gehoert die ganze Hoehe dem Promptfeld.
   $("hinaus-klappe").addEventListener("click", () => {
     z.hinausAuf = !z.hinausAuf;
@@ -4985,6 +4992,10 @@ function verbinde() {
   $("knopf-uebernahme").addEventListener("click", () => {
     // ⚠️ HIER wandert der maskierte Text hinueber, nirgends sonst.
     z.uebernommen = true;
+    // Der Balken zeigt, dass im Kasten etwas dazugekommen ist: erst dreht
+    // es, dann bleibt ein Haken stehen, solange uebernommen ist.
+    z.uebernahmeLaeuft = true;
+    setTimeout(() => { z.uebernahmeLaeuft = false; zeichne(); }, UEBERNAHME_DAUER);
     zeichne();
     handlungSprung("b03");
     $("prompt").focus();
@@ -5349,6 +5360,7 @@ const GROSS_ZU = ["M4 14h6v6", "M20 10h-6V4", "m14 10 7-7", "m3 21 7-7"];
  * Raster zurueck.
  */
 const GROSS_DAUER = 320, GROSS_KURVE = "cubic-bezier(.2,.7,.2,1)";
+const UEBERNAHME_DAUER = 650;   // ms, wie die Vokabular-Phase beim Einpflegen
 let grossVon = null;
 let grossPlatz = null;
 function grossBewegung(kachel, von, nach, zurueck) {
@@ -5536,6 +5548,11 @@ function allesLeeren() {
   z.vorlage = null;
   z.antwort04 = "";
   z.final = null;
+  // Auch die Anzeige zurueck: aufgeklappte Tafeln zeigten sonst nur noch
+  // den Platzhaltersatz.
+  z.hinausAuf = false;
+  z.hinweiseAuf = false;
+  z.uebernahmeLaeuft = false;
   for (const feld of ["orig", "prompt", "antwort04"]) {
     const e = $(feld);
     if (e) e.value = "";

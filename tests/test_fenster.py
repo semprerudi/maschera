@@ -1660,12 +1660,35 @@ else:
         check(len(_uses) >= 2, f"{_wf.name}: nur {len(_uses)} Actions "
               "gefunden — die Wache sucht an der falschen Stelle")
         for _u in _uses:
+            # `./.github/workflows/…` ist ein Workflow DIESES Repositorys,
+            # vom selben Commit wie der aufrufende; nichts zu verschieben.
+            if _u.startswith("./.github/workflows/"):
+                continue
             check(re.fullmatch(r"[\w./-]+@[0-9a-f]{40}", _u) is not None,
                   f"{_wf.name}: Action nicht auf einen Commit festgenagelt: "
                   f"{_u}")
         if _wf.name == "pakete.yml":
-            check(_ausl == {"workflow_dispatch"},
+            # Von Hand, oder als Teil von `release.yml` (`workflow_call`).
+            check(_ausl == {"workflow_dispatch", "workflow_call"},
                   f"der Paket-Workflow startet nicht nur von Hand: {_aus}")
+        if _wf.name == "release.yml":
+            # Nur ein Tag `v*` loest ein Release aus, kein Push auf main.
+            # Von Hand gestartet ist es ein Probelauf: dann darf weder das
+            # Release entstehen noch das Abbild nach GHCR gehen.
+            check(_ausl == {"push", "workflow_dispatch"}
+                  and _aus.get("push") == {"tags": ["v*"]},
+                  f"release.yml startet nicht nur bei einem Tag: {_aus}")
+            _jobs26 = _w.get("jobs", {})
+            check(_jobs26.get("release", {}).get("if")
+                  == "github.event_name == 'push'",
+                  "release.yml legt auch im Probelauf ein Release an")
+            _bau26 = next((_st for _st in _jobs26.get("docker", {})
+                           .get("steps", []) if _st.get("id") == "bau"), {})
+            check(_bau26.get("with", {}).get("push")
+                  == "${{ github.event_name == 'push' }}",
+                  "release.yml pusht das Abbild auch im Probelauf")
+            check("pull: true" in _text26,
+                  "release.yml baut das Abbild ohne `pull: true`")
         if _wf.name == "abbild-signieren.yml":
             # Nur von Hand, und das Eingabefeld nie direkt im Skript: ein
             # `${{ inputs.… }}` in `run:` liesse Shell-Befehle einschleusen.
@@ -1711,7 +1734,7 @@ print("\n29. Die Bauten holen das neueste Python, nicht das, was gerade daliegt"
 # Bau beim zuletzt geholten Stand — 1.0.3 lag als AppImage auf 3.13.15,
 # als die Luecke in `zipfile` schon in 3.13.16 behoben war (11.10.2026).
 _bauen29 = (WURZEL / "tools" / "paket" / "bauen.fish").read_text(encoding="utf-8")
-check(re.search(r"^docker build [^\n]*--pull", _bauen29, re.M) is not None,
+check(re.search(r"^\s*docker build [^\n]*--pull", _bauen29, re.M) is not None,
       "bauen.fish: `docker build` ohne `--pull`")
 _app29 = (WURZEL / "tools" / "paket" / "appimage_bauen.fish").read_text(encoding="utf-8")
 check(re.search(r"^uv python upgrade ", _app29, re.M) is not None,

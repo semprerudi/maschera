@@ -1,0 +1,252 @@
+# Ein Release in einem Lauf: ein Tag `vX.Y.Z` baut alle Pakete und legt das
+# Release an.
+#
+# Ausgeloest durch `git push` eines Tags `v*`. Der Tag muss zu `VERSION` in
+# `app/serve.py` passen, sonst bricht der erste Job ab und nichts wird
+# veroeffentlicht.
+#
+# Ablauf:
+#   pruefen     Tag gegen VERSION, Releasetext vorhanden
+#   pakete      macOS und Windows (`pakete.yml`)
+#   appimage    AppImage mit zsync-Adresse und SBOM
+#   flatpak     Flatpak-Buendel (das Modell holt die App beim ersten Start)
+#   docker      Abbild nach GHCR (:X.Y.Z und :latest), signiert, mit SBOM
+#   release     SHA256SUMS, Releasetext, Release als «latest»
+#
+# Das Release entsteht erst, wenn alle Pakete gebaut sind. Scheitert einer,
+# gibt es kein halbes Release; nur das Abbild kann dann schon auf GHCR liegen.
+#
+# Rechte: oben nur `contents: read`. Mehr bekommen nur die Jobs, die es
+# brauchen: `docker` (packages, id-token fuer die Signatur) und `release`
+# (contents: write). Jede Action ist auf einen Commit festgenagelt.
+name: Release
+on:
+  push:
+    tags: ["v*"]
+  # Probelauf: baut alles, pusht kein Abbild und legt kein Release an.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  pruefen:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      fassung: ${{ steps.fassung.outputs.fassung }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - id: fassung
+        name: Tag gegen VERSION
+        env:
+          TAG: ${{ github.ref_name }}
+          PROBE: ${{ github.event_name != 'push' }}
+        run: |
+          fassung=$(sed -n 's/^VERSION = "\([^"]*\)"$/\1/p' app/serve.py)
+          if [ "$PROBE" = true ]; then
+            echo "Probelauf mit $fassung, ohne Veroeffentlichung"
+            echo "fassung=$fassung" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "v$fassung" != "$TAG" ]; then
+            echo "::error::Tag $TAG passt nicht zu VERSION $fassung"
+            exit 1
+          fi
+          case "$fassung" in
+            *-*) echo "::error::$fassung ist keine Releasefassung"; exit 1 ;;
+          esac
+          if ! head -1 tools/paket/RELEASE-NOTES.md | grep -qx "# MASCHERA $fassung"; then
+            echo "::error::tools/paket/RELEASE-NOTES.md ist nicht fuer $fassung"
+            exit 1
+          fi
+          echo "fassung=$fassung" >> "$GITHUB_OUTPUT"
+
+  pakete:
+    needs: pruefen
+    uses: ./.github/workflows/pakete.yml
+
+  appimage:
+    needs: pruefen
+    runs-on: ubuntu-22.04   # aelteres glibc: laeuft auch auf aelteren Systemen
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        with:
+          python-version: "3.13"
+      - name: Werkzeuge
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q fish zsync librsvg2-bin
+          pip install uv
+          # appimagetool ist selbst eine AppImage: fest auf 1.9.1 und die
+          # Pruefsumme, ohne FUSE ausgepackt gestartet.
+          curl -fsSL -o /tmp/appimagetool \
+            https://github.com/AppImage/appimagetool/releases/download/1.9.1/appimagetool-x86_64.AppImage
+          echo "ed4ce84f0d9caff66f50bcca6ff6f35aae54ce8135408b3fa33abfc3cb384eb0  /tmp/appimagetool" | sha256sum -c
+          chmod +x /tmp/appimagetool
+          printf '#!/bin/sh\nAPPIMAGE_EXTRACT_AND_RUN=1 exec /tmp/appimagetool "$@"\n' \
+            | sudo tee /usr/local/bin/appimagetool > /dev/null
+          sudo chmod +x /usr/local/bin/appimagetool
+      - name: Modell holen (Pruefsumme aus packs/ch/modell.json)
+        run: |
+          python -c "
+          from pathlib import Path
+          from core import modell
+          modell.hole(modell.manifest('ch'), Path('runs/ch-v63b'))
+          "
+      - name: Bauen
+        env:
+          MASCHERA_UPDATE_URL: https://github.com/semprerudi/maschera/releases/latest/download
+        run: fish tools/paket/appimage_bauen.fish
+      - uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c  # v0.24.3
+        with:
+          path: dist/AppDir
+          format: spdx-json
+          output-file: maschera-${{ needs.pruefen.outputs.fassung }}-appimage.spdx.json
+          upload-artifact: false
+          upload-release-assets: false
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: appimage
+          path: |
+            dist/MASCHERA-latest-x86_64.AppImage
+            dist/MASCHERA-latest-x86_64.AppImage.zsync
+            maschera-*-appimage.spdx.json
+          retention-days: 7
+          compression-level: 0
+
+  flatpak:
+    needs: pruefen
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:kde-6.11
+      options: --privileged
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@79327416609af08178ad73b352877e51450790b3  # v6.8
+        with:
+          bundle: MASCHERA-latest-x86_64.flatpak
+          manifest-path: tools/paket/ch.maschera.Maschera.yml
+          cache: false
+          upload-artifact: false
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: flatpak
+          path: MASCHERA-latest-x86_64.flatpak
+          retention-days: 7
+          compression-level: 0
+
+  docker:
+    needs: pruefen
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    env:
+      ABBILD: ghcr.io/semprerudi/maschera
+      FASSUNG: ${{ needs.pruefen.outputs.fassung }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        with:
+          python-version: "3.13"
+      - name: Modell holen (Pruefsumme aus packs/ch/modell.json)
+        run: |
+          python -c "
+          from pathlib import Path
+          from core import modell
+          modell.hole(modell.manifest('ch'), Path('runs/ch-v63b'))
+          "
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069  # v4.4.1
+      - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f  # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: bau
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc  # v7.4.0
+        with:
+          context: .
+          file: tools/paket/Dockerfile
+          pull: true
+          push: ${{ github.event_name == 'push' }}
+          load: ${{ github.event_name != 'push' }}
+          provenance: false
+          tags: |
+            ${{ env.ABBILD }}:${{ env.FASSUNG }}
+            ${{ env.ABBILD }}:latest
+      - uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6  # v4.1.2
+        if: github.event_name == 'push'
+      - name: Signieren und pruefen
+        if: github.event_name == 'push'
+        env:
+          DIGEST: ${{ steps.bau.outputs.digest }}
+        run: |
+          cosign sign --yes "$ABBILD@$DIGEST"
+          cosign verify "$ABBILD@$DIGEST" \
+            --certificate-identity "https://github.com/semprerudi/maschera/.github/workflows/release.yml@refs/tags/v$FASSUNG" \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com > /dev/null
+          echo "$DIGEST" > digest.txt
+      - uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c  # v0.24.3
+        with:
+          image: ${{ env.ABBILD }}:${{ env.FASSUNG }}
+          format: spdx-json
+          output-file: maschera-${{ env.FASSUNG }}-docker.spdx.json
+          upload-artifact: false
+          upload-release-assets: false
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: docker
+          path: |
+            maschera-*-docker.spdx.json
+            digest.txt
+          retention-days: 7
+
+  release:
+    needs: [pruefen, pakete, appimage, flatpak, docker]
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: write
+    env:
+      FASSUNG: ${{ needs.pruefen.outputs.fassung }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333  # v8.0.2
+        with:
+          path: lauf
+      - name: Feste Namen und Pruefsummen
+        run: |
+          mkdir aus
+          mv lauf/appimage/dist/MASCHERA-latest-x86_64.AppImage* aus/
+          mv lauf/appimage/maschera-*-appimage.spdx.json aus/
+          mv lauf/flatpak/MASCHERA-latest-x86_64.flatpak aus/
+          mv lauf/docker/maschera-*-docker.spdx.json aus/
+          mv lauf/MASCHERA-Windows-setup/MASCHERA-*-x64-setup.exe aus/MASCHERA-latest-x64-setup.exe
+          mv lauf/MASCHERA-macOS-dmg/MASCHERA-*-arm64.dmg aus/MASCHERA-latest-arm64.dmg
+          cd aus
+          sha256sum * > SHA256SUMS
+          cat SHA256SUMS
+      - name: Releasetext
+        run: |
+          sed "s/{FASSUNG}/$FASSUNG/g" tools/paket/release-unten.md > unten.md
+          awk 'FNR==NR { u = u $0 "\n"; next }
+               /^<!-- UNTEN -->$/ { printf "%s", u; next } { print }' \
+            unten.md tools/paket/RELEASE-NOTES.md > text.md
+          if grep -q "UNTEN" text.md; then echo "::error::Marke nicht ersetzt"; exit 1; fi
+      - name: Release anlegen
+        run: |
+          gh release create "v$FASSUNG" aus/* \
+            --title "MASCHERA $FASSUNG" --notes-file text.md --latest \
+            --verify-tag

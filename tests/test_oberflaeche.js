@@ -1792,6 +1792,8 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     document.getElementById("antwort04").value = M.zustand.antwort04;
     M.zustand.final = { text: "fertiger Text" };
     M.zustand.vorlage = "Meine Vorlage";
+    M.zustand.hinausAuf = true;
+    M.zustand.hinweiseAuf = true;
 
     // ⚠️ Erst das NEIN: eine Wache, die immer bestaetigt wird, ist keine.
     bestaetigt = false;
@@ -1807,6 +1809,10 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     pruefe(M.zustand.prompt === "", "der Prompt blieb stehen");
     pruefe(M.zustand.antwort04 === "", "die Antwort aus 04 blieb stehen");
     pruefe(M.zustand.final === null, "der finale Text blieb stehen");
+    // Aufgeklappte Tafeln zeigten nach «Neu» nur noch den Platzhaltersatz.
+    pruefe(M.zustand.hinausAuf === false,
+           "«Prompt & maskierter Text» blieb aufgeklappt");
+    pruefe(M.zustand.hinweiseAuf === false, "die Hinweistafel in 02 blieb offen");
     pruefe(M.zustand.vorlage === null,
            "die gewaehlte Vorlage steht noch im Feld");
     pruefe(document.getElementById("prompt").value === "",

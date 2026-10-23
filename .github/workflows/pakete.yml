@@ -19,7 +19,10 @@
 # schreiben. Jede Action ist auf einen Commit festgenagelt, nicht auf eine
 # Marke, die sich verschieben liesse.
 name: Pakete bauen
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  # `release.yml` ruft ihn auf; die Artefakte landen dann im selben Lauf.
+  workflow_call:
 
 permissions:
   contents: read

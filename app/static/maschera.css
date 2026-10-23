@@ -3335,7 +3335,36 @@ button.tat.einpflegen:disabled {
 .einpflegen-zeile .haken { display: none; flex: none; color: var(--gr-flaeche); }
 .einpflegen-zeile.fertig .haken { display: block; }
 .einpflegen-zeile.fertig .dreher { display: none; }
-.einpflegen-zeile.fertig { box-shadow: none; }
+/* Eingepflegt bleibt ein duenner gruener Rand, damit die Zeile als eigenes
+ * Element steht (Feedback 23.10.2026). */
+.einpflegen-zeile.fertig { box-shadow: inset 0 0 0 1px var(--gr-flaeche); }
+
+/* 03: Links im Balken «Prompt & maskierter Text» steht vor der Uebernahme
+ * ein leerer Kreis, Text und Pfeil sind blass. Danach dreht es kurz, dann
+ * bleibt ein Haken. Schwarz: die Spalte ist rot, Gruen gehoert nicht hinein.
+ * (Feedback 23.10.2026, Variante B) */
+#hinaus-klappe { justify-content: flex-start; }
+#hinaus-klappe .pfeil { margin-left: auto; }
+#hinaus-klappe.leer .teil-titel,
+#hinaus-klappe.leer .pfeil { opacity: 0.45; }
+.uebernahme-zeichen {
+  display: inline-flex; flex: none; align-items: center; justify-content: center;
+  width: 1rem; height: 1rem; color: var(--color-text);
+}
+.uebernahme-zeichen .kreis {
+  display: block; width: 0.75rem; height: 0.75rem; box-sizing: border-box;
+  border-radius: 999px; border: 1.5px solid color-mix(in srgb, var(--color-text) 35%, transparent);
+}
+.uebernahme-zeichen .dreher {
+  display: none;
+  border-color: color-mix(in srgb, var(--color-text) 20%, transparent);
+  border-top-color: var(--color-text);
+}
+.uebernahme-zeichen .haken { display: none; }
+.uebernahme-zeichen.dreht .kreis,
+.uebernahme-zeichen.fertig .kreis { display: none; }
+.uebernahme-zeichen.dreht .dreher { display: block; }
+.uebernahme-zeichen.fertig .haken { display: block; }
 
 /* 2.1 — MESSWERTE IM KOPF, KACHEL 03 (Feedback 21.10.2026) ------------------
  * 02: Alle Messwerte im Kopf; die uebrigen ruhigen Hinweise hinter einem
@@ -3356,7 +3385,7 @@ button.tat.einpflegen:disabled {
 
 /* 03: Vorlage und Speichern als Leiste oben rechts IM Promptfeld; der
  * Teiltitel «Prompt» ist weg, das Feld gewinnt seine Hoehe. Ueber dem
- * Kasten darunter der Titel «Prompt + maskierter Text» und klein die Zahl.
+ * Kasten darunter der Titel «Prompt & maskierter Text» und klein die Zahl.
  */
 
 /* Der Kasten zeigt die Platzhalter wie 02: gleiche Zeilenhoehe, Text in
@@ -3384,7 +3413,7 @@ button.tat.einpflegen:disabled {
 /* 2.1 — 03: PROMPTZUSAMMENFUEHRUNG (Feedback 21.10.2026), breit:
  * oben der kleine Titel «Prompt» und rechts Vorlagen und Vorlage speichern,
  * darunter das Promptfeld ueber die ganze Breite, darunter rechts Prompt
- * leeren und Prompt kopieren, zuunterst der Balken «Prompt + maskierter
+ * leeren und Prompt kopieren, zuunterst der Balken «Prompt & maskierter
  * Text». Der Kasten dahinter legt sich aufgeklappt als Tafel UEBER alles
  * andere; das Promptfeld behaelt dabei Groesse und Lage.
  */
@@ -3469,7 +3498,7 @@ button.tat.einpflegen:disabled {
   position: fixed; z-index: 300; max-width: min(24rem, calc(100vw - 1rem));
 }
 
-/* «Prompt + maskierter Text» als Balken, der auf- und zuklappt. Zugeklappt
+/* «Prompt & maskierter Text» als Balken, der auf- und zuklappt. Zugeklappt
  * (Vorgabe) bekommt das Promptfeld die ganze Hoehe; die vier Knoepfe
  * bleiben oben rechts. */
 .klappkopf {

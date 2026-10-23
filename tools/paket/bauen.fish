@@ -17,12 +17,25 @@ set -l FASSUNG (fish $STAMM/tools/paket/fassung.fish)
 or exit 1
 
 echo "MASCHERA $FASSUNG"
-# `--pull`: das Grundbild `python:3.13-slim` jedes Mal frisch holen. Ohne
-# bleibt der Bau beim Python, das zufaellig schon auf dem Server liegt —
-# und eine behobene Luecke der Standardbibliothek (z. B. `zipfile` in
-# 3.13.16) kaeme nie im Abbild an.
-docker build --pull -f tools/paket/Dockerfile -t maschera:$FASSUNG .
-or exit 1
+# `--holen` (seit 2.1.1): das Abbild nicht bauen, sondern das fertige,
+# signierte von GHCR ziehen, das `release.yml` beim Tag gebaut hat. Dann
+# laeuft auf dem Server genau das, was auch alle anderen bekommen.
+if contains -- --holen $argv
+    if contains -- --test $argv
+        echo "HALT: --holen und --test zusammen. Testfassungen liegen nie auf GHCR."
+        exit 1
+    end
+    docker pull ghcr.io/semprerudi/maschera:$FASSUNG
+    and docker tag ghcr.io/semprerudi/maschera:$FASSUNG maschera:$FASSUNG
+    or exit 1
+else
+    # `--pull`: das Grundbild `python:3.13-slim` jedes Mal frisch holen. Ohne
+    # bleibt der Bau beim Python, das zufaellig schon auf dem Server liegt —
+    # und eine behobene Luecke der Standardbibliothek (z. B. `zipfile` in
+    # 3.13.16) kaeme nie im Abbild an.
+    docker build --pull -f tools/paket/Dockerfile -t maschera:$FASSUNG .
+    or exit 1
+end
 
 # `docker compose` liest `.env` aus dem Verzeichnis der Compose-Datei.
 # Deshalb liegt sie in `tools/paket/` und nicht im Projektstamm.

@@ -1,5 +1,37 @@
 # Änderungen
 
+## 2.2.0 (2026-10-23)
+
+Ein Willkommensschirm erklärt, was MASCHERA kann. Wie MASCHERA maskiert, bleibt
+gleich.
+
+### Neu
+- **Willkommensschirm:** Beim Start erklären fünf Seiten mit je einem Bild der
+  Oberfläche die Stärken von MASCHERA: maskieren und zurückholen, 100% lokal,
+  schnelles Arbeiten als Seitenleiste, was maskiert wird, Vorlagen und eigene
+  Chatbots. Die letzte Seite führt zum Beispiel oder auf www.maschera.ch.
+  «Nicht mehr anzeigen» blendet ihn aus; im Menü steht er unter «Willkommen»
+  jederzeit wieder.
+- **Grosse Ablagefläche:** Wer eine Datei über das Fenster zieht, sieht die
+  Ablage über Zeile und Textfeld von 01 wachsen und muss nicht mehr genau
+  zielen.
+
+### Geändert
+- In der roten Spalte (03 und 04) ist die Schrift schwarz statt rot,
+  Deaktiviertes dunkelgrau.
+- Der Titel einer Kachel bricht auf schmalen Bildschirmen nicht mehr um; zuerst
+  kürzt die Meldung daneben, dann die Zahl.
+- «Neu» und «Beispiel» setzen auch offene Rubriken im Rechtsklickmenü,
+  Suchwörter, Filter und eine vergrösserte Kachel zurück.
+
+### Behoben
+- Einstellungen, Rückfragen und Hilfe schlossen sich, wenn man in einem Feld
+  Text markierte und die Maus dabei über den Rand hinauszog. Sie schliessen
+  jetzt nur noch, wenn man daneben drückt und dort loslässt.
+- Im eigenen Fenster leuchtete «Beispiel» bei jedem Start, weil das Fenster
+  den Browserspeicher vergass. Solche Marken liegen dort jetzt in den
+  Einstellungen.
+
 ## 2.1.1 (2026-10-23)
 
 Kleiner Feinschliff an Kachel 03. Wie MASCHERA maskiert, bleibt gleich.

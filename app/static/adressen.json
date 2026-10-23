@@ -35,7 +35,7 @@
   "_reihenfolge": [
     "Vier Gruppen, von innen nach aussen:",
     "",
-    "  1. was im Werkzeug selbst hilft   Hilfe",
+    "  1. was im Werkzeug selbst hilft   Willkommen, Hilfe",
     "  2. die zwei Rueckwege zu uns      Fehler melden, Kontakt",
     "  3. das Projekt draussen           Webseite, Herunterladen, Updates, Quellcode",
     "  4. Pflicht und Fensterhandlung    Impressum, Im Browser oeffnen",
@@ -47,6 +47,7 @@
     "ohnehin nur im eigenen Fenster."
   ],
   "eintraege": [
+    { "schluessel": "mWillkommen", "bild": "buch", "dialog": "willkommen" },
     { "schluessel": "mHilfe", "bild": "frage",     "dialog": "hilfe" },
     { "schluessel": "mFehler", "bild": "kaefer",   "url": "https://github.com/semprerudi/maschera/issues" },
     { "schluessel": "mKontakt", "bild": "brief",   "url": "https://github.com/semprerudi" },

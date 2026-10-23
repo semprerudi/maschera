@@ -92,6 +92,18 @@ VORGABE_PORT = 4141
 # wenn das System nachts umschaltet.
 THEMEN = ("automatisch", "hell", "dunkel")
 
+# Marken «schon gesehen» der Oberflaeche (seit 2.2). Im eigenen Fenster
+# vergisst pywebview den Browserspeicher bei jedem Neustart
+# (`webview.start(private_mode=True)` ist dort die Vorgabe), deshalb liegen
+# sie dort hier. Im Browser und auf dem Server bleiben sie im
+# `localStorage`: hier teilten sich sonst alle Nutzer eines Servers eine
+# Marke.
+#
+# Unbekannte Marken fallen still weg statt abgelehnt zu werden: eine Datei
+# von einer NEUEREN Fassung soll eine aeltere nicht auf die ganze Vorgabe
+# zurueckwerfen (dieselbe Falle wie bei `schriftart`).
+MARKEN = ("beispiel", "willkommen")
+
 VORGABE = {
     "adresse": "127.0.0.1",
     "port": VORGABE_PORT,
@@ -111,6 +123,7 @@ VORGABE = {
     "tray": True,
     "fenstermodus": "widget",
     "thema": "automatisch",
+    "marken": [],
     # Alphabetisch nach Name. Gewaehlt ist trotzdem `dienst` (oben): Claude.
     # Mistral fehlte bis 1.0.2 hier, obwohl die Oberflaeche es kennt — die Liste
     # kommt vom Server, und der kannte vier.
@@ -246,6 +259,12 @@ def pruefe(roh) -> dict:
                         schluessel="thema_unbekannt", wert=repr(thema),
                         moeglich=", ".join(THEMEN))
 
+    marken = roh.get("marken", VORGABE["marken"])
+    if not isinstance(marken, list):
+        raise Abgelehnt("Feld `marken` ist keine Liste.",
+                        schluessel="marken_keine_liste")
+    marken = [m for m in MARKEN if m in marken]
+
     dienste = _dienste(roh.get("dienste", VORGABE["dienste"]))
 
     # ⚠️ Der zuletzt gewaehlte Dienst muss es noch geben. Wer ihn geloescht
@@ -267,6 +286,7 @@ def pruefe(roh) -> dict:
         "tray": tray,
         "fenstermodus": modus,
         "thema": thema,
+        "marken": marken,
         "dienste": dienste,
     }
 

@@ -275,6 +275,8 @@ const I18N = {
         kAusschneiden: "Ausschneiden", kKopieren: "Kopieren", kEinfuegen: "Einfügen",
         menu: "Menü",
         mBrowser: "Im Browser öffnen", mHilfe: "Hilfe",
+        mWillkommen: "Willkommen", wZurueck: "Zurück", wWeiter: "Weiter", wLos: "Los geht’s",
+        wNie: "Nicht mehr anzeigen", wBeispiel: "Beispiel ausprobieren", wSeite: "Seite {}",
         mHilfeBald: "kommt später", mWebseite: "maschera.ch",
         mGithub: "Quellcode auf GitHub", mDownload: "Herunterladen",
         mFehler: "Fehler melden",
@@ -334,7 +336,7 @@ const I18N = {
               + "einpflegst.",
         leer02: "Noch nichts maskiert. Text in Spalte 1 einfügen und "
               + "«Maskieren» drücken.",
-        dropN: "Klicken oder Textdatei bzw. Mail hierher ziehen", dropT: "Unterstützt: PDF, DOCX, TXT, MD, LOG, CSV, JSON und Mails als EML, MSG oder MBOX. Ein Klick öffnet die Dateiauswahl.",
+        dropN: "Klicken oder Textdatei bzw. Mail hierher ziehen", dropGross: "Hier ablegen", dropT: "Unterstützt: PDF, DOCX, TXT, MD, LOG, CSV, JSON und Mails als EML, MSG oder MBOX. Ein Klick öffnet die Dateiauswahl.",
         laeuft: "läuft …", lWartet: "Text wird vorbereitet …", lModell: "Fenster {} von {}", lMaskieren: "Maskieren, Wörterbuch wird gebaut …", lRest: "noch etwa {}", drop: "Datei hierher ziehen oder wählen",
         portFehlt: "Kein Port angegeben.",
         verwerfenVok: "Wirklich fortfahren?\n{} Vokabulareinträge gehen verloren.",
@@ -420,6 +422,7 @@ const I18N = {
           neueste_unlesbar: "GitHub hat geantwortet, aber ohne lesbare Fassungsnummer. Die neueste Fassung steht auf der Download-Seite.",
           regeln_unlesbar: "Regeln nicht lesbar. Ein Feld hat die falsche Form.",
           tray_kein_wahrheitswert: "Feld `tray` ist kein Wahrheitswert.",
+          marken_keine_liste: "Feld `marken` ist keine Liste.",
           fenstermodus_unbekannt: "Fenstermodus {wert} gibt es nicht. Möglich: {moeglich}",
           thema_unbekannt: "Thema {wert} gibt es nicht. Möglich: {moeglich}",
           schriftart_unbekannt: "Schriftart {wert} gibt es nicht. Möglich: {moeglich}",
@@ -563,6 +566,8 @@ const I18N = {
         kAusschneiden: "Couper", kKopieren: "Copier", kEinfuegen: "Coller",
         menu: "Menu",
         mBrowser: "Ouvrir dans le navigateur", mHilfe: "Aide",
+        mWillkommen: "Bienvenue", wZurueck: "Retour", wWeiter: "Suivant", wLos: "C’est parti",
+        wNie: "Ne plus afficher", wBeispiel: "Essayer l’exemple", wSeite: "Page {}",
         mHilfeBald: "à venir", mWebseite: "maschera.ch",
         mGithub: "Code source sur GitHub", mDownload: "Télécharger",
         mFehler: "Signaler un problème",
@@ -622,7 +627,7 @@ const I18N = {
               + "vocabulaire.",
         leer02: "Rien de masqué. Colle un texte dans la colonne 1 puis "
               + "presse « Masquer ».",
-        dropN: "Cliquer ou glisser ici un fichier texte ou un courriel", dropT: "Pris en charge : PDF, DOCX, TXT, MD, LOG, CSV, JSON et courriels EML, MSG ou MBOX. Un clic ouvre le choix de fichier.",
+        dropN: "Cliquer ou glisser ici un fichier texte ou un courriel", dropGross: "Déposer ici", dropT: "Pris en charge : PDF, DOCX, TXT, MD, LOG, CSV, JSON et courriels EML, MSG ou MBOX. Un clic ouvre le choix de fichier.",
         laeuft: "en cours …", lWartet: "Préparation du texte …", lModell: "Fenêtre {} sur {}", lMaskieren: "Masquage, création du glossaire …", lRest: "encore environ {}", drop: "Glisser un fichier ou choisir",
         portFehlt: "Aucun port indiqué.",
         verwerfenVok: "Continuer vraiment ?\n{} entrées de vocabulaire seront perdues.",
@@ -699,6 +704,7 @@ const I18N = {
           neueste_unlesbar: "GitHub a répondu, mais sans numéro de version lisible. La version la plus récente se trouve sur la page de téléchargement.",
           regeln_unlesbar: "Règles illisibles. Un champ n'a pas la bonne forme.",
           tray_kein_wahrheitswert: "Le champ `tray` n’est pas un booléen.",
+          marken_keine_liste: "Le champ `marken` n’est pas une liste.",
           fenstermodus_unbekannt: "Le mode de fenêtre {wert} n’existe pas. Possible : {moeglich}",
           thema_unbekannt: "Le thème {wert} n’existe pas. Possible : {moeglich}",
           schriftart_unbekannt: "La police {wert} n’existe pas. Possible : {moeglich}",
@@ -842,6 +848,8 @@ const I18N = {
         kAusschneiden: "Taglia", kKopieren: "Copia", kEinfuegen: "Incolla",
         menu: "Menu",
         mBrowser: "Apri nel browser", mHilfe: "Aiuto",
+        mWillkommen: "Benvenuto", wZurueck: "Indietro", wWeiter: "Avanti", wLos: "Si parte",
+        wNie: "Non mostrare più", wBeispiel: "Prova l’esempio", wSeite: "Pagina {}",
         mHilfeBald: "in arrivo", mWebseite: "maschera.ch",
         mGithub: "Codice sorgente su GitHub", mDownload: "Scarica",
         mFehler: "Segnala un problema",
@@ -900,7 +908,7 @@ const I18N = {
         leer05: "Il testo finale apparirà qui appena applichi il vocabolario.",
         leer02: "Niente mascherato. Incolla un testo nella colonna 1 e premi "
               + "«Maschera».",
-        dropN: "Clicca o trascina qui un file di testo o un’e-mail", dropT: "Supportati: PDF, DOCX, TXT, MD, LOG, CSV, JSON ed e-mail EML, MSG o MBOX. Un clic apre la scelta del file.",
+        dropN: "Clicca o trascina qui un file di testo o un’e-mail", dropGross: "Rilascia qui", dropT: "Supportati: PDF, DOCX, TXT, MD, LOG, CSV, JSON ed e-mail EML, MSG o MBOX. Un clic apre la scelta del file.",
         laeuft: "in corso …", lWartet: "Preparazione del testo …", lModell: "Finestra {} di {}", lMaskieren: "Mascheratura, creazione del glossario …", lRest: "ancora circa {}", drop: "Trascina un file o scegli",
         portFehlt: "Nessuna porta indicata.",
         verwerfenVok: "Continuare davvero?\n{} voci di vocabolario andranno perse.",
@@ -977,6 +985,7 @@ const I18N = {
           neueste_unlesbar: "GitHub ha risposto, ma senza un numero di versione leggibile. La versione più recente è nella pagina di download.",
           regeln_unlesbar: "Regole illeggibili. Un campo ha la forma sbagliata.",
           tray_kein_wahrheitswert: "Il campo `tray` non è un valore booleano.",
+          marken_keine_liste: "Il campo `marken` non è una lista.",
           fenstermodus_unbekannt: "La modalità finestra {wert} non esiste. Possibili: {moeglich}",
           thema_unbekannt: "Il tema {wert} non esiste. Possibili: {moeglich}",
           schriftart_unbekannt: "Il carattere {wert} non esiste. Possibili: {moeglich}",
@@ -1120,6 +1129,8 @@ const I18N = {
         kAusschneiden: "Cut", kKopieren: "Copy", kEinfuegen: "Paste",
         menu: "Menu",
         mBrowser: "Open in browser", mHilfe: "Help",
+        mWillkommen: "Welcome", wZurueck: "Back", wWeiter: "Next", wLos: "Let’s go",
+        wNie: "Don’t show again", wBeispiel: "Try the example", wSeite: "Page {}",
         mHilfeBald: "coming soon", mWebseite: "maschera.ch",
         mGithub: "Source code on GitHub", mDownload: "Download",
         mFehler: "Report an issue",
@@ -1178,7 +1189,7 @@ const I18N = {
         leer05: "The final text appears here once you apply the vocabulary.",
         leer02: "Nothing masked yet. Paste text into column 1 and press "
               + "\u00abMask\u00bb.",
-        dropN: "Click or drop a text file or e-mail here", dropT: "Supported: PDF, DOCX, TXT, MD, LOG, CSV, JSON and e-mails as EML, MSG or MBOX. A click opens the file picker.",
+        dropN: "Click or drop a text file or e-mail here", dropGross: "Drop here", dropT: "Supported: PDF, DOCX, TXT, MD, LOG, CSV, JSON and e-mails as EML, MSG or MBOX. A click opens the file picker.",
         laeuft: "running …", lWartet: "Preparing the text …", lModell: "Window {} of {}", lMaskieren: "Masking, building the glossary …", lRest: "about {} left", drop: "Drop a file or choose one",
         portFehlt: "No port given.",
         verwerfenVok: "Really continue?\n{} vocabulary entries will be lost.",
@@ -1255,6 +1266,7 @@ const I18N = {
           neueste_unlesbar: "GitHub answered, but without a readable version number. The newest version is on the download page.",
           regeln_unlesbar: "Rules not readable. A field has the wrong form.",
           tray_kein_wahrheitswert: "Field `tray` is not a boolean.",
+          marken_keine_liste: "Field `marken` is not a list.",
           fenstermodus_unbekannt: "Window mode {wert} does not exist. Possible: {moeglich}",
           thema_unbekannt: "Theme {wert} does not exist. Possible: {moeglich}",
           schriftart_unbekannt: "Typeface {wert} does not exist. Possible: {moeglich}",
@@ -1409,6 +1421,12 @@ const z = {
   sendeUhr: null,
   // Haelt den Ziehschleier, solange `dragover` nachkommt.
   ziehUhr: null,
+  ablageGrossUhr: null,
+  // Marken «schon gesehen» aus den Einstellungen; gelesen nur im eigenen
+  // Fenster (siehe `markeGesetzt`).
+  marken: [],
+  willkommenSeite: 0,
+  beispielGeprueft: false,
   // Holt den Stand, solange maskiert wird.
   fortschrittUhr: null,
   // Erst ein Klick auf «Uebernahme in Prompt» traegt den maskierten Text in
@@ -2051,6 +2069,9 @@ const MENUEBILDER = {
   // Kasten mit Pfeil hinaus
   hinaus: ["M15 3h6v6", "M10 14 21 3",
            "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"],
+  // Aufgeschlagenes Buch — «Willkommen»
+  buch: ["M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2Z",
+         "M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7Z"],
   // Fragezeichen im Kreis
   frage: ["M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z",
           "M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3", "M12 17h.01"],
@@ -2878,6 +2899,8 @@ function zeichneBeschriftung() {
   $("lokalzeiger").textContent = s.hundert;
   // Kurz und einzeilig im Feld, die Formate im Tooltip (Feedback 22.10.2026).
   $("ablage-text").textContent = s.dropN;
+  $("ablage-gross-text").textContent = s.dropGross;
+  if (!$("willkommen").hidden) zeichneWillkommen(0);
   $("ablage").title = s.dropT;
   // Zuletzt: erst stehen alle Beschriftungen, dann werden daraus die
   // Tooltips. Vorher gerufen traege der Tooltip die Sprache von vorhin.
@@ -3739,7 +3762,68 @@ function seiteZeigen(welche) {
   dialogVonOben($("seite"), rumpf);
 }
 
+/* Die grosse Ablageflaeche (seit 2.2, Feedback 23.10.2026): die Zeile oben
+ * in 01 war zu klein, man musste genau zielen. Sobald eine Datei ueber das
+ * Fenster gezogen wird, waechst eine eigene Ebene von der Lage der Zeile
+ * auf die ganze Flaeche von der Zeile bis zum unteren Rand des Textfelds.
+ *
+ * Eine Ebene UEBER der Kachel, kein Umbau: aendert sich das Layout, springt
+ * alles darunter. Lage und Groesse kommen gemessen aus dem Skript, die
+ * Bewegung aus der `transition` in `maschera.css`.
+ */
+function ablageGrossLage(von, kachel) {
+  const r = von.getBoundingClientRect();
+  return { top: r.top - kachel.top, left: r.left - kachel.left,
+           width: r.width, height: r.height };
+}
+function ablageGrossSetzen(ebene, l) {
+  ebene.style.top = l.top + "px"; ebene.style.left = l.left + "px";
+  ebene.style.width = l.width + "px"; ebene.style.height = l.height + "px";
+}
+function ablageGrossAuf() {
+  const ebene = $("ablage-gross");
+  if (!ebene.hidden) return;
+  clearTimeout(z.ablageGrossUhr);
+  const kachel = $("b01").getBoundingClientRect();
+  const zeile = $("ablagezeile");
+  const rumpf = $("orig").parentElement;
+  const start = ablageGrossLage(zeile, kachel);
+  const unten = ablageGrossLage(rumpf, kachel);
+  ebene.classList.remove("auf");
+  ablageGrossSetzen(ebene, start);
+  ebene.hidden = false;
+  void ebene.offsetWidth;              // Startlage gilt, bevor sie waechst
+  ebene.classList.add("auf");
+  ablageGrossSetzen(ebene, { top: start.top, left: start.left, width: start.width,
+                             height: unten.top + unten.height - start.top });
+}
+function ablageGrossZu() {
+  const ebene = $("ablage-gross");
+  if (ebene.hidden) return;
+  ebene.classList.remove("auf", "drueber");
+  const zeile = $("ablagezeile");
+  ablageGrossSetzen(ebene, ablageGrossLage(zeile, $("b01").getBoundingClientRect()));
+  clearTimeout(z.ablageGrossUhr);
+  z.ablageGrossUhr = setTimeout(() => { ebene.hidden = true; }, 180);
+}
+
 function seiteSchliessen() { $("seite").hidden = true; }
+
+/* Ein Klick auf den Hintergrund schliesst einen Dialog, aber nur, wenn der
+ * Druck UND das Loslassen dort liegen (Feedback 23.10.2026). Wer in einem
+ * Feld Text markiert und die Maus dabei ueber den Rand zieht, loest sonst
+ * beim Loslassen einen `click` am gemeinsamen Vorfahren aus, also am
+ * Hintergrund, und der Dialog schloss mitten im Markieren.
+ */
+function hintergrundSchliesst(hg, schliessen) {
+  let unten = false;
+  hg.addEventListener("pointerdown", (e) => { unten = e.target === hg; });
+  hg.addEventListener("click", (e) => {
+    const dort = unten && e.target === hg;
+    unten = false;
+    if (dort) schliessen();
+  });
+}
 
 /* «Nach Updates suchen»: fragt `POST /api/neueste` und zeigt das Ergebnis in
  * derselben Huelle wie Hilfe und Impressum. Gefragt wird NUR hier, auf Klick.
@@ -3803,7 +3887,8 @@ function zeichneBurger() {
                document.createTextNode(wort));
       b.addEventListener("click", () => {
         burgerAuf(false);
-        seiteZeigen(e.dialog);
+        if (e.dialog === "willkommen") willkommenZeigen(0);
+        else seiteZeigen(e.dialog);
       });
       menu.append(b);
       continue;
@@ -4593,8 +4678,18 @@ function verbinde() {
   ablage.addEventListener("dragleave", () => {
     ablage.classList.remove("drueber");
   });
-  ablage.addEventListener("drop", async (e) => {
+  const ablageGross = $("ablage-gross");
+  ablageGross.addEventListener("dragover", (e) => {
+    e.preventDefault(); ablageGross.classList.add("drueber");
+  });
+  ablageGross.addEventListener("dragleave", () => {
+    ablageGross.classList.remove("drueber");
+  });
+  ablage.addEventListener("drop", abgelegt);
+  ablageGross.addEventListener("drop", abgelegt);
+  async function abgelegt(e) {
     e.preventDefault(); ablage.classList.remove("drueber");
+    ablageGross.classList.remove("drueber");
     schleierAus();
     const d = e.dataTransfer && e.dataTransfer.files &&
               e.dataTransfer.files[0];
@@ -4609,7 +4704,7 @@ function verbinde() {
       (e.dataTransfer && e.dataTransfer.types) || []).join(", ");
     $("fehler").replaceChildren(
       el("p", "fehler-text", t().drop_ohne_datei + (typen ? " (" + typen + ")" : "")));
-  });
+  }
 
   // ZWEI Dinge auf der ganzen Seite, nicht nur auf der Flaeche.
   //
@@ -4634,12 +4729,14 @@ function verbinde() {
     clearTimeout(z.ziehUhr); z.ziehUhr = null;
     $("ziehschleier").hidden = true;
     document.body.classList.remove("zieht");
+    ablageGrossZu();
   }
   document.addEventListener("dragover", (e) => {
     if (!traegtDatei(e)) return;
     e.preventDefault();
     $("ziehschleier").hidden = false;
     document.body.classList.add("zieht");
+    ablageGrossAuf();
     clearTimeout(z.ziehUhr);
     z.ziehUhr = setTimeout(schleierAus, 250);
   });
@@ -4808,9 +4905,7 @@ function verbinde() {
   $("frage-ja").addEventListener("click", () => frageSchliessen(true));
   $("frage-nein").addEventListener("click", () => frageSchliessen(false));
   // Ein Klick neben den Kasten ist ein Nein — nie ein Ja.
-  $("frage").addEventListener("click", (e) => {
-    if (e.target === $("frage")) frageSchliessen(false);
-  });
+  hintergrundSchliesst($("frage"), () => frageSchliessen(false));
   $("frage").addEventListener("keydown", (e) => {
     if (e.key === "Escape") { e.preventDefault(); frageSchliessen(false); }
     else if (e.key === "Enter" && e.target === $("frage-eingabe")) {
@@ -4820,14 +4915,33 @@ function verbinde() {
   $("knopf-seite-zu").addEventListener("click", seiteSchliessen);
   // Der Klick auf den Hintergrund schliesst ebenfalls. Nur der Hintergrund
   // selbst, nicht ein Kind — sonst schloesse jeder Klick im Text die Seite.
-  $("seite").addEventListener("click", (e) => {
-    if (e.target === $("seite")) seiteSchliessen();
+  hintergrundSchliesst($("seite"), seiteSchliessen);
+
+  // Der Willkommensschirm: Kreuz, Escape und der Hintergrund schliessen,
+  // die Pfeiltasten blaettern, das Kreuzchen merkt sich sofort.
+  const willkommenZu = $("knopf-willkommen-zu");
+  willkommenZu.append(zeichenSinnbild("schliessen", KNOPFBILDER));
+  willkommenZu.addEventListener("click", () => willkommenSchliessen(false));
+  hintergrundSchliesst($("willkommen"), () => willkommenSchliessen(false));
+  $("knopf-willkommen-zurueck").addEventListener("click",
+    () => willkommenBlaettern(-1));
+  $("knopf-willkommen-weiter").addEventListener("click", () => {
+    if (z.willkommenSeite >= willkommenSeiten().length - 1) {
+      willkommenSchliessen(false);
+    } else {
+      willkommenBlaettern(1);
+    }
+  });
+  $("willkommen-nie").addEventListener("change",
+    (e) => markeSetzen("willkommen", e.target.checked));
+  $("willkommen").addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { e.preventDefault(); willkommenSchliessen(false); }
+    else if (e.key === "ArrowRight") { e.preventDefault(); willkommenBlaettern(1); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); willkommenBlaettern(-1); }
   });
   // Seit 17.10.2026 ein ABBRECHEN, kein Speichern (Issue #11) — wie bei der
   // Rueckfrage: ein Klick neben den Kasten ist ein Nein, nie ein Ja.
-  $("einst").addEventListener("click", (e) => {
-    if (e.target === $("einst")) einstellungenAbbrechen();
-  });
+  hintergrundSchliesst($("einst"), einstellungenAbbrechen);
 
   // Die Portpruefung fragt wirklich nach und liest `dienst`. Wer auf 4141
   // antwortet, ist noch lange nicht MASCHERA.
@@ -5553,6 +5667,19 @@ function allesLeeren() {
   z.hinausAuf = false;
   z.hinweiseAuf = false;
   z.uebernahmeLaeuft = false;
+  // Seit 2.2 auch das Uebrige, was eine Sitzung hinterlaesst (Musterfrage
+  // zu 12.49): offene Rubriken im Rechtsklickmenue, Suchwoerter und Filter,
+  // die vergroesserte Kachel. Nach «Neu» sieht MASCHERA aus wie beim Start.
+  z.kontextOffen = new Set(["haeufig"]);
+  z.kontextSuche = "";
+  z.vokSuche = "";
+  z.vokFilter = "alle";
+  z.vorlagenFilter = "";
+  for (const id of ["vok-suche", "vorlagen-filter"]) {
+    const e = $(id);
+    if (e) { e.value = ""; suchStand(e); }
+  }
+  if (z.gross) kachelGross(null);
   for (const feld of ["orig", "prompt", "antwort04"]) {
     const e = $(feld);
     if (e) e.value = "";
@@ -5883,6 +6010,7 @@ async function ladeEinstellungen() {
     // Vorgabe — eine kaputte Einstellungsdatei darf die Bedienung nicht
     // in einer Sprache festsetzen, die es nicht gibt.
     if (typeof d.tray === "boolean") z.tray = d.tray;
+    if (Array.isArray(d.marken)) z.marken = d.marken.slice();
     if (THEMEN.includes(d.thema)) {
       z.thema = d.thema;
       themaAnwenden();
@@ -5981,6 +6109,7 @@ async function sichereEinstellungen() {
     tray: z.tray,
     fenstermodus: z.fenstermodus,
     thema: z.thema,
+    marken: z.marken,
     // Eine GANZ leere Zeile («Hinzufuegen» geklickt, nichts getippt) faellt
     // still weg (Issue #11). Eine halb ausgefuellte geht mit und wird vom
     // Server abgewiesen — dort fehlt etwas, das gemeint war.
@@ -6367,21 +6496,59 @@ function teststufeZeigen(fassung) {
   kopfEinpassen();
 }
 
+/* MARKEN «SCHON GESEHEN» (seit 2.2).
+ *
+ * Im Browser liegt eine Marke im `localStorage`: auf dem Server teilten sich
+ * sonst alle Nutzer eine Marke. Sie traegt keinen Inhalt, nur «gesehen».
+ *
+ * Im EIGENEN FENSTER genuegt das nicht: pywebview startet ohne Angabe im
+ * privaten Modus (`webview.start(private_mode=True)` ist die Vorgabe) und
+ * vergisst den Speicher bei jedem Neustart. Dort leuchtete «Beispiel» von
+ * 2.1 an bei jedem Start. Deshalb liegen die Marken dort in den
+ * Einstellungen (`marken`), die nur einem Anwender gehoeren.
+ *
+ * Fehlt der Speicher (privates Fenster, gesperrt), gilt die Marke als nicht
+ * gesetzt; das ist harmlos, es erscheint nur wieder.
+ */
+const MARKE_SPEICHER = {
+  beispiel: "maschera.beispielGesehen",
+  willkommen: "maschera.willkommenAus",
+};
+function markeGesetzt(name) {
+  if (imEigenenFenster()) return z.marken.includes(name);
+  try { return window.localStorage.getItem(MARKE_SPEICHER[name]) === "1"; }
+  catch (e) { return false; }
+}
+async function markeSetzen(name, an) {
+  if (imEigenenFenster()) {
+    z.marken = z.marken.filter((m) => m !== name);
+    if (an) z.marken.push(name);
+    // Lesen, aendern, schreiben, wie bei `merkeFenster()`: ein `PUT` mit
+    // einem Feld setzte alle anderen auf die Vorgabe.
+    try {
+      const d = await holeEinstellungen();
+      d.marken = z.marken.slice();
+      await setzeEinstellungen(d);
+    } catch (e) { /* nicht gemerkt, erscheint beim naechsten Start wieder */ }
+    return;
+  }
+  try {
+    if (an) window.localStorage.setItem(MARKE_SPEICHER[name], "1");
+    else window.localStorage.removeItem(MARKE_SPEICHER[name]);
+  } catch (e) { /* kein Speicher: beim naechsten Start wieder */ }
+}
+
 /* Beim allerersten Start leuchtet «Beispiel» (seit 2.1, Feedback
  * 20.10.2026), bis irgendein Knopf geklickt wird — wer MASCHERA zum ersten
  * Mal sieht, soll merken, dass er es ausprobieren kann.
  *
- * Die Marke liegt im Speicher des BROWSERS, nicht in den Einstellungen: auf
- * dem Server teilten sich sonst alle Nutzer eine Marke. Sie traegt keinen
- * Inhalt, nur «gesehen». Fehlt der Speicher (privates Fenster, gesperrt),
- * leuchtet der Knopf bei jedem Start; das ist harmlos.
+ * Seit 2.2 erst, wenn der Willkommensschirm zu ist; vorher leuchtete es
+ * hinter dem Schirm, und der erste Klick darin haette es geloescht.
  */
-const BEISPIEL_MARKE = "maschera.beispielGesehen";
 function beispielLeuchten() {
-  let gesehen = false;
-  try { gesehen = window.localStorage.getItem(BEISPIEL_MARKE) === "1"; }
-  catch (e) { /* kein Speicher: leuchten */ }
-  if (gesehen) return;
+  if (z.beispielGeprueft) return;
+  z.beispielGeprueft = true;
+  if (markeGesetzt("beispiel")) return;
   const knopf = $("knopf-beispiel");
   knopf.classList.add("leuchtet");
   const aus = (e) => {
@@ -6389,11 +6556,174 @@ function beispielLeuchten() {
     while (k && k.tagName !== "BUTTON") k = k.parentElement;
     if (!k) return;
     knopf.classList.remove("leuchtet");
-    try { window.localStorage.setItem(BEISPIEL_MARKE, "1"); }
-    catch (e2) { /* kein Speicher: beim naechsten Start wieder */ }
+    markeSetzen("beispiel", true);
     document.removeEventListener("click", aus, true);
   };
   document.addEventListener("click", aus, true);
+}
+
+/* DER WILLKOMMENSSCHIRM (seit 2.2, Entscheide 23.10.2026).
+ *
+ * Fuenf Staerken und ein Schluss, je Seite Bild, Titel und Text, darunter
+ * Punkte als Seitenanzeige. Er erscheint bei jedem Start, bis «Nicht mehr
+ * anzeigen» angekreuzt ist; im Burgermenue steht er jederzeit wieder.
+ * Texte in `seiten.js`, Bilder unter `willkommen/<sprache>/`. Gebaut mit
+ * `el()` und `textContent`, `innerHTML` kommt nicht vor.
+ */
+/* Unter Qt setzt pywebview `window.pywebview` erst nach dem Laden der
+ * Seite und meldet es mit `pywebviewready`. Vorher hielte `markeGesetzt()`
+ * das eigene Fenster fuer einen Browser und laese den falschen Speicher.
+ * Im Browser kommt das Ereignis nie; dann gilt nach kurzer Zeit «Browser».
+ */
+function fensterBereit() {
+  if (imEigenenFenster() || typeof window === "undefined"
+      || !window.addEventListener) return Promise.resolve();
+  return new Promise((fertig) => {
+    const uhr = setTimeout(fertig, 700);
+    window.addEventListener("pywebviewready", () => {
+      clearTimeout(uhr); fertig();
+    }, { once: true });
+  });
+}
+
+function willkommenSeiten() {
+  const w = SEITEN.willkommen || {};
+  return w[z.sprache] || w.de || [];
+}
+
+function willkommenZeigen(nr) {
+  z.willkommenSeite = nr;
+  $("willkommen-nie").checked = markeGesetzt("willkommen");
+  zeichneWillkommen(0);
+  dialogVonOben($("willkommen"), $("willkommen-buehne"));
+  $("knopf-willkommen-weiter").focus();
+}
+
+function willkommenSchlussKnoepfe(st, sichtbar) {
+  const knoepfe = el("div", "willkommen-schluss");
+  const bsp = el("button", "tat haupt");
+  bsp.type = "button";
+  // Unsichtbare Blaetter sind nicht erreichbar, auch nicht mit Tab.
+  if (!sichtbar) bsp.tabIndex = -1;
+  bsp.append(el("span", null, st.wBeispiel));
+  bsp.addEventListener("click", () => {
+    willkommenSchliessen(true);
+    $("knopf-beispiel").click();
+  });
+  knoepfe.append(bsp);
+  // Die Adresse kommt aus `adressen.json`, wie im Burgermenue; hier steht
+  // keine zweite.
+  const seite = z.adressen.find((e) => e && e.schluessel === "mWebseite");
+  if (seite && seite.url) {
+    const a = el("a", "tat neben");
+    a.href = seite.url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    if (!sichtbar) a.tabIndex = -1;
+    a.append(zeichenSinnbild("globus", MENUEBILDER),
+             el("span", null, seite.url.replace(/^https?:\/\//, "")));
+    knoepfe.append(a);
+  }
+  return knoepfe;
+}
+
+/* Der Schluss: Maske und Schriftzug wie im Kopf, in derselben Bildflaeche
+ * (Feedback 23.10.2026: «damit auch dort etwas drin ist»). */
+function willkommenMarke() {
+  const flaeche = el("div", "willkommen-bild marke-gross");
+  const marke = el("div", "marke");
+  marke.append(document.createTextNode("MAS"), el("b", null, "CH"),
+               document.createTextNode("ERA"));
+  flaeche.append(el("i", "logo"), marke);
+  return flaeche;
+}
+
+function willkommenBild(nr) {
+  const huelle = el("div", "willkommen-bild");
+  for (const art of ["hell", "dunkel"]) {
+    const bild = el("img", "bild-" + art);
+    bild.alt = "";
+    bild.decoding = "async";
+    bild.src = "willkommen/" + z.sprache + "/" + nr + "-" + art + ".webp";
+    // Fehlt ein Bild, steht der Text allein da statt eines kaputten Symbols.
+    bild.addEventListener("error", () => bild.remove());
+    huelle.append(bild);
+  }
+  return huelle;
+}
+
+function zeichneWillkommen(richtung) {
+  const st = t();
+  const seiten = willkommenSeiten();
+  if (!seiten.length) return;
+  const nr = Math.max(0, Math.min(z.willkommenSeite, seiten.length - 1));
+  z.willkommenSeite = nr;
+  const letzte = nr === seiten.length - 1;
+
+  // ALLE Seiten liegen uebereinander in derselben Rasterzelle, sichtbar ist
+  // nur die aktuelle (Feedback 23.10.2026: keine leere Flaeche, gleich hoch).
+  // So ist der Rahmen genau so hoch wie die laengste Seite, bei jeder
+  // Breite und in jeder Sprache, ohne eine gemessene Zahl im CSS.
+  const buehne = $("willkommen-buehne");
+  const blaetter = seiten.map(([titel, text], i) => {
+    const schluss = i === seiten.length - 1;
+    const blatt = el("div", i === nr ? "willkommen-blatt aktiv" : "willkommen-blatt");
+    if (i !== nr) blatt.setAttribute("aria-hidden", "true");
+    // Jede Seite traegt dieselbe Bildflaeche, der Schluss die Maske.
+    blatt.append(schluss ? willkommenMarke() : willkommenBild(i + 1));
+    const h = el("h2", "willkommen-titel", titel);
+    if (i === nr) h.id = "willkommen-titel";
+    blatt.append(h, el("p", "willkommen-text", text));
+    if (schluss) blatt.append(willkommenSchlussKnoepfe(st, i === nr));
+    return blatt;
+  });
+  buehne.replaceChildren(...blaetter);
+  const aktiv = blaetter[nr];
+  if (richtung) {
+    void aktiv.offsetWidth;           // die Bewegung neu anstossen
+    aktiv.classList.add(richtung > 0 ? "von-rechts" : "von-links");
+  }
+
+  const punkte = $("willkommen-punkte");
+  punkte.replaceChildren();
+  seiten.forEach((_, i) => {
+    const p = el("button", i === nr ? "punkt aktiv" : "punkt");
+    p.type = "button";
+    p.setAttribute("aria-label", st.wSeite.replace("{}", String(i + 1)));
+    if (i === nr) p.setAttribute("aria-current", "step");
+    p.addEventListener("click", () => willkommenBlaettern(i - nr));
+    punkte.append(p);
+  });
+
+  $("knopf-willkommen-zurueck").disabled = nr === 0;
+  $("willkommen-weiter-text").textContent = letzte ? st.wLos : st.wWeiter;
+  $("willkommen-zurueck-text").textContent = st.wZurueck;
+  $("willkommen-nie-text").textContent = st.wNie;
+  const zu = $("knopf-willkommen-zu");
+  zu.title = st.schliessen;
+  zu.setAttribute("aria-label", st.schliessen);
+}
+
+function willkommenBlaettern(schritt) {
+  if (!schritt) return;
+  const n = willkommenSeiten().length;
+  const ziel = z.willkommenSeite + schritt;
+  if (ziel < 0 || ziel >= n) return;
+  z.willkommenSeite = ziel;
+  zeichneWillkommen(schritt);
+}
+
+/* `mitBeispiel`: der Schirm schliesst ueber «Beispiel ausprobieren». Dann
+ * leuchtet «Beispiel» nicht mehr, der Klick darauf folgt ja gleich. */
+function willkommenSchliessen(mitBeispiel) {
+  if ($("willkommen").hidden) return;
+  $("willkommen").hidden = true;
+  if (mitBeispiel) {
+    z.beispielGeprueft = true;
+    markeSetzen("beispiel", true);
+  } else {
+    beispielLeuchten();
+  }
 }
 
 async function start() {
@@ -6401,7 +6731,6 @@ async function start() {
   for (const id of ["einst-suche", "vok-suche", "vorlagen-filter"]) {
     suchfeldMitKreuz($(id));
   }
-  beispielLeuchten();
   fussBeobachten();
   // ⚠️ Frueh, aber NACH `verbinde`: der Probeklotz braucht den Koerper.
   // Der gemessene Wert steckt danach in `--rollbalken` und bestimmt den
@@ -6470,6 +6799,11 @@ async function start() {
   await ladeVorlagen();
   await ladeAdressen();
   zeichne();
+  // Erst jetzt: die Marken stehen in den Einstellungen, und die Adresse der
+  // Webseite fuer den Schluss kommt aus `ladeAdressen()`.
+  await fensterBereit();
+  if (markeGesetzt("willkommen")) beispielLeuchten();
+  else willkommenZeigen(0);
 }
 
 /* ⚠️ Nur fuer `tests/test_oberflaeche.js`. Im Browser gibt es `module`
@@ -6490,6 +6824,8 @@ if (typeof module !== "undefined" && module.exports) {
     vorlagenAuf,
     zeichneBurger, burgerAuf, imEigenenFenster, finalText, neuesteZeigen,
     SEITEN, seiteZeigen, seiteSchliessen,
+    willkommenZeigen, willkommenSchliessen, willkommenBlaettern,
+    markeGesetzt,
     pruefePlatzhalter, zeichneMaskiert, meldeVok, ablagefachMoeglich,
     fehlerText, serverFehler, frage, eingabe, frageZeigen, frageErsetzen,
     markdownZurueck, entwerteteReste, antwortUebernehmen,

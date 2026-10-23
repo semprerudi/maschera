@@ -1148,9 +1148,11 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     // 18.10.2026: «Fonts aus dem neuen Designsystem ausser fuer das Logo»).
     // Vier Stellen: Kopfzeile, Startbildschirm, Kopf der Einseiter und seit
     // 2.1 «TEST» in der Kopfzeile der Teststufe (Entscheid 21.10.2026: «in
-    // den gleich grossen Buchstaben wie MASCHERA»).
+    // den gleich grossen Buchstaben wie MASCHERA»). Seit 2.2 die fuenfte:
+    // Maske und Schriftzug auf der Schlussseite des Willkommensschirms
+    // (Feedback 23.10.2026).
     const marke = (CSS.match(/font-family:\s*var\(--font-marke\)/g) || []).length;
-    pruefe(marke === 4, `${marke} Wortmarken in --font-marke, 4 erwartet`);
+    pruefe(marke === 5, `${marke} Wortmarken in --font-marke, 5 erwartet`);
     pruefe(/--font-marke:\s*"Barlow Condensed"/.test(CSS),
            "die Wortmarke steht nicht mehr in Barlow Condensed");
     pruefe(/--skala/.test(CSS) && /calc\(100% \* var\(--skala\)\)/.test(CSS),
@@ -1794,6 +1796,14 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     M.zustand.vorlage = "Meine Vorlage";
     M.zustand.hinausAuf = true;
     M.zustand.hinweiseAuf = true;
+    M.zustand.kontextOffen = new Set(["haeufig", "person", "ort"]);
+    M.zustand.vokSuche = "brül";
+    document.getElementById("vok-suche").value = "brül";
+    M.zustand.vorlagenFilter = "brief";
+    M.zustand.vokFilter = "person";
+    // 01 selbst: der Sprung nach 01 verkleinert jede ANDERE Kachel schon,
+    // nur diese nicht.
+    M.zustand.gross = "b01";
 
     // ⚠️ Erst das NEIN: eine Wache, die immer bestaetigt wird, ist keine.
     bestaetigt = false;
@@ -1813,6 +1823,18 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     pruefe(M.zustand.hinausAuf === false,
            "«Prompt & maskierter Text» blieb aufgeklappt");
     pruefe(M.zustand.hinweiseAuf === false, "die Hinweistafel in 02 blieb offen");
+    // Seit 2.2: auch Rubriken, Suchwoerter, Filter und die grosse Kachel.
+    pruefe(M.zustand.kontextOffen.size === 1 && M.zustand.kontextOffen.has("haeufig"),
+           "offene Rubriken im Rechtsklickmenue ueberleben «Neu»");
+    pruefe(M.zustand.vokSuche === "" && document.getElementById("vok-suche").value === ""
+           && M.zustand.vorlagenFilter === "" && M.zustand.vokFilter === "alle",
+           "Suchwort oder Filter ueberleben «Neu»");
+    pruefe(M.zustand.gross === null, "die vergroesserte Kachel bleibt nach «Neu» gross");
+    // Das Suchwort im Vokabular leert sich bei einer kurzen Liste von selbst;
+    // fuer eine lange muss es `allesLeeren()` tun.
+    const leeren = (M.allesLeeren.toString().match(/\{([\s\S]*)\}/) || ["", ""])[1];
+    pruefe(/z\.vokSuche = "";/.test(leeren) && /z\.vorlagenFilter = "";/.test(leeren),
+           "allesLeeren() setzt Suchwort oder Vorlagenfilter nicht zurueck");
     pruefe(M.zustand.vorlage === null,
            "die gewaehlte Vorlage steht noch im Feld");
     pruefe(document.getElementById("prompt").value === "",
@@ -4027,10 +4049,19 @@ console.log("1. Alle Knoepfe sind verdrahtet");
       f({ key: "Escape", target: bl, preventDefault() {} });
     }
     pruefe((await p) === false, "Escape bestaetigt");
+    // Seit 2.2 schliesst der Hintergrund nur, wenn Druck UND Loslassen dort
+    // liegen (Feedback 23.10.2026). Erst der Fehlerfall: gedrueckt im Kasten,
+    // losgelassen daneben, der Browser meldet den `click` am Hintergrund.
+    const klickDaneben = (unten) => {
+      for (const f of bl._h["pointerdown"] || []) f({ target: unten });
+      for (const f of bl._h["click"] || []) {
+        f({ target: bl, preventDefault() {}, stopPropagation() {} });
+      }
+    };
     p = M.frageZeigen("x", {});
-    for (const f of bl._h["click"] || []) {
-      f({ target: bl, preventDefault() {}, stopPropagation() {} });
-    }
+    klickDaneben(document.getElementById("frage-text"));
+    pruefe(!bl.hidden, "Markieren mit Loslassen daneben schliesst den Dialog");
+    klickDaneben(bl);
     pruefe((await p) === false, "ein Klick daneben bestaetigt");
     // Eine zweite Frage laesst die erste nicht haengen
     const erste = M.frageZeigen("eins", {});
@@ -4447,7 +4478,8 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     // 3. Der Hintergrund: ein Nein, kein Speichern.
     await feuer("knopf-einstellungen"); await warte();
     M.zustand.dienste[0].name = "Hintergrund";
-    await feuer("einst"); await warte();
+    // Druck und Loslassen auf dem Hintergrund (seit 2.2, siehe Punkt 79).
+    await feuer("einst", "pointerdown"); await feuer("einst"); await warte();
     pruefe(dlg.hidden === true, "Klick auf den Hintergrund schliesst nicht");
     pruefe(M.zustand.dienste[0].name === vorDienst && gespeichert() === vorServer,
            "Klick auf den Hintergrund hat gespeichert statt abgebrochen");
@@ -4662,6 +4694,96 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     pruefe(/function beispielLeuchten\(\)/.test(js89) && /beispielLeuchten\(\);/.test(js89),
            "«Beispiel» leuchtet beim ersten Start nicht mehr");
     if (fehler === vorher) console.log("   OK   Lupe, Kreuz, 12 Tooltips je Sprache, Leuchten");
+  }
+
+  console.log("90. 2.2: Willkommensschirm, Hintergrund, schwarze Schrift, grosse Ablage");
+  // Seit 2.2 (Feedback und Entscheide 23.10.2026).
+  {
+    const vorher = fehler;
+    const html90 = fs.readFileSync(path.join(WURZEL, "app/static/index.html"), "utf8");
+    const js90 = fs.readFileSync(path.join(WURZEL, "app/static/maschera.js"), "utf8");
+    const ohneK90 = js90.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+    const css90 = fs.readFileSync(path.join(WURZEL, "app/static/maschera.css"), "utf8")
+      .replace(/\/\*[\s\S]*?\*\//g, "");
+
+    // Ein Dialog schliesst am Hintergrund nur, wenn Druck UND Loslassen dort
+    // liegen. Kein Horcher prueft mehr nur das Ziel des `click`.
+    for (const id of ["einst", "frage", "seite", "willkommen"]) {
+      pruefe(new RegExp('hintergrundSchliesst\\(\\$\\("' + id + '"\\)').test(ohneK90),
+             "#" + id + " schliesst nicht ueber hintergrundSchliesst()");
+    }
+    pruefe(!/if \(e\.target === \$\("(einst|frage|seite|willkommen)"\)\)/.test(ohneK90),
+           "ein Dialog prueft am Hintergrund wieder nur das Ziel des Klicks");
+
+    // Die rote Spalte schreibt schwarz; die Schicht steht am Ende.
+    pruefe(/\.spalte\.hinaus \*:not\([^{]*\{\s*color: var\(--color-text\) !important;/.test(css90),
+           "die Schicht «Schrift in der roten Spalte schwarz» fehlt");
+    pruefe(/\.spalte\.hinaus :is\(button, input, select\):disabled[^{]*\{\s*color: var\(--color-neutral-600\) !important; opacity: 1 !important;/.test(css90),
+           "Deaktiviertes in der roten Spalte ist nicht mehr dunkelgrau");
+
+    // Die grosse Ablage waechst beim Ziehen und nimmt Dateien an.
+    pruefe(/id="ablage-gross"[^>]*hidden/.test(html90), "#ablage-gross fehlt im HTML");
+    pruefe(/ablageGrossAuf\(\);/.test(ohneK90) && /ablageGrossZu\(\);/.test(ohneK90),
+           "die grosse Ablage geht beim Ziehen nicht auf oder nicht zu");
+    pruefe(/ablageGross\.addEventListener\("drop", abgelegt\)/.test(ohneK90),
+           "die grosse Ablage nimmt keine Datei an");
+
+    // Der Willkommensschirm: vier Sprachen, je sechs Seiten, eigene Texte,
+    // keine Gedankenstriche, Bilder fuer jede Seite ausser dem Schluss.
+    const W = M.SEITEN.willkommen || {};
+    pruefe(Object.keys(W).join(",") === "de,fr,it,en", "Willkommen nicht in vier Sprachen");
+    for (const [spr, seiten] of Object.entries(W)) {
+      pruefe(seiten.length === 6, "Willkommen " + spr + ": " + seiten.length + " statt 6 Seiten");
+      pruefe(!/[—–]/.test(JSON.stringify(seiten)), "Willkommen " + spr + " traegt einen Gedankenstrich");
+      if (spr !== "de") {
+        pruefe(JSON.stringify(seiten) !== JSON.stringify(W.de), "Willkommen " + spr + " ist der deutsche Text");
+      }
+      for (let n = 1; n < seiten.length; n++) {
+        for (const art of ["hell", "dunkel"]) {
+          const bild = path.join(WURZEL, "app/static/willkommen", spr, n + "-" + art + ".webp");
+          pruefe(fs.existsSync(bild), "Bild fehlt: willkommen/" + spr + "/" + n + "-" + art + ".webp");
+        }
+      }
+    }
+    const adr = JSON.parse(fs.readFileSync(path.join(WURZEL, "app/static/adressen.json"), "utf8"));
+    pruefe(adr.eintraege.some((e) => e.dialog === "willkommen"),
+           "der Willkommensschirm steht nicht im Burgermenue");
+    pruefe(/if \(markeGesetzt\("willkommen"\)\) beispielLeuchten\(\);\s*else willkommenZeigen\(0\);/.test(ohneK90),
+           "der Start zeigt den Willkommensschirm nicht ohne Marke");
+
+    // Jede Seite gleich gross (Feedback 23.10.2026): feste Breite und Hoehe,
+    // und der Schluss traegt dieselbe Bildflaeche mit Maske und Schriftzug.
+    // Seit test.3: feste Breite, Hoehe nach der laengsten Seite, weil alle
+    // Blaetter in derselben Rasterzelle liegen.
+    pruefe(/\.einst\.willkommen \{[^}]*width: min\(40rem, 100%\)/.test(css90)
+           && /\.willkommen-blatt \{[^}]*grid-area: 1 \/ 1;[^}]*visibility: hidden;/.test(css90),
+           "der Willkommensschirm hat keine feste Breite oder stapelt die Seiten nicht mehr");
+    pruefe(/\.willkommen-bild \{[^}]*width: 100%;/.test(css90),
+           "die Bildflaeche ist nicht mehr voll breit");
+    pruefe(/blatt\.append\(schluss \? willkommenMarke\(\) : willkommenBild\(i \+ 1\)\)/.test(ohneK90),
+           "der Schluss hat keine Bildflaeche mit Maske und Schriftzug");
+
+    // Jedes Bild ganz (Bild 1 ist breiter als 16:10), und hell und dunkel
+    // wechseln mit der Darstellung.
+    pruefe(/\.willkommen-bild img \{[^}]*object-fit: contain;/.test(css90),
+           "die Bilder des Willkommensschirms werden wieder zugeschnitten");
+    pruefe(/\.willkommen-bild \.bild-dunkel \{ display: none; \}/.test(css90)
+           && /:root\[data-thema="dunkel"\] \.willkommen-bild \.bild-dunkel \{ display: block; \}/.test(css90),
+           "hell und dunkel der Willkommensbilder wechseln nicht mehr");
+
+    // Und im Ablauf: zeigen, blaettern, Escape schliesst.
+    const wk = document.getElementById("willkommen");
+    M.willkommenZeigen(0);
+    pruefe(!wk.hidden, "der Willkommensschirm geht nicht auf");
+    M.willkommenBlaettern(1);
+    pruefe(M.zustand.willkommenSeite === 1, "Weiter blaettert nicht");
+    M.willkommenBlaettern(-5);
+    pruefe(M.zustand.willkommenSeite === 1, "Blaettern laeuft ueber den Anfang hinaus");
+    for (const f of wk._h["keydown"] || []) {
+      f({ key: "Escape", target: wk, preventDefault() {} });
+    }
+    pruefe(wk.hidden, "Escape schliesst den Willkommensschirm nicht");
+    if (fehler === vorher) console.log("   OK   Hintergrund, rote Spalte, Ablage, Willkommen in vier Sprachen");
   }
 
   console.log("");

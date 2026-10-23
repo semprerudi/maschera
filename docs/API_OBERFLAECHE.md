@@ -365,6 +365,7 @@ Adresse, Port, Dienste, Darstellung, Fensterschalter
   "thema": "automatisch",          // automatisch | hell | dunkel
   "tray": true,                    // beim Schliessen in den Infobereich
   "fenstermodus": "widget",        // voll | widget
+  "marken": [],                    // beispiel | willkommen, seit 2.2
   "dienste": [ { "id": "claude", "name": "Claude",
                  "url": "https://claude.ai/new" } ] }
 ```
@@ -392,6 +393,13 @@ Der Grundsatz sitzt an der Maskierung, wo eine falsche Amtsform ein
 fachlicher Fehler ist. `PUT` lehnt eine unbekannte Bediensprache mit
 `oberflaechensprache_unbekannt` ab, aber `lade()` fällt bei einer kaputten
 Datei auf die Vorgabe zurück, statt das Werkzeug unbenutzbar zu machen.
+
+⚠️ **`marken`** (seit 2.2) merkt «schon gesehen» der Oberfläche: `beispiel`
+(das Leuchten von «Beispiel» ist aus), `willkommen` («Nicht mehr anzeigen»
+im Willkommensschirm). Nur im eigenen Fenster; dort vergisst pywebview den
+Browserspeicher bei jedem Neustart. Im Browser liegen die Marken im
+`localStorage`, damit sich die Nutzer eines Servers keine Marke teilen.
+Unbekannte Werte fallen still weg, eine Nicht-Liste → 400 `marken_keine_liste`.
 
 ⚠️ **Adresse, Port, `tray` und `fenstermodus` gelten nur im eigenen
 Fenster.** Gelesen werden sie von `app/fenster.py` beim Start; im Browser

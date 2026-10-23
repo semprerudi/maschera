@@ -954,6 +954,7 @@ _abweichend = {"adresse": "127.0.0.2", "port": 9001, "eigenes_fenster": False,
                "dienst": "eigen", "schriftgroesse": 125, "schriftart": "serif",
                "sprache": "it", "tray": False,
                "fenstermodus": "voll", "thema": "dunkel",
+               "marken": ["beispiel", "willkommen"],
                "dienste": [{"id": "eigen", "name": "Eigene KI",
                             "url": "https://ki.example.ch"}]}
 check(set(_abweichend) == set(_VORG),

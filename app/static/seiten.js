@@ -579,6 +579,125 @@ const IMPRESSUM_EN = [
       + "their licences."],
 ];
 
+/* WILLKOMMEN (seit 2.2, Texte vom Anwender bestaetigt 23.10.2026).
+ *
+ * Je Sprache sechs Seiten: fuenf Staerken und der Schluss. Eine Seite ist
+ * `[titel, text]`; Bild, Punkte, Knoepfe und «Nicht mehr anzeigen» baut
+ * `willkommenZeigen()` in `maschera.js`. Das Bild der Seite n liegt unter
+ * `willkommen/<sprache>/<n>-<hell|dunkel>.webp` (aufgenommen von
+ * `tools/schirmbilder.py --willkommen`); der Schluss hat keines.
+ *
+ * Keine Gedankenstriche, Anrede mit «du», wie in der ganzen Oberflaeche.
+ */
+const WILLKOMMEN_DE = [
+  ["Maskieren, KI fragen, zurückholen",
+   "MASCHERA ersetzt Namen, Adressen und Nummern durch Platzhalter, bevor "
+   + "dein Text zu einer KI geht. Die Antwort fügst du wieder ein, und "
+   + "MASCHERA setzt die echten Werte zurück. Die KI sieht deine Daten nie."],
+  ["100% lokal, funktioniert auch ohne Internet",
+   "Erkennung und Modell laufen auf deinem Gerät, ohne Grafikkarte. Auf dem "
+   + "Server arbeitet MASCHERA nur im Arbeitsspeicher und speichert weder "
+   + "Dokumente noch Wörterbücher noch Protokolle. MASCHERA sendet selbst "
+   + "nichts, der Weg hinaus führt immer über deine Zwischenablage."],
+  ["Gebaut für schnelles Arbeiten",
+   "Zieh das Fenster schmal und stell es als Seitenleiste neben dein "
+   + "Mailprogramm oder dein Dokument. Unter Windows und Linux wartet "
+   + "MASCHERA neben der Uhr, mit geladenem Modell. Dateien und E-Mails "
+   + "ziehst du einfach hinein."],
+  ["Du bestimmst, was maskiert wird",
+   "Ein Rechtsklick maskiert ein Wort zusätzlich oder gibt es frei. Im "
+   + "Vokabular prüfst und ergänzt du jeden Platzhalter. Was nie maskiert "
+   + "werden soll, stellst du einmal ein. Jede Liste lässt sich durchsuchen, "
+   + "und jede Kachel lässt sich vergrössern."],
+  ["Dein Ablauf, deine Werkzeuge",
+   "Prompts, die du oft brauchst, speicherst du als Vorlage. Deine Chatbots "
+   + "trägst du selbst ein: «Alles kopieren und öffnen» kopiert den Text und "
+   + "öffnet gleich den Dienst, den du gewählt hast."],
+  ["Bereit?",
+   "Probier es mit dem Beispiel aus, oder lies mehr auf www.maschera.ch."],
+];
+
+const WILLKOMMEN_FR = [
+  ["Masquer, demander à l’IA, récupérer",
+   "MASCHERA remplace les noms, adresses et numéros par des marqueurs avant "
+   + "que ton texte parte vers une IA. Tu recolles la réponse, et MASCHERA y "
+   + "remet les vraies valeurs. L’IA ne voit jamais tes données."],
+  ["100% local, fonctionne aussi sans Internet",
+   "La détection et le modèle tournent sur ton appareil, sans carte "
+   + "graphique. Sur le serveur, MASCHERA travaille uniquement en mémoire vive "
+   + "et n’enregistre ni documents, ni dictionnaires, ni journaux. MASCHERA "
+   + "n’envoie rien lui-même, la sortie passe toujours par ton presse-papiers."],
+  ["Fait pour travailler vite",
+   "Rends la fenêtre étroite et place-la en barre latérale à côté de ta "
+   + "messagerie ou de ton document. Sous Windows et Linux, MASCHERA attend à "
+   + "côté de l’horloge, modèle chargé. Glisse simplement fichiers et "
+   + "courriels dedans."],
+  ["C’est toi qui décides ce qui est masqué",
+   "Un clic droit masque un mot en plus ou le libère. Dans le vocabulaire, tu "
+   + "vérifies et complètes chaque marqueur. Ce qui ne doit jamais être "
+   + "masqué, tu le règles une fois. Chaque liste se filtre, et chaque tuile "
+   + "s’agrandit."],
+  ["Ton déroulement, tes outils",
+   "Les prompts dont tu as souvent besoin, tu les enregistres comme modèles. "
+   + "Tes chatbots, tu les ajoutes toi-même : « Tout copier et ouvrir » copie "
+   + "le texte et ouvre aussitôt le service choisi."],
+  ["Prêt ?",
+   "Essaie avec l’exemple, ou lis-en plus sur www.maschera.ch."],
+];
+
+const WILLKOMMEN_IT = [
+  ["Mascherare, chiedere all’IA, recuperare",
+   "MASCHERA sostituisce nomi, indirizzi e numeri con segnaposto prima che il "
+   + "tuo testo vada a un’IA. Incolli di nuovo la risposta, e MASCHERA "
+   + "rimette i valori reali. L’IA non vede mai i tuoi dati."],
+  ["100% locale, funziona anche senza Internet",
+   "Il riconoscimento e il modello girano sul tuo dispositivo, senza scheda "
+   + "grafica. Sul server MASCHERA lavora solo nella memoria di lavoro e non "
+   + "salva né documenti, né vocabolari, né registri. MASCHERA non invia "
+   + "nulla da sé, la via d’uscita passa sempre dai tuoi appunti."],
+  ["Fatto per lavorare in fretta",
+   "Restringi la finestra e mettila come barra laterale accanto alla posta o "
+   + "al documento. Su Windows e Linux MASCHERA aspetta accanto all’orologio, "
+   + "con il modello caricato. File ed e-mail li trascini semplicemente dentro."],
+  ["Decidi tu cosa viene mascherato",
+   "Un clic destro maschera una parola in più o la libera. Nel vocabolario "
+   + "controlli e completi ogni segnaposto. Ciò che non va mai mascherato lo "
+   + "imposti una volta. Ogni elenco si può cercare e ogni riquadro si può "
+   + "ingrandire."],
+  ["Il tuo flusso, i tuoi strumenti",
+   "I prompt che usi spesso li salvi come modelli. I tuoi chatbot li "
+   + "aggiungi tu: «Copia tutto e apri» copia il testo e apre subito il "
+   + "servizio scelto."],
+  ["Pronto?",
+   "Provalo con l’esempio, o leggi di più su www.maschera.ch."],
+];
+
+const WILLKOMMEN_EN = [
+  ["Mask, ask the AI, restore",
+   "MASCHERA replaces names, addresses and numbers with placeholders before "
+   + "your text goes to an AI. You paste the answer back, and MASCHERA puts "
+   + "the real values back in. The AI never sees your data."],
+  ["100% local, works without internet too",
+   "Detection and model run on your device, without a graphics card. On the "
+   + "server, MASCHERA works in memory only and stores no documents, no "
+   + "vocabularies and no logs. MASCHERA never sends anything itself, the way "
+   + "out always goes through your clipboard."],
+  ["Built for working fast",
+   "Make the window narrow and place it as a sidebar next to your mail or "
+   + "document. On Windows and Linux, MASCHERA waits next to the clock with "
+   + "the model loaded. Just drag files and e-mails in."],
+  ["You decide what gets masked",
+   "A right-click masks another word or unmasks it. In the vocabulary you "
+   + "check and extend every placeholder. What should never be masked you "
+   + "set once. Every list can be searched, and every tile can be enlarged."],
+  ["Your workflow, your tools",
+   "Save prompts you need often as templates. Add your own chatbots: «Copy "
+   + "all and open» copies the text and opens the service you chose right "
+   + "away."],
+  ["Ready?",
+   "Try it with the example, or read more on www.maschera.ch."],
+];
+
 /* Acht Listen: Hilfe und Impressum in je vier Sprachen. Die Pruefung
  * verlangt, dass jede Sprache einen eigenen, nicht leeren Text hat.
  */
@@ -586,4 +705,6 @@ globalThis.MASCHERA_SEITEN = {
   hilfe: { de: HILFE_DE, fr: HILFE_FR, it: HILFE_IT, en: HILFE_EN },
   impressum: { de: IMPRESSUM_DE, fr: IMPRESSUM_FR,
                it: IMPRESSUM_IT, en: IMPRESSUM_EN },
+  willkommen: { de: WILLKOMMEN_DE, fr: WILLKOMMEN_FR,
+                it: WILLKOMMEN_IT, en: WILLKOMMEN_EN },
 };

@@ -116,6 +116,13 @@
     <!-- Die erste Angabe muss zur Fassung in app/serve.py passen
          (test_fenster 12). Testbauten tragen `X.Y.Z-test.N` mit
          type="development"; Software-Stores zeigen das nicht als Release. -->
+    <release version="2.2.0" date="2026-10-23">
+      <description>
+        <p>A welcome screen explains MASCHERA's strengths on five pages. A
+        larger drop area grows while a file is dragged, and the red column
+        uses black text.</p>
+      </description>
+    </release>
     <release version="2.1.1" date="2026-10-23">
       <description>
         <p>Small polish of tile 03: "Prompt &amp; masked text" shows with a

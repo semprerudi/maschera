@@ -107,7 +107,7 @@
           stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path
           d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg></button>
       </div>
-      <div class="ablagezeile">
+      <div class="ablagezeile" id="ablagezeile">
         <label class="ablage" id="ablage">
           <span id="ablage-text">Klicken oder Textdatei bzw. Mail hierher ziehen</span>
           <input type="file" id="datei"
@@ -121,6 +121,10 @@
             <path d="M19 15v4"/><path d="M17 17h4"/></svg><span
             id="beispiel-text">Beispiel</span>
         </button>
+      </div>
+      <!-- The large drop area: grows over the tile while a file is dragged. -->
+      <div class="ablage-gross" id="ablage-gross" hidden>
+        <span id="ablage-gross-text">Hier ablegen</span>
       </div>
       <!-- Model warning and run messages, under the drop area of column 1. -->
       <div id="warnbereich"></div>
@@ -537,6 +541,30 @@
       </button>
     </div>
     <div class="einst-rumpf" id="seite-rumpf"></div>
+  </div>
+</div>
+
+<!-- Welcome screen (since 2.2): five strengths and a closing page. Pages
+     come from seiten.js, built by maschera.js without innerHTML. -->
+<div class="einst-hintergrund" id="willkommen" hidden>
+  <div class="einst willkommen" role="dialog" aria-modal="true"
+       aria-labelledby="willkommen-titel">
+    <button type="button" class="kreuz willkommen-zu"
+            id="knopf-willkommen-zu"></button>
+    <div class="willkommen-buehne" id="willkommen-buehne"></div>
+    <div class="willkommen-punkte" id="willkommen-punkte"></div>
+    <div class="willkommen-fuss">
+      <label class="willkommen-nie">
+        <input type="checkbox" id="willkommen-nie">
+        <span id="willkommen-nie-text">Nicht mehr anzeigen</span>
+      </label>
+      <button type="button" class="tat neben" id="knopf-willkommen-zurueck">
+        <span id="willkommen-zurueck-text">Zurück</span>
+      </button>
+      <button type="button" class="tat haupt" id="knopf-willkommen-weiter">
+        <span id="willkommen-weiter-text">Weiter</span>
+      </button>
+    </div>
   </div>
 </div>
 

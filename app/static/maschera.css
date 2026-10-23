@@ -3565,3 +3565,176 @@ main.raster > .spalte > .bereich.gross, .bereich.gross {
 .ablagezeile #knopf-beispiel:hover:not(:disabled) {
   background: var(--beispiel-tief); border-color: var(--beispiel-kante);
 }
+
+/* ===== Schrift in der roten Spalte: schwarz (seit 2.2) =====
+ * Feedback 23.10.2026: rote und dunkelrote Schrift auf rotem Grund wirkte
+ * «wie durch ein Weinglas». Jetzt bleibt Rot bei Kanten, Flaechen, dem Punkt
+ * vor «Verlässt dein Gerät», den Plaketten und den zwei Hauptknoepfen
+ * (Senden, Einpflegen). Die ganze Schrift ist `--color-text`, Deaktiviertes
+ * ist dunkelgrau ohne zusaetzliche Deckkraft.
+ *
+ * Eine Schicht am Ende statt dreissig Einzelregeln: die Spalte hat ueber die
+ * Testrunden viele Regeln mit Rot bekommen, und eine vergessene davon waere
+ * die naechste rote Zeile. `!important`, weil diese Schicht ueber jeder
+ * davon stehen muss; die Ausnahmen stehen hier und nirgends sonst.
+ * `tests/test_oberflaeche.js` Punkt 90 haelt die Schicht fest.
+ */
+.spalte.hinaus *:not(svg, svg *, .ph, .ph *, .kreuz, .kreuz *,
+    .fehler-text, .warnhinweis,
+    button.tat.senden:not(:disabled), button.tat.senden:not(:disabled) *,
+    button.tat.einpflegen:not(:disabled), button.tat.einpflegen:not(:disabled) *) {
+  color: var(--color-text) !important;
+}
+.spalte.hinaus textarea::placeholder { color: var(--color-neutral-600) !important; }
+.spalte.hinaus :is(button, input, select):disabled,
+.spalte.hinaus :is(button, input, select):disabled * {
+  color: var(--color-neutral-600) !important; opacity: 1 !important;
+}
+#hinaus-klappe.leer .teil-titel,
+#hinaus-klappe.leer .pfeil,
+#hinaus-klappe.leer #uebernahme-zeichen { color: var(--color-neutral-600) !important; opacity: 1; }
+
+/* ===== Grosse Ablageflaeche (seit 2.2) =====
+ * Waechst beim Ziehen einer Datei von der Ablagezeile ueber Zeile und
+ * Textfeld von 01 (Feedback 23.10.2026). Lage und Groesse setzt
+ * `ablageGrossAuf()`, hier steht nur die Bewegung und das Aussehen.
+ */
+.ablage-gross[hidden] { display: none; }
+.ablage-gross {
+  position: absolute; z-index: 170; display: flex; align-items: center;
+  justify-content: center; text-align: center; padding: 1rem;
+  border: 2px dashed var(--gr-hell); border-radius: var(--radius-md);
+  background: var(--papier); color: var(--gr-schrift);
+  font-family: var(--ui-heading); font-size: 1.125rem; letter-spacing: .06em;
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--gr-hell) 35%, transparent);
+  transition: height .2s ease, top .2s ease, background-color .15s ease;
+}
+.ablage-gross.drueber { background: var(--gr-grund2); }
+.ablage-gross > span { pointer-events: none; }
+
+/* ===== Willkommensschirm (seit 2.2) =====
+ * Dieselbe Huelle wie Hilfe und Impressum (`.einst-hintergrund`), schmaler
+ * und mittig. Oben das Bild der Seite, darunter Titel und Text, dann die
+ * Punkte, unten «Nicht mehr anzeigen», Zurueck und Weiter.
+ */
+#willkommen { align-items: center; padding: 1rem; }
+/* Feste BREITE, Hoehe nach der laengsten Seite (Feedback 23.10.2026): alle
+ * Blaetter liegen in derselben Rasterzelle, sichtbar ist das aktuelle. So
+ * springt der Rahmen beim Blaettern nicht und hat keine leere Flaeche.
+ * Oben Platz fuer das Kreuz, sonst ringsum derselbe Rand. */
+.einst.willkommen {
+  position: relative; width: min(40rem, 100%); max-width: none;
+  max-height: calc(100vh - 2rem); padding: 2.75rem 1.5rem 1rem;
+  gap: 1rem; overflow: hidden;
+}
+.willkommen-zu { position: absolute; top: 0.5rem; right: 0.75rem; z-index: 1; }
+.willkommen-buehne {
+  flex: 0 1 auto; display: grid; min-height: 0; overflow-y: auto;
+}
+.willkommen-blatt {
+  grid-area: 1 / 1; display: flex; flex-direction: column; gap: 0.75rem;
+  visibility: hidden;
+}
+.willkommen-blatt.aktiv { visibility: visible; }
+.willkommen-punkte, .willkommen-fuss { flex: none; }
+.willkommen-blatt.von-rechts { animation: willkommen-rechts .25s ease; }
+.willkommen-blatt.von-links { animation: willkommen-links .25s ease; }
+@keyframes willkommen-rechts {
+  from { transform: translateX(1.5rem); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes willkommen-links {
+  from { transform: translateX(-1.5rem); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+.willkommen-bild {
+  border: 1px solid var(--color-neutral-300); border-radius: var(--radius-md);
+  overflow: hidden; background: var(--color-bg); aspect-ratio: 16 / 10;
+  /* Volle Breite, immer: ohne `width` schrumpfte die Flaeche unter
+   * `max-height` mit dem Seitenverhaeltnis und liess rechts einen Rand.
+   * In einem niedrigen Fenster gibt das Bild nach, nicht der Text. */
+  width: 100%; max-height: 38vh; flex: none;
+}
+/* `contain`, nicht `cover`: die ganze Oberflaeche (Bild 1) ist breiter als
+ * 16:10 und war rechts abgeschnitten (Feedback 23.10.2026). Jedes Bild steht
+ * ganz da; was fehlt, fuellt der Grund der Flaeche. */
+.willkommen-bild img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.willkommen-bild .bild-dunkel { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-thema="hell"]) .willkommen-bild .bild-hell { display: none; }
+  :root:not([data-thema="hell"]) .willkommen-bild .bild-dunkel { display: block; }
+}
+:root[data-thema="dunkel"] .willkommen-bild .bild-hell { display: none; }
+:root[data-thema="dunkel"] .willkommen-bild .bild-dunkel { display: block; }
+/* Der Schluss hat kein Bildschirmfoto: dieselbe Flaeche traegt Maske und
+ * Schriftzug wie im Kopf, gross, damit der Rahmen gleich bleibt. Die
+ * ausdrueckliche Farbwahl reist in der Adresse, wie beim Logo im Kopf. */
+.willkommen-bild.marke-gross {
+  display: flex; align-items: center; justify-content: center; gap: 4cqi;
+  container-type: inline-size;
+}
+.willkommen-bild.marke-gross .logo {
+  flex: none; width: 14cqi; aspect-ratio: 11 / 13;
+  background-image: url("maske.svg"); background-repeat: no-repeat;
+  background-position: center; background-size: contain;
+}
+:root[data-thema="dunkel"] .willkommen-bild.marke-gross .logo { background-image: url("maske.svg#dunkel"); }
+:root[data-thema="hell"] .willkommen-bild.marke-gross .logo { background-image: url("maske.svg#hell"); }
+.willkommen-bild.marke-gross .marke {
+  font-family: var(--font-marke); font-size: 11.5cqi; letter-spacing: .06em;
+  text-transform: uppercase; line-height: 1; font-weight: 400; color: var(--color-text);
+}
+.willkommen-bild.marke-gross .marke b { font-weight: 700; }
+.willkommen-titel {
+  margin: 0.25rem 2rem 0 0; font-family: var(--ui-heading); font-size: 1.375rem;
+  font-weight: 600; color: var(--color-text); line-height: 1.25;
+}
+.willkommen-text {
+  margin: 0; font-size: 0.9375rem; line-height: 1.55; color: var(--color-text);
+}
+.willkommen-schluss {
+  display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem;
+}
+.willkommen-schluss a.tat { text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; }
+.willkommen-punkte {
+  display: flex; justify-content: center; gap: 0.5rem;
+}
+.willkommen-punkte .punkt {
+  width: 0.625rem; height: 0.625rem; padding: 0; border-radius: 50%;
+  border: 1px solid var(--color-neutral-500); background: transparent; cursor: pointer;
+}
+.willkommen-punkte .punkt.aktiv { background: var(--color-text); border-color: var(--color-text); }
+.willkommen-punkte .punkt:hover:not(.aktiv) { background: var(--color-neutral-300); }
+.willkommen-fuss {
+  display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+  border-top: 1px solid var(--color-neutral-200); padding-top: 0.75rem;
+}
+.willkommen-nie {
+  margin-right: auto; display: inline-flex; align-items: center; gap: 0.5rem;
+  font-size: 0.8125rem; color: var(--color-neutral-700); cursor: pointer;
+}
+.willkommen-nie input { accent-color: var(--haupt-flaeche); width: 1rem; height: 1rem; margin: 0; }
+/* Schmal: das Kaestchen auf eine eigene Zeile, die zwei Knoepfe darunter
+ * zusammen rechts, statt «Los geht's» allein umzubrechen. */
+@media (max-width: 30em) {
+  .willkommen-fuss { justify-content: flex-end; }
+  .willkommen-nie { flex: 1 1 100%; }
+}
+
+/* ===== Kopf einer Kachel: der Titel bricht nie um (seit 2.2) =====
+ * Feedback 23.10.2026: auf dem Handy stand «Finaler / Text» auf zwei Zeilen,
+ * weil «10 Platzhalter zurückgesetzt.» und die Zeichenzahl daneben Platz
+ * nahmen. Nummer und Titel behalten ihre Breite; knapp wird zuerst die
+ * Gruppe mit der Meldung (sie kuerzt mit «…»), dann die Zahl.
+ */
+.bereich-nr, .bereich-titel { flex: none; white-space: nowrap; }
+/* Schrumpfen darf die Gruppe nur, wenn eine Meldung darin steht; sonst
+ * schoebe sich der Titel ueber die Zahl (so in 02 gesehen). */
+.bereich-kopf .titelgruppe { flex: none; }
+.bereich-kopf .titelgruppe:has(.gutzeile:not(:empty), .kopfmeldung:not(:empty)) {
+  flex: 0 100 auto;
+}
+.bereich-zahl {
+  flex: 0 1 auto; min-width: 0; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}

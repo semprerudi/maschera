@@ -609,6 +609,10 @@ figcaption {
 .kopfzeile .spruch {
   font-size: 0.75rem; color: var(--color-neutral-600); letter-spacing: .04em;
   margin-top: 2px;
+  /* Eine Zeile oder gar nicht (seit 23.10.2026): umgebrochen machte er die
+     Kopfzeile hoeher, und `kopfEinpassen()` merkte nicht, dass er nicht
+     passt. */
+  white-space: nowrap;
 }
 .kopfzeile .rechts { display: flex; align-items: center; gap: 0.625rem; }
 .lokalzeiger {
@@ -770,8 +774,11 @@ footer {
   body .schritte {
     flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain;
     scroll-snap-type: x proximity; scrollbar-width: none;
-    padding-inline: calc(50% - 2.5rem);
   }
+  /* Die Mitte nur, wenn die Leiste wirklich nicht passt (`.rollt`, gesetzt
+     von `schritteEinpassen()`); sonst steht sie links wie dreispaltig
+     (Feedback 23.10.2026). */
+  body .schritte.rollt { padding-inline: calc(50% - 2.5rem); }
   .schritte::-webkit-scrollbar { display: none; }
   .schritt, .schritt-pfeil { flex: none; }
   .schritt { scroll-snap-align: center; }
@@ -2524,11 +2531,9 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
  * keine Anordnung mehr, sondern eine Quetschung.
  */
 @media (max-width: 81.24em), (max-height: 44em) {
-  /* Der Spruch neben der Wortmarke ist das Erste, was gehen darf: er
-     erklaert, was ohnehin auf jedem Kasten steht. Danach der Lokalzeiger —
-     er sagt dasselbe wie die Plakette auf jedem einzelnen Kasten. */
-  .kopfzeile .spruch { display: none; }
-  .kopfzeile .lokalzeiger { display: none; }
+  /* Spruch und «100% lokal» fallen seit 23.10.2026 nicht mehr hier, sondern
+     nach PLATZ in `kopfEinpassen()` (Feedback 23.10.2026: bei breitem,
+     aber gestapeltem Fenster waren sie weg, obwohl Platz war). */
   .kopfzeile { gap: 0.75rem; padding: 0.625rem 0.75rem 0.5rem; }
 
   /* ⚠️ `height: auto` und NICHT `100dvh`: sonst schneidet der Koerper den
@@ -3474,6 +3479,7 @@ button.tat.einpflegen:disabled {
   line-height: 1; font-weight: 700; color: var(--color-text);
 }
 .kopfzeile.ohne-spruch .spruch { display: none; }
+.kopfzeile.ohne-lokal .lokalzeiger { display: none; }
 :root.teststufe .kopfzeile.ohne-test .teststufe-marke { display: none; }
 
 /* 2.1 — KNOEPFE IN KACHEL 03 (Feedback 21.10.2026) --------------------------
@@ -3630,6 +3636,10 @@ main.raster > .spalte > .bereich.gross, .bereich.gross {
 .willkommen-zu { position: absolute; top: 0.5rem; right: 0.75rem; z-index: 1; }
 .willkommen-buehne {
   flex: 0 1 auto; display: grid; min-height: 0; overflow-y: auto;
+  /* Waagrecht nie rollen (Feedback 25.10.2026): beim Blaettern gleitet das
+     Blatt 1.5rem von der Seite herein, ragte kurz ueber den Rand, und fuer
+     die Dauer der Bewegung erschien unten ein Rollbalken. */
+  overflow-x: hidden;
 }
 .willkommen-blatt {
   grid-area: 1 / 1; display: flex; flex-direction: column; gap: 0.75rem;
@@ -3670,11 +3680,15 @@ main.raster > .spalte > .bereich.gross, .bereich.gross {
  * Schriftzug wie im Kopf, gross, damit der Rahmen gleich bleibt. Die
  * ausdrueckliche Farbwahl reist in der Adresse, wie beim Logo im Kopf. */
 .willkommen-bild.marke-gross {
-  display: flex; align-items: center; justify-content: center; gap: 4cqi;
+  display: flex; align-items: center; justify-content: center;
   container-type: inline-size;
 }
 .willkommen-bild.marke-gross .logo {
-  flex: none; width: 14cqi; aspect-ratio: 11 / 13;
+  /* Abstand wie in der Kopfzeile: Luecke zu Maskenbreite rund 0.36
+   * (0.625rem zu 1.75rem). Als Rand der Maske und nicht als `gap`: ein
+   * `cqi` im `gap` meint den Behaelter UEBER der Flaeche, hier das Fenster,
+   * und die Luecke war 58 statt 24 px (Feedback 23.10.2026). */
+  flex: none; width: 14cqi; aspect-ratio: 11 / 13; margin-right: 5cqi;
   background-image: url("maske.svg"); background-repeat: no-repeat;
   background-position: center; background-size: contain;
 }

@@ -235,7 +235,7 @@ Ein fertiges Abbild, rund 4,2 GB, das Modell fährt mit:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:2.2.0
+    ghcr.io/semprerudi/maschera:2.2.1
 ```
 
 Danach im Browser `http://127.0.0.1:4141` öffnen. Der Server speichert
@@ -282,7 +282,7 @@ das Abbild, sobald eine Fassung getaggt wird. Diese prüfst du mit dem Tag in de
 Identität:
 
 ```fish
-cosign verify ghcr.io/semprerudi/maschera:2.2.0 \
+cosign verify ghcr.io/semprerudi/maschera:2.2.1 \
     --certificate-identity https://github.com/semprerudi/maschera/.github/workflows/release.yml@refs/tags/v2.1.1 \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```

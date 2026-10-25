@@ -3771,6 +3771,10 @@ function seiteZeigen(welche) {
  * alles darunter. Lage und Groesse kommen gemessen aus dem Skript, die
  * Bewegung aus der `transition` in `maschera.css`.
  */
+// Das Netz, wenn weder `drop` noch `dragend` noch das Verlassen des
+// Fensters kommt (etwa ein Abbruch mit Escape in manchen Anzeigeschichten).
+const ZIEH_NETZ_MS = 2000;
+
 function ablageGrossLage(von, kachel) {
   const r = von.getBoundingClientRect();
   return { top: r.top - kachel.top, left: r.left - kachel.left,
@@ -4018,9 +4022,20 @@ function schrittMitteMarkieren() {
   });
 }
 
+/* Rollmodus der Schrittleiste nur, wenn sie nicht passt (seit 23.10.2026,
+ * Feedback 23.10.2026). Gemessen ohne den Mitte-Innenabstand: mit ihm
+ * passte sie nie. */
+function schritteEinpassen() {
+  const nav = $("schritte");
+  if (!nav || !nav.classList) return;
+  nav.classList.remove("rollt");
+  nav.classList.toggle("rollt", nav.scrollWidth > nav.clientWidth + 1);
+}
+
 /* Den Schritt in der Mitte der Leiste zeigen — nur wenn sie seitlich rollt
  * (einspaltig). Mittig steht der angetippte, sonst der aktuelle. */
 function schrittZentrieren(weich) {
+  schritteEinpassen();
   const nav = $("schritte");
   if (!nav || nav.scrollWidth <= nav.clientWidth) return;
   const i = z.schrittMitte == null ? schrittJetzt() : z.schrittMitte;
@@ -4731,6 +4746,13 @@ function verbinde() {
     document.body.classList.remove("zieht");
     ablageGrossZu();
   }
+  // ⚠️ SEIT 23.10.2026: das Ende sagen die Ereignisse, nicht eine kurze Uhr.
+  // Bis dahin schloss alles nach 250 ms ohne `dragover`. Ruht die Maus,
+  // feuern Browser `dragover` aber nur noch etwa alle 350 ms (±200), und
+  // die grosse Ablage fiel unter einer still gehaltenen Datei zusammen
+  // (Feedback 23.10.2026). Jetzt schliessen `drop`, `dragend` und das
+  // Verlassen des Fensters; die Uhr ist nur noch das Netz, wenn keines
+  // davon kommt, und laeuft ueber der Ablage gar nicht.
   document.addEventListener("dragover", (e) => {
     if (!traegtDatei(e)) return;
     e.preventDefault();
@@ -4738,8 +4760,20 @@ function verbinde() {
     document.body.classList.add("zieht");
     ablageGrossAuf();
     clearTimeout(z.ziehUhr);
-    z.ziehUhr = setTimeout(schleierAus, 250);
+    const ueberAblage = e.target && $("ablage-gross").contains(e.target);
+    if (!ueberAblage) z.ziehUhr = setTimeout(schleierAus, ZIEH_NETZ_MS);
   });
+  document.addEventListener("dragleave", (e) => {
+    // Nur das Verlassen des FENSTERS: dann gibt es kein Ziel mehr, und die
+    // Maus steht am oder ausserhalb des Randes. Ein Wechsel zwischen zwei
+    // Elementen der Seite traegt ein Ziel und schliesst nichts.
+    if (e.relatedTarget) return;
+    const x = e.clientX, y = e.clientY;
+    if (x <= 0 || y <= 0 || x >= window.innerWidth || y >= window.innerHeight) {
+      schleierAus();
+    }
+  });
+  document.addEventListener("dragend", schleierAus);
   document.addEventListener("drop", (e) => {
     // Ausserhalb der Flaeche: nichts tun, aber die Datei auch NICHT vom
     // Browser oeffnen lassen.
@@ -6447,14 +6481,18 @@ function kopfEinpassen() {
     const haelfte = (platz + lueke - mitte) / 2;
     return links.scrollWidth <= haelfte && rechts.scrollWidth <= haelfte;
   };
-  kopf.classList.remove("sprache-klein", "ohne-marke", "ohne-spruch", "ohne-test");
+  kopf.classList.remove("sprache-klein", "ohne-marke", "ohne-spruch",
+                        "ohne-test", "ohne-lokal");
   if (passt()) return;
-  // Teststufe: zuerst geht der Untertitel neben der Wortmarke, dann «TEST»;
-  // erst danach die Stufen, die es auch sonst gibt.
+  // Seit 23.10.2026 auch ausserhalb der Teststufe nach Platz (Feedback
+  // 23.10.2026): zuerst «100% lokal», dann der Spruch neben der Wortmarke.
+  kopf.classList.add("ohne-lokal");
+  if (passt()) return;
+  kopf.classList.add("ohne-spruch");
+  if (passt()) return;
+  // Teststufe: danach «TEST»; erst dann die Stufen, die es auch sonst gibt.
   const wurzelKl = document.documentElement && document.documentElement.classList;
   if (wurzelKl && wurzelKl.contains("teststufe")) {
-    kopf.classList.add("ohne-spruch");
-    if (passt()) return;
     kopf.classList.add("ohne-test");
     if (passt()) return;
   }

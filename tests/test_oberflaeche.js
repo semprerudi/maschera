@@ -4786,6 +4786,46 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     if (fehler === vorher) console.log("   OK   Hintergrund, rote Spalte, Ablage, Willkommen in vier Sprachen");
   }
 
+  console.log("91. Seit 23.10.2026: Kopf und Schrittleiste geben nach Platz nach, die Ablage nach Ereignissen");
+  // Feedback 23.10.2026: bei breitem, aber gestapeltem Fenster fielen Spruch
+  // und «100% lokal» sofort, und die Schrittleiste sprang in die Mitte.
+  {
+    const vorher = fehler;
+    const js91 = fs.readFileSync(path.join(WURZEL, "app/static/maschera.js"), "utf8");
+    const ohneK91 = js91.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+    const css91 = fs.readFileSync(path.join(WURZEL, "app/static/maschera.css"), "utf8")
+      .replace(/\/\*[\s\S]*?\*\//g, "");
+    const stufen = ["ohne-lokal", "ohne-spruch", "sprache-klein", "ohne-marke"]
+      .map((k) => ohneK91.indexOf('kopf.classList.add("' + k + '")'));
+    pruefe(stufen.every((i) => i > 0) && stufen.every((i, n) => n === 0 || i > stufen[n - 1]),
+           "kopfEinpassen(): Reihenfolge nicht lokal, Spruch, Sprache, Marke");
+    pruefe(!/@media \(max-width: 81\.24em\), \(max-height: 44em\) \{[^@]*\.kopfzeile \.(spruch|lokalzeiger) \{ display: none; \}/.test(css91),
+           "Spruch oder «100% lokal» fallen wieder mit der Stapelgrenze statt nach Platz");
+    pruefe(/\.kopfzeile \.spruch \{[^}]*white-space: nowrap;/.test(css91),
+           "der Spruch darf umbrechen; dann merkt die Messung nicht, dass er nicht passt");
+    pruefe(/body \.schritte\.rollt \{ padding-inline: calc\(50% - 2\.5rem\); \}/.test(css91)
+           && !/body \.schritte \{[^}]*padding-inline: calc\(50%/.test(css91),
+           "die Schrittleiste zentriert wieder, auch wenn sie passt");
+    pruefe(/function schrittZentrieren\(weich\) \{\s*schritteEinpassen\(\);/.test(ohneK91),
+           "schrittZentrieren() misst nicht mehr, ob die Leiste passt");
+    // Die Ablage schliesst nach Ereignissen; die Uhr ist nur das Netz.
+    pruefe(/const ZIEH_NETZ_MS = (\d+);/.test(ohneK91) && Number(RegExp.$1) >= 1500,
+           "das Netz der Ablage ist kuerzer als 1.5 s; still gehaltene Dateien fallen wieder heraus");
+    pruefe(/document\.addEventListener\("dragend", schleierAus\)/.test(ohneK91)
+           && /document\.addEventListener\("dragleave"/.test(ohneK91),
+           "die Ablage schliesst nicht mehr bei dragend oder beim Verlassen des Fensters");
+    pruefe(/if \(!ueberAblage\) z\.ziehUhr = setTimeout/.test(ohneK91),
+           "ueber der grossen Ablage laeuft die Uhr wieder");
+    // Schlussseite: der Abstand der Maske ist ein Rand, kein `gap` in cqi.
+    pruefe(/\.willkommen-bild\.marke-gross \.logo \{[^}]*margin-right: 5cqi;/.test(css91)
+           && !/\.willkommen-bild\.marke-gross \{[^}]*gap:/.test(css91),
+           "die Maske auf der Schlussseite steht wieder ueber ein gap (cqi meint dort das Fenster)");
+    // Beim Blaettern kein waagrechter Rollbalken (Feedback 25.10.2026).
+    pruefe(/\.willkommen-buehne \{[^}]*overflow-x: hidden;/.test(css91),
+           "die Buehne des Willkommensschirms rollt beim Blaettern wieder waagrecht");
+    if (fehler === vorher) console.log("   OK   Kopf und Leiste nach Platz, Ablage nach Ereignissen, Maske am Schriftzug");
+  }
+
   console.log("");
   amEnde = true;
   if (fehler) {

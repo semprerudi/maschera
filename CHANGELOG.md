@@ -1,5 +1,26 @@
 # Änderungen
 
+## 2.2.1 (2026-10-25)
+
+Feinschliff an Kopf, Ablage und Willkommensschirm. Wie MASCHERA maskiert,
+bleibt gleich.
+
+### Geändert
+- **Kopf nach Platz:** Wird es eng, fällt zuerst «100% lokal», dann der Spruch
+  neben dem Logo, danach wird die Sprachwahl zur Auswahlliste und zuletzt
+  fällt der Schriftzug. Vorher fielen Spruch und «100% lokal» schon, sobald die
+  Kacheln untereinander standen, auch bei breitem Fenster.
+- **Schrittleiste:** steht links, solange alle fünf Schritte passen; erst wenn
+  sie nicht mehr passt, rollt sie mit dem aktuellen Schritt in der Mitte.
+- Auf der Schlussseite des Willkommensschirms sitzt die Maske so nah am
+  Schriftzug wie im Kopf der App.
+
+### Behoben
+- Die grosse Ablagefläche fiel zusammen, wenn man die Datei still darüber
+  hielt. Sie bleibt jetzt offen, bis die Datei abgelegt ist oder das Fenster
+  verlässt.
+- Beim Blättern im Willkommensschirm erschien kurz ein waagrechter Rollbalken.
+
 ## 2.2.0 (2026-10-23)
 
 Ein Willkommensschirm erklärt, was MASCHERA kann. Wie MASCHERA maskiert, bleibt

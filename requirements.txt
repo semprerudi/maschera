@@ -19,7 +19,8 @@ jinja2>=3.1.6         # Vorlagen von Flask, siehe oben
 pyyaml>=6.0           # taxonomy.yaml, patterns.yaml, eigene Regeln
 onnxruntime>=1.17     # Stufe 3 beim Anwender
 tokenizers>=0.15      # Zerlegung, ohne transformers
-pymupdf>=1.24         # PDF-Text. Ohne sie laufen txt, md, eml und mbox weiter.
+# PyMuPDF 2.0 zieht onnxruntime mit Telemetrie nach (Befund 26.10.2026).
+pymupdf>=1.24,<2     # PDF-Text. Ohne sie laufen txt, md, eml und mbox weiter.
 # Zweite Ausnahme von «keine neuen Abhaengigkeiten»: Outlook speichert
 # `.msg` als OLE2-Verbunddokument, nicht als MIME. `olefile` ist die
 # kleinste moegliche Antwort — eine einzelne Python-Datei, BSD, ohne eigene

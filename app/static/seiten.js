@@ -583,7 +583,10 @@ const IMPRESSUM_EN = [
  *
  * Je Sprache sechs Seiten: fuenf Staerken und der Schluss. Eine Seite ist
  * `[titel, text]`; Bild, Punkte, Knoepfe und «Nicht mehr anzeigen» baut
- * `willkommenZeigen()` in `maschera.js`. Das Bild der Seite n liegt unter
+ * `willkommenZeigen()` in `maschera.js`. Seite 2 traegt dazu Titel und Text
+ * fuer einen Server, `[titel, text, titelServer, textServer]`, weil «100%
+ * lokal» dort nicht stimmt (Feedback 25.10.2026); ihr Bild heisst dann
+ * `2s-…`. Das Bild der Seite n liegt unter
  * `willkommen/<sprache>/<n>-<hell|dunkel>.webp` (aufgenommen von
  * `tools/schirmbilder.py --willkommen`); der Schluss hat keines.
  *
@@ -598,7 +601,13 @@ const WILLKOMMEN_DE = [
    "Erkennung und Modell laufen auf deinem Gerät, ohne Grafikkarte. Auf dem "
    + "Server arbeitet MASCHERA nur im Arbeitsspeicher und speichert weder "
    + "Dokumente noch Wörterbücher noch Protokolle. MASCHERA sendet selbst "
-   + "nichts, der Weg hinaus führt immer über deine Zwischenablage."],
+   + "nichts, der Weg hinaus führt immer über deine Zwischenablage.",
+   // Titel und Text auf einem Server (`lokal: false` in /api/zustand).
+   "Speichert nichts, sendet nichts",
+   "Auf diesem Server arbeitet MASCHERA nur im Arbeitsspeicher, ohne "
+   + "Grafikkarte, und speichert weder Dokumente noch Wörterbücher noch "
+   + "Protokolle. MASCHERA sendet selbst nichts, der Weg hinaus führt immer "
+   + "über deine Zwischenablage."],
   ["Gebaut für schnelles Arbeiten",
    "Zieh das Fenster schmal und stell es als Seitenleiste neben dein "
    + "Mailprogramm oder dein Dokument. Unter Windows und Linux wartet "
@@ -626,7 +635,13 @@ const WILLKOMMEN_FR = [
    "La détection et le modèle tournent sur ton appareil, sans carte "
    + "graphique. Sur le serveur, MASCHERA travaille uniquement en mémoire vive "
    + "et n’enregistre ni documents, ni dictionnaires, ni journaux. MASCHERA "
-   + "n’envoie rien lui-même, la sortie passe toujours par ton presse-papiers."],
+   + "n’envoie rien lui-même, la sortie passe toujours par ton presse-papiers.",
+   // Titel und Text auf einem Server (`lokal: false` in /api/zustand).
+   "Ne stocke rien, n’envoie rien",
+   "Sur ce serveur, MASCHERA travaille uniquement en mémoire vive, sans "
+   + "carte graphique, et n’enregistre ni documents, ni dictionnaires, ni "
+   + "journaux. MASCHERA n’envoie rien lui-même, la sortie passe toujours "
+   + "par ton presse-papiers."],
   ["Fait pour travailler vite",
    "Rends la fenêtre étroite et place-la en barre latérale à côté de ta "
    + "messagerie ou de ton document. Sous Windows et Linux, MASCHERA attend à "
@@ -654,7 +669,13 @@ const WILLKOMMEN_IT = [
    "Il riconoscimento e il modello girano sul tuo dispositivo, senza scheda "
    + "grafica. Sul server MASCHERA lavora solo nella memoria di lavoro e non "
    + "salva né documenti, né vocabolari, né registri. MASCHERA non invia "
-   + "nulla da sé, la via d’uscita passa sempre dai tuoi appunti."],
+   + "nulla da sé, la via d’uscita passa sempre dai tuoi appunti.",
+   // Titel und Text auf einem Server (`lokal: false` in /api/zustand).
+   "Non salva nulla, non invia nulla",
+   "Su questo server MASCHERA lavora solo nella memoria di lavoro, senza "
+   + "scheda grafica, e non salva né documenti, né vocabolari, né registri. "
+   + "MASCHERA non invia nulla da sé, la via d’uscita passa sempre dai tuoi "
+   + "appunti."],
   ["Fatto per lavorare in fretta",
    "Restringi la finestra e mettila come barra laterale accanto alla posta o "
    + "al documento. Su Windows e Linux MASCHERA aspetta accanto all’orologio, "
@@ -681,7 +702,13 @@ const WILLKOMMEN_EN = [
    "Detection and model run on your device, without a graphics card. On the "
    + "server, MASCHERA works in memory only and stores no documents, no "
    + "vocabularies and no logs. MASCHERA never sends anything itself, the way "
-   + "out always goes through your clipboard."],
+   + "out always goes through your clipboard.",
+   // Titel und Text auf einem Server (`lokal: false` in /api/zustand).
+   "Stores nothing, sends nothing",
+   "On this server, MASCHERA works in memory only, without a graphics "
+   + "card, and stores no documents, no vocabularies and no logs. MASCHERA "
+   + "never sends anything itself, the way out always goes through your "
+   + "clipboard."],
   ["Built for working fast",
    "Make the window narrow and place it as a sidebar next to your mail or "
    + "document. On Windows and Linux, MASCHERA waits next to the clock with "

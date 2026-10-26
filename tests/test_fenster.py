@@ -1742,6 +1742,67 @@ check(re.search(r"^uv python upgrade ", _app29, re.M) is not None,
 if not failures:
     print("   OK   docker build --pull, uv python upgrade")
 
+print("\n30. Herunterladen ist im eigenen Fenster eingeschaltet")
+# Feedback 26.10.2026: in der AppImage taten alle Download-Knoepfe nichts.
+# pywebview 6 verbindet `downloadRequested` nur mit `ALLOW_DOWNLOADS`, und
+# die Vorgabe ist `False`.
+_vor30 = len(failures)
+_quelle30 = (WURZEL / "app" / "fenster.py").read_text(encoding="utf-8")
+_setzen30 = _quelle30.find('for _schalter in ("ALLOW_DOWNLOADS", "OPEN_EXTERNAL_LINKS_IN_BROWSER"):')
+_fenster30 = _quelle30.find("webview.create_window(")
+check(_setzen30 > 0 and re.search(r'webview\.settings\[_schalter\] = True', _quelle30) is not None,
+      "fenster.py schaltet ALLOW_DOWNLOADS nicht ein; jeder Download-Knopf tut still nichts")
+check(0 < _setzen30 < _fenster30,
+      "ALLOW_DOWNLOADS wird erst nach create_window gesetzt; der Slot ist dann schon (nicht) verbunden")
+try:
+    import webview as _wv30
+    for _k30 in ("ALLOW_DOWNLOADS", "OPEN_EXTERNAL_LINKS_IN_BROWSER"):
+        check(_k30 in _wv30.settings,
+              f"pywebview kennt {_k30} nicht mehr; der Schalter wirkt nicht")
+except ImportError:
+    pass
+if len(failures) == _vor30:
+    print("   OK   ALLOW_DOWNLOADS vor create_window, pywebview kennt beide Schalter")
+
+print("\n31. Keine Telemetrie von Bibliotheken")
+# Befund 26.10.2026: PyMuPDF 2.0 zog onnxruntime 1.31 nach, und dessen
+# Laden oeffnete HTTPS zu Microsoft (1DS). Zwei Hebel: der Schalter vor jedem
+# fremden Import an JEDEM Einstieg, und PyMuPDF unter 2.
+_vor31 = len(failures)
+_schalter31 = 'os.environ.setdefault("ORT_DISABLE_TELEMETRY", "1")'
+for _f31 in ("app/app.py", "app/fenster.py", "app/serve.py", "app/wsgi.py",
+             "tools/paket/windows_start.py"):
+    _q31 = (WURZEL / _f31).read_text(encoding="utf-8")
+    _pos31 = _q31.find(_schalter31)
+    # Der erste Import, der nicht aus der Standardbibliothek kommt.
+    _fremd31 = re.search(r"^(?:from|import) (?!__future__|argparse|json|os|re|socket|sys|threading|time|pathlib|runpy|tempfile|bisect)\w", _q31, re.M)
+    check(_pos31 > 0, f"{_f31}: ORT_DISABLE_TELEMETRY wird nicht gesetzt")
+    check(_fremd31 is None or 0 < _pos31 < _fremd31.start(),
+          f"{_f31}: ORT_DISABLE_TELEMETRY steht erst nach einem fremden Import")
+check(re.search(r"^export ORT_DISABLE_TELEMETRY=1$",
+                (WURZEL / "tools/paket/AppRun").read_text(encoding="utf-8"), re.M) is not None,
+      "AppRun setzt ORT_DISABLE_TELEMETRY nicht")
+check(re.search(r"^ENV ORT_DISABLE_TELEMETRY=1$",
+                (WURZEL / "tools/paket/Dockerfile").read_text(encoding="utf-8"), re.M) is not None,
+      "Dockerfile setzt ORT_DISABLE_TELEMETRY nicht")
+check("ort.disable_telemetry_events()" in (WURZEL / "core/inference.py").read_text(encoding="utf-8"),
+      "core/inference.py schaltet die Telemetrie von onnxruntime nicht ab")
+for _f31 in ("requirements.txt", "tools/paket/requirements-paket.txt",
+             "tools/paket/requirements-flatpak.txt"):
+    _z31 = re.search(r"^pymupdf([^\s#]*)", (WURZEL / _f31).read_text(encoding="utf-8"), re.M)
+    check(_z31 is not None and "<2" in _z31.group(1),
+          f"{_f31}: pymupdf ohne Obergrenze <2; 2.0 zieht onnxruntime mit Telemetrie nach")
+# pywebview festgelegt (6.x schaltete Downloads still ab).
+for _f31 in ("tools/paket/requirements-appimage.txt", "tools/paket/requirements-flatpak.txt",
+             ".github/workflows/pakete.yml"):
+    # Ohne Kommentare: dort steht «pywebview» auch als Wort.
+    _q31 = re.sub(r"(^|\s)#.*$", "", (WURZEL / _f31).read_text(encoding="utf-8"), flags=re.M)
+    _angaben31 = re.findall(r"(?:^|[\s\"])(pywebview(?:\[qt\])?[<>=][^\s\"]*|pywebview(?=\s))", _q31, re.M)
+    check(_angaben31 and all(">=6.2.1,<7" in a for a in _angaben31),
+          f"{_f31}: pywebview nicht auf >=6.2.1,<7 festgelegt ({_angaben31})")
+if len(failures) == _vor31:
+    print("   OK   Schalter an fuenf Einstiegen, AppRun, Dockerfile; pymupdf<2; pywebview festgelegt")
+
 print()
 if failures:
     print(f"{len(failures)} Pruefung(en) fehlgeschlagen.")

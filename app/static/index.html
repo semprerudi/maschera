@@ -51,8 +51,8 @@
        the wordmark. -->
   <div class="teststufe-marke" id="teststufe-marke" aria-hidden="true">TEST</div>
   <div class="rechts">
-    <div class="lokalzeiger"><i></i><span id="lokalzeiger">100% lokal</span></div>
-    <div class="gruppe" id="sprachen">
+    <div class="lokalzeiger" id="lokalpille"><i></i><span id="lokalzeiger">100% lokal</span></div>
+    <div class="gruppe sprachgruppe" id="sprachen">
       <button data-sprache="de" class="aktiv">DE</button>
       <button data-sprache="fr">FR</button>
       <button data-sprache="it">IT</button>
@@ -549,8 +549,18 @@
 <div class="einst-hintergrund" id="willkommen" hidden>
   <div class="einst willkommen" role="dialog" aria-modal="true"
        aria-labelledby="willkommen-titel">
-    <button type="button" class="kreuz willkommen-zu"
-            id="knopf-willkommen-zu"></button>
+    <!-- Top right, next to the cross: the same language choice as in the
+         header. spracheMarkieren() keeps every [data-sprache] in step. -->
+    <div class="willkommen-oben">
+      <div class="gruppe sprachgruppe" id="willkommen-sprachen">
+        <button type="button" data-sprache="de" class="aktiv">DE</button>
+        <button type="button" data-sprache="fr">FR</button>
+        <button type="button" data-sprache="it">IT</button>
+        <button type="button" data-sprache="en">EN</button>
+      </div>
+      <button type="button" class="kreuz willkommen-zu"
+              id="knopf-willkommen-zu"></button>
+    </div>
     <div class="willkommen-buehne" id="willkommen-buehne"></div>
     <div class="willkommen-punkte" id="willkommen-punkte"></div>
     <div class="willkommen-fuss">

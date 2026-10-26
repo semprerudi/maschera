@@ -20,6 +20,8 @@ export TRANSFORMERS_OFFLINE=1
 # Verzeichnis. Hier liegt nur PyQt6 — die Zeile haelt das fest, falls das
 # je nicht mehr stimmt.
 export QT_API=pyqt6
+# Keine Telemetrie von onnxruntime (Befund 26.10.2026, siehe app/serve.py).
+export ORT_DISABLE_TELEMETRY=1
 # ⚠️ Wayland zuerst, X11 als Rueckfall. Ohne das faellt Qt auf manchen
 # Sitzungen auf XWayland zurueck und das Fenster ist unscharf.
 if [ -n "$WAYLAND_DISPLAY" ]; then

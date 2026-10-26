@@ -443,6 +443,14 @@ try:
                 headers={"Host": "boese.example.com"}).status_code == 403,
           "mit gesetztem MASCHERA_WIRT kommt jeder durch")
 
+    # «100% lokal» nur unter einem lokalen Namen; hinter dem Proxy sagt die
+    # Oberflaeche «Speichert nichts» (Feedback 25.10.2026).
+    for _h, _soll in (("127.0.0.1:4141", True), ("localhost", True),
+                      ("[::1]:4141", True), ("maschera.example.ch", False)):
+        _l = c.get("/api/zustand", headers={"Host": _h}).get_json()
+        check(_l.get("lokal") is _soll,
+              f"lokal unter {_h}: {_l.get('lokal')!r} statt {_soll}")
+
     # Und der Ausweg, ausdruecklich und nicht als Nebenwirkung.
     _os2.environ["MASCHERA_WIRT"] = "*"
     check(_ew() is None, "`*` schaltet die Pruefung nicht ab")
@@ -746,9 +754,17 @@ check(_im_vertrag == tuple(_QUELLE),
 from core.einstellungen import SPRACHEN as _SPR  # noqa: E402
 import fenster as _fenster_spr  # noqa: E402
 
-_im_html = tuple(_re.findall(r'data-sprache="([a-z]{2})"', _html))
-check(_im_html == tuple(_SPR),
-      f"die Flaggenknoepfe bieten {_im_html}, der Server nimmt {tuple(_SPR)}")
+# Seit 25.10.2026 zwei Gruppen (Kopf und Willkommensschirm); JEDE bietet
+# genau die Sprachen des Servers.
+_gruppen = _re.findall(r'class="gruppe sprachgruppe"[^>]*>(.*?)</div>', _html, _re.S)
+check(len(_gruppen) == 2, f"{len(_gruppen)} Sprachgruppen statt 2 (Kopf, Willkommen)")
+check(len(_re.findall(r'data-sprache="', _html))
+      == sum(g.count('data-sprache="') for g in _gruppen),
+      "ein Sprachknopf steht ausserhalb der Sprachgruppen")
+for _g in _gruppen:
+    _im_html = tuple(_re.findall(r'data-sprache="([a-z]{2})"', _g))
+    check(_im_html == tuple(_SPR),
+          f"die Flaggenknoepfe bieten {_im_html}, der Server nimmt {tuple(_SPR)}")
 check(tuple(_fenster_spr.START_SAETZE) == tuple(_SPR),
       f"der Startbildschirm kennt {tuple(_fenster_spr.START_SAETZE)}, "
       f"der Server nimmt {tuple(_SPR)}")

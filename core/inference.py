@@ -297,6 +297,8 @@ class OnnxScorer:
         import numpy as np
         import onnxruntime as ort
         from tokenizers import Tokenizer
+        # Telemetrie aus, auch unter Windows (ETW); siehe app/serve.py.
+        ort.disable_telemetry_events()
 
         self.np = np
         path = Path(model_dir)

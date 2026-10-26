@@ -324,6 +324,8 @@ const I18N = {
         fertig: "Finaler Text", prompt: "Promptzusammenführung", promptT: "Prompt",
         antwort: "Antwort", neu: "Neu",
         hundert: "100% lokal", einst: "Einstellungen",
+        hundertS: "Speichert nichts",
+        hundertST: "Läuft nur im Arbeitsspeicher. Kein Dokument, kein Wörterbuch, kein Protokoll bleibt zurück.",
         spruch: "Maskiere deine Daten, bevor du sie mit anderen teilst! · "
               + "Lokales Modell · DSG / GDPR",
         spruch1: "Maskiere deine Daten, bevor du sie mit anderen teilst!",
@@ -615,6 +617,8 @@ const I18N = {
         fertig: "Texte final", prompt: "Assemblage du prompt", promptT: "Prompt",
         antwort: "Réponse", neu: "Nouveau",
         hundert: "100% local", einst: "Réglages",
+        hundertS: "Ne stocke rien",
+        hundertST: "Fonctionne uniquement en mémoire vive. Aucun document, dictionnaire ni journal n’est conservé.",
         spruch: "Masque tes données avant de les partager ! · "
               + "Modèle local · LPD / RGPD",
         spruch1: "Masque tes données avant de les partager !",
@@ -897,6 +901,8 @@ const I18N = {
         fertig: "Testo finale", prompt: "Composizione del prompt", promptT: "Prompt",
         antwort: "Risposta", neu: "Nuovo",
         hundert: "100% locale", einst: "Impostazioni",
+        hundertS: "Non salva nulla",
+        hundertST: "Funziona solo in memoria. Nessun documento, dizionario o registro viene conservato.",
         spruch: "Maschera i tuoi dati prima di condividerli! · "
               + "Modello locale · LPD / GDPR",
         spruch1: "Maschera i tuoi dati prima di condividerli!",
@@ -1178,6 +1184,8 @@ const I18N = {
         fertig: "Final text", prompt: "Prompt assembly", promptT: "Prompt",
         antwort: "Answer", neu: "New",
         hundert: "100% local", einst: "Settings",
+        hundertS: "Stores nothing",
+        hundertST: "Runs in memory only. No document, dictionary or log is kept.",
         spruch: "Mask your data before you share it! · "
               + "Local model · FADP / GDPR",
         spruch1: "Mask your data before you share it!",
@@ -1873,6 +1881,14 @@ function tippZeigen(ph) {
   const unten = r.bottom + 6 + k.height > window.innerHeight - 8;
   tipp.style.left = links + "px";
   tipp.style.top = (unten ? r.top - 6 - k.height : r.bottom + 6) + "px";
+}
+
+/* Bewegt das Rollen von `ziel` den Anker? Ja, wenn die Seite rollt oder
+ * ein Kasten, in dem der Anker liegt. Eine Leiste daneben bewegt ihn nicht. */
+function rolltUm(ziel, anker) {
+  if (!anker) return false;
+  return ziel === document || ziel === document.documentElement
+    || ziel === document.body || !!(ziel && ziel.contains && ziel.contains(anker));
 }
 
 function tippWeg() {
@@ -2896,7 +2912,11 @@ function zeichneBeschriftung() {
   // Klartext landet, nicht.
   $("knopf-vorlage-sichern").title = s.tplSichern + ". " + s.tplWarnung;
   $("spruch").textContent = s.spruch;
-  $("lokalzeiger").textContent = s.hundert;
+  // Auf einem Server waere «100% lokal» falsch: dort steht, was dort gilt
+  // (Feedback 25.10.2026). `lokal` meldet `/api/zustand`.
+  const lokal = auchLokal();
+  $("lokalzeiger").textContent = lokal ? s.hundert : s.hundertS;
+  $("lokalpille").title = lokal ? "" : s.hundertST;
   // Kurz und einzeilig im Feld, die Formate im Tooltip (Feedback 22.10.2026).
   $("ablage-text").textContent = s.dropN;
   $("ablage-gross-text").textContent = s.dropGross;
@@ -3607,6 +3627,12 @@ async function ladeAdressen() {
  * setzt `window.pywebview`. Nur dort ergibt «Im Browser oeffnen» einen
  * Sinn — im Browser waere es ein Knopf, der die Seite noch einmal
  * daneben aufmacht. */
+/* Laeuft die Erkennung auf dem Geraet des Browsers? Solange `/api/zustand`
+ * nicht geantwortet hat, ja: dann liegt noch der Startbildschirm darueber. */
+function auchLokal() {
+  return !z.zustand || z.zustand.lokal !== false;
+}
+
 function imEigenenFenster() {
   return typeof window !== "undefined" && !!window.pywebview;
 }
@@ -4917,9 +4943,13 @@ function verbinde() {
   }, { passive: false });
   // Das Vorlagenmenue haengt an einer festen Stelle: beim Rollen der Seite
   // (nicht seiner eigenen Liste) und bei Groessenaenderung geht es zu.
+  //
+  // ⚠️ Nur wenn das Rollen den KNOPF bewegt (Feedback 26.10.2026). In der
+  // schmalen Ansicht rollt beim Neuzeichnen die Schrittleiste zum aktuellen
+  // Schritt, und dieses Rollen schloss das Menue im selben Augenblick, in
+  // dem es aufging: der Knopf tat scheinbar nichts.
   document.addEventListener("scroll", (e) => {
-    const menu = $("vorlagen-menu");
-    if (z.vorlagenOffen && menu && !menu.contains(e.target)) vorlagenAuf(false);
+    if (z.vorlagenOffen && rolltUm(e.target, $("knopf-vorlagen"))) vorlagenAuf(false);
   }, true);
   window.addEventListener("resize", () => { if (z.vorlagenOffen) vorlagenAuf(false); });
   // Der Tooltip haengt an einer festen Stelle; beim Rollen gehoert er weg.
@@ -5929,6 +5959,11 @@ function vokabularEinlesen(datei) {
     // hergibt.
     if (!(await verwerfenOk())) return;
     const n = uebernimmVokabular(o);
+    // ⚠️ Neu zeichnen. `meldeKopf()` zeichnet nicht (anders als frueher
+    // `meldeVok()`): ohne diese Zeile stand das Vokabular im Speicher und
+    // erschien erst beim naechsten zufaelligen Neuzeichnen, 10 bis 17
+    // Sekunden spaeter (Feedback 26.10.2026).
+    zeichne();
     meldeKopf("meldung-vok", t().vokGeladen.replace("{}", String(n)));
   };
   leser.readAsText(datei);
@@ -6247,6 +6282,9 @@ async function vorlageSpeichern() {
   const grund = await sichereVorlagen(
     [{ name: name.trim(), text: text }].concat(rest));
   if (!grund) z.vorlage = name.trim();
+  // Neu zeichnen, damit Auswahl und Anzahl sofort stimmen; `meldeKopf()`
+  // zeichnet nicht (dasselbe Muster wie beim Vokabular, 26.10.2026).
+  zeichne();
   meldeKopf("meldung-03", grund ? s.tplFehler.replace("{}", grund)
                                 : s.tplGesichert.replace("{}", name.trim()));
 }
@@ -6682,7 +6720,10 @@ function willkommenBild(nr) {
     const bild = el("img", "bild-" + art);
     bild.alt = "";
     bild.decoding = "async";
-    bild.src = "willkommen/" + z.sprache + "/" + nr + "-" + art + ".webp";
+    // Der Pfad nimmt die Sprache aus der festen Liste, nie den Wert selbst
+    // (CodeQL js/xss-through-dom; `z.sprache` ist ohnehin geprueft).
+    const sprache = Object.keys(I18N).find((k) => k === z.sprache) || "de";
+    bild.src = "willkommen/" + sprache + "/" + nr + "-" + art + ".webp";
     // Fehlt ein Bild, steht der Text allein da statt eines kaputten Symbols.
     bild.addEventListener("error", () => bild.remove());
     huelle.append(bild);
@@ -6703,12 +6744,18 @@ function zeichneWillkommen(richtung) {
   // So ist der Rahmen genau so hoch wie die laengste Seite, bei jeder
   // Breite und in jeder Sprache, ohne eine gemessene Zahl im CSS.
   const buehne = $("willkommen-buehne");
-  const blaetter = seiten.map(([titel, text], i) => {
+  const lokal = auchLokal();
+  const blaetter = seiten.map(([titelLokal, textLokal, titelServer, textServer], i) => {
     const schluss = i === seiten.length - 1;
+    // Auf einem Server sagt Seite 2, was dort gilt, mit eigenem Bild.
+    const server = !lokal && !!titelServer;
+    const titel = server ? titelServer : titelLokal;
+    const text = server ? textServer : textLokal;
     const blatt = el("div", i === nr ? "willkommen-blatt aktiv" : "willkommen-blatt");
     if (i !== nr) blatt.setAttribute("aria-hidden", "true");
     // Jede Seite traegt dieselbe Bildflaeche, der Schluss die Maske.
-    blatt.append(schluss ? willkommenMarke() : willkommenBild(i + 1));
+    blatt.append(schluss ? willkommenMarke()
+                         : willkommenBild(String(i + 1) + (server ? "s" : "")));
     const h = el("h2", "willkommen-titel", titel);
     if (i === nr) h.id = "willkommen-titel";
     blatt.append(h, el("p", "willkommen-text", text));

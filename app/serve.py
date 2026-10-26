@@ -55,6 +55,12 @@ import tempfile
 import threading
 from pathlib import Path
 
+# ⚠️ ZUERST, vor jedem fremden Import (Befund 26.10.2026): onnxruntime 1.31
+# schickt sonst beim Laden Telemetrie an Microsoft (1DS, gemessen: HTTPS zu
+# mobile.events.data.microsoft.com). Es kam ungefragt ueber PyMuPDF 2.0 in
+# die Pakete. «Kein Nachladen von aussen» gilt auch fuer Bibliotheken.
+os.environ.setdefault("ORT_DISABLE_TELEMETRY", "1")
+
 WURZEL = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(WURZEL))
 sys.path.insert(0, str(WURZEL / "tools"))
@@ -79,7 +85,7 @@ from filter_document import Mitschreiber  # noqa: E402
 # hier heraus. `tests/test_fenster.py` Punkt 7 prueft, dass es bei dieser
 # einen Stelle bleibt. In einem Fehlerbericht sagt sie, welcher Stand
 # gemeint ist.
-VERSION = "2.2.1"
+VERSION = "2.2.2"
 
 # Mehr nimmt der Server nicht an. Ein Dokument ist laut Messung 1500 bis 4500
 # Zeichen; 10 MB fangen auch ein PDF mit Bildern ab, ohne dass ein
@@ -576,6 +582,11 @@ def baue(z: Zustand) -> Flask:
             # ohne sie ein zweites Mal zu tragen.
             "max_mb": MAX_UPLOAD // (1024 * 1024),
             "hinweise": _hinweise_ohne_modell() if z.ohne_modell else [],
+            # Kommt der Browser ueber einen lokalen Namen? Dann laeuft die
+            # Erkennung auf seinem Geraet, und die Oberflaeche sagt «100%
+            # lokal». Unter jedem anderen Namen steht ein Server dazwischen,
+            # dann sagt sie «Speichert nichts» (Feedback 25.10.2026).
+            "lokal": wirt_von(request.host) in WIRTE_LOKAL,
         })
 
     # -- Neueste Fassung ----------------------------------------------------

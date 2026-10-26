@@ -434,8 +434,13 @@ Läuft der Server, mit welchem Modell, unter welchem Labelvertrag.
 { "dienst": "maschera", "version": "x.y.z", "pack": "ch",
   "label_hash": "b7a96dc9…", "tags": 45,
   "modell": "runs/ch-v63b", "ohne_modell": false, "max_mb": 10,
-  "hinweise": [] }
+  "hinweise": [], "lokal": true }
 ```
+
+`lokal` sagt, ob der Browser über einen lokalen Namen kommt (`127.0.0.1`,
+`localhost`, `::1`, `0.0.0.0`). Dann zeigt die Oberfläche «100% lokal»,
+sonst «Speichert nichts»: dann steht ein Server zwischen Gerät und
+Erkennung, und «lokal» wäre falsch.
 
 ⚠️ Die **Portprüfung** aus den Einstellungen hängt hier: wer auf 4141
 antwortet, ist noch lange nicht MASCHERA. Das Feld `dienst` ist die Antwort

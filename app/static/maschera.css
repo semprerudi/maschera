@@ -638,19 +638,19 @@ figcaption {
 /* Die Sprachwahl ist ein Knopfverbund: der Rahmen traegt die Rundung, und
  * `overflow: hidden` schneidet die Flaeche des gewaehlten Knopfs an den
  * Ecken mit ab. */
-#sprachen { border-radius: var(--radius-md); overflow: hidden; }
+.sprachgruppe { border-radius: var(--radius-md); overflow: hidden; }
 /* Seit 2.0 wie im Entwurf: graue Schiene, die gewaehlte Sprache als weisse
    Pille mit Schatten. */
-#sprachen.gruppe {
+.sprachgruppe.gruppe {
   border: 0; gap: 2px; padding: 0.1875rem; background: var(--color-neutral-200);
   border-radius: var(--radius-feld);
 }
-#sprachen.gruppe button {
+.sprachgruppe.gruppe button {
   height: 1.75rem; min-width: 2.125rem; padding: 0 0.5rem; border-radius: var(--radius-pille);
   background: transparent; color: var(--color-neutral-600); letter-spacing: 0;
   font-size: 0.75rem; font-weight: 500;
 }
-#sprachen.gruppe button:hover { background: transparent; color: var(--color-text); }
+.sprachgruppe.gruppe button:hover { background: transparent; color: var(--color-text); }
 /* Das Pulldown steht nur bei wenig Breite da, siehe unten. */
 .sprachwahl {
   display: none; height: 1.6875rem; box-sizing: border-box;
@@ -659,7 +659,7 @@ figcaption {
   font-family: var(--ui-heading); font-size: 0.75rem; font-weight: 500;
   cursor: pointer;
 }
-#sprachen.gruppe button.aktiv {
+.sprachgruppe.gruppe button.aktiv {
   background: var(--papier); color: var(--color-text);
   box-shadow: 0 1px 2px color-mix(in srgb, var(--schatten-grund) 14%, transparent);
 }
@@ -3627,13 +3627,18 @@ main.raster > .spalte > .bereich.gross, .bereich.gross {
 /* Feste BREITE, Hoehe nach der laengsten Seite (Feedback 23.10.2026): alle
  * Blaetter liegen in derselben Rasterzelle, sichtbar ist das aktuelle. So
  * springt der Rahmen beim Blaettern nicht und hat keine leere Flaeche.
- * Oben Platz fuer das Kreuz, sonst ringsum derselbe Rand. */
+ * Oben Platz fuer Sprachwahl und Kreuz, sonst ringsum derselbe Rand. */
 .einst.willkommen {
   position: relative; width: min(40rem, 100%); max-width: none;
-  max-height: calc(100vh - 2rem); padding: 2.75rem 1.5rem 1rem;
+  max-height: calc(100vh - 2rem); padding: 3rem 1.5rem 1rem;
   gap: 1rem; overflow: hidden;
 }
-.willkommen-zu { position: absolute; top: 0.5rem; right: 0.75rem; z-index: 1; }
+/* Oben rechts die Sprachwahl wie im Kopf, daneben das Kreuz (Feedback
+   25.10.2026). Schmal genug fuer jedes Telefon, deshalb kein Pulldown. */
+.willkommen-oben {
+  position: absolute; top: 0.5rem; right: 0.75rem; z-index: 1;
+  display: flex; align-items: center; gap: 0.5rem;
+}
 .willkommen-buehne {
   flex: 0 1 auto; display: grid; min-height: 0; overflow-y: auto;
   /* Waagrecht nie rollen (Feedback 25.10.2026): beim Blaettern gleitet das

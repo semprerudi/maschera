@@ -116,6 +116,15 @@
     <!-- Die erste Angabe muss zur Fassung in app/serve.py passen
          (test_fenster 12). Testbauten tragen `X.Y.Z-test.N` mit
          type="development"; Software-Stores zeigen das nicht als Release. -->
+    <release version="2.2.2" date="2026-10-26">
+      <description>
+        <p>Privacy fix: a library pulled in by PyMuPDF 2.0 sent telemetry to
+        Microsoft at start; it is switched off and no longer packaged. Also:
+        downloads in the app window work again, the template menu stays open
+        in the narrow layout, an uploaded vocabulary shows at once, language
+        choice in the welcome screen, and "Stores nothing" on a server.</p>
+      </description>
+    </release>
     <release version="2.2.1" date="2026-10-25">
       <description>
         <p>The header and the step bar give way by available space, the large

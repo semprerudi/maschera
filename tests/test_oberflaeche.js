@@ -4760,7 +4760,7 @@ console.log("1. Alle Knoepfe sind verdrahtet");
            "der Willkommensschirm hat keine feste Breite oder stapelt die Seiten nicht mehr");
     pruefe(/\.willkommen-bild \{[^}]*width: 100%;/.test(css90),
            "die Bildflaeche ist nicht mehr voll breit");
-    pruefe(/blatt\.append\(schluss \? willkommenMarke\(\) : willkommenBild\(i \+ 1\)\)/.test(ohneK90),
+    pruefe(/blatt\.append\(schluss \? willkommenMarke\(\)\s*: willkommenBild\(String\(i \+ 1\)/.test(ohneK90),
            "der Schluss hat keine Bildflaeche mit Maske und Schriftzug");
 
     // Jedes Bild ganz (Bild 1 ist breiter als 16:10), und hell und dunkel
@@ -4824,6 +4824,125 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     pruefe(/\.willkommen-buehne \{[^}]*overflow-x: hidden;/.test(css91),
            "die Buehne des Willkommensschirms rollt beim Blaettern wieder waagrecht");
     if (fehler === vorher) console.log("   OK   Kopf und Leiste nach Platz, Ablage nach Ereignissen, Maske am Schriftzug");
+  }
+
+  console.log("92. Seit 25.10.2026: Sprachwahl im Willkommensschirm, «Speichert nichts» auf dem Server");
+  {
+    const vorher = fehler;
+    const html92 = fs.readFileSync(path.join(WURZEL, "app/static/index.html"), "utf8");
+    const js92 = fs.readFileSync(path.join(WURZEL, "app/static/maschera.js"), "utf8");
+    const ohneK92 = js92.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+    const css92 = fs.readFileSync(path.join(WURZEL, "app/static/maschera.css"), "utf8")
+      .replace(/\/\*[\s\S]*?\*\//g, "");
+    // Oben rechts im Schirm dieselbe Gruppe wie im Kopf, neben dem Kreuz.
+    const oben = (html92.match(/<div class="willkommen-oben">([\s\S]*?)<\/div>\s*<button[^>]*id="knopf-willkommen-zu"/) || [])[1] || "";
+    pruefe(/class="gruppe sprachgruppe" id="willkommen-sprachen"/.test(oben)
+           && ["de", "fr", "it", "en"].every((l) => oben.includes('data-sprache="' + l + '"')),
+           "die Sprachwahl steht nicht oben rechts im Willkommensschirm neben dem Kreuz");
+    pruefe(/class="gruppe sprachgruppe" id="sprachen"/.test(html92),
+           "der Kopf traegt die gemeinsame Klasse der Sprachwahl nicht");
+    // Gleiches Aussehen: die Stile haengen an der Klasse, nicht an der Kennung.
+    pruefe(!/#sprachen\.gruppe( button)?[^{,]*\{(?![^}]*display: none)/.test(css92)
+           && /\.sprachgruppe\.gruppe button\.aktiv \{/.test(css92),
+           "die Sprachwahl ist wieder an #sprachen gestylt; im Willkommensschirm saehe sie anders aus");
+    // Gleiche Wirkung: alle [data-sprache] fuehren zu spracheWaehlen().
+    pruefe(/querySelectorAll\("\[data-sprache\]"\)\) \{\s*knopf\.addEventListener\("click", \(\) => spracheWaehlen/.test(ohneK92)
+           && /function spracheMarkieren\(\) \{\s*for \(const k of document\.querySelectorAll\("\[data-sprache\]"\)\)/.test(ohneK92),
+           "die Sprachknoepfe werden nicht mehr alle verdrahtet und markiert");
+    pruefe(/if \(!\$\("willkommen"\)\.hidden\) zeichneWillkommen\(0\);/.test(ohneK92),
+           "der offene Willkommensschirm zeichnet sich bei einem Sprachwechsel nicht neu");
+    // «100% lokal» nur, wenn /api/zustand lokal meldet.
+    pruefe(/return !z\.zustand \|\| z\.zustand\.lokal !== false;/.test(ohneK92)
+           && /\$\("lokalzeiger"\)\.textContent = lokal \? s\.hundert : s\.hundertS;/.test(ohneK92),
+           "auf einem Server steht wieder «100% lokal»");
+    pruefe((js92.match(/hundertS: "/g) || []).length === 4 && (js92.match(/hundertST: "/g) || []).length === 4,
+           "«Speichert nichts» fehlt in einer Sprache");
+    // Seite 2 des Schirms: eigener Titel, Text und Bild auf dem Server.
+    for (const [spr, seiten] of Object.entries(M.SEITEN.willkommen || {})) {
+      const s2 = seiten[1] || [];
+      pruefe(s2.length === 4 && s2[2] && s2[3] && s2[2] !== s2[0] && s2[3] !== s2[1],
+             "Willkommen " + spr + ": Seite 2 hat keinen eigenen Titel und Text fuer den Server");
+      pruefe(!/[—–]/.test(String(s2[2]) + String(s2[3])),
+             "Willkommen " + spr + ": Servertext mit Gedankenstrich");
+      for (const art of ["hell", "dunkel"]) {
+        pruefe(fs.existsSync(path.join(WURZEL, "app/static/willkommen", spr, "2s-" + art + ".webp")),
+               "Bild fehlt: willkommen/" + spr + "/2s-" + art + ".webp");
+      }
+    }
+    pruefe(/willkommenBild\(String\(i \+ 1\) \+ \(server \? "s" : ""\)\)/.test(ohneK92),
+           "Seite 2 zeigt auf dem Server das lokale Bild");
+    if (fehler === vorher) console.log("   OK   Sprachwahl im Schirm, Serveranzeige mit Titel, Text und Bild");
+  }
+
+  console.log("93. Seit 26.10.2026: Vorlagenmenue bleibt offen, Vokabular hochladen liest ein");
+  {
+    const vorher = fehler;
+    // Feedback 26.10.2026 (eigenes Fenster, schmal): das Vorlagenmenue ging
+    // auf und im selben Augenblick zu. Beim Neuzeichnen rollt die
+    // Schrittleiste zum aktuellen Schritt, und JEDES Rollen schloss es.
+    const rollen = document._h.scroll || [];
+    const knopf = document.getElementById("knopf-vorlagen");
+    const leiste = { id: "schritte", contains: (k) => false };
+    const kasten = { id: "raster", contains: (k) => k === knopf };
+    const rolle = (ziel) => { for (const f of rollen) f({ target: ziel }); };
+    M.vorlagenAuf(true);
+    rolle(leiste);
+    pruefe(M.zustand.vorlagenOffen === true,
+           "das Rollen der Schrittleiste schliesst das Vorlagenmenue wieder");
+    rolle(kasten);
+    pruefe(M.zustand.vorlagenOffen === false,
+           "rollt der Kasten mit dem Knopf, bleibt das Menue irgendwo im Raum stehen");
+    M.vorlagenAuf(true);
+    rolle(document);
+    pruefe(M.zustand.vorlagenOffen === false, "rollt die Seite, bleibt das Menue offen");
+
+    // Vokabular hochladen: der Knopf oeffnet das Dateifeld, eine gewaehlte
+    // Datei wird gelesen, geprueft und uebernommen.
+    let geklickt = null;
+    const altKlick = verweisKlick;
+    verweisKlick = (o) => { geklickt = o.id; };
+    await feuer("knopf-vok-hoch");
+    verweisKlick = altKlick;
+    pruefe(geklickt === "vok-datei", "«Vokabular hochladen» oeffnet die Dateiwahl nicht");
+    const datei = {
+      maschera: "vokabular", fassung: M.vokabularDatei().fassung,
+      erstellt: "2026-10-26T00:00:00Z", label_hash: null, eintraege: 2,
+      woerterbuch: { "[FULLNAME_1]": "Anna Muster", "[CITY_1]": "Bern" },
+      maskiert: "[FULLNAME_1] wohnt in [CITY_1]."
+    };
+    const altLeser = global.FileReader;
+    global.FileReader = class {
+      readAsText(f) { setTimeout(() => { this.result = f._text; this.onload(); }, 0); }
+    };
+    const feld = document.getElementById("vok-datei");
+    feld.files = [{ name: "vokabular.json", _text: JSON.stringify(datei) }];
+    feld.value = "C:\\fakepath\\vokabular.json";
+    await feuer("vok-datei", "change");
+    await new Promise((r) => setTimeout(r, 30));
+    global.FileReader = altLeser;
+    const wb = (M.zustand.antwort && M.zustand.antwort.woerterbuch) || {};
+    pruefe(wb["[FULLNAME_1]"] === "Anna Muster" && wb["[CITY_1]"] === "Bern",
+           "das hochgeladene Vokabular wurde nicht uebernommen");
+    pruefe(M.zustand.antwort && M.zustand.antwort.maskiert === datei.maskiert,
+           "der maskierte Text aus der Datei fehlt");
+    pruefe(feld.value === "", "das Dateifeld wird nicht geleert; dieselbe Datei loest beim zweiten Mal nichts aus");
+    // Und es steht SOFORT da (Feedback 26.10.2026: 10 bis 17 Sekunden ohne
+    // Rueckmeldung, weil nach dem Einlesen niemand neu zeichnete).
+    pruefe(text(document.getElementById("maskiert")).includes("wohnt in"),
+           "das eingelesene Vokabular erscheint erst beim naechsten zufaelligen Neuzeichnen");
+
+    // Dasselbe beim Speichern einer Vorlage: Auswahl und Anzahl sofort.
+    const altPrompt = M.zustand.prompt;
+    M.zustand.prompt = "Bitte kurz antworten.";
+    M.zustand.vorlage = null;
+    eingabeAntwort = "Kurz 93";
+    await feuer("knopf-vorlage-sichern");
+    await new Promise((r) => setTimeout(r, 10));
+    eingabeAntwort = null;
+    pruefe(text(document.getElementById("vorlagen-anzeige")) === "Kurz 93",
+           "die gespeicherte Vorlage steht erst nach dem naechsten Neuzeichnen in der Auswahl");
+    M.zustand.prompt = altPrompt;
+    if (fehler === vorher) console.log("   OK   Menue bleibt bei fremdem Rollen offen, Vokabular gelesen und uebernommen");
   }
 
   console.log("");

@@ -1,5 +1,39 @@
 # Änderungen
 
+## 2.2.2 (2026-10-26)
+
+**Wichtig für den Datenschutz: bitte aktualisieren.** Wie MASCHERA maskiert,
+bleibt gleich.
+
+### Behoben
+- **Telemetrie einer Bibliothek abgestellt.** Die Fassungen 2.1.1 bis 2.2.1
+  enthielten über PyMuPDF 2.0 ungewollt onnxruntime 1.31. Dessen Laden
+  öffnete beim Start eine Verbindung zum Telemetrie-Dienst von Microsoft;
+  gemessen in der Linux-AppImage. Die macOS-App enthält denselben Sammler,
+  unter Windows gehen die Ereignisse in die Diagnosedaten von Windows.
+  Dokumente, Texte und Wörterbücher liefen nie durch onnxruntime. 2.2.2
+  schaltet die Telemetrie an jedem Start ab und hält PyMuPDF unter 2.0;
+  onnxruntime ist nicht mehr in den Paketen. Die Docker-Abbilder auf
+  abgeschottetem Netz waren nicht betroffen.
+- **Herunterladen im App-Fenster:** Die Knöpfe zum Herunterladen (maskierter
+  Text, finaler Text, Vokabular) taten unter Linux nichts. Jetzt erscheint
+  wieder der Speichern-Dialog.
+- **Vorlagenmenü:** In der schmalen Ansicht ging es auf und sofort wieder zu.
+- **Vokabular hochladen:** Das eingelesene Vokabular erschien erst nach 10 bis
+  20 Sekunden. Jetzt sofort, ebenso eine gespeicherte Vorlage.
+
+### Neu
+- **Sprachwahl im Willkommensschirm,** oben rechts neben dem Kreuz.
+- **Auf einem Server** steht oben rechts «Speichert nichts» statt «100%
+  lokal», mit Erklärung beim Darüberfahren. Auch Seite 2 des
+  Willkommensschirms sagt dort, was auf dem Server gilt.
+
+### Wartung
+- Abhängigkeiten mit bekannten Lücken im Flatpak ersetzt (filelock,
+  setuptools; certifi wird nicht mehr gebraucht).
+- pywebview auf 6.2.1 bis unter 7 festgelegt.
+- SECURITY.md nennt 2.2.x als unterstützte Fassung.
+
 ## 2.2.1 (2026-10-25)
 
 Feinschliff an Kopf, Ablage und Willkommensschirm. Wie MASCHERA maskiert,

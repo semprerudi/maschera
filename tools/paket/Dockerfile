@@ -146,6 +146,8 @@ u.urlopen('http://127.0.0.1:4141/api/zustand', timeout=4)" || exit 1
 # `--timeout 300`: ein grosses PDF braucht auf wenigen CPU-Kernen Minuten.
 # Die Vorgabe von 30 s wuerde den Arbeiter mitten im Dokument abschiessen.
 ENV MASCHERA_MODELL=runs/ch-v63b
+# Keine Telemetrie von onnxruntime (Befund 26.10.2026, siehe app/serve.py).
+ENV ORT_DISABLE_TELEMETRY=1
 ENTRYPOINT ["gunicorn"]
 CMD ["--workers", "1", "--threads", "8", "--timeout", "300", \
      "--bind", "0.0.0.0:4141", "--access-logfile", "-", \

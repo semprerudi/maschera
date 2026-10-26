@@ -24,7 +24,8 @@ jinja2>=3.1.6
 gunicorn>=22.0            # der Server im Betrieb
 pyyaml>=6.0               # taxonomy.yaml, patterns.yaml, eigene Regeln
 tokenizers>=0.15
-pymupdf>=1.24             # PDF-Text
+# PyMuPDF 2.0 zieht onnxruntime mit Telemetrie nach (Befund 26.10.2026).
+pymupdf>=1.24,<2         # PDF-Text
 olefile>=0.46             # Outlook .msg
 
 # NUR die CPU-Fassung, und die Zeile unten erzwingt das NICHT — dieselbe
@@ -35,7 +36,7 @@ transformers>=5.10
 # ⚠️ OHNE `[qt]`. Das Extra zieht PyQt6 nach, und genau das darf nicht
 # passieren. pywebview findet den Unterbau ueber `qtpy` und das PyQt6
 # aus dem BaseApp.
-pywebview>=6.0
+pywebview>=6.2.1,<7       # festgelegt, siehe requirements-appimage.txt
 qtpy>=2.4
 
 --extra-index-url https://download.pytorch.org/whl/cpu

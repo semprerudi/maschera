@@ -24,6 +24,12 @@ import os
 import sys
 from pathlib import Path
 
+# ⚠️ ZUERST, vor jedem fremden Import (Befund 26.10.2026): onnxruntime 1.31
+# schickt sonst beim Laden Telemetrie an Microsoft (1DS, gemessen: HTTPS zu
+# mobile.events.data.microsoft.com). Es kam ungefragt ueber PyMuPDF 2.0 in
+# die Pakete. «Kein Nachladen von aussen» gilt auch fuer Bibliotheken.
+os.environ.setdefault("ORT_DISABLE_TELEMETRY", "1")
+
 WURZEL = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(WURZEL))
 sys.path.insert(0, str(WURZEL / "tools"))

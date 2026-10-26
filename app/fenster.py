@@ -43,6 +43,12 @@ import threading
 import time
 from pathlib import Path
 
+# ⚠️ ZUERST, vor jedem fremden Import (Befund 26.10.2026): onnxruntime 1.31
+# schickt sonst beim Laden Telemetrie an Microsoft (1DS, gemessen: HTTPS zu
+# mobile.events.data.microsoft.com). Es kam ungefragt ueber PyMuPDF 2.0 in
+# die Pakete. «Kein Nachladen von aussen» gilt auch fuer Bibliotheken.
+os.environ.setdefault("ORT_DISABLE_TELEMETRY", "1")
+
 WURZEL = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(WURZEL))
 sys.path.insert(0, str(WURZEL / "tools"))
@@ -1806,6 +1812,23 @@ def main() -> int:
         import webview
     except ImportError as e:
         return im_browser(f"`pywebview` fehlt ({e})")
+
+    # Schalter von pywebview, auf die MASCHERA baut, AUSDRUECKLICH gesetzt
+    # (Feedback 26.10.2026). `ALLOW_DOWNLOADS` steht seit pywebview 6 auf
+    # `False`: dann verbindet `qt.py` `downloadRequested` gar nicht, Edge
+    # bricht ab, WebKit ignoriert — jeder Download-Knopf tat still nichts,
+    # und `downloads_richten()` unten wurde nie aufgerufen. Alle drei
+    # Schichten zeigen mit dem Schalter einen Speichern-Dialog; ohne Dialog
+    # wird nichts geschrieben. Die Dienste oeffnen sich im Standardbrowser
+    # (`OPEN_EXTERNAL_LINKS_IN_BROWSER`), heute Vorgabe, aber vorausgesetzt.
+    for _schalter in ("ALLOW_DOWNLOADS", "OPEN_EXTERNAL_LINKS_IN_BROWSER"):
+        try:
+            webview.settings[_schalter] = True
+        except (KeyError, AttributeError, TypeError) as e:
+            # Laut, aber kein Abbruch: ein umbenannter Schalter soll das
+            # Fenster nicht verhindern.
+            print(f"  ⚠ pywebview kennt {_schalter} nicht ({e}); "
+                  f"Herunterladen oder Dienste gehen dann nicht.")
 
     # Der Import allein genuegt nicht: `pywebview` laedt seine Anzeigeschicht
     # erst beim Start und sucht dann `qtpy` oder `gi`. `pywebview` ohne das

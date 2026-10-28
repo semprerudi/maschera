@@ -304,11 +304,9 @@ if not fund:
 
 
 print("\n8. Beide Bauwege sehen nach, dass torch die CPU-Fassung ist")
-# `--extra-index-url …/whl/cpu` ERGAENZT PyPI, es ersetzt es nicht —
-# die CUDA-Raeder bleiben waehlbar. `--index-url` statt dessen ginge nicht:
-# auf dem CPU-Index gibt es Flask und die uebrigen Pakete nicht. Dass
-# `+cpu` gewinnt, haengt an der Sortierung der Versionen, nicht an einer
-# Zusage.
+# Seit 28.10.2026 kommt das torch-Rad einzeln vom CPU-Index (Punkt 32).
+# Nachgesehen wird trotzdem: ein Tippfehler in einem Bauweg holte sonst
+# still die CUDA-Fassung von PyPI.
 #
 # ⚠️ Und ein Fehlgriff waere UNSICHTBAR: die CUDA-Fassung laeuft. Sie
 # bringt nur ueber 2 GB Bibliotheken mit, die keine GPU je benutzt.
@@ -1802,6 +1800,44 @@ for _f31 in ("tools/paket/requirements-appimage.txt", "tools/paket/requirements-
           f"{_f31}: pywebview nicht auf >=6.2.1,<7 festgelegt ({_angaben31})")
 if len(failures) == _vor31:
     print("   OK   Schalter an fuenf Einstiegen, AppRun, Dockerfile; pymupdf<2; pywebview festgelegt")
+
+print("\n32. Kein Zusatzindex: torch einzeln vom CPU-Index, alles andere von PyPI")
+# Befund Lockpick, 28.10.2026: `--extra-index-url download.pytorch.org` in
+# den Paketlisten ERGAENZTE PyPI fuer JEDES Paket, und pip nimmt die
+# hoechste Fassung aus beiden Quellen. Der PyTorch-Index fuehrt Kopien
+# fremder Pakete; das ist Dependency Confusion. Jetzt holen die Bauwege das
+# torch-Rad einzeln, ohne Abhaengigkeiten, und geben es als Datei mit.
+_vor32 = len(failures)
+_listen32 = sorted(set(WURZEL.glob("requirements*.txt"))
+                   | set((WURZEL / "tools/paket").glob("requirements*.txt")))
+check(len(_listen32) >= 4, f"zu wenige Paketlisten gefunden: {_listen32}")
+for _f32 in _listen32:
+    for _z32 in _f32.read_text(encoding="utf-8").splitlines():
+        _z32 = _z32.split("#", 1)[0].strip()
+        check(not re.match(r"(--extra-index-url|--index-url|-i\s|--find-links|-f\s)", _z32),
+              f"{_f32.relative_to(WURZEL)}: «{_z32}» setzt eine weitere Paketquelle; "
+              f"sie gaelte fuer jedes Paket der Liste")
+# In den Bauwegen: nirgends ein Zusatzindex, und wo torch vom CPU-Index
+# kommt, nur ohne Abhaengigkeiten.
+_bau32 = ["tools/paket/Dockerfile", "tools/paket/appimage_bauen.fish",
+          ".github/workflows/tests.yml", ".github/workflows/pakete.yml",
+          ".github/workflows/release.yml"]
+for _f32 in _bau32:
+    _q32 = re.sub(r"(^|\s)#.*$", "", (WURZEL / _f32).read_text(encoding="utf-8"), flags=re.M)
+    check("--extra-index-url" not in _q32, f"{_f32}: --extra-index-url")
+    # Fortgesetzte Zeilen zusammenziehen, dann jeden pip-Aufruf ansehen.
+    _q32 = re.sub(r"\\\n\s*", " ", _q32)
+    for _aufruf in re.findall(r"pip[3]? (?:install|download)[^\n&]*", _q32):
+        if "download.pytorch.org" in _aufruf:
+            check("--no-deps" in _aufruf,
+                  f"{_f32}: torch vom CPU-Index MIT Abhaengigkeiten: {_aufruf.strip()[:90]}")
+for _f32 in ("tools/paket/Dockerfile", "tools/paket/appimage_bauen.fish",
+             ".github/workflows/tests.yml"):
+    _q32 = (WURZEL / _f32).read_text(encoding="utf-8")
+    check("torch-*.whl" in _q32 and "download.pytorch.org/whl/cpu" in _q32,
+          f"{_f32}: holt das torch-Rad nicht einzeln vom CPU-Index")
+if len(failures) == _vor32:
+    print(f"   OK   {len(_listen32)} Paketlisten ohne weitere Quelle, torch einzeln und ohne Abhaengigkeiten")
 
 print()
 if failures:

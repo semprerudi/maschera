@@ -118,13 +118,15 @@ py -3.13 -m venv .venv
 ## 3. Die Abhängigkeiten — torch zuerst, vom CPU-Index
 
 ```powershell
-.\.venv\Scripts\python.exe -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+.\.venv\Scripts\python.exe -m pip install torch --no-deps --index-url https://download.pytorch.org/whl/cpu
 .\.venv\Scripts\python.exe -m pip install -r tools\paket\requirements-paket.txt pywebview pyinstaller pystray pillow
 ```
 
 ⚠️⚠️ **PYTORCH MUSS DIE CPU-FASSUNG SEIN.** `requirements-paket.txt` nennt
-den CPU-Index nur als `--extra-index-url` — das **ergänzt** PyPI, es
-ersetzt es nicht. Auf einer Maschine mit Grafikkarte fällt ein Fehlgriff
+keinen zweiten Index (ein Zusatzindex gälte für jedes Paket, siehe ihren
+Kopf). Ohne die erste Zeile käme torch von PyPI, mit CUDA. `--no-deps`
+lässt die Abhängigkeiten von torch der zweiten Zeile, also PyPI. Auf einer
+Maschine mit Grafikkarte fällt ein Fehlgriff
 nicht auf, weil die CUDA-Fassung dort läuft; sie bringt nur über 2 GB
 Bibliotheken in den Installer. Deshalb torch zuerst, ausdrücklich vom
 CPU-Index. `windows_bauen.py` prüft es und bricht ohne `+cpu` ab.

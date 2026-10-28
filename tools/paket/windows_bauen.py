@@ -85,7 +85,7 @@ def torch_pruefen() -> None:
     if "+cpu" not in torch.__version__:
         raise SystemExit(
             f"torch {torch.__version__} ist nicht die CPU-Fassung. Neu holen:\n"
-            "  pip install torch --index-url "
+            "  pip install torch --no-deps --index-url "
             "https://download.pytorch.org/whl/cpu --force-reinstall")
 
 

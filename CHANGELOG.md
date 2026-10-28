@@ -1,5 +1,33 @@
 # Änderungen
 
+## 2.2.3 (2026-10-28)
+
+Bedienung mit der Tastatur und ein sicherer Bezug der Pakete. Wie MASCHERA
+maskiert, bleibt gleich.
+
+### Neu
+- **Tab folgt den Schritten.** In der dreispaltigen Ansicht sprang Tab von
+  01 zuerst nach 05 und hielt an jedem kleinen Knopf. Jetzt geht es nur über
+  Felder und Hauptknöpfe, in der Reihenfolge der Arbeit: Originaltext,
+  Maskieren, maskierter Text, Übernehmen, Vorlagen, Prompt, Senden, Antwort,
+  Einpflegen, finaler Text, Kopieren, Neu. Shift-Tab geht denselben Weg
+  zurück, deaktivierte Knöpfe fallen heraus.
+- **Pfeiltasten durch die kleinen Knöpfe.** Hat ein Knopf einer Kachel den
+  Fokus, erreichen ← und → die übrigen: Leeren, Kopieren, Herunterladen,
+  Vergrössern, Beispiel, Vokabular.
+- **Datei öffnen mit der Tastatur:** Die Ablage in 01 ist erreichbar, Enter
+  oder Leertaste öffnet die Dateiwahl.
+
+### Sicherheit
+- **Jedes Paket aus einer Quelle.** Die Bauwege nannten den Paketindex von
+  PyTorch als Zusatzquelle neben PyPI. pip hätte damit jedes Paket auch von
+  dort nehmen können (Dependency Confusion). Jetzt kommt nur PyTorch selbst
+  von dort, alle anderen Pakete nur von PyPI. Hinweis von Lockpick. Die
+  Paketlisten sind vor und nach der Änderung gleich.
+
+### Wartung
+- PyTorch 2.15.
+
 ## 2.2.2 (2026-10-26)
 
 **Wichtig für den Datenschutz: bitte aktualisieren.** Wie MASCHERA maskiert,

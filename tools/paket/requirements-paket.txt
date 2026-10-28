@@ -47,29 +47,33 @@ pymupdf>=1.24,<2     # PDF-Text. Ohne sie laufen txt, md, eml und mbox weiter
 # ohne eigene Abhaengigkeiten.
 olefile>=0.46         # Outlook .msg. Ohne sie laufen alle anderen weiter
 
-# NUR die CPU-Fassung — und die Zeile unten erzwingt das NICHT.
+# NUR die CPU-Fassung, und sie kommt NICHT aus dieser Datei.
 #
 # Das voreingestellte `torch` von PyPI bringt die CUDA-Bibliotheken mit,
 # ueber 2 GB allein dafuer, und weder im Container noch in der AppImage ist
-# eine GPU.
+# eine GPU. Das CPU-Rad liegt auf dem Index von PyTorch.
 #
-# `--extra-index-url` ERGAENZT PyPI, es ersetzt es nicht. `--index-url`
-# ginge nicht: es loeste PyPI fuer die ganze Datei ab, und auf dem
-# PyTorch-Index gibt es kein `flask`.
+# ⚠️ KEIN `--extra-index-url` in dieser Datei (bis 28.10.2026 stand er
+# hier). Er ERGAENZT PyPI fuer JEDES Paket, und pip nimmt die hoechste
+# Fassung aus beiden Quellen. Der PyTorch-Index fuehrt Kopien fremder
+# Pakete (Jinja2, MarkupSafe, filelock, networkx, sympy …): jedes Paket
+# hier konnte von dort kommen. Das ist «Dependency Confusion» (Befund
+# Lockpick, 28.10.2026; PyTorch selbst traf es im Dezember 2022). Dazu
+# kam die CPU-Fassung nur, weil `2.14.0+cpu` hoeher sortiert als `2.14.0`.
 #
-# Dass heute die CPU-Raeder kommen, liegt an der Sortierung: `2.14.0+cpu`
-# sortiert HOEHER als `2.14.0`, weil die lokale Fassung angehaengt ist. Das
-# ist die Reihenfolge der Versionen und keine Zusage — veroeffentlicht PyPI
-# je eine hoehere Grundfassung, kippt es still.
+# Jetzt holt jeder Bauweg das torch-Rad EINZELN und ohne Abhaengigkeiten
+# vom CPU-Index und gibt es als Datei mit; alles andere kommt nur von PyPI:
 #
-# DESHALB WIRD ES GEPRUEFT UND NICHT GEHOFFT. `Dockerfile` und
-# `appimage_bauen.fish` brechen ab, wenn in `torch.__version__` kein `+cpu`
-# steht; `tests/test_fenster.py` haelt fest, dass beide das tun. Auf einer
-# Maschine MIT Grafikkarte fiele der Fehlgriff sonst nicht auf.
+#     pip download --no-deps --index-url https://download.pytorch.org/whl/cpu \
+#         "torch>=2.13" -d /tmp/torch
+#     pip install -r requirements-paket.txt /tmp/torch/torch-*.whl
+#
+# `Dockerfile` und `appimage_bauen.fish` sehen danach trotzdem nach, dass
+# `torch.__version__` ein `+cpu` traegt; `tests/test_fenster.py` Punkt 8
+# haelt das fest, Punkt 32, dass keine Datei hier einen Zusatzindex hat.
 #
 # Untergrenzen = kleinste Fassung ohne bekannte Luecke (pip-audit,
 # 3.10.2026): torch < 2.6 CVE-2025-32434, torch < 2.10 CVE-2026-24747,
 # transformers 4.56 bis 5.2 CVE-2026-4372.
 torch>=2.13
 transformers>=5.10
---extra-index-url https://download.pytorch.org/whl/cpu

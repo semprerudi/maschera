@@ -1,39 +1,35 @@
-# MASCHERA 2.2.2
+# MASCHERA 2.2.3
 
-**Privacy fix, please update.** Nothing changes in how MASCHERA masks.
+**Keyboard navigation and a safer way to get packages.** Nothing changes in
+how MASCHERA masks.
 
 Website: [www.maschera.ch](https://www.maschera.ch)
 
-## Fixed
-
-- **Telemetry of a library switched off.** Versions 2.1.1 to 2.2.1
-  unintentionally contained onnxruntime 1.31, pulled in by PyMuPDF 2.0.
-  Loading it opened a connection to Microsoft's telemetry service at start;
-  measured in the Linux AppImage. The macOS app contains the same collector;
-  on Windows the events go into the Windows diagnostic data. Documents,
-  texts and vocabularies never passed through onnxruntime. This release switches
-  the telemetry off at every start and keeps PyMuPDF below 2.0; onnxruntime
-  is no longer in the packages. Docker images on an isolated network were
-  not affected.
-- **Downloads in the app window:** the download buttons (masked text, final
-  text, vocabulary) did nothing on Linux. The save dialog appears again.
-- **Template menu:** in the narrow layout it opened and closed at once.
-- **Uploading a vocabulary:** it appeared only after 10 to 20 seconds. Now
-  at once, and so does a saved template.
-
 ## New
 
-- **Language choice in the welcome screen,** top right next to the cross.
-- **On a server** the header says "Stores nothing" instead of "100% local",
-  with an explanation on hover. Page 2 of the welcome screen says what
-  applies on a server, too.
+- **Tab follows the steps.** In the three-column layout, Tab went from 01
+  to 05 first and stopped at every small button. Now it moves only through
+  fields and main buttons, in the order of the work: original text, Mask,
+  masked text, Take over, Templates, Prompt, Send, Answer, Apply, final
+  text, Copy, New. Shift+Tab goes the same way back; disabled buttons are
+  skipped.
+- **Arrow keys reach the small buttons.** When a button of a tile has the
+  focus, ← and → move to the others: Clear, Copy, Download, Enlarge,
+  Example, Vocabulary.
+- **Open a file with the keyboard:** the drop area in 01 can be reached,
+  Enter or Space opens the file dialog.
+
+## Security
+
+- **Each package from one source.** The builds named the PyTorch package
+  index as an extra source next to PyPI, so pip could have taken any
+  package from there (dependency confusion). Now only PyTorch itself comes
+  from there, all other packages only from PyPI. Reported by Lockpick. The
+  package lists are the same before and after the change.
 
 ## Maintenance
 
-- Flatpak dependencies with known vulnerabilities replaced (filelock,
-  setuptools; certifi is no longer needed).
-- pywebview pinned to 6.2.1 up to below 7.
-- SECURITY.md names 2.2.x as the supported version.
+- PyTorch 2.15.
 
 Details: [CHANGELOG.md](CHANGELOG.md).
 
@@ -41,20 +37,17 @@ Details: [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
-# MASCHERA 2.2.2
+# MASCHERA 2.2.3
 
-**Datenschutz-Korrektur, bitte aktualisieren.** Wie MASCHERA maskiert, bleibt
-gleich.
+**Bedienung mit der Tastatur und ein sicherer Bezug der Pakete.** Wie
+MASCHERA maskiert, bleibt gleich.
 
-- **Telemetrie abgestellt:** 2.1.1 bis 2.2.1 enthielten über PyMuPDF 2.0
-  ungewollt onnxruntime, das beim Start Microsofts Telemetrie-Dienst
-  ansprach (gemessen unter Linux; macOS gleich, Windows über die
-  Diagnosedaten). Dokumente und Texte liefen nie hindurch. Diese Fassung schaltet
-  das ab, onnxruntime ist nicht mehr in den Paketen.
-- Behoben: Herunterladen im App-Fenster unter Linux, Vorlagenmenü in der
-  schmalen Ansicht, Vokabular hochladen erscheint sofort.
-- Neu: Sprachwahl im Willkommensschirm; auf einem Server «Speichert nichts»
-  statt «100% lokal».
+- **Tab folgt den Schritten** von 01 bis 05, nur über Felder und
+  Hauptknöpfe; Shift-Tab geht denselben Weg zurück. Die kleinen Knöpfe
+  einer Kachel erreichen die Pfeiltasten, die Ablage öffnet mit Enter.
+- **Jedes Paket aus einer Quelle:** Nur PyTorch kommt vom Index von
+  PyTorch, alle anderen Pakete nur von PyPI (Hinweis von Lockpick).
+- PyTorch 2.15.
 
 **Fehler gefunden?** Bitte ein [Issue](https://github.com/semprerudi/maschera/issues)
 eröffnen. Nie ein echtes Dokument oder echte Namen hineinkopieren.

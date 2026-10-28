@@ -7,9 +7,9 @@
     "sources": [
         {
             "type": "file",
-            "url": "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp313-cp313-manylinux_2_28_x86_64.whl",
-            "sha256": "331fa474e26e428e2e6af1143b2fdab19cee492d7d21897b8899ce1c14755662",
-            "dest-filename": "torch-2.14.1+cpu-cp313-cp313-manylinux_2_28_x86_64.whl"
+            "url": "https://download.pytorch.org/whl/cpu/torch-2.15.0%2Bcpu-cp313-cp313-manylinux_2_28_x86_64.whl",
+            "sha256": "0f6f69701b2d38ddc412364dfb92e2e13e74960d33fa3573b4930ced626e81c7",
+            "dest-filename": "torch-2.15.0+cpu-cp313-cp313-manylinux_2_28_x86_64.whl"
         },
         {
             "type": "file",
@@ -118,6 +118,11 @@
         },
         {
             "type": "file",
+            "url": "https://files.pythonhosted.org/packages/73/fa/fb638d54bffff44700c8d487608c1f2872823e606fbd043b3c29c93236cf/transformers-5.21.0-py3-none-any.whl",
+            "sha256": "8803a8712932aa3441c1e8bb340e66d5e3eca079fe65d9b717ede2f3ead01c79"
+        },
+        {
+            "type": "file",
             "url": "https://files.pythonhosted.org/packages/74/27/e5b8f34d02d9995b80abcef563ea1f8b56d20134d8f4e5e81733b1feceb2/pyyaml-6.0.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
             "sha256": "0f29edc409a6392443abf94b9cf89ce99889a1dd5376d94316ae5145dfedd5d6"
         },
@@ -145,11 +150,6 @@
             "type": "file",
             "url": "https://files.pythonhosted.org/packages/83/f6/b55ec74cfe68c6584163faa311503c20b0da4c09883a41e8e00d6726c954/bottle-0.13.4-py2.py3-none-any.whl",
             "sha256": "045684fbd2764eac9cdeb824861d1551d113e8b683d8d26e296898d3dd99a12e"
-        },
-        {
-            "type": "file",
-            "url": "https://files.pythonhosted.org/packages/96/b6/724faefed06913dd3e42e0476fe2c42448675c42f687a12bf810aa098005/transformers-5.20.2-py3-none-any.whl",
-            "sha256": "7ae75dbc1fb3922aff1b6c97b9e5479d6cf26fd86a8866bfb71324190479f807"
         },
         {
             "type": "file",

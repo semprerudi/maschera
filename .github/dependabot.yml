@@ -10,10 +10,10 @@
 #
 # `pip` zweimal: die Wurzel führt `requirements.txt` (ONNX-Weg) und
 # `requirements-dev.txt`, `tools/paket/` führt die Listen der Pakete.
-# Die Pakete ziehen torch von einem zweiten Index (`--extra-index-url`),
-# den Dependabot ohne eigene Zugangsangabe nicht kennt — Vorschläge für
-# torch sind dort mit Vorsicht zu lesen; die Untergrenzen in den Listen
-# bleiben Handarbeit, geprüft mit `pip-audit`.
+# Das torch-Rad holen die Bauwege einzeln vom CPU-Index von PyTorch (kein
+# Zusatzindex in den Listen, siehe `requirements-paket.txt`). Dependabot
+# kennt nur PyPI — Vorschläge für torch sind mit Vorsicht zu lesen; die
+# Untergrenzen in den Listen bleiben Handarbeit, geprüft mit `pip-audit`.
 #
 # `docker` für `tools/paket/Dockerfile`. Das Basisabbild bleibt bewusst bei
 # Python 3.13: nur Patch-Fassungen werden vorgeschlagen. Ein Wechsel auf

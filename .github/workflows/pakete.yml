@@ -37,6 +37,8 @@ jobs:
         with:
           python-version: "3.13"
 
+      # Auf macOS ist torch von PyPI schon die CPU-Fassung (ohne `+cpu`);
+      # ein zweiter Index braucht es nicht.
       - name: Abhaengigkeiten
         run: |
           python -m pip install --upgrade pip
@@ -136,14 +138,14 @@ jobs:
         with:
           python-version: "3.13"
 
-      # ⚠️ torch ZUERST und ausdruecklich vom CPU-Index (WINDOWS.md
-      # Abschnitt 3). `requirements-paket.txt` sagt nur `--extra-index-url`;
-      # danach ist torch schon erfuellt und wird nicht ersetzt.
+      # ⚠️ torch ZUERST, einzeln und ohne Abhaengigkeiten vom CPU-Index
+      # (WINDOWS.md Abschnitt 3); danach ist torch erfuellt und wird nicht
+      # ersetzt, und seine Abhaengigkeiten kommen von PyPI.
       # `windows_bauen.py` bricht ohnehin ab, wenn kein `+cpu` dasteht.
       - name: Abhaengigkeiten
         run: |
           python -m pip install --upgrade pip
-          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install torch --no-deps --index-url https://download.pytorch.org/whl/cpu
           pip install -r tools/paket/requirements-paket.txt "pywebview>=6.2.1,<7" pyinstaller pystray pillow
           pip freeze > pakete-windows.txt
           python -c "import importlib.metadata as m; print('torch', m.version('torch')); print('werkzeug', m.version('werkzeug'))"

@@ -116,6 +116,15 @@
     <!-- Die erste Angabe muss zur Fassung in app/serve.py passen
          (test_fenster 12). Testbauten tragen `X.Y.Z-test.N` mit
          type="development"; Software-Stores zeigen das nicht als Release. -->
+    <release version="2.2.3" date="2026-10-28">
+      <description>
+        <p>Keyboard navigation and a safer way to get packages. Tab follows
+        the work steps from 01 to 05 through fields and main buttons,
+        Shift+Tab goes the same way back, and the arrow keys reach the
+        small buttons of each tile. PyTorch now comes alone from its own
+        index, every other package only from PyPI.</p>
+      </description>
+    </release>
     <release version="2.2.2" date="2026-10-26">
       <description>
         <p>Privacy fix: a library pulled in by PyMuPDF 2.0 sent telemetry to

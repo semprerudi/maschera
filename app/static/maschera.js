@@ -4649,6 +4649,125 @@ async function ablegen(datei) {
   }
 }
 
+/* Tab folgt dem Arbeitsweg, nicht den Spalten (Feedback
+ * 28.10.2026). Im Quelltext steht 05 unter 01 in derselben Spalte, und Tab
+ * sprang von 01 nach 05, bevor es 02 erreichte, mit einem Halt an jedem
+ * kleinen Knopf dazwischen. Jetzt: nur Felder und Hauptknoepfe, in der
+ * Reihenfolge der Schritte. Shift-Tab geht denselben Weg genau zurueck; ein
+ * zweiter Weg rueckwaerts haette Stellen, von denen Tab vorwaerts nicht
+ * weiss, wohin.
+ *
+ * Die Nebenknoepfe einer Kachel (Leeren, Kopieren, Herunterladen,
+ * Vergroessern, Beispiel, Datei, Dienstmenue, Vokabular) erreicht man mit
+ * den Pfeiltasten, sobald ein Knopf der Kachel den Fokus hat. 02 und das
+ * Vokabular sind dabei eine Gruppe, das Vokabular hat keinen Hauptknopf.
+ * Deaktivierte und unsichtbare Elemente fallen von selbst heraus. */
+const ARBEITSWEG = [
+  "orig", "knopf-maskieren",
+  "maskiert", "maskiert-feld", "knopf-uebernahme",
+  "knopf-vorlagen", "prompt", "knopf-senden",
+  "antwort04", "knopf-einpflegen04",
+  "final", "knopf-final-kopieren",
+  "knopf-neu", "knopf-neu-unten",
+];
+// Die Stelle einer Kachel auf dem Weg. «Neu» steht in 01, kommt aber zuletzt.
+const WEGRANG = { b01: 1, b02: 2, bvok: 2, b03: 3, b04: 4, b05: 5 };
+const WEGENDE = new Set(["knopf-neu", "knopf-neu-unten"]);
+
+function bedienbar(k) {
+  return !!k && !k.disabled && !k.hidden && !(k.tabIndex < 0)
+    && k.getClientRects().length > 0;
+}
+
+function wegRang(k) {
+  if (WEGENDE.has(k.id)) return 6;
+  const b = k.closest(".bereich");
+  return (b && WEGRANG[b.id]) || 0;
+}
+
+// Liegt `a` auf dem Weg vor `b`? Erst die Kachel, darin der Quelltext.
+function wegDavor(a, b) {
+  const ra = wegRang(a), rb = wegRang(b);
+  if (ra !== rb) return ra < rb;
+  return !!(a.compareDocumentPosition(b) & 4);   // DOCUMENT_POSITION_FOLLOWING
+}
+
+// Das naechste (vor) bzw. vorherige Element auf dem Weg, oder null am Ende.
+// Von einem Nebenknopf aus geht es dort weiter, wo er in seiner Kachel steht.
+function wegSchritt(von, vor) {
+  const weg = ARBEITSWEG.map($).filter(bedienbar);
+  const i = weg.indexOf(von);
+  if (i >= 0) return weg[i + (vor ? 1 : -1)] || null;
+  if (vor) return weg.find((w) => wegDavor(von, w)) || null;
+  return weg.filter((w) => wegDavor(w, von)).pop() || null;
+}
+
+// Was vor und nach dem Raster den Fokus nimmt: Kopfzeile und Fusszeile.
+function randElemente(wo) {
+  const wahl = wo === "kopf" ? "#kopfzeile button, #kopfzeile select"
+                             : "footer a[href], footer button";
+  return [...document.querySelectorAll(wahl)].filter(bedienbar);
+}
+
+function tabWeg(e) {
+  if (e.key !== "Tab" || e.ctrlKey || e.altKey || e.metaKey) return;
+  const ziel = e.target, vor = !e.shiftKey;
+  if (!ziel || !ziel.closest) return;
+  let nach = null;
+  if ($("raster").contains(ziel)) {
+    // In einem offenen Menue (Vorlagen, Dienste) gilt der Weg des Menues.
+    if (ziel.closest(".vorlagen-menu, .dienstmenu")) return;
+    nach = wegSchritt(ziel, vor);
+    // Am Ende des Wegs hinaus, nicht zurueck in den Quelltext: sonst fiele
+    // Tab nach «Neu» in Spalte 2. Die Fusszeile hat heute nichts
+    // Bedienbares, dann geht es oben in der Kopfzeile weiter.
+    if (!nach) {
+      const kopf = randElemente("kopf"), fuss = randElemente("fuss");
+      nach = vor ? (fuss[0] || kopf[0])
+                 : (kopf[kopf.length - 1] || fuss[fuss.length - 1]);
+    }
+  } else {
+    // Aus der Kopfzeile hinein und aus der Fusszeile zurueck: auf den Weg,
+    // nicht auf den ersten Knopf im Quelltext.
+    const kopf = randElemente("kopf"), fuss = randElemente("fuss");
+    const weg = ARBEITSWEG.map($).filter(bedienbar);
+    if (vor && ziel === kopf[kopf.length - 1]) nach = weg[0];
+    else if (!vor && ziel === fuss[0]) nach = weg[weg.length - 1];
+  }
+  if (nach) { e.preventDefault(); nach.focus(); }
+}
+
+// Die Pfeilgruppe einer Kachel: alles Bedienbare ausser den Textfeldern.
+function pfeilGruppe(k) {
+  const b = k.closest(".bereich");
+  if (!b) return [];
+  const kacheln = b.id === "b02" || b.id === "bvok"
+    ? [$("b02"), $("bvok")] : [b];
+  return kacheln.flatMap((x) => [...x.querySelectorAll(
+    "button, input[type=search], #ablage")]).filter(bedienbar);
+}
+
+function pfeilWeg(e) {
+  if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+  if (e.ctrlKey || e.altKey || e.metaKey || e.shiftKey) return;
+  const ziel = e.target;
+  // Von Knoepfen aus. Im Suchfeld bewegen die Pfeile die Einfuegemarke und
+  // springen erst am Rand des Textes weiter, in Textfeldern gar nicht.
+  if (!ziel || !ziel.closest) return;
+  if (ziel.tagName === "INPUT") {
+    const rechts = e.key === "ArrowRight", l = ziel.value.length;
+    if (ziel.selectionStart !== ziel.selectionEnd) return;
+    if (rechts ? ziel.selectionEnd !== l : ziel.selectionStart !== 0) return;
+  } else if (!(ziel.tagName === "BUTTON" || ziel.id === "ablage")) return;
+  if (!$("raster").contains(ziel) || ziel.closest(".vorlagen-menu, .dienstmenu")) return;
+  const gruppe = pfeilGruppe(ziel);
+  const i = gruppe.indexOf(ziel);
+  if (i < 0 || gruppe.length < 2) return;
+  const n = gruppe.length;
+  e.preventDefault();
+  gruppe[(i + (e.key === "ArrowRight" ? 1 : -1) + n) % n].focus();
+}
+
 function verbinde() {
   // Die Knoepfe stehen im HTML, nicht hier. Uebersetzt wird ueber
   // `textContent` auf den Spannen darin — die Regel gegen `innerHTML` soll
@@ -5303,6 +5422,16 @@ function verbinde() {
   });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && z.burgerOffen) burgerAuf(false);
+  });
+  // Tab auf dem Arbeitsweg, Pfeile durch die Nebenknoepfe (siehe ARBEITSWEG).
+  document.addEventListener("keydown", tabWeg);
+  document.addEventListener("keydown", pfeilWeg);
+  // Die Ablage ist ein <label> um ein verstecktes Dateifeld und war darum
+  // mit der Tastatur nicht erreichbar. Jetzt in der Pfeilgruppe von 01.
+  $("ablage").addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    e.preventDefault();
+    $("datei").click();
   });
 
   // **Es wird nichts gesendet.** `/api/senden` gibt es nicht und wird es
@@ -6923,6 +7052,7 @@ if (typeof module !== "undefined" && module.exports) {
     zeichne, zeichneFinal,
     messeRollbalken, knopfTitelSetzen,
     allesLeeren, neuOk,
+    ARBEITSWEG, wegSchritt, tabWeg, pfeilWeg, pfeilGruppe,
     hinweisText, hinweisSchluessel, I18N,
   };
 }

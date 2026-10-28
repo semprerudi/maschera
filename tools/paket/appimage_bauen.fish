@@ -66,20 +66,25 @@ cp -a $PYWURZEL $BAU/usr/python
 or exit 1
 
 echo "── 3. Abhaengigkeiten nach usr/lib/python (mit Qt, rund 2 GB)"
+# torch EINZELN vom CPU-Index, ohne Abhaengigkeiten, als Datei mitgegeben;
+# alles andere nur von PyPI. Ein Zusatzindex haette fuer jedes Paket
+# gegolten (Dependency Confusion, Kopf von `requirements-paket.txt`).
+set -l TORCHRAD (mktemp -d)
+$BAU/usr/python/bin/python3 -m pip download --quiet --no-cache-dir \
+    --no-deps --index-url https://download.pytorch.org/whl/cpu \
+    "torch>=2.13" -d $TORCHRAD
+or exit 1
 $BAU/usr/python/bin/python3 -m pip install --quiet --no-cache-dir \
     --target $BAU/usr/lib/python \
-    -r tools/paket/requirements-appimage.txt
+    -r tools/paket/requirements-appimage.txt $TORCHRAD/torch-*.whl
 or exit 1
+rm -rf $TORCHRAD
 
 # ⚠️⚠️ NACHSEHEN, NICHT HOFFEN: ist es wirklich die CPU-Fassung?
 #
-# `requirements-paket.txt` sagt `--extra-index-url`, und das ERGAENZT
-# PyPI. Dass heute die CPU-Raeder gewinnen, liegt allein daran, dass
-# `2.14.0+cpu` hoeher sortiert als `2.14.0`. Kippt das, kommen ueber 2 GB
-# CUDA-Bibliotheken in eine AppImage, die keine GPU sieht — und es faellt
-# NICHT auf, weil das Paket damit laeuft.
-#
-# Die Begruendung stand im Kommentar und in keiner Pruefung. Jetzt hier.
+# CUDA-Bibliotheken in einer AppImage, die keine GPU sieht, fielen NICHT
+# auf, weil das Paket damit laeuft. Die Begruendung stand im Kommentar und
+# in keiner Pruefung. Jetzt hier.
 set -l torchfassung ($BAU/usr/python/bin/python3 -c \
     "import sys; sys.path.insert(0, '$BAU/usr/lib/python'); \
      import torch; print(torch.__version__)" 2>/dev/null)

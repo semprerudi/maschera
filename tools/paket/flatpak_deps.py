@@ -3,9 +3,20 @@
 
     flatpak --filesystem=/tmp --user --devel --share=network \\
         --command=pip3 run org.kde.Sdk//6.11 \\
+        download --no-deps --index-url https://download.pytorch.org/whl/cpu \\
+        "torch>=2.13" -d /tmp/torch
+    flatpak --filesystem=/tmp --user --devel --share=network \\
+        --command=pip3 run org.kde.Sdk//6.11 \\
         install --dry-run --ignore-installed --report /tmp/pip-report.json \\
-        -r requirements-flatpak.txt
+        -r requirements-flatpak.txt /tmp/torch/torch-*.whl
     python3 tools/paket/flatpak_deps.py /tmp/pip-report.json
+
+Das torch-Rad kommt EINZELN vom CPU-Index und geht als Datei in die
+Aufloesung; alles andere nur von PyPI. Ein Zusatzindex in
+`requirements-flatpak.txt` haette fuer jedes Paket gegolten (Dependency
+Confusion, Kopf von `requirements-paket.txt`). Im Bericht steht fuer torch
+deshalb eine `file://`-Adresse; `_rad_beim_index()` setzt die Adresse beim
+CPU-Index ein und nimmt die Summe aus der Datei selbst.
 
 Warum nicht `flatpak-pip-generator`: der uebliche Weg holt Adresse und
 Pruefsumme ueber `https://pypi.org/pypi/<name>/<version>/json` — und
@@ -16,9 +27,8 @@ unsichtbar.
 MASCHERA braucht aber genau dieses Rad: die CUDA-Fassung waere ueber 2 GB
 schwerer, und im Sandkasten ist keine Grafikkarte.
 
-pip selbst kennt beide Indexe. `--report` schreibt fuer jedes aufgeloeste
-Paket Adresse UND Pruefsumme — aus dem Lauf, der den `--extra-index-url`
-beachtet hat. Dieses Werkzeug uebersetzt das nur.
+`--report` schreibt fuer jedes aufgeloeste Paket Adresse UND Pruefsumme.
+Dieses Werkzeug uebersetzt das nur.
 
 ES WIRD GEMESSEN, NICHT GETIPPT. Kein Name, keine Fassung und keine Summe
 steht in dieser Datei.
@@ -59,6 +69,26 @@ def _von_pypi(name: str, fassung: str) -> tuple[str, str] | None:
     return None
 
 
+CPU_INDEX = "https://download.pytorch.org/whl/cpu/"
+
+
+def _rad_beim_index(netz: str) -> tuple[str, str]:
+    """Ein lokales Rad (`file://`, das torch-Rad vom CPU-Index) auf seine
+    Adresse beim CPU-Index abbilden. Die Summe kommt aus der Datei selbst;
+    die Adresse ist die, auf die der Index weiterleitet, damit zwei Laeufe
+    dieselbe Datei ergeben."""
+    pfad = Path(urllib.parse.unquote(urllib.parse.urlparse(netz).path))
+    h = hashlib.sha256()
+    with pfad.open("rb") as f:
+        for stueck in iter(lambda: f.read(1 << 20), b""):
+            h.update(stueck)
+    adresse = CPU_INDEX + urllib.parse.quote(pfad.name)
+    with urllib.request.urlopen(
+            urllib.request.Request(adresse, method="HEAD"), timeout=60) as a:
+        adresse = a.geturl()
+    return adresse, h.hexdigest()
+
+
 def _selbst_hashen(netz: str) -> str:
     """Notnagel: das Rad holen und die Summe aus den Bytes nehmen."""
     h = hashlib.sha256()
@@ -81,7 +111,9 @@ def main(bericht: Path) -> int:
         netz = holen["url"]
         summe = holen.get("archive_info", {}).get("hashes", {}).get("sha256")
 
-        if not summe:
+        if netz.startswith("file://"):
+            netz, summe = _rad_beim_index(netz)
+        elif not summe:
             ersatz = _von_pypi(name, fassung)
             if ersatz:
                 netz, summe = ersatz

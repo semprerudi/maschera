@@ -15,19 +15,19 @@ FROM python:3.13-slim AS bau
 # eigenen Kopf, dass sie fuer genau diesen Zweck kurz gehalten ist.
 COPY tools/paket/requirements-paket.txt /bau/requirements.txt
 #
-# ⚠️⚠️ Die letzte Zeile SIEHT NACH, ob es die CPU-Fassung ist.
+# torch kommt EINZELN vom CPU-Index, ohne Abhaengigkeiten, und wird als
+# Datei mitgegeben; alles andere nur von PyPI. Ein Zusatzindex haette fuer
+# jedes Paket gegolten (Dependency Confusion, Kopf von
+# `requirements-paket.txt`).
 #
-# `requirements-paket.txt` sagt `--extra-index-url`, und das ERGAENZT
-# PyPI. Dass heute die CPU-Raeder gewinnen, liegt allein an der
-# Sortierung: `2.14.0+cpu` steht ueber `2.14.0`. Kippt das, kommen ueber
-# 2 GB CUDA-Bibliotheken in ein Abbild, in dem keine GPU ist — und es
-# faellt nicht auf, weil der Dienst damit laeuft. Nur die Schichten waeren
-# ploetzlich riesig, und das sieht niemand beim Bauen.
-#
-# Der Bau bricht dann ab. Eine Zusage im Kommentar ist keine Pruefung.
+# ⚠️⚠️ Die letzte Zeile SIEHT TROTZDEM NACH, ob es die CPU-Fassung ist.
+# CUDA-Bibliotheken in einem Abbild ohne GPU fielen nicht auf, weil der
+# Dienst damit laeuft. Eine Zusage im Kommentar ist keine Pruefung.
 RUN python -m venv /opt/venv \
  && /opt/venv/bin/pip install --no-cache-dir --upgrade pip \
- && /opt/venv/bin/pip install --no-cache-dir -r /bau/requirements.txt \
+ && /opt/venv/bin/pip download --no-cache-dir --no-deps \
+      --index-url https://download.pytorch.org/whl/cpu "torch>=2.13" -d /bau/torch \
+ && /opt/venv/bin/pip install --no-cache-dir -r /bau/requirements.txt /bau/torch/torch-*.whl \
  && /opt/venv/bin/python -c "import torch, sys; v = torch.__version__; \
 print('torch', v); sys.exit(0 if '+cpu' in v else 1)" \
  && /opt/venv/bin/python -m pip uninstall -y pip

@@ -62,6 +62,7 @@ const imHtml = new Set(
   [...HTML.matchAll(/id="([A-Za-z0-9_-]+)"/g)].map((m) => m[1]));
 
 const knoten = {};
+let fokus = null;
 const entfernt = new Set();
 
 function mach(id) {
@@ -103,7 +104,8 @@ function mach(id) {
     },
     appendChild(k) { o.append(k); },
     prepend(...kinder) { o._kinder.unshift(...kinder); },
-    focus() {}, blur() {}, select() {},
+    // Der Fokus wird mitgeschrieben: Punkt 94 prueft den Tab-Weg.
+    focus() { fokus = o; }, blur() {}, select() {},
     // ⚠️ Mitschreiben, nicht verschlucken: die gestapelte Ansicht springt
     // zum naechsten Schritt, und eine Attrappe, die `scrollIntoView` still
     // schluckt, wuerde das nie pruefen.
@@ -127,6 +129,10 @@ function mach(id) {
     // Dienst ueber einen angeklickten Verweis geoeffnet wird.
     click() { if (verweisKlick) verweisKlick(o); },
     querySelector() { return mach("_kind"); },
+    // Sichtbar heisst hier: nicht `hidden`. Das genuegt fuer den Tab-Weg;
+    // die Wirkung von CSS prueft der Browser, nicht diese Attrappe.
+    getClientRects() { return o.hidden ? [] : [{}]; },
+    closest() { return null; },
     querySelectorAll() { return []; },
   };
   return o;
@@ -4943,6 +4949,69 @@ console.log("1. Alle Knoepfe sind verdrahtet");
            "die gespeicherte Vorlage steht erst nach dem naechsten Neuzeichnen in der Auswahl");
     M.zustand.prompt = altPrompt;
     if (fehler === vorher) console.log("   OK   Menue bleibt bei fremdem Rollen offen, Vokabular gelesen und uebernommen");
+  }
+
+  console.log("94. Seit 28.10.2026: Tab folgt dem Arbeitsweg, Pfeile durch die Nebenknoepfe");
+  {
+    const vorher = fehler;
+    // Feedback 28.10.2026: in drei Spalten sprang Tab von 01 nach 05, mit
+    // einem Halt an jedem kleinen Knopf. Jetzt Felder und Hauptknoepfe in
+    // der Reihenfolge der Schritte, Shift-Tab genau zurueck.
+    const $ = (i) => document.getElementById(i);
+    const raster = $("raster");
+    const warContains = raster.contains;
+    raster.contains = (k) => M.ARBEITSWEG.includes(k && k.id);
+    const zustaende = {};
+    for (const id of M.ARBEITSWEG) {
+      const k = $(id);
+      zustaende[id] = [k.disabled, k.hidden];
+      k.disabled = false; k.hidden = false;
+    }
+    $("maskiert-feld").hidden = true;     // nicht im Bearbeiten
+    $("knopf-neu-unten").hidden = true;   // nur gestapelt sichtbar
+    const tab = (von, shift) => {
+      fokus = null;
+      let verhindert = false;
+      M.tabWeg({ key: "Tab", shiftKey: !!shift, target: von,
+                 preventDefault() { verhindert = true; } });
+      return verhindert ? fokus : null;
+    };
+    const soll = ["orig", "knopf-maskieren", "maskiert", "knopf-uebernahme",
+      "knopf-vorlagen", "prompt", "knopf-senden", "antwort04",
+      "knopf-einpflegen04", "final", "knopf-final-kopieren", "knopf-neu"];
+    const vor = ["orig"];
+    for (let k = $("orig"), i = 0; i < soll.length - 1; i++) {
+      k = tab(k);
+      vor.push(k ? k.id : null);
+      if (!k) break;
+    }
+    pruefe(JSON.stringify(vor) === JSON.stringify(soll),
+           "Tab vorwaerts weicht vom Arbeitsweg ab: " + vor.join(" > "));
+    const rueck = ["knopf-neu"];
+    for (let k = $("knopf-neu"), i = 0; i < soll.length - 1; i++) {
+      k = tab(k, true);
+      rueck.push(k ? k.id : null);
+      if (!k) break;
+    }
+    pruefe(JSON.stringify(rueck) === JSON.stringify([...soll].reverse()),
+           "Shift-Tab geht nicht denselben Weg zurueck: " + rueck.join(" < "));
+    // Deaktiviert faellt heraus: ohne Prompt kein Senden.
+    $("knopf-senden").disabled = true;
+    const n = tab($("prompt"));
+    pruefe(n && n.id === "antwort04", "ein deaktivierter Knopf bleibt auf dem Weg: " + (n && n.id));
+    // Mit Strg oder Alt ist Tab nicht unseres.
+    fokus = null;
+    M.tabWeg({ key: "Tab", ctrlKey: true, target: $("orig"), preventDefault() {} });
+    pruefe(fokus === null, "Strg-Tab wird abgefangen");
+    for (const id of M.ARBEITSWEG) [$(id).disabled, $(id).hidden] = zustaende[id];
+    raster.contains = warContains;
+
+    // Verdrahtet, und die Ablage ist mit der Tastatur erreichbar.
+    const q = fs.readFileSync(path.join(__dirname, "..", "app", "static", "maschera.js"), "utf8");
+    pruefe(/addEventListener\("keydown", tabWeg\)/.test(q), "tabWeg haengt an keinem keydown");
+    pruefe(/addEventListener\("keydown", pfeilWeg\)/.test(q), "pfeilWeg haengt an keinem keydown");
+    pruefe(/id="ablage" tabindex="0"/.test(HTML), "die Ablage hat keinen Tab-Halt fuer die Pfeilgruppe");
+    if (fehler === vorher) console.log("   OK   Arbeitsweg vor und zurueck, Deaktiviertes uebersprungen, Pfeile verdrahtet");
   }
 
   console.log("");

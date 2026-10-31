@@ -235,7 +235,7 @@ Ein fertiges Abbild, rund 4,2 GB, das Modell fährt mit:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:2.2.3
+    ghcr.io/semprerudi/maschera:2.3.0
 ```
 
 Danach im Browser `http://127.0.0.1:4141` öffnen. Der Server speichert
@@ -282,7 +282,7 @@ das Abbild, sobald eine Fassung getaggt wird. Diese prüfst du mit dem Tag in de
 Identität:
 
 ```fish
-cosign verify ghcr.io/semprerudi/maschera:2.2.3 \
+cosign verify ghcr.io/semprerudi/maschera:2.3.0 \
     --certificate-identity https://github.com/semprerudi/maschera/.github/workflows/release.yml@refs/tags/v2.1.1 \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```
@@ -315,11 +315,11 @@ beschreibt den macOS-Bau, der auf GitHub läuft (Workflow `Pakete bauen`, von Ha
 python3 tools/run_tests.py
 ```
 
-Dreissig Prüfungen, keine Abhängigkeiten ausser PyYAML und Flask.
-Kein Modell, keine GPU, keine Downloads nötig: **neunundzwanzig laufen in einem
+Einunddreissig Prüfungen, keine Abhängigkeiten ausser PyYAML und Flask.
+Kein Modell, keine GPU, keine Downloads nötig: **dreissig laufen in einem
 frischen Klon sofort durch.**
 
-Die dreissigste braucht das Modell und sagt es; zwei weitere lassen je
+Die einunddreissigste braucht das Modell und sagt es; zwei weitere lassen je
 einen Punkt aus, solange die Nomenklatur nicht gebaut ist
 (`python3 packs/ch/nomenclatures/build.py`). Beides steht in der Ausgabe:
 **eine übersprungene Prüfung hat nichts geprüft**, und der Läufer
@@ -372,7 +372,8 @@ tools/             Werkzeuge
 
 
 train.py           Training (braucht torch + GPU)
-tests/             neunundzwanzig Prüfdateien
+tests/             dreissig Prüfdateien
+specs/             vollständiger Anforderungskatalog
 ```
 
 ## Die eine Regel

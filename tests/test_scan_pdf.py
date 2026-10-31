@@ -16,8 +16,11 @@ Leser bis zur Oberflaeche fest.
 Braucht `pymupdf`. Fehlt es, meldet sie sich als uebersprungen — sie prueft
 dann NICHTS.
 """
+import io
+import subprocess
 import sys
 import tempfile
+import zlib
 from pathlib import Path
 
 WURZEL = Path(__file__).resolve().parent.parent
@@ -138,6 +141,192 @@ check("hinweise = d.hinweise" in js.replace(" ", "").replace("\n", "")
       or "d.hinweise" in js,
       "maschera.js kennt das Feld `hinweise` im Fehlerfall nicht")
 print("   OK   Hinweise werden ausgewertet")
+
+print("6. Brotli erreicht MuPDF nicht: die rohe Datei")
+# ⚠️ Die Proben tragen kaputte Daten und keinen Angriff. Ein kaputter
+# Brotli-Strom laesst MuPDF aber haengen, deshalb laeuft der ganze Weg in
+# eigenen Prozessen: gibt die Wache nach, wird die Pruefung rot und bleibt
+# nicht stehen.
+from dokumente import (inhalt_brotli_verdacht, pdf_entschaerfen,  # noqa: E402
+                       pdf_verdeckter_filter)
+
+for _probe in (b"<</Filter/BrotliDecode>>", b"<</Filter/Br>>", b"<</F/Br>>",
+               b"<</Filter/Brotli#44ecode>>", b"<</Filter/B#72>>",
+               b"<</Filter[/Fl/Br]>>", b"<</X/F/Filter/Br>>",
+               b"<</T(100%)/Filter %c\n/Br>>", b"5 0 obj /Br endobj"):
+    _neu = pdf_entschaerfen(_probe)
+    check(len(_neu) == len(_probe), f"Laenge geaendert: {_probe!r}")
+    check(b"Br" not in _neu.replace(b"Brotli", b"Br") or b"/Xb" in _neu,
+          f"nicht ueberschrieben: {_probe!r}")
+    check(b"/Xb" in _neu, f"nicht ueberschrieben: {_probe!r}")
+for _probe in (b"<</Filter 5 0 R>>", b"<</Filter[5 0 R]>>",
+               b"<</Filter[/Fl 5 0 R]>>", b"<</Filter %c\n 5 0 R>>",
+               b"<</F 5 0 R>>"):
+    check(pdf_verdeckter_filter(_probe), f"nicht erkannt: {_probe!r}")
+print("   OK   jede gemessene Schreibweise")
+
+print("7. Gewoehnliche PDF fallen nicht durch")
+for _probe in (b"<</Font<</F1 5 0 R/F2 6 0 R>>>>", b"<</Type/Annot/F 4>>",
+               b"<</Filter/FlateDecode>>", b"<</Filter[/A85/Fl]>>",
+               b"<</F 5 0 R>>\n5 0 obj\n<</F(a.pdf)>>\nendobj"):
+    check(not pdf_verdeckter_filter(_probe), f"zu Unrecht: {_probe!r}")
+check(pdf_entschaerfen(b"/Brot /Bruch /Xy /Filter") == b"/Brot /Bruch /Xy /Filter",
+      "aehnliche Namen werden ueberschrieben")
+_rand = bytes(i * 37 % 251 for i in range(4096)) * 500
+check(pdf_entschaerfen(_rand) == _rand, "Binaerdaten werden veraendert")
+check(not pdf_verdeckter_filter(_rand), "Binaerdaten loesen die Wache aus")
+check(not inhalt_brotli_verdacht(b"<a>BI</a><b>x</Br><c>ID</c>"),
+      "XML in einem Anhang loest aus")
+check(not inhalt_brotli_verdacht(b"BT (a /Br) Tj ET BI /W 1 /F /Fl ID x EI"),
+      "Text oder Flate loest aus")
+for _probe in (b"q BI /W 1 /F /Br ID x EI Q", b"BI/F/BrotliDecode ID x EI",
+               b"BI /(ID) /F /B#72 ID x EI", b"(a)BI /ID 1 /F /Br ID x EI",
+               b"BI /F /Br ID x"):
+    check(inhalt_brotli_verdacht(_probe), f"nicht erkannt: {_probe!r}")
+print("   OK   Schriften, Anmerkungen, Flate, Anhaenge, Binaerdaten")
+
+print("8. Der ganze Weg: echtes MuPDF, je Fall ein Prozess")
+_KURZ = (
+    "import sys; sys.path[:0] = ['.', 'tools']\n"
+    "from pathlib import Path\n"
+    "from core.hinweise import Abbruch\n"
+    "from dokumente import pdf_zu_text\n"
+    "try:\n    print('GELESEN', pdf_zu_text(Path(sys.argv[1]))[0][:40])\n"
+    "except Abbruch as e:\n    print(e.schluessel)\n")
+
+
+def _pdf(objekte):
+    b = b"%PDF-1.7\n"
+    orte = []
+    for i, o in enumerate(objekte, 1):
+        orte.append(len(b))
+        b += b"%d 0 obj\n" % i + o + b"\nendobj\n"
+    a = len(b)
+    b += b"xref\n0 %d\n0000000000 65535 f \n" % (len(objekte) + 1)
+    for o in orte:
+        b += b"%010d 00000 n \n" % o
+    return b + (b"trailer\n<</Size %d/Root 1 0 R>>\nstartxref\n%d\n%%%%EOF\n"
+                % (len(objekte) + 1, a))
+
+
+def _strom(d, c):
+    return b"<<" + d + b"/Length %d>>\nstream\n" % len(c) + c + b"\nendstream"
+
+
+_KAPUTT = b"\x1b\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff"
+_KOPF = [b"<</Type/Catalog/Pages 2 0 R>>",
+         b"<</Type/Pages/Kids[3 0 R]/Count 1>>",
+         b"<</Type/Page/Parent 2 0 R/MediaBox[0 0 300 100]/Contents 4 0 R"
+         b"/Resources<</Font<</F1 <</Type/Font/Subtype/Type1"
+         b"/BaseFont/Helvetica>>>>>>>>"]
+_TEXT = b"BT /F1 14 Tf 10 50 Td (Gesund) Tj ET"
+
+
+def _inline(name):
+    return _TEXT + b" q 9 0 0 9 0 0 cm BI /W 4 /H 4 /BPC 8 /CS /G /F /" + name \
+        + b" ID " + _KAPUTT + b" EI Q"
+
+
+def _mit_objektstrom():
+    """Stream 4 -> /F 5 0 R -> [6 0 R] -> /Br, versteckt in Objektstrom 7."""
+    kopf, wert = b"6 0 ", b"/Br"
+    teile = _KOPF + [_strom(b"/F 5 0 R", _KAPUTT), b"[6 0 R]",
+                     None,
+                     _strom(b"/Type/ObjStm/N 1/First %d/Filter/FlateDecode"
+                            % len(kopf), zlib.compress(kopf + wert))]
+    b = b"%PDF-1.7\n"
+    orte = {}
+    for i, o in enumerate(teile, 1):
+        if o is not None:
+            orte[i] = len(b)
+            b += b"%d 0 obj\n" % i + o + b"\nendobj\n"
+    ab = len(b)
+    orte[8] = ab
+    zeilen = b"\0\0\0\0\0\0"
+    for i in range(1, 9):
+        if i == 6:
+            zeilen += b"\2" + (7).to_bytes(4, "big") + b"\0"
+        else:
+            zeilen += b"\1" + orte[i].to_bytes(4, "big") + b"\0"
+    b += b"8 0 obj\n" + _strom(b"/Type/XRef/Size 9/W[1 4 1]/Root 1 0 R",
+                               zeilen) + b"\nendobj\n"
+    return b + b"startxref\n%d\n%%%%EOF\n" % ab
+
+
+def _katalog_im_brotli():
+    """Der Dokumentkatalog in einem Objektstrom: `open()` braucht ihn sofort."""
+    teile = {2: _KOPF[1], 3: _KOPF[2], 4: _strom(b"", _TEXT),
+             5: _strom(b"/Type/ObjStm/N 1/First 4/Filter/Br", _KAPUTT)}
+    b = b"%PDF-1.7\n"
+    orte = {}
+    for i, o in teile.items():
+        orte[i] = len(b)
+        b += b"%d 0 obj\n" % i + o + b"\nendobj\n"
+    ab = len(b)
+    orte[6] = ab
+    zeilen = b"\0\0\0\0\0\0" + b"\2" + (5).to_bytes(4, "big") + b"\0"
+    for i in range(2, 7):
+        zeilen += b"\1" + orte[i].to_bytes(4, "big") + b"\0"
+    b += b"6 0 obj\n" + _strom(b"/Type/XRef/Size 7/W[1 4 1]/Root 1 0 R",
+                               zeilen) + b"\nendobj\n"
+    return b + b"startxref\n%d\n%%%%EOF\n" % ab
+
+
+_FAELLE = {
+    "katalog": _katalog_im_brotli(),
+    "lang": _pdf(_KOPF + [_strom(b"/Filter/BrotliDecode", _KAPUTT)]),
+    "kurz": _pdf(_KOPF + [_strom(b"/Filter/Br", _KAPUTT)]),
+    "f": _pdf(_KOPF + [_strom(b"/F/Br", _KAPUTT)]),
+    "hex": _pdf(_KOPF + [_strom(b"/Filter/B#72", _KAPUTT)]),
+    "array": _pdf(_KOPF + [_strom(b"/Filter[/Br]", _KAPUTT)]),
+    "schluessel": _pdf(_KOPF + [_strom(b"/X/F/Filter/Br", _KAPUTT)]),
+    "kombiniert": _pdf(_KOPF + [_strom(b"/T(100%)/Filter %c\n/Br", _KAPUTT)]),
+    "indirekt": _pdf(_KOPF + [_strom(b"/Filter 5 0 R", _KAPUTT), b"/Br"]),
+    "f_weit": _pdf(_KOPF + [_strom(b"/F 5 0 R", _KAPUTT),
+                            b" " * 600 + b"/Br"]),
+    "objstrom": _mit_objektstrom(),
+    "f_verdeckt": _pdf(_KOPF + [_strom(b"/F 9 0 R", _KAPUTT)]),
+    "inline": _pdf(_KOPF + [_strom(b"/Filter/FlateDecode",
+                                   zlib.compress(_inline(b"Br")))]),
+    "inline_hex": _pdf(_KOPF + [_strom(b"/Filter/FlateDecode",
+                                       zlib.compress(_inline(b"B#72")))]),
+    "inline_bild": _pdf(_KOPF + [_strom(b"/Subtype/Image/Filter/FlateDecode",
+                                        zlib.compress(_inline(b"Br")))]),
+}
+with tempfile.TemporaryDirectory() as _o:
+    for _name, _b in _FAELLE.items():
+        _p = Path(_o) / f"{_name}.pdf"
+        _p.write_bytes(_b)
+        try:
+            _l = subprocess.run([sys.executable, "-c", _KURZ, str(_p)],
+                                cwd=WURZEL, capture_output=True, text=True,
+                                timeout=20)
+            check("pdf_brotli" in _l.stdout,
+                  f"{_name}: {(_l.stdout or _l.stderr)[-80:]!r}")
+        except subprocess.TimeoutExpired:
+            check(False, f"{_name} erreicht den Decoder: MuPDF haengt")
+    _gesund = [_pdf(_KOPF + [_strom(b"", _TEXT)]),
+               _pdf(_KOPF[:2] + [_KOPF[2], _strom(b"/Filter/FlateDecode",
+                                                  zlib.compress(_TEXT))])]
+    _echt = pymupdf.open()
+    _echt.new_page().insert_text((72, 72), "Gesund")
+    _echt.embfile_add("a.xml", b"<a>BI</a><b>x</Br><c>ID</c>")
+    _gesund.append(_echt.tobytes(garbage=3, deflate=True))
+    for _i, _b in enumerate(_gesund):
+        _p = Path(_o) / f"gesund{_i}.pdf"
+        _p.write_bytes(_b)
+        _l = subprocess.run([sys.executable, "-c", _KURZ, str(_p)], cwd=WURZEL,
+                            capture_output=True, text=True, timeout=20)
+        check("GELESEN Gesund" in _l.stdout,
+              f"gesundes PDF {_i}: {(_l.stdout or _l.stderr)[-80:]!r}")
+_body = _FAELLE["kurz"]
+if b"/Xb" in pdf_entschaerfen(_body):
+    r = c.post("/api/lesen", data={"datei": (io.BytesIO(_body), "b.pdf")},
+               content_type="multipart/form-data")
+    check(r.status_code == 400, f"Status {r.status_code}")
+    check((r.get_json() or {}).get("fehler_schluessel") == "pdf_brotli",
+          f"Antwort {r.get_json()}")
+print(f"   OK   {len(_FAELLE)} Faelle abgewiesen, {len(_gesund)} gesunde gelesen")
 
 print()
 if failures:

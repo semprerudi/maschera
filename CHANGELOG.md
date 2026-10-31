@@ -1,5 +1,30 @@
 # Änderungen
 
+## 2.3.0 (2026-10-31)
+
+**Wichtig für die Sicherheit: bitte aktualisieren.** Dazu erscheint die gesamte
+Dokumentation im Repository. Wie MASCHERA maskiert, bleibt gleich.
+
+### Sicherheit
+- **PDF mit Brotli-Kompression werden abgewiesen (CVE-2026-111497).** PyMuPDF
+  enthält einen Brotli-Decoder mit einer Lücke, die ein präpariertes PDF schon beim
+  Auslesen des Textes erreicht. Eine Fassung mit Fix gibt es noch nicht. MASCHERA
+  prüft deshalb jedes PDF, bevor es den Decoder erreicht, auch Kurzformen, indirekte
+  Filter und Inline-Bilder. Ein abgewiesenes PDF speicherst du mit einem PDF-Programm
+  neu, oder du fügst den Text direkt ein. Andere PDF sind nicht betroffen.
+- Dependabot meldet jetzt auch Aktualisierungen der GitHub Actions.
+
+### Neu
+- **Anforderungskatalog `specs/`:** Ziele, funktionale und nichtfunktionale
+  Anforderungen, Architektur, Abläufe als Diagramme, Erkennung, API, Training,
+  Oberfläche, Design, Sicherheit, Entscheide und eine Anleitung für den Neubau. Dazu
+  ein Testkatalog und Listen, die aus dem Code erzeugt werden. `SPEC.md` und `docs/`
+  verweisen darauf.
+
+### Wartung
+- Vor jedem Release wird der Katalog nachgeführt, Prüfungen vergleichen seine Werte und
+  die Felder der Schnittstelle mit dem Code.
+
 ## 2.2.3 (2026-10-28)
 
 Bedienung mit der Tastatur und ein sicherer Bezug der Pakete. Wie MASCHERA

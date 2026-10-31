@@ -393,6 +393,105 @@ def _teil_text(teil) -> str:
 # PDF
 # ---------------------------------------------------------------------------
 
+# ⚠️ KEIN BROTLI AN MUPDF (CVE-2026-111497, Schreibzugriff ausserhalb des
+# Puffers im Brotli-Decoder). PyMuPDF bringt Brotli 1.2.0 statisch mit, und
+# keine Fassung hat den Fix. Gemessen am 31.10.2026 mit harmlosen Proben:
+# MuPDF dekodiert `/Filter` und ebenso `/F`, `BrotliDecode` und ebenso `Br`,
+# als Name, im Array, indirekt, mit #xx im Namen, und in Inline-Bildern schon
+# beim Textauszug. Ein kaputter Brotli-Strom laesst es zudem haengen.
+#
+# NICHT SUCHEN, UEBERSCHREIBEN. Die erste Fassung suchte Schluessel und Wert
+# und liess sich mit Kommentaren, Strings und verschachtelten Schluesseln
+# umgehen (Gegenlese 31.10.2026). Jetzt wird jeder Brotli-Name in der Datei
+# durch einen gleich langen, unbekannten Namen ersetzt, wo immer er steht. Dann
+# gibt es keinen Filter mehr, den MuPDF aufrufen koennte, und es braucht keinen
+# Kontext. Was erst nach dem Dekodieren sichtbar wird (Objektstroeme, Inline-
+# Bilder), prueft `pdf_pruefen()` nach dem Oeffnen und vor dem Textauszug.
+_PDF_ZEICHEN = rb"[^\s\x00/\[\]<>()%{}]"
+_PDF_NAME = re.compile(rb"/" + _PDF_ZEICHEN + rb"*")
+_PDF_HEX = re.compile(rb"#([0-9A-Fa-f]{2})")
+_PDF_BROTLI = (b"/Br", b"/BrotliDecode")
+_PDF_ERSATZ = b"/Xb"
+_PDF_WEISS = rb"(?:[\s\x00]+|%[^\r\n]*[\r\n])*"
+_PDF_FILTERVERWEIS = re.compile(
+    rb"/(Filter|F)(?![^\s\x00/\[\]<>()%{}])(" + _PDF_WEISS + rb"\[?(?:"
+    + _PDF_WEISS + rb"/" + _PDF_ZEICHEN + rb"*)*" + _PDF_WEISS
+    + rb")(\d+)[\s\x00]+(\d+)[\s\x00]+R(?!" + _PDF_ZEICHEN + rb")")
+_PDF_INLINE = re.compile(rb"(?<!" + _PDF_ZEICHEN + rb")BI(?=[\s\x00/%])(.*?)"
+                         rb"(?:(?<!" + _PDF_ZEICHEN + rb")EI(?!" + _PDF_ZEICHEN
+                         + rb")|\Z)", re.S)
+_PDF_NUR_NAMEN = re.compile(rb"\s*\[?\s*(?:/" + _PDF_ZEICHEN + rb"*\s*)+\]?\s*")
+
+
+def _ist_brotli(name: bytes) -> bool:
+    return (_PDF_HEX.sub(lambda m: bytes([int(m[1], 16)]), name)
+            in _PDF_BROTLI)
+
+
+def _enthaelt_brotli(daten: bytes) -> bool:
+    return any(_ist_brotli(t) or t.startswith(_PDF_ERSATZ)
+               for t in _PDF_NAME.findall(daten))
+
+
+def pdf_entschaerfen(roh: bytes) -> bytes:
+    """Jeden Brotli-Namen ueberschreiben, gleich lang, damit Offsets stimmen."""
+    def ersatz(m: re.Match) -> bytes:
+        t = m.group(0)
+        return _PDF_ERSATZ.ljust(len(t), b"_") if _ist_brotli(t) else t
+    return _PDF_NAME.sub(ersatz, roh)
+
+
+def pdf_verdeckter_filter(roh: bytes) -> bool:
+    """Ein Filter, der schon beim Oeffnen aus einem Objektstrom kaeme.
+
+    Liegt ein Objektstrom hinter einem indirekten Filter, dekodiert MuPDF ihn
+    beim Oeffnen, bevor `pdf_pruefen()` laeuft. Ein indirekter `/Filter`
+    wird deshalb abgewiesen. `/F 5 0 R` ist oft eine Dateiangabe und zaehlt nur,
+    wenn das Ziel nicht lesbar in der Datei steht.
+    """
+    for t in _PDF_FILTERVERWEIS.finditer(roh):
+        if t.group(1) == b"Filter":
+            return True
+        ziel = rb"(?<!\d)" + t.group(3) + rb"[\s\x00]+" + t.group(4) + rb"[\s\x00]+obj"
+        if not re.search(ziel, roh):
+            return True
+    return False
+
+
+def inhalt_brotli_verdacht(inhalt: bytes) -> bool:
+    """Ein dekodierter Strom: Inline-Bilder stehen erst hier."""
+    return any(_enthaelt_brotli(t.group(1))
+               for t in _PDF_INLINE.finditer(inhalt))
+
+
+def _pdf_abweisen() -> Abbruch:
+    return Abbruch("PDF mit Brotli-Kompression abgelehnt (CVE-2026-111497)",
+                   schluessel="pdf_brotli")
+
+
+def pdf_pruefen(dok) -> None:
+    """Nach dem Oeffnen, vor jedem Strom und vor dem Textauszug.
+
+    Erst alle Objekte, denn ein Filter kann als blosser Name in einem
+    Objektstrom liegen. Ein entschaerfter Name in einem Stream-Woerterbuch
+    heisst: dieses PDF nutzt Brotli; es still leer zu lesen waere ein leerer
+    Befund. Danach die Stroeme, ohne Ausnahme: `/Subtype/Image` auf einem
+    Seiteninhalt darf die Pruefung nicht umgehen.
+    """
+    stroeme = []
+    for x in range(1, dok.xref_length()):
+        objekt = dok.xref_object(x, compressed=True).encode("utf-8", "replace")
+        if dok.xref_is_stream(x):
+            stroeme.append(x)
+            if _enthaelt_brotli(objekt):
+                raise _pdf_abweisen()
+        elif _PDF_NUR_NAMEN.fullmatch(objekt) and _enthaelt_brotli(objekt):
+            raise _pdf_abweisen()
+    for x in stroeme:
+        if inhalt_brotli_verdacht(dok.xref_stream(x) or b""):
+            raise _pdf_abweisen()
+
+
 def pdf_zu_text(pfad: Path) -> tuple[str, list[str]]:
     try:
         import pymupdf
@@ -405,11 +504,28 @@ def pdf_zu_text(pfad: Path) -> tuple[str, list[str]]:
                 "  pip install pymupdf",
                 schluessel="pdf_ohne_pymupdf")
 
+    roh = Path(pfad).read_bytes()
+    if pdf_verdeckter_filter(roh):
+        raise _pdf_abweisen()
+
     hinweise: list[dict] = []
     seiten = []
-    with pymupdf.open(pfad) as dok:
-        for n, seite in enumerate(dok, 1):
-            seiten.append(seite.get_text())
+    sauber = pdf_entschaerfen(roh)
+    hinweise: list[dict] = []
+    seiten = []
+    try:
+        with pymupdf.open(stream=sauber, filetype="pdf") as dok:
+            pdf_pruefen(dok)
+            for n, seite in enumerate(dok, 1):
+                seiten.append(seite.get_text())
+    except Abbruch:
+        raise
+    except Exception:
+        # Hing das Dokument selbst an einem Brotli-Strom, ist nach dem
+        # Entschaerfen nichts mehr zu lesen. Das ist kein kaputtes PDF.
+        if sauber != roh:
+            raise _pdf_abweisen()
+        raise
     text = "\n\n".join(seiten)
 
     if not text.strip():

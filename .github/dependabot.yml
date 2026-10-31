@@ -41,3 +41,10 @@ updates:
       - dependency-name: "python"
         update-types: ["version-update:semver-major",
                        "version-update:semver-minor"]
+
+  # Die Actions sind auf einen Commit festgelegt. Ohne diesen Eintrag bleiben
+  # sie dort stehen, auch wenn eine neuere Fassung eine Luecke schliesst.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"

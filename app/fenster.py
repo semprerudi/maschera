@@ -18,10 +18,9 @@ Beim Schliessen des Fensters endet der Prozess und damit der Dienst.
 Sie kommen aus `~/.config/maschera/einstellungen.json` — derselben Datei,
 die die Oberflaeche unter «Einstellungen» schreibt. Vorgabe 127.0.0.1:4141.
 
-Laesst sich dort nicht binden, kommt ein kleiner Dialog: Adresse und
-Port, der Port mit Pfeilen um eins verstellbar, vorbelegt mit dem
-naechsten freien. Was gewaehlt wird, wird SOFORT gesichert und gilt beim
-naechsten Start. Kein Zufallsport: ein Dienst, der jedes Mal woanders
+Laesst sich dort nicht binden, weicht das Fenster auf den naechsten freien
+Port aus. Was gewaehlt wird, wird SOFORT gesichert und gilt beim naechsten
+Start. Kein Zufallsport: ein Dienst, der jedes Mal woanders
 horcht, ist genau die Undurchschaubarkeit, gegen die dieses Fenster
 gebaut wurde.
 

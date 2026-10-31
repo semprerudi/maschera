@@ -28,6 +28,7 @@ import platform
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 # Die gemeinsamen Teile kommen aus dem Windows-Bau — nicht abgeschrieben,
@@ -127,9 +128,23 @@ def main() -> int:
     dmg = ziel / f"MASCHERA-{zahl}-{arch}.dmg"
     dmg.unlink(missing_ok=True)
     # `hdiutil` ist Teil von macOS — kein zusaetzliches Werkzeug noetig.
-    subprocess.run(["hdiutil", "create", "-volname", "MASCHERA",
-                    "-srcfolder", str(app), "-ov", "-format", "UDZO",
-                    str(dmg)], check=True)
+    #
+    # ⚠️ Bis zu drei Versuche. Beim Release 2.2.3 (28.10.2026) brach es auf
+    # dem GitHub-Rechner mit «create failed - Resource busy» ab, nachdem der
+    # Bau selbst durchgelaufen war: ein Systemdienst hielt das Abbild kurz
+    # fest. Ein bekanntes Verhalten der macOS-Rechner von GitHub, kein
+    # Fehler im Bau; ein zweiter Versuch nach einer Pause geht durch.
+    for versuch in range(1, 4):
+        lauf = subprocess.run(["hdiutil", "create", "-volname", "MASCHERA",
+                               "-srcfolder", str(app), "-ov", "-format", "UDZO",
+                               str(dmg)])
+        if lauf.returncode == 0:
+            break
+        if versuch == 3:
+            raise SystemExit(f"hdiutil scheiterte dreimal (zuletzt {lauf.returncode})")
+        print(f"   hdiutil scheiterte ({lauf.returncode}), neuer Versuch in 20 s")
+        dmg.unlink(missing_ok=True)
+        time.sleep(20)
     print(f"FERTIG: {dmg}  ({dmg.stat().st_size / 1e9:.2f} GB)")
     return 0
 

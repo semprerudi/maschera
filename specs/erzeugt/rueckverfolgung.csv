@@ -1,0 +1,95 @@
+Kennung;Titel;Status;Testfaelle
+FA-001;Text einfügen und Dateien lesen;;T-API-8 T-DOKUMENTE-DOCX-1 T-MAIL-1 T-MAIL-6 T-MAIL-8
+FA-002;Ablegen liest nur;;T-OBERFLAECHE-29 T-OBERFLAECHE-30
+FA-003;Scan ohne Textebene;;T-API-7 T-SCAN-PDF-1 T-SCAN-PDF-3 T-SCAN-PDF-5
+FA-004;Mail;;T-MAIL-2 T-MAIL-3 T-MAIL-4 T-MAIL-5
+FA-005;Word;;T-DOKUMENTE-DOCX-10 T-DOKUMENTE-DOCX-11B T-DOKUMENTE-DOCX-3 T-DOKUMENTE-DOCX-5
+FA-006;Sicher hochladen;;T-API-26 T-APP-5
+FA-007;Keine PDF mit Brotli;;T-SCAN-PDF-6 T-SCAN-PDF-7 T-SCAN-PDF-8
+FA-010;Drei Stufen;;T-INFERENCE-2 T-INFERENCE-3 T-INFERENCE-4 T-INFERENCE-6
+FA-011;45 Tags in vier Sprachen;;T-LABELVERTRAG-EINGEFROREN-1 T-LABELVERTRAG-EINGEFROREN-2 T-PATTERNS-1 T-PATTERNS-11
+FA-012;Prüfsummen entscheiden;;T-CH-CHECKSUMS-1 T-CH-CHECKSUMS-2 T-CH-CHECKSUMS-3 T-CH-CHECKSUMS-4 T-INFERENCE-2
+FA-013;Schwelle je Fehlerbudget;;T-EVALUATE-7 T-INFERENCE-1
+FA-014;Dokument-Propagation;;T-MASKING-2 T-MASKING-3
+FA-015;Lange Dokumente;;T-LANGES-DOKUMENT-1 T-LANGES-DOKUMENT-3
+FA-016;Decoys bleiben stehen;;T-BEFUNDE-1 T-BEFUNDE-2 T-MASKING-5 T-PATTERNS-2
+FA-017;Eigene Regeln;;T-API-9 T-USER-RULES-1 T-USER-RULES-2 T-USER-RULES-3 T-USER-RULES-5
+FA-018;Klartext-Tags;;T-API-11 T-API-6 T-VORLIEBEN-2 T-VORLIEBEN-3 T-VORLIEBEN-5
+FA-020;Platzhalter und Wörterbuch;;T-API-3 T-APP-12 T-MASKING-1 T-MASKING-1B
+FA-021;Ohne Wörterbuch;;T-API-5
+FA-022;Korrektur von Hand;;T-OBERFLAECHE-14 T-OBERFLAECHE-15 T-OBERFLAECHE-16 T-OBERFLAECHE-18 T-OBERFLAECHE-63 T-OBERFLAECHE-85
+FA-023;Herkunft sichtbar;;T-OBERFLAECHE-17 T-VERTRAUEN-1 T-VERTRAUEN-4 T-VERTRAUEN-8
+FA-024;Fortschritt;;T-API-15 T-OBERFLAECHE-36
+FA-025;Vokabular sichern;;T-OBERFLAECHE-20 T-OBERFLAECHE-21
+FA-030;Nichts wird gesendet;;T-API-10 T-APP-4 T-OBERFLAECHE-7 T-OBERFLAECHE-81
+FA-031;Vorlagen;;T-API-12 T-OBERFLAECHE-23
+FA-032;Dienste;;T-API-27 T-OBERFLAECHE-24 T-OBERFLAECHE-27 T-OBERFLAECHE-82
+FA-033;Warnung an der Grenze;;T-APP-16 T-OBERFLAECHE-50
+FA-040;Antwort zurückwandeln;;T-API-4 T-OBERFLAECHE-70
+FA-041;Nicht zugeordnete Platzhalter;;T-MASKING-6 T-OBERFLAECHE-10
+FA-042;Umgeschriebene Platzhalter;;T-OBERFLAECHE-68
+FA-050;Sechs Kacheln entlang des Wegs;;T-OBERFLAECHE-1 T-OBERFLAECHE-8 T-OBERFLAECHE-86 T-OBERFLAECHE-88
+FA-051;Vier Bediensprachen;;T-API-18 T-API-19 T-MODELL-9C T-OBERFLAECHE-22 T-OBERFLAECHE-47 T-OBERFLAECHE-60
+FA-052;Willkommensschirm;;T-OBERFLAECHE-90 T-OBERFLAECHE-92
+FA-053;Beispiel;;T-OBERFLAECHE-3
+FA-054;Neu;;T-APP-17 T-OBERFLAECHE-41
+FA-055;Suchen und Vergrössern;;T-OBERFLAECHE-89
+FA-056;Einstellungen;;T-API-13 T-API-20 T-OBERFLAECHE-12 T-OBERFLAECHE-25 T-OBERFLAECHE-87
+FA-057;Eigene Dialoge;;T-OBERFLAECHE-79
+FA-058;Hilfe und Impressum im Paket;;T-OBERFLAECHE-62
+FA-060;Eigenes Fenster;;T-FENSTER-19 T-FENSTER-20 T-FENSTER-21
+FA-061;Portwahl;;T-FENSTER-1 T-FENSTER-2 T-FENSTER-3 T-FENSTER-4 T-FENSTER-5
+FA-062;Tray und Seitenleiste;;T-FENSTER-17 T-FENSTER-24 T-OBERFLAECHE-77
+FA-063;Modell holen;;T-MODELL-1 T-MODELL-12 T-MODELL-2 T-MODELL-3 T-MODELL-5 T-MODELL-6 T-MODELL-7
+FA-064;Nach Updates suchen;;T-API-23 T-API-28 T-API-29 T-OBERFLAECHE-84
+FA-065;Serverbetrieb;;T-API-25 T-APP-8
+FA-066;Kommandozeile;;T-INFERENCE-4 T-VERTRAUEN-8
+FA-070;Trainingsdaten;;T-ALIGNMENT-7 T-INJECTOR-1 T-INJECTOR-2 T-INJECTOR-3 T-INJECTOR-4 T-INJECTOR-5
+FA-071;Rauschen und Haltezone;;T-RAUSCHEN-1 T-RAUSCHEN-4 T-RAUSCHEN-5 T-RAUSCHEN-7
+FA-072;Auswertung;;T-EVALUATE-2 T-EVALUATE-3B T-EVALUATE-4 T-EVALUATE-6 T-VORLIEBEN-6
+FA-073;Streuung;;T-STREUUNG-1 T-STREUUNG-3
+FA-074;Eigene Golddokumente;;T-GOLD-ERSETZEN-4 T-GOLD-MARKUP-2 T-GOLDPFAD-3 T-GOLDPFAD-4
+NFA-001;Modell laden;gemessen;
+NFA-002;Kurzer Text;gemessen;
+NFA-003;Dokument;gemessen;
+NFA-004;Langes Dokument;gemessen;
+NFA-005;Keine Grafikkarte;verbindlich;T-FENSTER-8
+NFA-006;Keine Sperre bei langen Läufen;verbindlich;T-API-15
+NFA-010;Arbeitsspeicher;gemessen;
+NFA-011;Paket mit Modell;gemessen;
+NFA-012;Paket ohne Modell;gemessen;
+NFA-013;Modell;verbindlich;T-MODELL-8
+NFA-020;Vorrang für Lecks;verbindlich;T-EVALUATE-2 T-EVALUATE-4
+NFA-021;Fehlerbudgets;verbindlich;T-EVALUATE-7 T-INFERENCE-1
+NFA-022;Leckrate synthetisch;gemessen;
+NFA-023;Leckrate an Dokumenten;offen;
+NFA-024;Prüfsummen ohne Fehlalarm;verbindlich;T-CH-CHECKSUMS-3 T-PATTERNS-3
+NFA-030;Lokal;verbindlich;T-API-10 T-APP-4 T-APP-6 T-APP-7
+NFA-031;Nichts wird aufbewahrt;verbindlich;T-APP-11 T-MODELL-9 T-VORLIEBEN-1
+NFA-032;Keine Telemetrie;verbindlich;T-FENSTER-31
+NFA-033;Kein Nachladen;verbindlich;T-APP-6 T-SCHRIFTEN-4
+NFA-040;Kopfzeilen;verbindlich;T-APP-21
+NFA-041;Wirtsprüfung;verbindlich;T-API-25
+NFA-042;Modell nur als safetensors;verbindlich;T-FENSTER-25 T-MODELL-12
+NFA-043;Eine Paketquelle;verbindlich;T-FENSTER-32
+NFA-044;Kein Text wird Code;verbindlich;T-APP-21 T-OBERFLAECHE-39 T-OBERFLAECHE-62
+NFA-045;Aktuelle Abhängigkeiten;verbindlich;T-FENSTER-29
+NFA-046;Kein bekannt verwundbarer Decoder;verbindlich;T-SCAN-PDF-6 T-SCAN-PDF-8
+NFA-050;Tastatur;verbindlich;T-OBERFLAECHE-94
+NFA-051;Barrierefreiheit;verbindlich;
+NFA-052;Skalierbare Grössen;verbindlich;T-OBERFLAECHE-28
+NFA-053;Breiten;verbindlich;T-OBERFLAECHE-40 T-OBERFLAECHE-51 T-OBERFLAECHE-91
+NFA-054;Hell und dunkel;verbindlich;T-APP-23 T-OBERFLAECHE-72 T-OBERFLAECHE-73
+NFA-055;Einheitliche Formen;verbindlich;T-APP-22
+NFA-060;Plattformen;verbindlich;T-FENSTER-12 T-FENSTER-22 T-FENSTER-26
+NFA-061;Zeichensatz;verbindlich;T-SCHRIFTEN-5 T-SCHRIFTEN-6
+NFA-062;Browser;offen;
+NFA-070;Prüfbar ohne Modell;verbindlich;
+NFA-071;Eine Quelle;verbindlich;T-API-21 T-FENSTER-6 T-FENSTER-7 T-GOLDPFAD-6
+NFA-072;Länderspezifisches ist Daten;verbindlich;T-LABELVERTRAG-EINGEFROREN-3 T-USER-RULES-3
+NFA-073;Katalog bleibt aktuell;verbindlich;T-SPECS-1 T-SPECS-12 T-SPECS-2 T-SPECS-3 T-SPECS-4 T-SPECS-5 T-SPECS-6 T-SPECS-7 T-SPECS-8
+NFA-075;Katalog bei jedem Release;verbindlich;T-SPECS-10 T-SPECS-11 T-SPECS-9
+NFA-074;Testfassung vor Release;verbindlich;
+NFA-080;Support;verbindlich;
+NFA-082;Vertrag und Antwort;verbindlich;T-API-24 T-API-30
+NFA-081;Offline;verbindlich;T-APP-6

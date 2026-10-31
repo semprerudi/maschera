@@ -1,0 +1,921 @@
+<!-- Erzeugt von tools/specs_bauen.py aus dem Code. Nicht von Hand aendern. -->
+
+# Hilfe und Willkommen
+
+Quelle: `app/static/seiten.js`. Der Aufbau ist Daten, gebaut wird daraus ohne `innerHTML`.
+
+## hilfe
+
+### de
+
+```json
+[
+ [
+  "p",
+  "MASCHERA ersetzt Personendaten in einem Text durch Platzhalter, damit du ihn einem KI-Werkzeug geben kannst, ohne die Daten preiszugeben. Aus «Andrea Brülhart» wird «[FULLNAME_1]». Die Antwort setzt MASCHERA anschliessend wieder zurück."
+ ],
+ [
+  "h",
+  "Warum nichts hinausgeht"
+ ],
+ [
+  "p",
+  "Die Erkennung läuft vollständig auf diesem Gerät. Im Betrieb wird nichts nachgeladen und nichts gesendet, auch keine Schriften, keine Symbole und keine Statistik. Ohne Netzverbindung funktioniert alles ausser dem Öffnen des KI-Dienstes."
+ ],
+ [
+  "p",
+  "Eine Ausnahme wählst du selbst: «Nach Updates suchen» im Menü fragt GitHub einmal nach der neuesten Fassungsnummer. Mitgeschickt wird nichts, und ohne diesen Klick fragt MASCHERA nie."
+ ],
+ [
+  "p",
+  "Je nach Paket liegt das Modell schon darin, oder es wird einmal beim ersten Start geholt: aus einer benannten Quelle, mit Prüfsumme, und erst nachdem du zugestimmt hast. Du kannst auch ablehnen und es später tun. Danach ist es hier und bleibt hier."
+ ],
+ [
+  "p",
+  [
+   "Es gibt in MASCHERA keinen Endpunkt, der Text verschickt, und es wird auch keinen geben. Der Weg nach draussen führt immer über deine Zwischenablage: du kopierst, du fügst ein. Damit bleibt sichtbar, was hinausgeht. Bereich ",
+   [
+    "b",
+    "03 Prompt"
+   ],
+   " zeigt genau den Text, der zum Dienst gelangt, und zählt seine Zeichen."
+  ]
+ ],
+ [
+  "p",
+  "Geschrieben wird nur, was du ausdrücklich speicherst: deine Regeln, Vorlagen, Vorlieben und Einstellungen. Kein Dokumentinhalt, kein Wörterbuch, kein Protokoll."
+ ],
+ [
+  "h",
+  "Der Weg durch das Fenster"
+ ],
+ [
+  "tab",
+  [
+   [
+    "01 Originaltext",
+    [
+     "Text einfügen, tippen oder eine Datei hineinziehen (txt, md, csv, json, eml, msg, mbox, pdf, docx). Dann ",
+     [
+      "b",
+      "Maskieren"
+     ],
+     ". Höchstens {mb} MB je Datei; die Dauer hängt an der Textlänge und nicht an der Dateigrösse. Rund 100 Seiten (300 000 Zeichen) brauchen etwa eine Minute."
+    ]
+   ],
+   [
+    "02 Maskiert",
+    [
+     "Das Ergebnis. Jeder Platzhalter ist farbig; ein Rechtsklick darauf ändert oder entfernt ihn. Ein Rechtsklick auf gewöhnlichen Text maskiert ihn nachträglich. ",
+     [
+      "b",
+      "Bearbeiten"
+     ],
+     " öffnet den Text zum Korrigieren von Hand. Die Platzhalter dabei stehen lassen."
+    ]
+   ],
+   [
+    "03 Prompt",
+    [
+     "Deine Frage an das KI-Werkzeug. Darunter steht, was wirklich hinausgeht. Die orange gestrichelte Zone bedeutet: ab hier verlässt es das Gerät. ",
+     [
+      "b",
+      "Alles kopieren und … öffnen"
+     ],
+     " legt beides in die Zwischenablage und öffnet den gewählten Dienst."
+    ]
+   ]
+  ]
+ ],
+ [
+  "rot",
+  "Ab hier arbeitest du selbst online. Nimm den Prompt zum KI-Dienst, arbeite dort, bis das Ergebnis stimmt, und komm mit der Antwort hierher zurück."
+ ],
+ [
+  "tab",
+  [
+   [
+    "04 Antwort",
+    "Die Antwort des Dienstes hier einfügen."
+   ],
+   [
+    "05 Finaler Text",
+    [
+     [
+      "b",
+      "Vokabular einpflegen"
+     ],
+     " setzt deine echten Daten wieder ein, über das Wörterbuch."
+    ]
+   ]
+  ]
+ ],
+ [
+  "h",
+  "Das Wörterbuch"
+ ],
+ [
+  "p",
+  [
+   "Es hält fest, welcher Platzhalter für welchen Wert steht, und liegt nur im Browserfenster. Wer es verliert, kann den Text nie mehr zurückwandeln. Deshalb der Knopf ",
+   [
+    "b",
+    "Herunterladen"
+   ],
+   ". Die Datei enthält die echten Werte im Klartext: sie gehört an einen Ort, an den auch das Original gehört."
+  ]
+ ],
+ [
+  "h",
+  "Übermaskierung ist kein Fehler"
+ ],
+ [
+  "p",
+  "MASCHERA maskiert im Zweifel zu viel. Ein Ortsname, der wie ein Nachname aussieht, wird ersetzt. Das ist Absicht: ein zu viel ersetztes Wort kostet dich einen Handgriff, ein übersehenes kostet die Daten einer Person."
+ ],
+ [
+  "p",
+  "Umgekehrt ist ein leerer Befund keine Entwarnung. Ein eingescanntes PDF ohne Textebene wird abgewiesen statt «sauber» gemeldet. Dort ist nichts zu erkennen, nicht nichts zu finden."
+ ],
+ [
+  "h",
+  "Eigene Regeln"
+ ],
+ [
+  "p",
+  [
+   "Dossiernummern, Fallnummern, interne Projektnamen: was nur bei dir vorkommt, kennt kein Modell. Unter ",
+   [
+    "b",
+    "Einstellungen → Eigene Regeln"
+   ],
+   " trägst du es als YAML ein. Die Schlüssel sind englisch, damit dieselbe Datei in jeder Bediensprache funktioniert; die Werte bleiben in der Sprache deiner Dokumente."
+  ]
+ ],
+ [
+  "h",
+  "Pseudonymisierung, nicht Anonymisierung"
+ ],
+ [
+  "p",
+  [
+   "Über das Wörterbuch ist jede Maskierung umkehrbar, und genau das macht das Werkzeug brauchbar. Deshalb heisst der Knopf ",
+   [
+    "b",
+    "Maskieren"
+   ],
+   ". Ein maskierter Text ist kein anonymer Text: solange das Wörterbuch existiert, ist der Bezug zur Person herstellbar."
+  ]
+ ],
+ [
+  "h",
+  "⚠ Entwicklungsfassung, bitte nachsehen"
+ ],
+ [
+  "p",
+  [
+   "MASCHERA ist noch nicht fertig, und das Modell ist es nie: es kann Personendaten ",
+   [
+    "b",
+    "übersehen"
+   ],
+   ". Sieh dir den maskierten Text an, ",
+   [
+    "b",
+    "bevor"
+   ],
+   " du ihn hinausgibst. Das ist der einzige Handgriff, den dir kein Werkzeug abnimmt."
+  ]
+ ],
+ [
+  "p",
+  [
+   "Das Werkzeug ist offene Software. Wer einen Fehler findet oder etwas beitragen möchte: der Quelltext steht im Menü unter ",
+   [
+    "b",
+    "Quellcode auf GitHub"
+   ],
+   "."
+  ]
+ ]
+]
+```
+
+### fr
+
+```json
+[
+ [
+  "p",
+  "MASCHERA remplace les données personnelles d’un texte par des marqueurs, pour que tu puisses le confier à un outil IA sans livrer ces données. « Andrea Brülhart » devient « [FULLNAME_1] ». MASCHERA rétablit ensuite la réponse."
+ ],
+ [
+  "h",
+  "Pourquoi rien ne sort"
+ ],
+ [
+  "p",
+  "La détection se fait entièrement sur cet appareil. En fonctionnement, rien n’est téléchargé et rien n’est envoyé, ni polices, ni icônes, ni statistiques. Sans connexion réseau, tout fonctionne, sauf l’ouverture du service IA."
+ ],
+ [
+  "p",
+  "Une exception, c’est toi qui la choisis : « Rechercher des mises à jour » dans le menu demande une fois à GitHub le numéro de la version la plus récente. Rien n’est envoyé, et sans ce clic MASCHERA ne demande jamais."
+ ],
+ [
+  "p",
+  "Selon le paquet, le modèle y est déjà, ou il est récupéré une seule fois au premier démarrage : d’une source nommée, avec une somme de contrôle, et seulement après ton accord. Tu peux aussi refuser et le faire plus tard. Ensuite il reste ici."
+ ],
+ [
+  "p",
+  [
+   "MASCHERA n’a aucun point d’accès qui expédie du texte, et il n’y en aura pas. La sortie passe toujours par ton presse-papiers : tu copies, tu colles. Ce qui sort reste ainsi visible. La zone ",
+   [
+    "b",
+    "03 Prompt"
+   ],
+   " montre exactement le texte qui parvient au service et en compte les caractères."
+  ]
+ ],
+ [
+  "p",
+  "N’est écrit que ce que tu enregistres expressément : tes règles, tes modèles, tes préférences et tes réglages. Aucun contenu de document, aucun vocabulaire, aucun journal."
+ ],
+ [
+  "h",
+  "Le parcours dans la fenêtre"
+ ],
+ [
+  "tab",
+  [
+   [
+    "01 Texte original",
+    [
+     "Coller du texte, l’écrire ou y glisser un fichier (txt, md, csv, json, eml, msg, mbox, pdf, docx). Puis ",
+     [
+      "b",
+      "Masquer"
+     ],
+     ". Au plus {mb} Mo par fichier ; la durée dépend de la longueur du texte et non de la taille du fichier. Environ 100 pages (300 000 caractères) prennent à peu près une minute."
+    ]
+   ],
+   [
+    "02 Masqué",
+    [
+     "Le résultat. Chaque marqueur est coloré ; un clic droit dessus le modifie ou le retire. Un clic droit sur du texte ordinaire le masque après coup. ",
+     [
+      "b",
+      "Modifier"
+     ],
+     " ouvre le texte à la correction manuelle, en laissant les marqueurs en place."
+    ]
+   ],
+   [
+    "03 Prompt",
+    [
+     "Ta question à l’outil IA. En dessous s’affiche ce qui sort réellement. La zone orange en pointillés signifie : à partir d’ici, cela quitte l’appareil. ",
+     [
+      "b",
+      "Tout copier et ouvrir …"
+     ],
+     " met le tout dans le presse-papiers et ouvre le service choisi."
+    ]
+   ]
+  ]
+ ],
+ [
+  "rot",
+  "À partir d’ici, tu travailles toi-même en ligne. Emporte le prompt vers le service d’IA, travaille là-bas jusqu’à ce que le résultat te convienne, puis reviens ici avec la réponse."
+ ],
+ [
+  "tab",
+  [
+   [
+    "04 Réponse",
+    "Coller ici la réponse du service."
+   ],
+   [
+    "05 Texte final",
+    [
+     [
+      "b",
+      "Appliquer le vocabulaire"
+     ],
+     " remet tes données réelles en place, via le vocabulaire."
+    ]
+   ]
+  ]
+ ],
+ [
+  "h",
+  "Le vocabulaire"
+ ],
+ [
+  "p",
+  [
+   "Il retient quel marqueur correspond à quelle valeur et ne vit que dans la fenêtre du navigateur. Qui le perd ne pourra plus jamais rétablir le texte. D’où le bouton ",
+   [
+    "b",
+    "Télécharger"
+   ],
+   ". Le fichier contient les valeurs réelles en clair : sa place est là où se trouve aussi l’original."
+  ]
+ ],
+ [
+  "h",
+  "Trop masquer n’est pas une erreur"
+ ],
+ [
+  "p",
+  "Dans le doute, MASCHERA masque trop. Un nom de lieu qui ressemble à un nom de famille sera remplacé. C’est voulu : un mot remplacé en trop te coûte un geste, un mot oublié coûte les données d’une personne."
+ ],
+ [
+  "p",
+  "À l’inverse, un résultat vide n’est pas un feu vert. Un PDF scanné sans couche de texte est refusé au lieu d’être déclaré « propre ». Là, il n’y a rien à reconnaître, et non rien à trouver."
+ ],
+ [
+  "h",
+  "Règles personnelles"
+ ],
+ [
+  "p",
+  [
+   "Numéros de dossier, numéros d’affaire, noms de projets internes : ce qui n’existe que chez toi, aucun modèle ne le connaît. Sous ",
+   [
+    "b",
+    "Réglages → Règles personnelles"
+   ],
+   " tu les saisis en YAML. Les clés sont en anglais, pour que le même fichier fonctionne dans toutes les langues d’interface ; les valeurs restent dans la langue de tes documents."
+  ]
+ ],
+ [
+  "h",
+  "Pseudonymisation, pas anonymisation"
+ ],
+ [
+  "p",
+  [
+   "Via le vocabulaire, chaque masquage est réversible, et c’est précisément ce qui rend l’outil utilisable. D’où le bouton ",
+   [
+    "b",
+    "Masquer"
+   ],
+   ". Un texte masqué n’est pas un texte anonyme : tant que le vocabulaire existe, le lien avec la personne peut être rétabli."
+  ]
+ ],
+ [
+  "h",
+  "⚠ Version de développement, vérifiez"
+ ],
+ [
+  "p",
+  [
+   "MASCHERA n’est pas terminé, et le modèle ne le sera jamais : il peut ",
+   [
+    "b",
+    "passer à côté"
+   ],
+   " de données personnelles. Relisez le texte masqué ",
+   [
+    "b",
+    "avant"
+   ],
+   " de le transmettre. C’est le seul geste qu’aucun outil ne fera à ta place."
+  ]
+ ],
+ [
+  "p",
+  [
+   "L’outil est un logiciel libre. Qui trouve une erreur ou veut contribuer : le code source est au menu sous ",
+   [
+    "b",
+    "Code source sur GitHub"
+   ],
+   "."
+  ]
+ ]
+]
+```
+
+### it
+
+```json
+[
+ [
+  "p",
+  "MASCHERA sostituisce i dati personali di un testo con segnaposto, così puoi darlo a uno strumento IA senza rivelarli. Da «Andrea Brülhart» diventa «[FULLNAME_1]». La risposta viene poi ripristinata da MASCHERA."
+ ],
+ [
+  "h",
+  "Perché non esce nulla"
+ ],
+ [
+  "p",
+  "Il riconoscimento avviene interamente su questo dispositivo. Durante l’uso non viene scaricato né inviato nulla, nemmeno caratteri, icone o statistiche. Senza connessione di rete funziona tutto, tranne l’apertura del servizio IA."
+ ],
+ [
+  "p",
+  "Un’eccezione la scegli tu: «Cerca aggiornamenti» nel menu chiede una volta a GitHub il numero della versione più recente. Non viene inviato nulla, e senza questo clic MASCHERA non chiede mai."
+ ],
+ [
+  "p",
+  "A seconda del pacchetto il modello è già incluso, oppure viene scaricato una sola volta al primo avvio: da una fonte indicata, con somma di controllo, e solo dopo il tuo consenso. Puoi anche rifiutare e farlo più tardi. Dopodiché resta qui."
+ ],
+ [
+  "p",
+  [
+   "In MASCHERA non esiste alcun endpoint che spedisca testo, e non ci sarà. La via verso l’esterno passa sempre dagli appunti: tu copi, tu incolli. Così resta visibile ciò che esce. L’area ",
+   [
+    "b",
+    "03 Prompt"
+   ],
+   " mostra esattamente il testo che raggiunge il servizio e ne conta i caratteri."
+  ]
+ ],
+ [
+  "p",
+  "Viene scritto solo ciò che salvi espressamente: le tue regole, i modelli, le preferenze e le impostazioni. Nessun contenuto di documento, nessun vocabolario, nessun registro."
+ ],
+ [
+  "h",
+  "Il percorso nella finestra"
+ ],
+ [
+  "tab",
+  [
+   [
+    "01 Testo originale",
+    [
+     "Incollare il testo, scriverlo o trascinarvi un file (txt, md, csv, json, eml, msg, mbox, pdf, docx). Poi ",
+     [
+      "b",
+      "Maschera"
+     ],
+     ". Al massimo {mb} MB per file; la durata dipende dalla lunghezza del testo e non dalla dimensione del file. Circa 100 pagine (300 000 caratteri) richiedono circa un minuto."
+    ]
+   ],
+   [
+    "02 Mascherato",
+    [
+     "Il risultato. Ogni segnaposto è colorato; un clic destro lo cambia o lo rimuove. Un clic destro su testo normale lo maschera a posteriori. ",
+     [
+      "b",
+      "Modifica"
+     ],
+     " apre il testo alla correzione a mano, lasciando i segnaposto al loro posto."
+    ]
+   ],
+   [
+    "03 Prompt",
+    [
+     "La tua domanda allo strumento IA. Sotto si vede ciò che esce davvero. La zona arancione tratteggiata significa: da qui in poi lascia il dispositivo. ",
+     [
+      "b",
+      "Copia tutto e apri …"
+     ],
+     " mette tutto negli appunti e apre il servizio scelto."
+    ]
+   ]
+  ]
+ ],
+ [
+  "rot",
+  "Da qui in poi lavori tu stesso online. Porta il prompt al servizio di IA, lavora lì finché il risultato non ti soddisfa, poi torna qui con la risposta."
+ ],
+ [
+  "tab",
+  [
+   [
+    "04 Risposta",
+    "Incollare qui la risposta del servizio."
+   ],
+   [
+    "05 Testo finale",
+    [
+     [
+      "b",
+      "Applica il vocabolario"
+     ],
+     " reinserisce i tuoi dati reali, tramite il vocabolario."
+    ]
+   ]
+  ]
+ ],
+ [
+  "h",
+  "Il vocabolario"
+ ],
+ [
+  "p",
+  [
+   "Tiene nota di quale segnaposto sta per quale valore e vive solo nella finestra del browser. Chi lo perde non potrà mai più ripristinare il testo. Per questo il pulsante ",
+   [
+    "b",
+    "Scarica"
+   ],
+   ". Il file contiene i valori reali in chiaro: va tenuto dove sta anche l’originale."
+  ]
+ ],
+ [
+  "h",
+  "Mascherare troppo non è un errore"
+ ],
+ [
+  "p",
+  "Nel dubbio MASCHERA maschera troppo. Un nome di località che sembra un cognome viene sostituito. È voluto: una parola sostituita di troppo ti costa un gesto, una parola sfuggita costa i dati di una persona."
+ ],
+ [
+  "p",
+  "Al contrario, un esito vuoto non è un via libera. Un PDF scansionato senza livello di testo viene respinto invece di essere dichiarato «pulito». Lì non c’è nulla da riconoscere, non nulla da trovare."
+ ],
+ [
+  "h",
+  "Regole proprie"
+ ],
+ [
+  "p",
+  [
+   "Numeri di dossier, numeri di pratica, nomi di progetti interni: ciò che esiste solo da te, nessun modello lo conosce. In ",
+   [
+    "b",
+    "Impostazioni → Regole proprie"
+   ],
+   " li inserisci come YAML. Le chiavi sono in inglese, così lo stesso file funziona in tutte le lingue dell’interfaccia; i valori restano nella lingua dei tuoi documenti."
+  ]
+ ],
+ [
+  "h",
+  "Pseudonimizzazione, non anonimizzazione"
+ ],
+ [
+  "p",
+  [
+   "Tramite il vocabolario ogni mascheratura è reversibile, ed è proprio questo a rendere utile lo strumento. Per questo il pulsante si chiama ",
+   [
+    "b",
+    "Maschera"
+   ],
+   ". Un testo mascherato non è un testo anonimo: finché il vocabolario esiste, il legame con la persona è ricostruibile."
+  ]
+ ],
+ [
+  "h",
+  "⚠ Versione in sviluppo, controlla"
+ ],
+ [
+  "p",
+  [
+   "MASCHERA non è finito, e il modello non lo sarà mai: può ",
+   [
+    "b",
+    "non riconoscere"
+   ],
+   " dati personali. Rileggi il testo mascherato ",
+   [
+    "b",
+    "prima"
+   ],
+   " di consegnarlo. È l’unico gesto che nessuno strumento può fare al posto tuo."
+  ]
+ ],
+ [
+  "p",
+  [
+   "Lo strumento è software libero. Chi trova un errore o vuole contribuire: il codice sorgente è nel menu sotto ",
+   [
+    "b",
+    "Codice sorgente su GitHub"
+   ],
+   "."
+  ]
+ ]
+]
+```
+
+### en
+
+```json
+[
+ [
+  "p",
+  "MASCHERA replaces personal data in a text with placeholders so you can hand it to an AI tool without giving the data away. «Andrea Brülhart» becomes «[FULLNAME_1]». MASCHERA then restores the answer."
+ ],
+ [
+  "h",
+  "Why nothing goes out"
+ ],
+ [
+  "p",
+  "Detection runs entirely on this device. In operation nothing is fetched and nothing is sent: no fonts, no icons, no statistics. Without a network connection everything works except opening the AI service."
+ ],
+ [
+  "p",
+  "One exception is yours to choose: “Check for updates” in the menu asks GitHub once for the newest version number. Nothing is sent along, and without that click MASCHERA never asks."
+ ],
+ [
+  "p",
+  "Depending on the package the model is already inside, or it is fetched once on first start: from a named source, with a checksum, and only after you agree. You can also decline and do it another time. After that it stays here."
+ ],
+ [
+  "p",
+  [
+   "MASCHERA has no endpoint that sends text, and there will not be one. The way out always goes through your clipboard: you copy, you paste. What leaves stays visible that way. Area ",
+   [
+    "b",
+    "03 Prompt"
+   ],
+   " shows exactly the text that reaches the service, and counts its characters."
+  ]
+ ],
+ [
+  "p",
+  "Only what you explicitly save is written: your rules, templates, preferences and settings. No document content, no vocabulary, no log."
+ ],
+ [
+  "h",
+  "The way through the window"
+ ],
+ [
+  "tab",
+  [
+   [
+    "01 Original text",
+    [
+     "Paste text, type it, or drag a file in (txt, md, csv, json, eml, msg, mbox, pdf, docx). Then ",
+     [
+      "b",
+      "Mask"
+     ],
+     ". At most {mb} MB per file; how long it takes depends on the text length, not the file size. About 100 pages (300,000 characters) take roughly a minute."
+    ]
+   ],
+   [
+    "02 Masked",
+    [
+     "The result. Every placeholder is coloured; a right-click changes or removes it. A right-click on ordinary text masks it after the fact. ",
+     [
+      "b",
+      "Edit"
+     ],
+     " opens the text for correction by hand. Leave the placeholders in place."
+    ]
+   ],
+   [
+    "03 Prompt",
+    [
+     "Your question to the AI tool. Below it stands what actually goes out. The dashed orange zone means: from here on it leaves the device. ",
+     [
+      "b",
+      "Copy all and open …"
+     ],
+     " puts both on the clipboard and opens the chosen service."
+    ]
+   ]
+  ]
+ ],
+ [
+  "rot",
+  "From here you work online yourself. Take the prompt to the AI service, work there until the result is right, then come back here with the answer."
+ ],
+ [
+  "tab",
+  [
+   [
+    "04 Answer",
+    "Paste the service’s answer here."
+   ],
+   [
+    "05 Final text",
+    [
+     [
+      "b",
+      "Apply vocabulary"
+     ],
+     " puts your real data back in, through the vocabulary."
+    ]
+   ]
+  ]
+ ],
+ [
+  "h",
+  "The vocabulary"
+ ],
+ [
+  "p",
+  [
+   "It records which placeholder stands for which value, and lives only in the browser window. Whoever loses it can never restore the text. Hence the ",
+   [
+    "b",
+    "Download"
+   ],
+   " button. The file holds the real values in the clear: it belongs where the original belongs."
+  ]
+ ],
+ [
+  "h",
+  "Over-masking is not a fault"
+ ],
+ [
+  "p",
+  "When in doubt MASCHERA masks too much. A place name that looks like a surname gets replaced. That is deliberate: one word replaced too many costs you a moment, one word missed costs a person’s data."
+ ],
+ [
+  "p",
+  "Conversely, an empty finding is not an all-clear. A scanned PDF without a text layer is refused rather than reported «clean». There is nothing to recognise there, not nothing to find."
+ ],
+ [
+  "h",
+  "Own rules"
+ ],
+ [
+  "p",
+  [
+   "File numbers, case numbers, internal project names: what occurs only at your place, no model knows. Under ",
+   [
+    "b",
+    "Settings → Own rules"
+   ],
+   " you enter them as YAML. The keys are English so the same file works in every interface language; the values stay in the language of your documents."
+  ]
+ ],
+ [
+  "h",
+  "Pseudonymisation, not anonymisation"
+ ],
+ [
+  "p",
+  [
+   "Through the vocabulary every masking is reversible, which is exactly what makes the tool usable. Hence the button is called ",
+   [
+    "b",
+    "Mask"
+   ],
+   ". A masked text is not an anonymous text: as long as the vocabulary exists, the link to the person can be restored."
+  ]
+ ],
+ [
+  "h",
+  "⚠ Development version, please check"
+ ],
+ [
+  "p",
+  [
+   "MASCHERA is not finished, and the model never will be: it can ",
+   [
+    "b",
+    "miss"
+   ],
+   " personal data. Read the masked text ",
+   [
+    "b",
+    "before"
+   ],
+   " you pass it on. That is the one step no tool can take for you."
+  ]
+ ],
+ [
+  "p",
+  [
+   "The tool is open software. If you find a fault or want to contribute: the source code is in the menu under ",
+   [
+    "b",
+    "Source code on GitHub"
+   ],
+   "."
+  ]
+ ]
+]
+```
+
+## willkommen
+
+### de
+
+```json
+[
+ [
+  "Maskieren, KI fragen, zurückholen",
+  "MASCHERA ersetzt Namen, Adressen und Nummern durch Platzhalter, bevor dein Text zu einer KI geht. Die Antwort fügst du wieder ein, und MASCHERA setzt die echten Werte zurück. Die KI sieht deine Daten nie."
+ ],
+ [
+  "100% lokal, funktioniert auch ohne Internet",
+  "Erkennung und Modell laufen auf deinem Gerät, ohne Grafikkarte. Auf dem Server arbeitet MASCHERA nur im Arbeitsspeicher und speichert weder Dokumente noch Wörterbücher noch Protokolle. MASCHERA sendet selbst nichts, der Weg hinaus führt immer über deine Zwischenablage.",
+  "Speichert nichts, sendet nichts",
+  "Auf diesem Server arbeitet MASCHERA nur im Arbeitsspeicher, ohne Grafikkarte, und speichert weder Dokumente noch Wörterbücher noch Protokolle. MASCHERA sendet selbst nichts, der Weg hinaus führt immer über deine Zwischenablage."
+ ],
+ [
+  "Gebaut für schnelles Arbeiten",
+  "Zieh das Fenster schmal und stell es als Seitenleiste neben dein Mailprogramm oder dein Dokument. Unter Windows und Linux wartet MASCHERA neben der Uhr, mit geladenem Modell. Dateien und E-Mails ziehst du einfach hinein."
+ ],
+ [
+  "Du bestimmst, was maskiert wird",
+  "Ein Rechtsklick maskiert ein Wort zusätzlich oder gibt es frei. Im Vokabular prüfst und ergänzt du jeden Platzhalter. Was nie maskiert werden soll, stellst du einmal ein. Jede Liste lässt sich durchsuchen, und jede Kachel lässt sich vergrössern."
+ ],
+ [
+  "Dein Ablauf, deine Werkzeuge",
+  "Prompts, die du oft brauchst, speicherst du als Vorlage. Deine Chatbots trägst du selbst ein: «Alles kopieren und öffnen» kopiert den Text und öffnet gleich den Dienst, den du gewählt hast."
+ ],
+ [
+  "Bereit?",
+  "Probier es mit dem Beispiel aus, oder lies mehr auf www.maschera.ch."
+ ]
+]
+```
+
+### fr
+
+```json
+[
+ [
+  "Masquer, demander à l’IA, récupérer",
+  "MASCHERA remplace les noms, adresses et numéros par des marqueurs avant que ton texte parte vers une IA. Tu recolles la réponse, et MASCHERA y remet les vraies valeurs. L’IA ne voit jamais tes données."
+ ],
+ [
+  "100% local, fonctionne aussi sans Internet",
+  "La détection et le modèle tournent sur ton appareil, sans carte graphique. Sur le serveur, MASCHERA travaille uniquement en mémoire vive et n’enregistre ni documents, ni dictionnaires, ni journaux. MASCHERA n’envoie rien lui-même, la sortie passe toujours par ton presse-papiers.",
+  "Ne stocke rien, n’envoie rien",
+  "Sur ce serveur, MASCHERA travaille uniquement en mémoire vive, sans carte graphique, et n’enregistre ni documents, ni dictionnaires, ni journaux. MASCHERA n’envoie rien lui-même, la sortie passe toujours par ton presse-papiers."
+ ],
+ [
+  "Fait pour travailler vite",
+  "Rends la fenêtre étroite et place-la en barre latérale à côté de ta messagerie ou de ton document. Sous Windows et Linux, MASCHERA attend à côté de l’horloge, modèle chargé. Glisse simplement fichiers et courriels dedans."
+ ],
+ [
+  "C’est toi qui décides ce qui est masqué",
+  "Un clic droit masque un mot en plus ou le libère. Dans le vocabulaire, tu vérifies et complètes chaque marqueur. Ce qui ne doit jamais être masqué, tu le règles une fois. Chaque liste se filtre, et chaque tuile s’agrandit."
+ ],
+ [
+  "Ton déroulement, tes outils",
+  "Les prompts dont tu as souvent besoin, tu les enregistres comme modèles. Tes chatbots, tu les ajoutes toi-même : « Tout copier et ouvrir » copie le texte et ouvre aussitôt le service choisi."
+ ],
+ [
+  "Prêt ?",
+  "Essaie avec l’exemple, ou lis-en plus sur www.maschera.ch."
+ ]
+]
+```
+
+### it
+
+```json
+[
+ [
+  "Mascherare, chiedere all’IA, recuperare",
+  "MASCHERA sostituisce nomi, indirizzi e numeri con segnaposto prima che il tuo testo vada a un’IA. Incolli di nuovo la risposta, e MASCHERA rimette i valori reali. L’IA non vede mai i tuoi dati."
+ ],
+ [
+  "100% locale, funziona anche senza Internet",
+  "Il riconoscimento e il modello girano sul tuo dispositivo, senza scheda grafica. Sul server MASCHERA lavora solo nella memoria di lavoro e non salva né documenti, né vocabolari, né registri. MASCHERA non invia nulla da sé, la via d’uscita passa sempre dai tuoi appunti.",
+  "Non salva nulla, non invia nulla",
+  "Su questo server MASCHERA lavora solo nella memoria di lavoro, senza scheda grafica, e non salva né documenti, né vocabolari, né registri. MASCHERA non invia nulla da sé, la via d’uscita passa sempre dai tuoi appunti."
+ ],
+ [
+  "Fatto per lavorare in fretta",
+  "Restringi la finestra e mettila come barra laterale accanto alla posta o al documento. Su Windows e Linux MASCHERA aspetta accanto all’orologio, con il modello caricato. File ed e-mail li trascini semplicemente dentro."
+ ],
+ [
+  "Decidi tu cosa viene mascherato",
+  "Un clic destro maschera una parola in più o la libera. Nel vocabolario controlli e completi ogni segnaposto. Ciò che non va mai mascherato lo imposti una volta. Ogni elenco si può cercare e ogni riquadro si può ingrandire."
+ ],
+ [
+  "Il tuo flusso, i tuoi strumenti",
+  "I prompt che usi spesso li salvi come modelli. I tuoi chatbot li aggiungi tu: «Copia tutto e apri» copia il testo e apre subito il servizio scelto."
+ ],
+ [
+  "Pronto?",
+  "Provalo con l’esempio, o leggi di più su www.maschera.ch."
+ ]
+]
+```
+
+### en
+
+```json
+[
+ [
+  "Mask, ask the AI, restore",
+  "MASCHERA replaces names, addresses and numbers with placeholders before your text goes to an AI. You paste the answer back, and MASCHERA puts the real values back in. The AI never sees your data."
+ ],
+ [
+  "100% local, works without internet too",
+  "Detection and model run on your device, without a graphics card. On the server, MASCHERA works in memory only and stores no documents, no vocabularies and no logs. MASCHERA never sends anything itself, the way out always goes through your clipboard.",
+  "Stores nothing, sends nothing",
+  "On this server, MASCHERA works in memory only, without a graphics card, and stores no documents, no vocabularies and no logs. MASCHERA never sends anything itself, the way out always goes through your clipboard."
+ ],
+ [
+  "Built for working fast",
+  "Make the window narrow and place it as a sidebar next to your mail or document. On Windows and Linux, MASCHERA waits next to the clock with the model loaded. Just drag files and e-mails in."
+ ],
+ [
+  "You decide what gets masked",
+  "A right-click masks another word or unmasks it. In the vocabulary you check and extend every placeholder. What should never be masked you set once. Every list can be searched, and every tile can be enlarged."
+ ],
+ [
+  "Your workflow, your tools",
+  "Save prompts you need often as templates. Add your own chatbots: «Copy all and open» copies the text and opens the service you chose right away."
+ ],
+ [
+  "Ready?",
+  "Try it with the example, or read more on www.maschera.ch."
+ ]
+]
+```

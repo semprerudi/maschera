@@ -35,6 +35,7 @@ SUITE = [
     ("Streuung",        "tests/test_streuung.py"),
     ("Langes Dokument", "tests/test_langes_dokument.py"),
     ("Fenster",         "tests/test_fenster.py"),
+    ("Katalog specs/",  "tests/test_specs.py"),
     ("Oberflaechenlogik", "tests/test_oberflaeche.js"),
 ]
 

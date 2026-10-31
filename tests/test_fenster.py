@@ -281,7 +281,7 @@ check(_m is not None, "keine VERSION in app/serve.py")
 FASSUNG = _m.group(1) if _m else ""
 
 fund = []
-for ort in ("app", "core", "tools", "tests", "docs"):
+for ort in ("app", "core", "tools", "tests", "docs", "specs"):
     for pfad in sorted((WURZEL / ort).rglob("*")):
         if (not pfad.is_file() or pfad == QUELLE_V
                 or "__pycache__" in str(pfad)

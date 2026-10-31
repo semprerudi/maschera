@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Die Endpunkte aus `docs/API_OBERFLAECHE.md`.
+"""Die Endpunkte aus `specs/07_api.md`.
 
     python3 tests/test_api.py
 
@@ -719,7 +719,7 @@ import re as _re  # noqa: E402
 
 _html = (WURZEL / "app" / "static" / "index.html").read_text(encoding="utf-8")
 _js = (WURZEL / "app" / "static" / "maschera.js").read_text(encoding="utf-8")
-_vertrag = (WURZEL / "docs" / "API_OBERFLAECHE.md").read_text(encoding="utf-8")
+_vertrag = (WURZEL / "specs" / "07_api.md").read_text(encoding="utf-8")
 
 from core.einstellungen import GROESSEN as _QUELLE  # noqa: E402
 
@@ -1466,8 +1466,35 @@ app.config.pop("NEUESTE_HOLEN", None)
 if not failures:
     print("   OK   403 mit Rest 0 und 429 → begrenzt; anderes 403/500 → nicht erreichbar")
 
+print("30. Jedes Feld einer echten Antwort steht im Vertrag")
+# Ein neues Feld ohne Eintrag ist ein Vertrag, der hinterherlaeuft. Nicht das
+# Beispiel wird verglichen, sondern das, was der Dienst wirklich antwortet.
+_v30 = (WURZEL / "specs" / "07_api.md").read_text(encoding="utf-8")
+
+
+def _abschnitt(kopf):
+    t = _v30.split(kopf, 1)
+    check(len(t) == 2, f"07_api.md: Abschnitt {kopf} fehlt")
+    return t[-1].split("\n### ", 1)[0]
+
+
+_a30 = c.post("/api/anonymisieren", json={"text": "Tel. 079 123 45 67"})
+_b30 = c.post("/api/zurueckwandeln",
+              json={"text": "x", "woerterbuch": {"[A_1]": "y"}})
+for kopf, antwort in (("### `GET /api/zustand`", c.get("/api/zustand")),
+                      ("### `POST /api/anonymisieren`", _a30),
+                      ("### `POST /api/zurueckwandeln`", _b30),
+                      ("### `GET /api/tags`", c.get("/api/tags"))):
+    _text = _abschnitt(kopf)
+    daten = antwort.get_json()
+    check(isinstance(daten, dict), f"{kopf}: keine Objektantwort")
+    for feld in daten or ():
+        check(feld in _text, f"{kopf}: Feld `{feld}` steht nicht im Vertrag")
+if not failures:
+    print("   OK   vier Antworten, jedes Feld beschrieben")
+
 print()
 if failures:
     print(f"{len(failures)} Pruefung(en) fehlgeschlagen.")
     raise SystemExit(1)
-print("OK — Endpunkte entsprechen API_OBERFLAECHE.md.")
+print("OK: Endpunkte entsprechen specs/07_api.md.")

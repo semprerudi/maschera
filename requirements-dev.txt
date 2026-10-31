@@ -29,5 +29,6 @@ pyyaml>=6.0               # steht auch in der Laufzeit, hier fuer Werkzeuge
 # bleibt er aus und sagt es; ohne `brotli` scheitert er an JEDER Datei,
 # weil alle `.woff2` sind.
 fonttools>=4.60.2
-brotli>=1.2.0               # WOFF2 entpacken
+brotli>=1.2.1               # WOFF2 entpacken
 
+markdown-it-py        # Leseansicht des Katalogs, tools/specs_bauen.py --html

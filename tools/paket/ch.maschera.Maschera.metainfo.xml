@@ -116,6 +116,13 @@
     <!-- Die erste Angabe muss zur Fassung in app/serve.py passen
          (test_fenster 12). Testbauten tragen `X.Y.Z-test.N` mit
          type="development"; Software-Stores zeigen das nicht als Release. -->
+    <release version="2.3.0" date="2026-10-31">
+      <description>
+        <p>Security update: PDF files using Brotli compression are refused
+        before they reach a decoder with a known flaw (CVE-2026-111497).
+        The full requirements catalog is now part of the repository.</p>
+      </description>
+    </release>
     <release version="2.2.3" date="2026-10-28">
       <description>
         <p>Keyboard navigation and a safer way to get packages. Tab follows

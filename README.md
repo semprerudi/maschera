@@ -230,7 +230,7 @@ A ready-made image, about 4.2 GB, the model included:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:2.2.3
+    ghcr.io/semprerudi/maschera:2.3.0
 ```
 
 Then open `http://127.0.0.1:4141` in the browser. The server keeps
@@ -276,7 +276,7 @@ signs the image when a version is tagged. Verify those with the tag in the
 identity:
 
 ```fish
-cosign verify ghcr.io/semprerudi/maschera:2.2.3 \
+cosign verify ghcr.io/semprerudi/maschera:2.3.0 \
     --certificate-identity https://github.com/semprerudi/maschera/.github/workflows/release.yml@refs/tags/v2.1.1 \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```
@@ -309,10 +309,10 @@ builds. `WINDOWS.md` (German) describes the Windows build as it was run;
 python3 tools/run_tests.py
 ```
 
-30 checks, no dependencies except PyYAML and Flask. No model, no GPU, no
-downloads needed: **29 pass straight away in a fresh clone.**
+31 checks, no dependencies except PyYAML and Flask. No model, no GPU, no
+downloads needed: **30 pass straight away in a fresh clone.**
 
-The 30th needs the model and says so; two more skip one point each as
+The 31st needs the model and says so; two more skip one point each as
 long as the nomenclature has not been built
 (`python3 packs/ch/nomenclatures/build.py`). Both show up in the output:
 **a skipped check has checked nothing**, and the runner does not count it
@@ -369,7 +369,8 @@ tools/             tools
 
 
 train.py           training (needs torch + GPU)
-tests/             29 test files
+tests/             30 test files
+specs/             full requirements catalog (German)
 ```
 
 ## The one rule

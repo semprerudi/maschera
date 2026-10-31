@@ -6,7 +6,7 @@
 
 | Version | Unterstützt |
 |---|---|
-| 2.2.x | ja |
+| 2.3.x | ja |
 | älter | nein |
 
 ### Eine Sicherheitslücke melden
@@ -16,7 +16,7 @@ Meldung von GitHub: im Repository den Reiter **Security**, dann
 **Report a vulnerability**. Die Meldung sieht nur, wer das Projekt betreut.
 
 Eine erste Antwort ist innerhalb von **7 Tagen** zu erwarten. Wird die Lücke
-bestätigt, folgt ein Fix in einer neuen 2.2.x-Fassung; die Meldung wird
+bestätigt, folgt ein Fix in einer neuen 2.3.x-Fassung; die Meldung wird
 danach gemeinsam mit dem Fix offengelegt.
 
 ### Bitte keine echten Personendaten
@@ -31,7 +31,7 @@ erfundene Probe, die den Fehler zeigt, genügt.
 
 | Version | Supported |
 |---|---|
-| 2.2.x | yes |
+| 2.3.x | yes |
 | older | no |
 
 ### Reporting a vulnerability
@@ -41,7 +41,7 @@ instead: open the **Security** tab of the repository, then **Report a
 vulnerability**. Only the maintainers can see the report.
 
 Expect a first answer within **7 days**. If the vulnerability is confirmed,
-a fix follows in a new 2.2.x release, and the report is disclosed together
+a fix follows in a new 2.3.x release, and the report is disclosed together
 with the fix.
 
 ### Please send no real personal data

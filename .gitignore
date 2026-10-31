@@ -65,6 +65,8 @@ release/
 # traefe `dist/` auch `packs/*/nomenclatures/dist/`, und git stiege fuer
 # dessen `.gitkeep` gar nicht erst hinein.
 /dist/
+# Die Leseansicht des Katalogs ist erzeugt (tools/specs_bauen.py).
+/specs/html/
 *.safetensors
 
 __pycache__/

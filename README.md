@@ -1,6 +1,38 @@
-# MAS**CH**ERA
+<div align="center">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/bilder/logo-dunkel.png">
+  <img src="docs/bilder/logo-hell.png" alt="MASCHERA" height="80">
+</picture>
+
+### Free PII masking for Swiss documents, on your own device.
 
 **English** · [Deutsch](README.de.md)
+
+<p>
+<img src="https://img.shields.io/badge/tags-45-1f5f3d" alt="45 tags">
+<img src="https://img.shields.io/badge/languages-DE%20FR%20IT%20EN-1f5f3d" alt="German, French, Italian, English">
+<img src="https://img.shields.io/badge/runs%20on-CPU-1f5f3d" alt="Runs on the CPU">
+<img src="https://img.shields.io/badge/offline-no%20account-1f5f3d" alt="Offline, no account">
+<img src="https://img.shields.io/github/v/release/semprerudi/maschera?label=release&amp;color=555" alt="Latest release">
+<a href="LIZENZ.md"><img src="https://img.shields.io/badge/licence-MIT%20%2F%20AGPL--3.0-555" alt="Licence"></a>
+</p>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/bilder/vorschau-en-dunkel.png">
+  <img src="docs/bilder/vorschau-en-hell.png" alt="MASCHERA in three columns and in one column, with an invented example masked">
+</picture>
+
+**[www.maschera.ch](https://www.maschera.ch/en/)**
+
+<p>
+<a href="https://www.maschera.ch/en/#herunterladen"><img src="https://img.shields.io/badge/Download-Windows-1f5f3d?style=for-the-badge" alt="Download for Windows"></a>
+<a href="https://www.maschera.ch/en/#herunterladen"><img src="https://img.shields.io/badge/Download-macOS-1f5f3d?style=for-the-badge" alt="Download for macOS"></a>
+<a href="https://www.maschera.ch/en/#herunterladen"><img src="https://img.shields.io/badge/Download-Linux-1f5f3d?style=for-the-badge" alt="Download for Linux"></a>
+<a href="https://www.maschera.ch/en/#herunterladen"><img src="https://img.shields.io/badge/Download-Docker-1f5f3d?style=for-the-badge" alt="Download for Docker"></a>
+</p>
+
+</div>
 
 **Free, open-source PII masking for Swiss documents: on your own
 device, on the CPU, with no GPU and no network while it runs.** Four
@@ -37,8 +69,6 @@ equally offline.**
 *maschera* is Italian for **mask** and carries the Swiss country code
 **CH** in the middle.
 
-- Website: [www.maschera.ch](https://www.maschera.ch)
-- Source: [github.com/semprerudi/maschera](https://github.com/semprerudi/maschera)
 - Model: [semprerudi/maschera-ch-v63b](https://huggingface.co/semprerudi/maschera-ch-v63b)
 - Report a bug: [Issues](https://github.com/semprerudi/maschera/issues)
 
@@ -330,10 +360,10 @@ looks like.
 The code, its comments and the documentation are in German; the
 interface speaks all four languages.
 
-`SPEC.md` describes what the tool is and what it is not.
-`docs/API_OBERFLAECHE.md` is the authoritative contract of the
-endpoints. `docs/ARCHITEKTUR.md` explains the decisions and the known
-weaknesses.
+[`specs/`](specs/README.md) is the full requirements catalog: goals,
+requirements, architecture, flows, the contract of the endpoints, training,
+interface, security and every decision with its reason, plus a test catalog
+generated from the code.
 
 ## Layout
 

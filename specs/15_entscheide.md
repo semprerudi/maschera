@@ -282,3 +282,11 @@ Der Halt vor dem Release vergleicht einen Fingerabdruck der Oberfläche statt Co
 2.3.0 ging hinaus, und erst die Wochenroutine fand die Umgehung der Brotli-Wache. Deshalb
 läuft derselbe Check vor jedem Release auf dem Stand, der hinausgeht. Der Nachweis gilt für
 genau einen Commit, jede weitere Änderung verlangt ihn neu.
+
+### EN-036 Der Kopf der GitHub-Seite
+
+Zuerst zählt, was MASCHERA ist und wie es aussieht: Logo, ein Satz, Vorschau, Webseite,
+Download. Die Vorschau ist ein einziges Bild, weil zwei Bilder auf dem Handy nicht gleich
+hoch blieben. Die Knöpfe führen zum Abschnitt auf der Webseite, dort stehen die Hinweise zum
+Modell und zu den fehlenden Signaturen. Aussagen wie «GDPR by design» stehen nicht in den
+Badges: Das sind Rechtsaussagen ohne Beleg, und MASCHERA ersetzt die eigene Prüfung nicht.

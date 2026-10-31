@@ -209,6 +209,13 @@ Rückfragen laufen im eigenen Dialog. Prüfung: T-OBERFLAECHE-79.
 
 Prüfung: T-OBERFLAECHE-62.
 
+### FA-059 Auftritt auf GitHub
+
+Beide READMEs beginnen mit Logo, einem Satz, Badges, einer Vorschau der App dreispaltig und
+einspaltig auf gleicher Höhe, dem Link zur Webseite und Download-Knöpfen. Die Bilder liegen
+in `docs/bilder/`. `tools/schirmbilder.py --app` erneuert sie. `ohne Prüfung` im öffentlichen
+Stand, die interne Veröffentlichungswache hält die Bilder und die Knöpfe fest.
+
 ## Fenster und Betrieb
 
 ### FA-060 Eigenes Fenster

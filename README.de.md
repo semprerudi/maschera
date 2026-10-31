@@ -1,6 +1,38 @@
-# MAS**CH**ERA
+<div align="center">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/bilder/logo-dunkel.png">
+  <img src="docs/bilder/logo-hell.png" alt="MASCHERA" height="80">
+</picture>
+
+### Kostenlose Maskierung von Personendaten in Schweizer Dokumenten, auf deinem eigenen Gerät.
 
 [English](README.md) · **Deutsch**
+
+<p>
+<img src="https://img.shields.io/badge/Tags-45-1f5f3d" alt="45 Tags">
+<img src="https://img.shields.io/badge/Sprachen-DE%20FR%20IT%20EN-1f5f3d" alt="Deutsch, Französisch, Italienisch, Englisch">
+<img src="https://img.shields.io/badge/l%C3%A4uft%20auf-CPU-1f5f3d" alt="Läuft auf der CPU">
+<img src="https://img.shields.io/badge/offline-ohne%20Konto-1f5f3d" alt="Offline, ohne Konto">
+<img src="https://img.shields.io/github/v/release/semprerudi/maschera?label=Fassung&amp;color=555" alt="Aktuelle Fassung">
+<a href="LIZENZ.md"><img src="https://img.shields.io/badge/Lizenz-MIT%20%2F%20AGPL--3.0-555" alt="Lizenz"></a>
+</p>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/bilder/vorschau-de-dunkel.png">
+  <img src="docs/bilder/vorschau-de-hell.png" alt="MASCHERA dreispaltig und einspaltig, mit einem erfundenen Beispiel maskiert">
+</picture>
+
+**[www.maschera.ch](https://www.maschera.ch/)**
+
+<p>
+<a href="https://www.maschera.ch/#herunterladen"><img src="https://img.shields.io/badge/Download-Windows-1f5f3d?style=for-the-badge" alt="Herunterladen für Windows"></a>
+<a href="https://www.maschera.ch/#herunterladen"><img src="https://img.shields.io/badge/Download-macOS-1f5f3d?style=for-the-badge" alt="Herunterladen für macOS"></a>
+<a href="https://www.maschera.ch/#herunterladen"><img src="https://img.shields.io/badge/Download-Linux-1f5f3d?style=for-the-badge" alt="Herunterladen für Linux"></a>
+<a href="https://www.maschera.ch/#herunterladen"><img src="https://img.shields.io/badge/Download-Docker-1f5f3d?style=for-the-badge" alt="Herunterladen für Docker"></a>
+</p>
+
+</div>
 
 **Freie Open-Source-Software, die Personendaten (PII) in Schweizer
 Dokumenten maskiert: auf dem eigenen Gerät, auf der CPU, ohne GPU und
@@ -40,8 +72,6 @@ andermal. **Danach ist beides gleich offline.**
 *maschera* ist italienisch für **Maske** und trägt die Landeskennung
 **CH** in der Mitte.
 
-- Website: [www.maschera.ch](https://www.maschera.ch)
-- Quellcode: [github.com/semprerudi/maschera](https://github.com/semprerudi/maschera)
 - Modell: [semprerudi/maschera-ch-v63b](https://huggingface.co/semprerudi/maschera-ch-v63b)
 - Fehler melden: [Issues](https://github.com/semprerudi/maschera/issues)
 
@@ -333,10 +363,10 @@ Erzeugt Trainingsbeispiele aus den Vorlagen und zeigt, wie das Ergebnis aussieht
 
 ## Vollständige Beschreibung
 
-`SPEC.md` beschreibt, was das Werkzeug ist und was es nicht ist.
-`docs/API_OBERFLAECHE.md` ist der massgebliche Vertrag der Endpunkte.
-`docs/ARCHITEKTUR.md` führt die getroffenen Entscheide und die bekannten
-Schwächen.
+[`specs/`](specs/README.md) ist der vollständige Anforderungskatalog: Ziele,
+Anforderungen, Architektur, Abläufe, der Vertrag der Endpunkte, Training,
+Oberfläche, Sicherheit und jeder Entscheid mit Begründung, dazu ein aus dem Code
+erzeugter Testkatalog.
 
 ## Aufbau
 

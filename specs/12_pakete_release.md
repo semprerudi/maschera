@@ -35,7 +35,8 @@ Das Vorgehen als Diagramm steht in [05 Abläufe](05_ablaeufe.md).
    `Katalog unverändert: <Grund>`, sonst hält das Release an ([NFA-075](03_nichtfunktional.md)).
    Dazu `VERSION`, `CHANGELOG.md`, Metainfo, `PKGBUILD` und
    `tools/paket/RELEASE-NOTES.md` auf die neue Fassung, Willkommensbilder mit
-   `tools/schirmbilder.py --app` erneuern, falls sich die Oberfläche änderte.
+   `tools/schirmbilder.py --app` erneuern, falls sich die Oberfläche änderte. Das
+   erneuert auch die Bilder des README in `docs/bilder/`.
 2. Der ganze Check der Wochenroutine läuft vorher auf dem Stand, der hinausgeht: Bau auf der
    Testinstanz, Paketprüfung, eingebaute Bibliotheken, Abbild, Alarme, Proben gegen den
    laufenden Dienst. Ohne diesen Nachweis für den aktuellen Commit hält das Release an.

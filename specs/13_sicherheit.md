@@ -55,7 +55,7 @@ nachgeholtes Modell liegt unter `~/.local/share/maschera/modelle/`.
 | Gefälschtes Paket | SHA256SUMS, SBOM, Signatur des Docker-Abbilds mit cosign |
 | Dependency Confusion | Keine zusätzliche Paketquelle. torch kommt einzeln als Datei ohne Abhängigkeiten, alles andere nur von PyPI |
 | Präpariertes PDF greift den Decoder an (CVE-2026-111497) | Drei Stufen in `tools/dokumente.py`: Brotli-Namen vor dem Öffnen überschreiben, verdeckte Filter abweisen, Objekte und Ströme vor dem Textauszug prüfen, siehe EN-033 |
-| Telemetrie einer Bibliothek | Abgeschaltet und per Prüfung festgehalten, onnxruntime ist nicht im Paket |
+| Telemetrie einer Bibliothek | `pymupdf<2`, Dependabot schlägt 2.x nicht vor. Abgeschaltet und per Prüfung festgehalten, onnxruntime ist nicht im Paket |
 | Personendaten im öffentlichen Repository | Echte Dokumente liegen ausserhalb des Baums. Eine Wache prüft Pfade, Namen und interne Dateien vor jeder Veröffentlichung |
 
 Das Verhalten beschreibt [07 API](07_api.md). Die Kopfzeilen jeder Antwort:

@@ -20,6 +20,7 @@ import email
 import email.policy
 import html as html_mod
 import re
+import zlib
 from dataclasses import dataclass
 from email.header import decode_header, make_header
 from pathlib import Path
@@ -411,15 +412,18 @@ _PDF_ZEICHEN = rb"[^\s\x00/\[\]<>()%{}]"
 _PDF_NAME = re.compile(rb"/" + _PDF_ZEICHEN + rb"*")
 _PDF_HEX = re.compile(rb"#([0-9A-Fa-f]{2})")
 _PDF_BROTLI = (b"/Br", b"/BrotliDecode")
-_PDF_ERSATZ = b"/Xb"
-_PDF_WEISS = rb"(?:[\s\x00]+|%[^\r\n]*[\r\n])*"
-_PDF_FILTERVERWEIS = re.compile(
-    rb"/(Filter|F)(?![^\s\x00/\[\]<>()%{}])(" + _PDF_WEISS + rb"\[?(?:"
-    + _PDF_WEISS + rb"/" + _PDF_ZEICHEN + rb"*)*" + _PDF_WEISS
-    + rb")(\d+)[\s\x00]+(\d+)[\s\x00]+R(?!" + _PDF_ZEICHEN + rb")")
-_PDF_INLINE = re.compile(rb"(?<!" + _PDF_ZEICHEN + rb")BI(?=[\s\x00/%])(.*?)"
-                         rb"(?:(?<!" + _PDF_ZEICHEN + rb")EI(?!" + _PDF_ZEICHEN
-                         + rb")|\Z)", re.S)
+_PDF_ERSATZ = b"/~b"
+_PDF_LEER = rb"[\s\x00]"
+_PDF_KOMMENTAR = re.compile(rb"%[^\r\n]*")
+_PDF_FILTERSCHLUESSEL = re.compile(rb"/(Filter|F)(?!" + _PDF_ZEICHEN + rb")")
+_PDF_VERWEIS = re.compile(rb"[+]?(\d+)" + _PDF_LEER + rb"+[+]?(\d+)"
+                          + _PDF_LEER + rb"+R(?!" + _PDF_ZEICHEN + rb")")
+_PDF_STROM = re.compile(rb"\bstream\r?\n")
+_PDF_OBJSTM_KOPF = re.compile(rb"[\s\x00]*\d+[\s\x00]+\d+[\s\x00]")
+_PDF_ENTSCHLUESSELT = re.compile(rb"/Encrypt(?!" + _PDF_ZEICHEN + rb")")
+_PDF_AUSGEPACKT = 64 * 1_000_000
+_PDF_INLINE = re.compile(rb"(?<!" + _PDF_ZEICHEN + rb")BI(?=[\s\x00/%])")
+_PDF_ERSETZT = re.compile(rb"/~b~*")
 _PDF_NUR_NAMEN = re.compile(rb"\s*\[?\s*(?:/" + _PDF_ZEICHEN + rb"*\s*)+\]?\s*")
 
 
@@ -429,7 +433,7 @@ def _ist_brotli(name: bytes) -> bool:
 
 
 def _enthaelt_brotli(daten: bytes) -> bool:
-    return any(_ist_brotli(t) or t.startswith(_PDF_ERSATZ)
+    return any(_ist_brotli(t) or _PDF_ERSETZT.fullmatch(t)
                for t in _PDF_NAME.findall(daten))
 
 
@@ -437,31 +441,87 @@ def pdf_entschaerfen(roh: bytes) -> bytes:
     """Jeden Brotli-Namen ueberschreiben, gleich lang, damit Offsets stimmen."""
     def ersatz(m: re.Match) -> bytes:
         t = m.group(0)
-        return _PDF_ERSATZ.ljust(len(t), b"_") if _ist_brotli(t) else t
+        return _PDF_ERSATZ.ljust(len(t), b"~") if _ist_brotli(t) else t
     return _PDF_NAME.sub(ersatz, roh)
 
 
-def pdf_verdeckter_filter(roh: bytes) -> bool:
-    """Ein Filter, der schon beim Oeffnen aus einem Objektstrom kaeme.
+def _filterwert(daten: bytes, ab: int) -> bytes:
+    """Der Wert nach einem Filterschluessel: ein Array ganz, sonst kurz."""
+    i = ab
+    while i < len(daten) and daten[i] in b" \t\r\n\f\x00":
+        i += 1
+    if daten[i:i + 1] == b"[":
+        ende = daten.find(b"]", i)
+        return daten[i:ende if ende >= 0 else i + 4096]
+    # Nur ein Verweis an dieser Stelle zaehlt. Nach einem Namen geht das
+    # Woerterbuch weiter: `/Filter /FlateDecode /Length 7 0 R` ist gesund.
+    t = _PDF_VERWEIS.match(daten, i)
+    return t.group(0) if t else b""
 
-    Liegt ein Objektstrom hinter einem indirekten Filter, dekodiert MuPDF ihn
-    beim Oeffnen, bevor `pdf_pruefen()` laeuft. Ein indirekter `/Filter`
-    wird deshalb abgewiesen. `/F 5 0 R` ist oft eine Dateiangabe und zaehlt nur,
-    wenn das Ziel nicht lesbar in der Datei steht.
+
+def _objektstrom_inhalt(daten: bytes, ab: int,
+                        bis: int | None = None) -> bytes | None:
+    """Einen Flate-Strom ausgepackt, oder None, wenn es keiner ist."""
+    try:
+        return zlib.decompressobj().decompress(
+            memoryview(daten)[ab:bis], _PDF_AUSGEPACKT)
+    except zlib.error:
+        return None
+
+
+def pdf_verdeckter_filter(roh: bytes) -> bool:
+    """Ein Filter, den `pdf_entschaerfen()` nicht sehen kann.
+
+    Ein Objektstrom ist komprimiert: ein Filtername darin steht nicht im
+    Klartext der Datei, und liegt der Dokumentkatalog in einem Strom, der
+    darauf zeigt, dekodiert schon `open()` mit Brotli. Verweise zu verfolgen
+    liess sich nicht halten (`/Filter[null 7 0 R]`, `/Filter +7 0 R`, ein Koeder
+    `%7 0 obj`, Vorpruefung 31.10.2026). Deshalb wird jeder Objektstrom hier
+    selbst ausgepackt und gelesen, bevor MuPDF ihn sieht. Was nicht Flate ist,
+    laesst sich nicht lesen und wird abgewiesen.
+
+    Ausnahme: verschluesselte PDF. Ihre Stroeme sind hier nicht lesbar, und
+    Formulare mit Rechteschutz sind haeufig. Dort bleibt nur die Regel fuer
+    indirekte Filter (EN-033, bekannte Grenze).
     """
-    for t in _PDF_FILTERVERWEIS.finditer(roh):
-        if t.group(1) == b"Filter":
-            return True
-        ziel = rb"(?<!\d)" + t.group(3) + rb"[\s\x00]+" + t.group(4) + rb"[\s\x00]+obj"
-        if not re.search(ziel, roh):
-            return True
+    n = _PDF_HEX.sub(lambda m: bytes([int(m[1], 16)]), roh)
+    ohne = _PDF_KOMMENTAR.sub(b"", n)
+    for daten in (n, ohne):
+        for t in _PDF_FILTERSCHLUESSEL.finditer(daten):
+            for v in _PDF_VERWEIS.finditer(_filterwert(daten, t.end())):
+                if t.group(1) == b"Filter":
+                    return True
+                ziel = (rb"(?<!\d)" + v.group(1) + _PDF_LEER + rb"+" + v.group(2)
+                        + _PDF_LEER + rb"+obj\b")
+                if not re.search(ziel, ohne):
+                    return True
+    # Aus `roh`, nicht aus `n`: #xx-Aufloesen veraendert auch komprimierte Bytes,
+    # und ein gesunder Strom galte sonst als unlesbar.
+    for t in _PDF_STROM.finditer(roh):
+        anfang = _objektstrom_inhalt(roh, t.end(), t.end() + 4096)
+        if anfang is not None and _PDF_OBJSTM_KOPF.match(anfang):
+            inhalt = _objektstrom_inhalt(roh, t.end())
+            if inhalt is not None and _enthaelt_brotli(inhalt):
+                return True
+    if _PDF_ENTSCHLUESSELT.search(n) is None:
+        for t in _PDF_NAME.finditer(roh):
+            if _PDF_HEX.sub(lambda m: bytes([int(m[1], 16)]), t.group(0)) != b"/ObjStm":
+                continue
+            s = _PDF_STROM.search(roh, t.end())
+            if s is None or _objektstrom_inhalt(roh, s.end()) is None:
+                return True
     return False
 
 
 def inhalt_brotli_verdacht(inhalt: bytes) -> bool:
-    """Ein dekodierter Strom: Inline-Bilder stehen erst hier."""
-    return any(_enthaelt_brotli(t.group(1))
-               for t in _PDF_INLINE.finditer(inhalt))
+    """Ein dekodierter Strom: Inline-Bilder stehen erst hier.
+
+    Geprueft wird alles ab dem ersten `BI` bis zum Ende, nicht bis `EI`: ein
+    `(EI )` in einem String beendete die Suche sonst vor dem Filter. Der Preis
+    ist klein, ein Strom mit Inline-Bild und einer Ressource namens `/Br`.
+    """
+    t = _PDF_INLINE.search(inhalt)
+    return t is not None and _enthaelt_brotli(inhalt[t.end():])
 
 
 def _pdf_abweisen() -> Abbruch:
@@ -490,6 +550,24 @@ def pdf_pruefen(dok) -> None:
     for x in stroeme:
         if inhalt_brotli_verdacht(dok.xref_stream(x) or b""):
             raise _pdf_abweisen()
+    # Eine Seite mit mehreren Inhaltsstroemen ist fuer MuPDF EIN Strom: ein
+    # Inline-Bild, ja ein Name kann ueber die Grenze laufen. Einzeln gelesen
+    # sieht das niemand (Samstagsbericht vom 31.10.2026). Beide Verbindungen,
+    # denn ob zwischen den Stroemen ein Trenner steht, ist Sache des Lesers.
+    gelesen: dict[int, bytes] = {}
+    geprueft: set[tuple[int, ...]] = set()
+    for seite in dok:
+        strom_nr = tuple(seite.get_contents())
+        if len(strom_nr) < 2 or strom_nr in geprueft:
+            continue
+        geprueft.add(strom_nr)
+        for x in strom_nr:
+            if x not in gelesen:
+                gelesen[x] = dok.xref_stream(x) or b""
+        teile = [gelesen[x] for x in strom_nr]
+        if inhalt_brotli_verdacht(b"\n".join(teile)) \
+                or inhalt_brotli_verdacht(b"".join(teile)):
+            raise _pdf_abweisen()
 
 
 def pdf_zu_text(pfad: Path) -> tuple[str, list[str]]:
@@ -508,8 +586,6 @@ def pdf_zu_text(pfad: Path) -> tuple[str, list[str]]:
     if pdf_verdeckter_filter(roh):
         raise _pdf_abweisen()
 
-    hinweise: list[dict] = []
-    seiten = []
     sauber = pdf_entschaerfen(roh)
     hinweise: list[dict] = []
     seiten = []

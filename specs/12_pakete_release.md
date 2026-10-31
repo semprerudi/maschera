@@ -36,15 +36,20 @@ Das Vorgehen als Diagramm steht in [05 Abläufe](05_ablaeufe.md).
    Dazu `VERSION`, `CHANGELOG.md`, Metainfo, `PKGBUILD` und
    `tools/paket/RELEASE-NOTES.md` auf die neue Fassung, Willkommensbilder mit
    `tools/schirmbilder.py --app` erneuern, falls sich die Oberfläche änderte.
-2. Prüfen: Fassung ist keine Testfassung, Baum sauber, Tag frei, alle Prüfungen grün.
-3. Öffentlichen Stand als normalen Commit nach GitHub schieben, dann den Tag.
-4. Der Tag löst `.github/workflows/release.yml` aus: Tag gegen `VERSION` prüfen,
+2. Der ganze Check der Wochenroutine läuft vorher auf dem Stand, der hinausgeht: Bau auf der
+   Testinstanz, Paketprüfung, eingebaute Bibliotheken, Abbild, Alarme, Proben gegen den
+   laufenden Dienst. Ohne diesen Nachweis für den aktuellen Commit hält das Release an.
+   Eine frische Sitzung liest vor dem Release den Diff gegen die betroffenen Kapitel und
+   sucht Widersprüche. `tools/mess_nfa.py` misst die Sollwerte erneut.
+3. Prüfen: Fassung ist keine Testfassung, Baum sauber, Tag frei, alle Prüfungen grün.
+4. Öffentlichen Stand als normalen Commit nach GitHub schieben, dann den Tag.
+5. Der Tag löst `.github/workflows/release.yml` aus: Tag gegen `VERSION` prüfen,
    Pakete bauen (`pakete.yml` für macOS und Windows), Modell mit Prüfsumme holen,
    Docker-Abbild nach GHCR mit cosign signieren, SBOM für AppImage und Docker, `SHA256SUMS`,
    Release anlegen.
-5. Der Server zieht das signierte Abbild.
-6. Eine frische Sitzung liest vor dem Release den Diff gegen die betroffenen Kapitel und
-   sucht Widersprüche. `tools/mess_nfa.py` misst die Sollwerte erneut.
+6. Der Server zieht das signierte Abbild.
+   Willkommensbilder und Bildschirmfotos enthalten weder Fassung noch Laufzeit. Ersetzt
+   wird nur, was anders aussieht; hochgeladen nur, was sich an der Seite geändert hat.
 7. Bildschirmfotos der Webseite nur, wenn sich die Oberfläche änderte. Hochladen nur,
    wenn sich `site/` änderte, IndexNow nur bei geändertem Seitentext.
 

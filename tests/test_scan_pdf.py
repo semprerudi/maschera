@@ -156,9 +156,7 @@ for _probe in (b"<</Filter/BrotliDecode>>", b"<</Filter/Br>>", b"<</F/Br>>",
                b"<</T(100%)/Filter %c\n/Br>>", b"5 0 obj /Br endobj"):
     _neu = pdf_entschaerfen(_probe)
     check(len(_neu) == len(_probe), f"Laenge geaendert: {_probe!r}")
-    check(b"Br" not in _neu.replace(b"Brotli", b"Br") or b"/Xb" in _neu,
-          f"nicht ueberschrieben: {_probe!r}")
-    check(b"/Xb" in _neu, f"nicht ueberschrieben: {_probe!r}")
+    check(b"/~b" in _neu, f"nicht ueberschrieben: {_probe!r}")
 for _probe in (b"<</Filter 5 0 R>>", b"<</Filter[5 0 R]>>",
                b"<</Filter[/Fl 5 0 R]>>", b"<</Filter %c\n 5 0 R>>",
                b"<</F 5 0 R>>"):
@@ -168,6 +166,8 @@ print("   OK   jede gemessene Schreibweise")
 print("7. Gewoehnliche PDF fallen nicht durch")
 for _probe in (b"<</Font<</F1 5 0 R/F2 6 0 R>>>>", b"<</Type/Annot/F 4>>",
                b"<</Filter/FlateDecode>>", b"<</Filter[/A85/Fl]>>",
+               b"<</Filter /FlateDecode /Length 7 0 R>>",
+               b"<</F /Xy /Length 7 0 R>>",
                b"<</F 5 0 R>>\n5 0 obj\n<</F(a.pdf)>>\nendobj"):
     check(not pdf_verdeckter_filter(_probe), f"zu Unrecht: {_probe!r}")
 check(pdf_entschaerfen(b"/Brot /Bruch /Xy /Filter") == b"/Brot /Bruch /Xy /Filter",
@@ -175,13 +175,16 @@ check(pdf_entschaerfen(b"/Brot /Bruch /Xy /Filter") == b"/Brot /Bruch /Xy /Filte
 _rand = bytes(i * 37 % 251 for i in range(4096)) * 500
 check(pdf_entschaerfen(_rand) == _rand, "Binaerdaten werden veraendert")
 check(not pdf_verdeckter_filter(_rand), "Binaerdaten loesen die Wache aus")
+check(not inhalt_brotli_verdacht(b"BI /W 1 /Xb0 1 ID x EI"),
+      "ein Name, der mit /Xb beginnt, loest aus")
 check(not inhalt_brotli_verdacht(b"<a>BI</a><b>x</Br><c>ID</c>"),
       "XML in einem Anhang loest aus")
 check(not inhalt_brotli_verdacht(b"BT (a /Br) Tj ET BI /W 1 /F /Fl ID x EI"),
       "Text oder Flate loest aus")
 for _probe in (b"q BI /W 1 /F /Br ID x EI Q", b"BI/F/BrotliDecode ID x EI",
                b"BI /(ID) /F /B#72 ID x EI", b"(a)BI /ID 1 /F /Br ID x EI",
-               b"BI /F /Br ID x"):
+               b"BI /F /Br ID x", b"BI /X (EI ) /F /Br ID x EI",
+               b"BI /X 1 % EI\n /F /Br ID x EI", b"BI\n/F /~b ID x EI"):
     check(inhalt_brotli_verdacht(_probe), f"nicht erkannt: {_probe!r}")
 print("   OK   Schriften, Anmerkungen, Flate, Anhaenge, Binaerdaten")
 
@@ -253,6 +256,31 @@ def _mit_objektstrom():
     return b + b"startxref\n%d\n%%%%EOF\n" % ab
 
 
+def _katalog_hinter_verweis(schluessel, zusatz=b"", art=b"/Type/ObjStm"):
+    """Katalog in Objektstrom 5, dessen Filter auf /Br in Objektstrom 8 zeigt."""
+    kopf, wert = b"7 0 ", b"/Br"
+    teile = {2: _KOPF[1], 3: _KOPF[2], 4: _strom(b"", _TEXT),
+             5: _strom(art + b"/N 1/First 4" + schluessel, _KAPUTT),
+             8: _strom(b"/Type/ObjStm/N 1/First %d/Filter/FlateDecode"
+                       % len(kopf), zlib.compress(kopf + wert))}
+    b = b"%PDF-1.7\n" + zusatz
+    orte = {}
+    for i, o in teile.items():
+        orte[i] = len(b)
+        b += b"%d 0 obj\n" % i + o + b"\nendobj\n"
+    ab = len(b)
+    orte[9] = ab
+    zeilen = b"\0\0\0\0\0\0" + b"\2" + (5).to_bytes(4, "big") + b"\0"
+    for i in (2, 3, 4, 5):
+        zeilen += b"\1" + orte[i].to_bytes(4, "big") + b"\0"
+    zeilen += b"\0\0\0\0\0\0" + b"\2" + (8).to_bytes(4, "big") + b"\0"
+    zeilen += b"\1" + orte[8].to_bytes(4, "big") + b"\0"
+    zeilen += b"\1" + orte[9].to_bytes(4, "big") + b"\0"
+    b += b"9 0 obj\n" + _strom(b"/Type/XRef/Size 10/W[1 4 1]/Root 1 0 R",
+                               zeilen) + b"\nendobj\n"
+    return b + b"startxref\n%d\n%%%%EOF\n" % ab
+
+
 def _katalog_im_brotli():
     """Der Dokumentkatalog in einem Objektstrom: `open()` braucht ihn sofort."""
     teile = {2: _KOPF[1], 3: _KOPF[2], 4: _strom(b"", _TEXT),
@@ -272,8 +300,32 @@ def _katalog_im_brotli():
     return b + b"startxref\n%d\n%%%%EOF\n" % ab
 
 
+def _zwei_stroeme(c1, c2):
+    seite = _KOPF[2].replace(b"/Contents 4 0 R", b"/Contents[4 0 R 5 0 R]")
+    return _pdf(_KOPF[:2] + [seite,
+                             _strom(b"/Filter/FlateDecode", zlib.compress(c1)),
+                             _strom(b"/Filter/FlateDecode", zlib.compress(c2))])
+
+
+_BILD = b"q 9 0 0 9 0 0 cm BI /W 1 /H 1 /BPC 8 /CS /G"
 _FAELLE = {
     "katalog": _katalog_im_brotli(),
+    "verweis_hex": _katalog_hinter_verweis(b"/Filt#65r 7 0 R"),
+    "verweis_kurzhex": _katalog_hinter_verweis(b"/#46 7 0 R"),
+    "verweis_null": _katalog_hinter_verweis(b"/Filter[null 7 0 R]"),
+    "verweis_plus": _katalog_hinter_verweis(b"/Filter +7 0 R"),
+    "verweis_koeder": _katalog_hinter_verweis(b"/F 7 0 R", b"%7 0 obj\n"),
+    # Der Koeder steht im Klartext, nur das Lesen des Objektstroms faengt das.
+    "verweis_string": _katalog_hinter_verweis(b"/F 7 0 R", b"(7 0 obj)\n", b""),
+    "geteilt": _zwei_stroeme(_BILD, b"/F /Br ID " + _KAPUTT + b" EI Q"),
+    "geteilt_nach_bi": _zwei_stroeme(b"q BI", b"/W 1 /H 1 /BPC 8 /CS /G "
+                                     b"/F /BrotliDecode ID " + _KAPUTT + b" EI Q"),
+    "geteilt_name": _zwei_stroeme(_BILD + b" /F /B",
+                                  b"r ID " + _KAPUTT + b" EI Q"),
+    "ei_im_string": _pdf(_KOPF + [_strom(
+        b"/Filter/FlateDecode", zlib.compress(
+            b"q BI /W 1 /H 1 /BPC 8 /CS /G /X (EI ) /F /Br ID " + _KAPUTT
+            + b" EI Q"))]),
     "lang": _pdf(_KOPF + [_strom(b"/Filter/BrotliDecode", _KAPUTT)]),
     "kurz": _pdf(_KOPF + [_strom(b"/Filter/Br", _KAPUTT)]),
     "f": _pdf(_KOPF + [_strom(b"/F/Br", _KAPUTT)]),
@@ -312,6 +364,14 @@ with tempfile.TemporaryDirectory() as _o:
     _echt.new_page().insert_text((72, 72), "Gesund")
     _echt.embfile_add("a.xml", b"<a>BI</a><b>x</Br><c>ID</c>")
     _gesund.append(_echt.tobytes(garbage=3, deflate=True))
+    # Mehrere Inhaltsstroeme und eine Ressource, die mit /Xb beginnt.
+    _gesund.append(_zwei_stroeme(_TEXT, b" q 9 0 0 9 0 0 cm BI /W 1 /H 1 /BPC 8 "
+                                 b"/CS /G /Xb0 1 /Xb 1 ID x EI Q"))
+    # Ein #-Paar in komprimierten Bytes darf gesunde Objektstroeme nicht stoeren.
+    _hexdaten = _echt.tobytes(garbage=3, deflate=True, use_objstms=1)
+    _gesund.append(_hexdaten)
+    _gesund.append(_pdf(_KOPF + [_strom(b"/Xb 1/Xb0 2/Resources<</XObject"
+                                        b"<</Xb 5 0 R>>>>", _TEXT)]))
     for _i, _b in enumerate(_gesund):
         _p = Path(_o) / f"gesund{_i}.pdf"
         _p.write_bytes(_b)
@@ -320,12 +380,11 @@ with tempfile.TemporaryDirectory() as _o:
         check("GELESEN Gesund" in _l.stdout,
               f"gesundes PDF {_i}: {(_l.stdout or _l.stderr)[-80:]!r}")
 _body = _FAELLE["kurz"]
-if b"/Xb" in pdf_entschaerfen(_body):
-    r = c.post("/api/lesen", data={"datei": (io.BytesIO(_body), "b.pdf")},
-               content_type="multipart/form-data")
-    check(r.status_code == 400, f"Status {r.status_code}")
-    check((r.get_json() or {}).get("fehler_schluessel") == "pdf_brotli",
-          f"Antwort {r.get_json()}")
+r = c.post("/api/lesen", data={"datei": (io.BytesIO(_body), "b.pdf")},
+           content_type="multipart/form-data")
+check(r.status_code == 400, f"Status {r.status_code}")
+check((r.get_json() or {}).get("fehler_schluessel") == "pdf_brotli",
+      f"Antwort {r.get_json()}")
 print(f"   OK   {len(_FAELLE)} Faelle abgewiesen, {len(_gesund)} gesunde gelesen")
 
 print()

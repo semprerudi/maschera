@@ -116,6 +116,13 @@
     <!-- Die erste Angabe muss zur Fassung in app/serve.py passen
          (test_fenster 12). Testbauten tragen `X.Y.Z-test.N` mit
          type="development"; Software-Stores zeigen das nicht als Release. -->
+    <release version="2.3.1" date="2026-10-31">
+      <description>
+        <p>Security update: the check for PDF files using Brotli compression
+        (CVE-2026-111497) could be bypassed with an inline image split over
+        two content streams of a page. This is closed.</p>
+      </description>
+    </release>
     <release version="2.3.0" date="2026-10-31">
       <description>
         <p>Security update: PDF files using Brotli compression are refused

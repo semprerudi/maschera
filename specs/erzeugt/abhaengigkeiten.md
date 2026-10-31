@@ -38,7 +38,7 @@ transformers>=5.10
 -r requirements-paket.txt
 pywebview[qt]>=6.2.1,<7
 qtpy>=2.4
-PyQt6-WebEngine>=6.6
+PyQt6-WebEngine>=6.11
 ```
 
 ## `tools/paket/requirements-flatpak.txt`

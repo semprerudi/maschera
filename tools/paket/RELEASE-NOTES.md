@@ -1,25 +1,19 @@
-# MASCHERA 2.3.0
+# MASCHERA 2.3.1
 
-**Security update: please upgrade.** The full documentation is now in the
-repository too. Nothing changes in how MASCHERA masks.
+**Security update: please upgrade.** Nothing changes in how MASCHERA masks.
 
 Website: [www.maschera.ch](https://www.maschera.ch)
 
 ## Security
 
-- **PDF files with Brotli compression are refused (CVE-2026-111497).** PyMuPDF
-  contains a Brotli decoder with a flaw that a crafted PDF can reach during plain
-  text extraction, and no fixed release exists yet. MASCHERA now checks every PDF
-  before it reaches the decoder, including short forms, indirect filters and
-  inline images. If a PDF is refused, save it again with a PDF program or paste
-  the text directly. Other PDF files are not affected.
+- **The check for Brotli PDF files could be bypassed in 2.3.0 (CVE-2026-111497).** An
+  inline image split over two content streams of a page still reached the decoder.
+  The streams of a page are now also checked together. If a PDF is refused, save it
+  again with a PDF program or paste the text directly.
 
-## New
+## Fixed
 
-- **Requirements catalog in `specs/`:** goals, functional and non-functional
-  requirements, architecture, flow diagrams, detection, API, training, interface,
-  design, security, decisions and a rebuild guide, plus a test catalog and lists
-  generated from the code. In German.
+- A resource whose name starts with `/Xb` could cause a healthy PDF to be refused.
 
 Details: [CHANGELOG.md](CHANGELOG.md).
 
@@ -27,16 +21,14 @@ Details: [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
-# MASCHERA 2.3.0
+# MASCHERA 2.3.1
 
-**Sicherheitsupdate: bitte aktualisieren.** Dazu steht jetzt die gesamte
-Dokumentation im Repository. Wie MASCHERA maskiert, bleibt gleich.
+**Sicherheitsupdate: bitte aktualisieren.** Wie MASCHERA maskiert, bleibt gleich.
 
-- **PDF mit Brotli-Kompression werden abgewiesen (CVE-2026-111497).** Eine Lücke in
-  der PDF-Bibliothek liess sich schon beim Auslesen des Textes erreichen. Ein
-  abgewiesenes PDF speicherst du neu oder fügst den Text direkt ein.
-- **Anforderungskatalog `specs/`:** alle Ziele, Anforderungen, Abläufe und Entscheide
-  an einem Ort.
+- **Die Prüfung auf Brotli-PDF war in 2.3.0 umgehbar (CVE-2026-111497).** Ein über zwei
+  Inhaltsströme verteiltes Inline-Bild erreichte den Decoder trotzdem. Das ist behoben.
+  Ein abgewiesenes PDF speicherst du neu oder fügst den Text direkt ein.
+- Ein gesundes PDF konnte wegen eines Ressourcennamens abgewiesen werden. Behoben.
 
 **Fehler gefunden?** Bitte ein [Issue](https://github.com/semprerudi/maschera/issues)
 eröffnen. Nie ein echtes Dokument oder echte Namen hineinkopieren.

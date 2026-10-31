@@ -246,15 +246,39 @@ Deshalb werden jetzt drei Stufen genutzt:
 
 1. Vor dem Öffnen wird jeder Brotli-Name in der Datei durch einen gleich langen,
    unbekannten Namen ersetzt, wo immer er steht. Ohne Namen gibt es keinen Filter.
-2. Ein indirekter `/Filter` oder ein `/F` auf ein unsichtbares Ziel wird abgewiesen, denn
-   dahinter könnte ein Name in einem Objektstrom stecken, den schon `open()` braucht.
+2. Vor dem Öffnen wird jeder Objektstrom selbst ausgepackt und gelesen, denn ein Name darin
+   steht nicht im Klartext der Datei, und liegt der Katalog in einem Strom, der darauf
+   zeigt, dekodiert schon `open()`. Ein Objektstrom, der nicht Flate ist, wird abgewiesen,
+   ebenso ein indirekter `/Filter` und ein indirektes `/F`, dessen Ziel nicht in der Datei
+   steht.
 3. Nach dem Öffnen werden alle Objekte und danach alle Ströme geprüft, vor dem Textauszug.
-   So fallen auch Inline-Bilder und PDF auf, die wirklich Brotli nutzen.
+   So fallen auch Inline-Bilder und PDF auf, die wirklich Brotli nutzen. Die Ströme einer
+   Seite werden zusätzlich zusammen geprüft, denn für MuPDF sind sie ein Strom: Ein
+   Inline-Bild kann über die Grenze laufen. Das fand die wöchentliche Prüfung in 2.3.0.
+   Geprüft wird ab dem ersten `BI` bis zum Ende, damit ein `EI` in einem String die Suche
+   nicht vorzeitig beendet.
 
-Ein gültiges PDF mit indirektem Filter wird damit abgewiesen. Das ist selten, und die
+Ein gültiges PDF mit indirektem Filter wird damit abgewiesen, ebenso ein Strom mit
+Inline-Bild und einer Ressource namens `/Br`. Das ist selten, und die
 Meldung sagt, was man tun kann. Die Wache fällt weg, sobald PyMuPDF einen Decoder ab
 Brotli 1.2.1 mitbringt.
 
-**Bekannte Grenze:** Ein Objektstrom hinter einem Filter, den Stufe 1 nicht sieht und der
-nicht Flate ist, lässt sich nicht vollständig ausschliessen; Stufe 2 fängt den bekannten
-Weg dorthin ab.
+**Bekannte Grenze:** Verschlüsselte PDF. Ihre Ströme sind vor dem Öffnen nicht lesbar, und
+Formulare mit Rechteschutz sind häufig, deshalb gilt dort nur die Regel für indirekte
+Filter. Ein Objektstrom ohne `/ObjStm` in einem anderen Filter als Flate fällt ebenfalls
+nicht auf. Der Ersatzname `/~b` kommt in echten PDF nicht vor.
+
+### EN-034 Bilder werden nur ersetzt, wenn sie anders aussehen
+
+Die Fotos trugen Fassung und Laufzeit, deshalb galt jedes Bild bei jedem Release als
+geändert. Beide fehlen jetzt in der Aufnahme. Verglichen wird das Aussehen mit 2 %
+Farbtoleranz und bis zu 500 abweichenden Pixeln, denn zwei Läufe unterscheiden sich auch
+ohne Änderung um bis zu rund 300 Pixel. Eine winzige Änderung, etwa ein einzelnes Zeichen,
+kann darunter bleiben und wird dann erst mit der nächsten grösseren Änderung ersetzt.
+Der Halt vor dem Release vergleicht einen Fingerabdruck der Oberfläche statt Commit-Zeiten.
+
+### EN-035 Der ganze Check läuft vor dem Release
+
+2.3.0 ging hinaus, und erst die Wochenroutine fand die Umgehung der Brotli-Wache. Deshalb
+läuft derselbe Check vor jedem Release auf dem Stand, der hinausgeht. Der Nachweis gilt für
+genau einen Commit, jede weitere Änderung verlangt ihn neu.

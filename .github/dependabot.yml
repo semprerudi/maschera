@@ -26,12 +26,20 @@ updates:
     versioning-strategy: increase-if-necessary
     schedule:
       interval: "weekly"
+    # PyMuPDF 2 zieht onnxruntime und damit Telemetrie mit (EN-029).
+    ignore:
+      - dependency-name: "pymupdf"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "pip"
     directory: "/tools/paket"
     versioning-strategy: increase-if-necessary
     schedule:
       interval: "weekly"
+    # PyMuPDF 2 zieht onnxruntime und damit Telemetrie mit (EN-029).
+    ignore:
+      - dependency-name: "pymupdf"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "docker"
     directory: "/tools/paket"

@@ -655,7 +655,24 @@ def release_befunde(geaendert: list[str], changelog: str, security: str,
     return befunde
 
 
+def vorpruefung_stand() -> str:
+    """Fassung und Commit: was geprueft wurde, ist genau das, was hinausgeht."""
+    serve = (WURZEL / "app/serve.py").read_text(encoding="utf-8")
+    fassung = re.search(r'^VERSION = "([^"]+)"', serve, re.M).group(1)
+    commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=WURZEL, text=True,
+                            capture_output=True, check=True).stdout.strip()
+    return f"{fassung} {commit}"
+
+
 def main() -> int:
+    if "--vorpruefung" in sys.argv:
+        # Nicht in Git: `dist/` reist mit dem Projektordner, und ein Eintrag
+        # in einer verfolgten Datei waere schon der naechste Commit.
+        ziel = WURZEL / "dist" / "vorpruefung.txt"
+        ziel.parent.mkdir(exist_ok=True)
+        ziel.write_text(vorpruefung_stand() + "\n", encoding="utf-8")
+        print(f"   Vorpruefung festgehalten: {vorpruefung_stand()[:20]}")
+        return 0
     if "--release" in sys.argv:
         i = sys.argv.index("--release")
         basis, fassung = sys.argv[i + 1], sys.argv[i + 2]

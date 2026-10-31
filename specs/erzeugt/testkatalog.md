@@ -29,14 +29,14 @@ Jede Prüfung mit ihren Punkten. Die Kennung `T-<DATEI>-<PUNKT>` ist stabil, sol
 | `tests/test_patterns.py` | 9 | 11 |
 | `tests/test_rauschen.py` | 7 | 15 |
 | `tests/test_regressionen.py` | 1 | 14 |
-| `tests/test_scan_pdf.py` | 8 | 29 |
+| `tests/test_scan_pdf.py` | 8 | 30 |
 | `tests/test_schriften.py` | 6 | 15 |
 | `tests/test_specs.py` | 12 | 34 |
 | `tests/test_streuung.py` | 4 | 12 |
 | `tests/test_user_rules.py` | 7 | 17 |
 | `tests/test_vertrauen.py` | 8 | 14 |
 | `tests/test_vorlieben.py` | 6 | 16 |
-| **Summe** | **378** | **1555** |
+| **Summe** | **378** | **1556** |
 
 ## `tests/test_alignment.py`
 
@@ -2574,6 +2574,7 @@ Ein gescanntes PDF ohne Textebene, der stille Nullbefund.
 - aehnliche Namen werden ueberschrieben
 - Binaerdaten werden veraendert
 - Binaerdaten loesen die Wache aus
+- ein Name, der mit /Xb beginnt, loest aus
 - XML in einem Anhang loest aus
 - Text oder Flate loest aus
 - nicht erkannt: …

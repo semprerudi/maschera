@@ -1,5 +1,25 @@
 # Änderungen
 
+## 2.3.1 (2026-10-31)
+
+**Wichtig für die Sicherheit: bitte aktualisieren.** Wie MASCHERA maskiert, bleibt
+gleich.
+
+### Sicherheit
+- **Die Prüfung auf Brotli-PDF war in 2.3.0 umgehbar (CVE-2026-111497).** Ein über zwei
+  Inhaltsströme einer Seite verteiltes Inline-Bild erreichte den Decoder trotzdem. Jetzt
+  werden die Ströme einer Seite auch zusammen geprüft, und ein Text vor dem Filter
+  beendet die Suche nicht mehr vorzeitig. Objektströme werden vor dem Öffnen selbst
+  gelesen, denn ein Filter konnte sich darin verstecken. Gefunden von der wöchentlichen
+  Prüfung und der neuen Prüfung vor jedem Release.
+
+### Behoben
+- Eine Ressource, deren Name mit `/Xb` beginnt, konnte ein gesundes PDF abweisen.
+
+### Wartung
+- AppImage: PyQt6-WebEngine ab 6.11, damit kein altes Chromium in den Bau kommt.
+- Dependabot schlägt PyMuPDF 2 nicht mehr vor, die Fassung bringt Telemetrie mit.
+
 ## 2.3.0 (2026-10-31)
 
 **Wichtig für die Sicherheit: bitte aktualisieren.** Dazu erscheint die gesamte

@@ -35,4 +35,4 @@
 # schaltete Downloads still ab). Ab 6.2.1 gilt ALLOW_DOWNLOADS, das fenster.py setzt.
 pywebview[qt]>=6.2.1,<7
 qtpy>=2.4                 # ausdruecklich, nicht nur ueber das Extra
-PyQt6-WebEngine>=6.6      # zieht PyQt6 und PyQt6-Qt6 mit, rund 525 MB
+PyQt6-WebEngine>=6.11     # zieht PyQt6 und PyQt6-Qt6 mit, rund 525 MB

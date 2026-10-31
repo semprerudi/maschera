@@ -230,7 +230,7 @@ A ready-made image, about 4.2 GB, the model included:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:2.3.0
+    ghcr.io/semprerudi/maschera:2.3.1
 ```
 
 Then open `http://127.0.0.1:4141` in the browser. The server keeps
@@ -276,7 +276,7 @@ signs the image when a version is tagged. Verify those with the tag in the
 identity:
 
 ```fish
-cosign verify ghcr.io/semprerudi/maschera:2.3.0 \
+cosign verify ghcr.io/semprerudi/maschera:2.3.1 \
     --certificate-identity https://github.com/semprerudi/maschera/.github/workflows/release.yml@refs/tags/v2.1.1 \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```

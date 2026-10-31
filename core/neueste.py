@@ -60,7 +60,7 @@ class Unlesbar(Exception):
 
 
 def zerlegen(fassung: str) -> tuple[int, int, int] | None:
-    """`2.3.10`, `v2.3.10` oder `2.3.10-test.1` → (2, 3, 10). Sonst None."""
+    """`8.7.60`, `v8.7.60` oder `8.7.60-test.1` → (8, 7, 60). Sonst None."""
     m = _FASSUNG.fullmatch((fassung or "").strip())
     return tuple(int(x) for x in m.groups()[:3]) if m else None
 
@@ -95,7 +95,7 @@ def _holen(adresse: str) -> bytes:
 
 
 def nachsehen(holen=_holen) -> str:
-    """Die neueste veroeffentlichte Fassung, z. B. `2.3.10`.
+    """Die neueste veroeffentlichte Fassung, z. B. `8.7.60`.
 
     `holen` ist austauschbar, damit die Pruefung ohne Netz laeuft.
     """

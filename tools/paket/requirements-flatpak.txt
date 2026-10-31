@@ -25,7 +25,7 @@ gunicorn>=22.0            # der Server im Betrieb
 pyyaml>=6.0               # taxonomy.yaml, patterns.yaml, eigene Regeln
 tokenizers>=0.15
 # PyMuPDF 2.0 zieht onnxruntime mit Telemetrie nach (Befund 26.10.2026).
-pymupdf>=1.24,<2         # PDF-Text
+pymupdf>=1.24,<3         # PDF-Text
 olefile>=0.46             # Outlook .msg
 
 # NUR die CPU-Fassung. Das Rad kommt getrennt vom CPU-Index, nicht ueber

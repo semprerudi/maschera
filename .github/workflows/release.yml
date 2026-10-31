@@ -111,7 +111,7 @@ jobs:
           output-file: maschera-${{ needs.pruefen.outputs.fassung }}-appimage.spdx.json
           upload-artifact: false
           upload-release-assets: false
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
         with:
           name: appimage
           path: |
@@ -136,7 +136,7 @@ jobs:
           manifest-path: tools/paket/ch.maschera.Maschera.yml
           cache: false
           upload-artifact: false
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
         with:
           name: flatpak
           path: MASCHERA-latest-x86_64.flatpak
@@ -203,7 +203,7 @@ jobs:
           output-file: maschera-${{ env.FASSUNG }}-docker.spdx.json
           upload-artifact: false
           upload-release-assets: false
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
         with:
           name: docker
           path: |

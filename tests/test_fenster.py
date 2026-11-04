@@ -1828,7 +1828,9 @@ for _f32 in _bau32:
     # Fortgesetzte Zeilen zusammenziehen, dann jeden pip-Aufruf ansehen.
     _q32 = re.sub(r"\\\n\s*", " ", _q32)
     for _aufruf in re.findall(r"pip[3]? (?:install|download)[^\n&]*", _q32):
-        if "download.pytorch.org" in _aufruf:
+        # Als ganze Adresse gesucht, nicht als Teilwort: so meint die Zeile
+        # genau den CPU-Index (CodeQL py/incomplete-url-substring-sanitization).
+        if re.search(r"https://download\.pytorch\.org/whl/cpu\b", _aufruf):
             check("--no-deps" in _aufruf,
                   f"{_f32}: torch vom CPU-Index MIT Abhaengigkeiten: {_aufruf.strip()[:90]}")
 for _f32 in ("tools/paket/Dockerfile", "tools/paket/appimage_bauen.fish",

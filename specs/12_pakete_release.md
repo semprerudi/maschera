@@ -53,6 +53,9 @@ Das Vorgehen als Diagramm steht in [05 Abläufe](05_ablaeufe.md).
    wird nur, was anders aussieht; hochgeladen nur, was sich an der Seite geändert hat.
 7. Bildschirmfotos der Webseite nur, wenn sich die Oberfläche änderte. Hochladen nur,
    wenn sich `site/` änderte, IndexNow nur bei geändertem Seitentext.
+8. Zum Abschluss zeigt der Lauf, was auf GitHub offen ist: Issues, Pull Requests, Alarme und
+   gescheiterte Läufe auf `main`. Pull Requests werden nie auf GitHub gemergt, die Änderung
+   kommt in den internen Stand, sonst weicht `main` vom öffentlichen Stand ab.
 
 Der öffentliche Stand entsteht mit `tools/oeffentlich_paket.py`. Es lässt Internes weg
 und prüft das fertige Paket.

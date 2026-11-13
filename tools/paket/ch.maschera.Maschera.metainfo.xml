@@ -116,6 +116,14 @@
     <!-- Die erste Angabe muss zur Fassung in app/serve.py passen
          (test_fenster 12). Testbauten tragen `X.Y.Z-test.N` mit
          type="development"; Software-Stores zeigen das nicht als Release. -->
+    <release version="2.3.2" date="2026-11-13">
+      <description>
+        <p>Security update for Word files: a document type declaration (DTD)
+        behind a long comment or in a UTF-16 document got past the check. The
+        whole document part is now searched, and broken XML stops with a
+        message.</p>
+      </description>
+    </release>
     <release version="2.3.1" date="2026-10-31">
       <description>
         <p>Security update: the check for PDF files using Brotli compression

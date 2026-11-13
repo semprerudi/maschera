@@ -4,7 +4,7 @@
 
 Quelle: `I18N` in `app/static/maschera.js`. Hilfe und Impressum stehen in `app/static/seiten.js`.
 
-346 Schlüssel in 4 Sprachen.
+347 Schlüssel in 4 Sprachen.
 
 | Schlüssel | de | fr | it | en |
 |---|---|---|---|---|
@@ -351,6 +351,7 @@ Quelle: `I18N` in `app/static/maschera.js`. Hilfe und Impressum stehen in `app/s
 | `meldungen.docx_zu_gross` | Das Word-Dokument wäre ausgepackt {mb} MB gross; höchstens {hoechstens} MB werden gelesen. | Le document Word ferait {mb} Mo une fois décompressé ; au plus {hoechstens} Mo sont lus. | Il documento Word sarebbe di {mb} MB una volta decompresso; se ne leggono al massimo {hoechstens} MB. | The Word document would be {mb} MB unpacked; at most {hoechstens} MB are read. |
 | `meldungen.docx_kaputt` | Keine lesbare .docx-Datei. Ältere .doc sind ein anderes Format. | Pas de fichier .docx lisible. Les anciens .doc sont un autre format. | Nessun file .docx leggibile. I vecchi .doc sono un altro formato. | Not a readable .docx file. Older .doc files are a different format. |
 | `meldungen.docx_ohne_dokument` | Kein Word-Dokument. Vermutlich .odt, .pptx oder .xlsx mit falscher Endung. | Pas un document Word. Sans doute un .odt, .pptx ou .xlsx mal nommé. | Non è un documento Word. Probabilmente .odt, .pptx o .xlsx con estensione sbagliata. | Not a Word document. Probably .odt, .pptx or .xlsx with the wrong extension. |
+| `meldungen.docx_xml` | Das Word-Dokument ist beschädigt: sein Inhalt ist kein lesbares XML. In Word oder LibreOffice öffnen und neu speichern. | Le document Word est endommagé : son contenu n’est pas du XML lisible. L’ouvrir dans Word ou LibreOffice et l’enregistrer à nouveau. | Il documento Word è danneggiato: il contenuto non è XML leggibile. Aprilo in Word o LibreOffice e salvalo di nuovo. | The Word document is damaged: its content is not readable XML. Open it in Word or LibreOffice and save it again. |
 | `meldungen.docx_dtd` | Das Word-Dokument enthält eine DTD; das kommt in echten Word-Dateien nicht vor und wird nicht gelesen. | Le document Word contient une DTD ; cela n'existe pas dans un vrai fichier Word et n'est pas lu. | Il documento Word contiene una DTD; nei veri file Word non esiste e non viene letto. | The Word document declares a DTD; real Word files never do, so it is not read. |
 | `meldungen.word_alt` | Das alte Word-Format (.doc) wird nicht gelesen. In Word oder LibreOffice als .docx speichern. | L'ancien format Word (.doc) n'est pas lu. Enregistre-le en .docx dans Word ou LibreOffice. | Il vecchio formato Word (.doc) non viene letto. Salvalo come .docx in Word o LibreOffice. | The old Word format (.doc) is not read. Save it as .docx in Word or LibreOffice. |
 | `leer` | Noch nichts maskiert. | Rien de masqué pour l’instant. | Niente mascherato finora. | Nothing masked yet. |

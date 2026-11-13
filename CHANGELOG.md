@@ -1,5 +1,29 @@
 # Änderungen
 
+## 2.3.2 (2026-11-13)
+
+Wichtig für die Sicherheit bei Word-Dateien. Wie MASCHERA maskiert, bleibt gleich.
+
+### Sicherheit
+- Word: Eine Dokumenttyp-Erklärung (DTD) kam an der Prüfung vorbei, hinter einem langen
+  Kommentar oder in einem UTF-16 kodierten Dokument. Jetzt wird der ganze Teil in jeder
+  Kodierung durchsucht, und kaputtes XML bricht mit einer Meldung ab statt mit einem
+  Fehler. Gegen aufgeblähte Entities schützt zusätzlich die XML-Bibliothek selbst (seit
+  Expat 2.4).
+
+- Docker: Jeder Bau holt die Sicherheitsupdates von Debian. Im Basisabbild fehlte der
+  zlib-Fix aus DSA-6613-1 (CVE-2026-76844, CVE-2026-85091). MASCHERA nutzt die
+  betroffene Funktion nicht.
+
+### Behoben
+- Der Befehl zum Prüfen der Signatur des Docker-Abbilds in den READMEs nannte den Tag
+  einer alten Fassung und schlug deshalb fehl.
+
+### Wartung
+- GitHub-Seite mit Logo, Vorschau und Download-Knöpfen.
+- Actions auf neue Fassungen, weiter auf Commits festgelegt, darunter cosign-installer 4.1.3.
+- Dependabot schliesst PyMuPDF ab 2 nach Fassung aus, die bisherige Regel griff nicht.
+
 ## 2.3.1 (2026-10-31)
 
 **Wichtig für die Sicherheit: bitte aktualisieren.** Wie MASCHERA maskiert, bleibt

@@ -11,8 +11,8 @@
 
 FROM python:3.13-slim AS bau
 
-# Nur die fuenf Zeilen aus `requirements.txt`. Die Datei sagt in ihrem
-# eigenen Kopf, dass sie fuer genau diesen Zweck kurz gehalten ist.
+# Die Laufzeitliste des Pakets, `requirements-paket.txt`, nicht
+# `requirements.txt`. Warum es zwei Listen gibt, sagt ihr eigener Kopf.
 COPY tools/paket/requirements-paket.txt /bau/requirements.txt
 #
 # torch kommt EINZELN vom CPU-Index, ohne Abhaengigkeiten, und wird als
@@ -39,9 +39,16 @@ COPY --from=bau /opt/venv /opt/venv
 # pip wird im Betrieb nie aufgerufen. Es bringt eigene Kopien von urllib3,
 # msgpack und setuptools mit, die Scanner melden (trivy, 17.10.2026:
 # 4 HIGH, alle nur in pip). Ohne pip keine Meldung und weniger Angriffsflaeche.
+#
+# `apt-get upgrade`: das offizielle Abbild hinkt Debian hinterher. Am 13.11.2026
+# fehlte darin der zlib-Fix aus DSA-6613-1 (trivy: 2 HIGH), den Debian schon
+# ausgeliefert hatte. So bringt jeder Bau die Sicherheitsupdates von Debian mit.
 RUN rm -rf /usr/local/lib/python3.13/site-packages/pip \
            /usr/local/lib/python3.13/site-packages/pip-*.dist-info \
-           /usr/local/bin/pip /usr/local/bin/pip3*
+           /usr/local/bin/pip /usr/local/bin/pip3* \
+ && apt-get update \
+ && apt-get upgrade -y --no-install-recommends \
+ && rm -rf /var/lib/apt/lists/*
 ENV PATH="/opt/venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \

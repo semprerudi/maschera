@@ -12,7 +12,7 @@ Jede Prüfung mit ihren Punkten. Die Kennung `T-<DATEI>-<PUNKT>` ist stabil, sol
 | `tests/test_befunde.py` | 7 | 8 |
 | `tests/test_ch_checksums.py` | 4 | 10 |
 | `tests/test_dist_frisch.py` | 4 | 4 |
-| `tests/test_dokumente_docx.py` | 13 | 31 |
+| `tests/test_dokumente_docx.py` | 13 | 40 |
 | `tests/test_evaluate.py` | 8 | 21 |
 | `tests/test_fenster.py` | 33 | 199 |
 | `tests/test_gold_ersetzen.py` | 7 | 17 |
@@ -36,7 +36,7 @@ Jede Prüfung mit ihren Punkten. Die Kennung `T-<DATEI>-<PUNKT>` ist stabil, sol
 | `tests/test_user_rules.py` | 7 | 17 |
 | `tests/test_vertrauen.py` | 8 | 14 |
 | `tests/test_vorlieben.py` | 6 | 16 |
-| **Summe** | **378** | **1556** |
+| **Summe** | **378** | **1565** |
 
 ## `tests/test_alignment.py`
 
@@ -750,6 +750,15 @@ DOCX einlesen, ohne neue Abhaengigkeit, ohne Word, ohne Beispieldatei.
 
 - eine DTD im Dokumentteil wird gelesen statt abgewiesen
 - abgewiesen, aber mit falschem Grund: …
+- eine DTD hinter einem langen Kommentar wird gelesen
+- eine DTD in … wird gelesen
+- …: abgewiesen, aber mit falschem Grund: …
+- kaputtes XML wird gelesen
+- falscher Grund: …
+- kaputtes XML stuerzt ab: …
+- …: wird gelesen
+- …: falscher Grund: …
+- …: stuerzt ab: …
 - die Groessengrenze wirkt nicht
 - die Wache weist auch gewoehnliche ab
 

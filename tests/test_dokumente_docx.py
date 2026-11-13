@@ -198,6 +198,61 @@ try:
 except SystemExit as e:
     check("DTD" in str(e), f"abgewiesen, aber mit falschem Grund: {e}")
 
+# Dieselbe Bombe hinter einem langen Kommentar. Bis 2.3.1 suchte die Wache
+# nur in den ersten 4096 Byte und las diese Datei (gemessen 11.11.2026).
+_versteckt = TMP / "entity_spaet.docx"
+with zipfile.ZipFile(_bombe) as z:
+    _roh = z.read("word/document.xml").decode()
+with zipfile.ZipFile(_versteckt, "w") as z:
+    z.writestr("word/document.xml", _roh.replace(
+        "?>\n", "?>\n<!--" + " " * 5000 + "-->\n", 1))
+try:
+    docx_zu_text(_versteckt)
+    check(False, "eine DTD hinter einem langen Kommentar wird gelesen")
+except SystemExit as e:
+    check("DTD" in str(e), f"abgewiesen, aber mit falschem Grund: {e}")
+
+# Dieselbe Bombe in UTF-16, mit und ohne BOM. Die Bytesuche sah `<!DOCTYPE`
+# dort nicht, Expat las die Datei trotzdem (Gegenlese vor 2.3.2).
+for _kod in ("utf-16", "utf-16-be", "utf-16-le"):
+    _u16 = TMP / f"entity_{_kod}.docx"
+    with zipfile.ZipFile(_u16, "w") as z:
+        z.writestr("word/document.xml", _roh.replace(
+            'version="1.0"', f'version="1.0" encoding="{_kod}"', 1).encode(_kod))
+    try:
+        docx_zu_text(_u16)
+        check(False, f"eine DTD in {_kod} wird gelesen")
+    except SystemExit as e:
+        check("DTD" in str(e), f"{_kod}: abgewiesen, aber mit falschem Grund: {e}")
+
+# Kaputtes XML bricht mit Meldung ab, nicht mit einem ParseError.
+_kaputt = TMP / "kaputt_xml.docx"
+with zipfile.ZipFile(_kaputt, "w") as z:
+    z.writestr("word/document.xml", f"<w:document {NS}><w:body>")
+try:
+    docx_zu_text(_kaputt)
+    check(False, "kaputtes XML wird gelesen")
+except SystemExit as e:
+    check("lesbares XML" in str(e), f"falscher Grund: {e}")
+except Exception as e:
+    check(False, f"kaputtes XML stuerzt ab: {type(e).__name__}")
+
+# Eine angekuendigte Kodierung, die der Parser nicht kann oder die es nicht
+# gibt: ValueError und LookupError statt ParseError (Gegenlese vor 2.3.2).
+for _kod in ("utf-16-be", "gibt-es-nicht"):
+    _k = TMP / f"kodierung_{_kod}.docx"
+    with zipfile.ZipFile(_k, "w") as z:
+        z.writestr("word/document.xml",
+                   f'<?xml version="1.0" encoding="{_kod}"?>'
+                   f'<w:document {NS}><w:body/></w:document>')
+    try:
+        docx_zu_text(_k)
+        check(False, f"{_kod}: wird gelesen")
+    except SystemExit as e:
+        check("lesbares XML" in str(e), f"{_kod}: falscher Grund: {e}")
+    except Exception as e:
+        check(False, f"{_kod}: stuerzt ab: {type(e).__name__}")
+
 # ⚠️ NICHT wirklich 64 MB schreiben. Geprueft wird die Entscheidung, und
 # die faellt an `file_size` aus dem ZIP-Verzeichnis — also wird die
 # Grenze fuer diesen einen Aufruf heruntergesetzt. Eine 65-MB-Probedatei

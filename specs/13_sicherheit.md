@@ -49,10 +49,12 @@ nachgeholtes Modell liegt unter `~/.local/share/maschera/modelle/`.
 | Dienst ist im Netz erreichbar | Vorgabe `127.0.0.1`. `0.0.0.0` warnt, im Netz nur mit Anmeldung davor |
 | Pfadausbruch beim Hochladen | Der Dateiname wird nie zum Pfad, auch keine Gerätenamen unter Windows |
 | Fehlermeldungen verraten Serverdaten | Antworten nennen den Text einer Ausnahme nicht, er steht nur im Protokoll |
+| Präpariertes Word-XML (DTD, Entities, ZIP-Bombe) | Eine DTD wird im ganzen Dokumentteil gesucht, auch in UTF-16, und abgewiesen. Ausgepackt wird höchstens 64 MB. Kaputtes XML bricht mit Meldung ab |
 | Ein Leser übersieht einen Scan | Scan ohne Textebene ist ein Fehler mit Begründung, keine leere Meldung |
 | Besonders schützenswerte Daten werden versehentlich Klartext | Tags mit `bspd` verlangen `auch_bspd` |
 | Gefälschtes Modell | Fester Commit, Prüfsumme je Datei, nur `safetensors` |
 | Gefälschtes Paket | SHA256SUMS, SBOM, Signatur des Docker-Abbilds mit cosign |
+| Veraltete Systembibliotheken im Docker-Abbild | Jeder Bau holt die Sicherheitsupdates von Debian (`apt-get upgrade`), pip ist entfernt. Vor dem Release prüft trivy das Abbild |
 | Dependency Confusion | Keine zusätzliche Paketquelle. torch kommt einzeln als Datei ohne Abhängigkeiten, alles andere nur von PyPI |
 | Präpariertes PDF greift den Decoder an (CVE-2026-111497) | Drei Stufen in `tools/dokumente.py`: Brotli-Namen vor dem Öffnen überschreiben, verdeckte Filter abweisen, Objekte und Ströme vor dem Textauszug prüfen, siehe EN-033 |
 | Telemetrie einer Bibliothek | `pymupdf<2`, Dependabot schlägt 2.x nicht vor. Abgeschaltet und per Prüfung festgehalten, onnxruntime ist nicht im Paket |

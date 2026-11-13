@@ -260,8 +260,10 @@ Deshalb werden jetzt drei Stufen genutzt:
 
 Ein gültiges PDF mit indirektem Filter wird damit abgewiesen, ebenso ein Strom mit
 Inline-Bild und einer Ressource namens `/Br`. Das ist selten, und die
-Meldung sagt, was man tun kann. Die Wache fällt weg, sobald PyMuPDF einen Decoder ab
-Brotli 1.2.1 mitbringt.
+Meldung sagt, was man tun kann. Die Wache fällt erst weg, wenn PyMuPDF einen Decoder ab
+Brotli 1.2.1 mitbringt **und** ein kaputter Strom nicht mehr hängt. Das neue Brotli allein
+genügt nicht: PyMuPDF 2.1 bringt Brotli 1.2.1 mit, hängt aber mit einem kaputten Strom
+weiter wie 1.28.2 (gemessen am 7.11.2026, ohne Wache, beide nach 20 s abgebrochen).
 
 **Bekannte Grenze:** Verschlüsselte PDF. Ihre Ströme sind vor dem Öffnen nicht lesbar, und
 Formulare mit Rechteschutz sind häufig, deshalb gilt dort nur die Regel für indirekte

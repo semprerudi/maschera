@@ -29,7 +29,8 @@ erfindet keinen. Prüfung: T-MAIL-2, T-MAIL-3, T-MAIL-4, T-MAIL-5.
 ### FA-005 Word
 
 Tabellen behalten Etikett und Wert auf einer Zeile. Kopf- und Fusszeilen werden
-gemeldet. `.doc` wird abgewiesen, ZIP-Bomben ebenso. Prüfung: T-DOKUMENTE-DOCX-3,
+gemeldet. `.doc` wird abgewiesen, ZIP-Bomben ebenso, und eine DTD an jeder Stelle des
+Dokumentteils, auch in UTF-16. Kaputtes XML bricht mit Meldung ab. Prüfung: T-DOKUMENTE-DOCX-3,
 T-DOKUMENTE-DOCX-5, T-DOKUMENTE-DOCX-10, T-DOKUMENTE-DOCX-11B.
 
 ### FA-006 Sicher hochladen

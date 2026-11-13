@@ -639,8 +639,14 @@ W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 # und trotzdem weit unter dem liegt, was ein praeparierter ZIP verspricht.
 DOCX_HOECHSTENS = 64 * 1_000_000
 
-# Eine Dokumenttyp-Erklaerung am Anfang des Teils. Nur `re` noetig — die
-# Erklaerung steht laut XML-Spezifikation im Prolog, also ganz vorne.
+# Eine Dokumenttyp-Erklaerung, gesucht im GANZEN Teil. Laut XML-Spezifikation
+# steht sie im Prolog, aber der Prolog darf beliebig lange Kommentare tragen:
+# bis 2.3.1 wurden nur die ersten 4096 Byte durchsucht, und 5000 Leerzeichen
+# in einem Kommentar davor reichten, damit die DTD gelesen wurde (gemessen
+# 11.11.2026). In Text kann `<!` nicht stehen, XML verlangt dort `&lt;`.
+# Gesucht wird OHNE Nullbytes: in UTF-16 oder UTF-32 steht `<!DOCTYPE` nicht
+# als diese Bytefolge da, Expat liest die Datei aber trotzdem (Gegenlese
+# vor 2.3.2). ASCII-Zeichen bleiben nach dem Entfernen der Nullen lesbar.
 _DTD = re.compile(rb"<!DOCTYPE|<!ENTITY", re.IGNORECASE)
 
 
@@ -713,13 +719,23 @@ def docx_zu_text(pfad: Path) -> tuple[str, list[str]]:
     # `defusedxml` waere der uebliche Weg; bei einem Werkzeug, dessen
     # README «keine Abhaengigkeiten ausser PyYAML und Flask» sagt,
     # sind zwei Zeilen die bessere Wahl.
-    if _DTD.search(roh[:4096]):
+    if _DTD.search(roh.replace(b"\0", b"")):
         raise Abbruch(
             f"word/document.xml erklaert eine DTD: {pfad}\n"
             "  OOXML kennt keine; ein solcher Teil wird nicht gelesen.",
             schluessel="docx_dtd")
 
-    wurzel = ET.fromstring(roh)
+    # Kaputtes XML ist ein Abbruch mit Meldung, kein Absturz. Dazu gehoert
+    # auch die eigene Grenze von Expat gegen aufgeblaehte Entities, falls
+    # doch einmal eine DTD an der Suche oben vorbeikommt. `ValueError` und
+    # `LookupError` kommen, wenn der Teil eine Kodierung ankuendigt, die der
+    # Parser nicht kann (etwa `utf-16-be` ohne BOM) oder die es nicht gibt.
+    try:
+        wurzel = ET.fromstring(roh)
+    except (ET.ParseError, ValueError, LookupError):
+        raise Abbruch(
+            f"word/document.xml ist kein lesbares XML: {pfad}",
+            schluessel="docx_xml")
     koerper = wurzel.find(W + "body")
     if koerper is None:
         return "", ["docx ohne Körper — nichts zu lesen"]

@@ -27,9 +27,12 @@ updates:
     schedule:
       interval: "weekly"
     # PyMuPDF 2 zieht onnxruntime und damit Telemetrie mit (EN-029).
+    # Ueber Fassungen, nicht ueber `semver-major`: diese Regel hat das
+    # Anheben der Obergrenze `<2` auf `<3` nicht als Hauptsprung erkannt
+    # (PR #12 und #18).
     ignore:
       - dependency-name: "pymupdf"
-        update-types: ["version-update:semver-major"]
+        versions: [">=2"]
 
   - package-ecosystem: "pip"
     directory: "/tools/paket"
@@ -37,9 +40,12 @@ updates:
     schedule:
       interval: "weekly"
     # PyMuPDF 2 zieht onnxruntime und damit Telemetrie mit (EN-029).
+    # Ueber Fassungen, nicht ueber `semver-major`: diese Regel hat das
+    # Anheben der Obergrenze `<2` auf `<3` nicht als Hauptsprung erkannt
+    # (PR #12 und #18).
     ignore:
       - dependency-name: "pymupdf"
-        update-types: ["version-update:semver-major"]
+        versions: [">=2"]
 
   - package-ecosystem: "docker"
     directory: "/tools/paket"

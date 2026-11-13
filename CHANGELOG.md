@@ -11,6 +11,7 @@ Wichtig für die Sicherheit bei Word-Dateien. Wie MASCHERA maskiert, bleibt glei
   Fehler. Gegen aufgeblähte Entities schützt zusätzlich die XML-Bibliothek selbst (seit
   Expat 2.4).
 
+- macOS-Paket auf dem Runner `macos-15` gebaut, GitHub hat `macos-14` abgeschaltet.
 - Docker: Jeder Bau holt die Sicherheitsupdates von Debian. Im Basisabbild fehlte der
   zlib-Fix aus DSA-6613-1 (CVE-2026-76844, CVE-2026-85091). MASCHERA nutzt die
   betroffene Funktion nicht.

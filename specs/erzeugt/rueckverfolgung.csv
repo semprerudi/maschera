@@ -82,6 +82,7 @@ NFA-052;Skalierbare Grössen;verbindlich;T-OBERFLAECHE-28
 NFA-053;Breiten;verbindlich;T-OBERFLAECHE-40 T-OBERFLAECHE-51 T-OBERFLAECHE-91
 NFA-054;Hell und dunkel;verbindlich;T-APP-23 T-OBERFLAECHE-72 T-OBERFLAECHE-73
 NFA-055;Einheitliche Formen;verbindlich;T-APP-22
+NFA-056;Bedienung mit dem Finger;verbindlich;T-OBERFLAECHE-93
 NFA-060;Plattformen;verbindlich;T-FENSTER-12 T-FENSTER-22 T-FENSTER-26
 NFA-061;Zeichensatz;verbindlich;T-SCHRIFTEN-5 T-SCHRIFTEN-6
 NFA-062;Browser;offen;

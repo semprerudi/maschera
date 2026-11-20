@@ -4394,6 +4394,22 @@ function gestapelt() {
     "(max-width: 81.24em), (max-height: 44em)").matches;
 }
 
+/* Ein Finger statt einer Maus (Handytest 20.11.2026). Dort oeffnet
+ * jedes `focus()` auf einem Textfeld die Bildschirmtastatur: das Fenster wird
+ * niedriger, der Browser rollt das Feld selbst ins Bild, und beides kaempfte
+ * mit dem Sprung zum naechsten Schritt und schloss das Vorlagenmenue im
+ * Augenblick, in dem es aufging. Wer tippt, soll die Tastatur selbst holen.
+ */
+function fingerBedienung() {
+  return window.matchMedia("(pointer: coarse)").matches;
+}
+
+/* Fokus ohne Rollen, und mit dem Finger gar nicht. */
+function fokusOhneSprung(feld) {
+  if (!feld || fingerBedienung()) return;
+  feld.focus({ preventScroll: true });
+}
+
 function einspaltig() {
   return window.matchMedia("(max-width: 39.99em)").matches;
 }
@@ -5075,10 +5091,32 @@ function verbinde() {
   // schmalen Ansicht rollt beim Neuzeichnen die Schrittleiste zum aktuellen
   // Schritt, und dieses Rollen schloss das Menue im selben Augenblick, in
   // dem es aufging: der Knopf tat scheinbar nichts.
+  //
+  // ⚠️ Seit dem Handytest vom 20.11.2026 folgt es dem Knopf, statt zuzugehen.
+  // Auf dem Handy rollt die Seite und aendert sich die Fensterhoehe laufend:
+  // die Adressleiste blendet sich beim Rollen aus, die Tastatur geht auf,
+  // sobald man ins Suchfeld tippt. Jedes davon schloss das Menue. Zu geht es
+  // erst, wenn der Knopf das Fenster verlaesst, oder bei neuer BREITE.
+  const vorlagenFolgen = () => {
+    if (!z.vorlagenOffen) return;
+    const k = $("knopf-vorlagen").getBoundingClientRect();
+    // Ein unsichtbarer Knopf (`display: none`) meldet ueberall 0; das Menue
+    // rutschte dann nach links oben, statt zuzugehen.
+    const weg = k.width === 0 && k.height === 0;
+    if (weg || k.top + k.height < 0 || k.top > window.innerHeight) vorlagenAuf(false);
+    else vorlagenMenuSetzen();
+  };
   document.addEventListener("scroll", (e) => {
-    if (z.vorlagenOffen && rolltUm(e.target, $("knopf-vorlagen"))) vorlagenAuf(false);
+    if (z.vorlagenOffen && rolltUm(e.target, $("knopf-vorlagen"))) vorlagenFolgen();
   }, true);
-  window.addEventListener("resize", () => { if (z.vorlagenOffen) vorlagenAuf(false); });
+  let vorlagenBreite = window.innerWidth;
+  window.addEventListener("resize", () => {
+    const breiter = window.innerWidth !== vorlagenBreite;
+    vorlagenBreite = window.innerWidth;
+    if (!z.vorlagenOffen) return;
+    if (breiter) vorlagenAuf(false);
+    else vorlagenFolgen();
+  });
   // Der Tooltip haengt an einer festen Stelle; beim Rollen gehoert er weg.
   document.addEventListener("scroll", tippWeg, true);
 
@@ -5303,7 +5341,9 @@ function verbinde() {
     setTimeout(() => { z.uebernahmeLaeuft = false; zeichne(); }, UEBERNAHME_DAUER);
     zeichne();
     handlungSprung("b03");
-    $("prompt").focus();
+    // Ohne Rollen: ein `focus()` rollte selbst und warf den Sprung zu 03
+    // wieder 415 px zurueck (gemessen 20.11.2026, 375 px breit).
+    fokusOhneSprung($("prompt"));
   });
 
   $("antwort04").addEventListener("input", (e) => {
@@ -6513,7 +6553,7 @@ function vorlagenAuf(offen) {
   zeichne();
   if (offen) {
     vorlagenMenuSetzen();
-    $("vorlagen-filter").focus();
+    fokusOhneSprung($("vorlagen-filter"));
   }
 }
 
@@ -6528,8 +6568,17 @@ function vorlagenMenuSetzen() {
   if (!menu || !knopf || menu.hidden) return;
   const k = knopf.getBoundingClientRect();
   menu.style.width = "";
-  const breite = Math.max(k.width, menu.getBoundingClientRect().width);
+  menu.style.minWidth = "";
+  menu.style.maxWidth = "";
+  // Nie breiter als das Fenster: eng gilt `width: 100%`, und bei
+  // `position: fixed` ist das die ganze Fensterbreite, rechts abgeschnitten.
+  const breite = Math.min(window.innerWidth - 16,
+                          Math.max(k.width, menu.getBoundingClientRect().width));
   menu.style.width = breite + "px";
+  // Eng setzt das CSS `min-width: 100%`, und das schlaegt `width`: beide
+  // Grenzen mit, sonst bliebe es so breit wie das Fenster.
+  menu.style.minWidth = breite + "px";
+  menu.style.maxWidth = breite + "px";
   const hoehe = menu.getBoundingClientRect().height;
   const links = Math.max(8, Math.min(k.right - breite, window.innerWidth - breite - 8));
   let oben = k.bottom + 4;
@@ -6656,6 +6705,21 @@ function kopfEinpassen() {
     const haelfte = (platz + lueke - mitte) / 2;
     return links.scrollWidth <= haelfte && rechts.scrollWidth <= haelfte;
   };
+  // ⚠️ Waehrend des Messens darf die Kopfzeile nicht ueber den Rand ragen
+  // (Handytest 20.11.2026). Ohne die Kuerzungen ist sie breiter als ein
+  // Handy; die Seite wurde dann fuer einen Augenblick breiter, der Browser
+  // zoomte heraus und setzte die Rollposition neu, 1534 auf 1120 px, bei
+  // jedem Neuzeichnen. `scrollWidth` misst den Inhalt auch so.
+  const ueberlauf = kopf.style.overflow;
+  kopf.style.overflow = "hidden";
+  try {
+    kopfStufen(kopf, passt);
+  } finally {
+    kopf.style.overflow = ueberlauf;
+  }
+}
+
+function kopfStufen(kopf, passt) {
   kopf.classList.remove("sprache-klein", "ohne-marke", "ohne-spruch",
                         "ohne-test", "ohne-lokal");
   if (passt()) return;
@@ -7044,6 +7108,7 @@ if (typeof module !== "undefined" && module.exports) {
     pruefeVokabular, uebernimmVokabular, vokabularDatei, VOK_PH_RE,
     vorlageNehmen, zeichneVorlagen, zeichneDienstmenu, zeichneDienstliste,
     vorlagenAuf,
+    kopfEinpassen,
     zeichneBurger, burgerAuf, imEigenenFenster, finalText, neuesteZeigen,
     SEITEN, seiteZeigen, seiteSchliessen,
     willkommenZeigen, willkommenSchliessen, willkommenBlaettern,

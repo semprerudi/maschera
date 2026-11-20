@@ -1,26 +1,24 @@
-# MASCHERA 2.3.2
+# MASCHERA 2.3.3
 
-**Security update for Word files.** Nothing changes in how MASCHERA masks.
+**Works properly on the phone.** Nothing changes in how MASCHERA masks.
 
 Website: [www.maschera.ch](https://www.maschera.ch)
 
-## Security
-
-- **Word: a document type declaration (DTD) could get past the check**, behind a long
-  comment or in a document encoded as UTF-16. The whole document part is now searched
-  in any encoding, and broken XML stops with a message instead of an error.
-- Docker: every build now pulls Debian's security updates. The base image was missing
-  the zlib fix from DSA-6613-1; MASCHERA does not use the affected function.
-
 ## Fixed
 
-- The command in the READMEs to verify the Docker image signature named the tag of an
-  old release and therefore failed.
+- **Phone: the page jumped back after a step.** While fitting the header, it was briefly
+  wider than the screen; the browser zoomed out and reset the scroll position, on every
+  redraw.
+- **Phone: the template menu closed the moment it opened.** The keyboard shrank the
+  window. The menu now follows its button and only closes when the button leaves the
+  window or the width changes.
+- Phone: the template menu was wider than the screen and cut off on the right.
+- With a finger, MASCHERA no longer puts the cursor into a text field after «Übernahme
+  in Prompt» or in the template menu, so the keyboard only opens when you ask for it.
 
 ## Maintenance
 
-- New GitHub page with logo, preview and download buttons.
-- GitHub Actions updated, still pinned to commits (cosign-installer 4.1.3 and others).
+- docker/login-action 4.8.0, still pinned to its commit.
 
 Details: [CHANGELOG.md](CHANGELOG.md).
 
@@ -28,15 +26,14 @@ Details: [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
-# MASCHERA 2.3.2
+# MASCHERA 2.3.3
 
-**Sicherheitsupdate für Word-Dateien.** Wie MASCHERA maskiert, bleibt gleich.
+**Läuft sauber auf dem Handy.** Wie MASCHERA maskiert, bleibt gleich.
 
-- **Word: Eine Dokumenttyp-Erklärung (DTD) kam an der Prüfung vorbei**, hinter einem
-  langen Kommentar oder in einem UTF-16 kodierten Dokument. Jetzt wird der ganze Teil in
-  jeder Kodierung durchsucht, und kaputtes XML bricht mit einer Meldung ab.
-- Der Befehl zum Prüfen der Docker-Signatur in den READMEs nannte eine alte Fassung.
-- Neue GitHub-Seite mit Logo, Vorschau und Download-Knöpfen.
+- **Handy: Die Seite sprang nach einem Schritt wieder zurück.** Behoben.
+- **Handy: Das Vorlagen-Menü ging sofort wieder zu** und war breiter als der
+  Bildschirm. Es bleibt jetzt offen und passt aufs Display.
+- Mit dem Finger geht die Tastatur nur auf, wenn man sie holt.
 
 **Fehler gefunden?** Bitte ein [Issue](https://github.com/semprerudi/maschera/issues)
 eröffnen. Nie ein echtes Dokument oder echte Namen hineinkopieren.

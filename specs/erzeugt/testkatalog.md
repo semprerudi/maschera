@@ -25,7 +25,7 @@ Jede Prüfung mit ihren Punkten. Die Kennung `T-<DATEI>-<PUNKT>` ist stabil, sol
 | `tests/test_mail.py` | 8 | 45 |
 | `tests/test_masking.py` | 11 | 17 |
 | `tests/test_modell.py` | 14 | 50 |
-| `tests/test_oberflaeche.js` | 95 | 556 |
+| `tests/test_oberflaeche.js` | 95 | 564 |
 | `tests/test_patterns.py` | 9 | 11 |
 | `tests/test_rauschen.py` | 7 | 15 |
 | `tests/test_regressionen.py` | 1 | 14 |
@@ -36,7 +36,7 @@ Jede Prüfung mit ihren Punkten. Die Kennung `T-<DATEI>-<PUNKT>` ist stabil, sol
 | `tests/test_user_rules.py` | 7 | 17 |
 | `tests/test_vertrauen.py` | 8 | 14 |
 | `tests/test_vorlieben.py` | 6 | 16 |
-| **Summe** | **378** | **1565** |
+| **Summe** | **378** | **1573** |
 
 ## `tests/test_alignment.py`
 
@@ -2416,11 +2416,19 @@ Die Oberflaechenlogik gegen eine strenge DOM-Attrappe.
 - .webp
 - Seite 2 zeigt auf dem Server das lokale Bild
 
-### T-OBERFLAECHE-93: Seit 26.10.2026: Vorlagenmenue bleibt offen, Vokabular hochladen liest ein
+### T-OBERFLAECHE-93: Seit 26.10.2026: Vorlagenmenue bleibt offen, auch auf dem Handy; Vokabular hochladen liest ein
 
 - das Rollen der Schrittleiste schliesst das Vorlagenmenue wieder
-- rollt der Kasten mit dem Knopf, bleibt das Menue irgendwo im Raum stehen
-- rollt die Seite, bleibt das Menue offen
+- rollt der Kasten, und der Knopf bleibt sichtbar, geht das Menue zu
+- rollt die Seite, und der Knopf bleibt sichtbar, geht das Menue zu
+- nur die Hoehe aendert sich (Tastatur, Adressleiste), das Menue geht zu
+- der Knopf ist aus dem Fenster gerollt, das Menue steht irgendwo im Raum
+- der Knopf ist unsichtbar, das Menue rutscht nach links oben
+- neue Breite, das Menue bleibt offen
+- mit dem Finger setzt das Vorlagenmenue den Fokus ins Suchfeld
+- mit der Maus steht der Fokus nicht im Suchfeld
+- «Übernahme» setzt den Fokus mit Rollen: der Sprung zu 03 wird zurueckgeworfen
+- kopfEinpassen stellt den Ueberlauf nicht zurueck
 - «Vokabular hochladen» oeffnet die Dateiwahl nicht
 - das hochgeladene Vokabular wurde nicht uebernommen
 - der maskierte Text aus der Datei fehlt

@@ -40,6 +40,9 @@ kommt der Fluss zurück.
 
 Wird es eng, fällt zuerst die Plakette, dann der Spruch, dann wird die Sprachwahl
 zur Auswahlliste, zuletzt fällt der Schriftzug.
+Gemessen wird bei jedem Neuzeichnen. Während des Messens ragt die Kopfzeile nicht
+über den Rand: Sonst wird die Seite kurz breiter, ein Handy zoomt heraus und setzt
+die Rollposition neu (NFA-056).
 
 ## Schrittleiste
 
@@ -98,8 +101,14 @@ herunterladen und wieder einlesen; der Dienst sieht diese Datei nie.
 
 ### 03 Promptzusammenführung
 
-- Vorlagenmenü mit Filter, Speichern als eigene Vorlage.
+- Vorlagenmenü mit Filter, Speichern als eigene Vorlage. Das Menü liegt frei über der
+  Seite, nie breiter als das Fenster, und folgt beim Rollen dem Knopf. Es geht zu,
+  wenn der Knopf das Fenster verlässt oder sich die Breite ändert, nicht bei einer
+  blossen Änderung der Höhe (Tastatur, Adressleiste). Mit der Maus steht der Cursor
+  gleich im Filter, mit dem Finger nicht (NFA-056).
 - «Übernahme in Prompt» zeigt einen leeren Kreis, dreht kurz, dann steht ein Haken.
+  Untereinander springt die Seite zu 03. Mit der Maus steht der Cursor danach im
+  Prompt, ohne dass die Seite dafür rollt; mit dem Finger bleibt er weg (NFA-056).
 - Der Sendeknopf kopiert Prompt und maskierten Text und öffnet den Dienst. Der
   Text wird nicht gesendet, er liegt in der Zwischenablage.
 - Dienste stehen alphabetisch: ChatGPT, Claude, Copilot, Gemini, Mistral. Eigene

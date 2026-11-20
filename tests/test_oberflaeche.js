@@ -4880,7 +4880,7 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     if (fehler === vorher) console.log("   OK   Sprachwahl im Schirm, Serveranzeige mit Titel, Text und Bild");
   }
 
-  console.log("93. Seit 26.10.2026: Vorlagenmenue bleibt offen, Vokabular hochladen liest ein");
+  console.log("93. Seit 26.10.2026: Vorlagenmenue bleibt offen, auch auf dem Handy; Vokabular hochladen liest ein");
   {
     const vorher = fehler;
     // Feedback 26.10.2026 (eigenes Fenster, schmal): das Vorlagenmenue ging
@@ -4891,16 +4891,79 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     const leiste = { id: "schritte", contains: (k) => false };
     const kasten = { id: "raster", contains: (k) => k === knopf };
     const rolle = (ziel) => { for (const f of rollen) f({ target: ziel }); };
+    // Fenstergroesse zuerst, und einmal melden: das Menue merkt sich die
+    // Breite, um eine neue von einer blossen Hoehenaenderung zu trennen.
+    const hoeheVorher = window.innerHeight, breiteVorher = window.innerWidth;
+    window.innerHeight = 800; window.innerWidth = 375;
+    for (const f of (window._h.resize || [])) f({});
+    const quelle = fs.readFileSync(path.join(WURZEL, "app/static/maschera.js"), "utf8");
     M.vorlagenAuf(true);
     rolle(leiste);
     pruefe(M.zustand.vorlagenOffen === true,
            "das Rollen der Schrittleiste schliesst das Vorlagenmenue wieder");
+    // Seit dem Handytest vom 20.11.2026 FOLGT das Menue dem Knopf. Auf dem
+    // Handy rollt die Seite und aendert sich die Fensterhoehe laufend
+    // (Adressleiste, Tastatur), und jedes davon schloss es. Zu geht es erst,
+    // wenn der Knopf das Fenster verlaesst, oder bei neuer Breite.
+    knopf._top = 300; knopf._hoehe = 30;
     rolle(kasten);
-    pruefe(M.zustand.vorlagenOffen === false,
-           "rollt der Kasten mit dem Knopf, bleibt das Menue irgendwo im Raum stehen");
-    M.vorlagenAuf(true);
+    pruefe(M.zustand.vorlagenOffen === true,
+           "rollt der Kasten, und der Knopf bleibt sichtbar, geht das Menue zu");
     rolle(document);
-    pruefe(M.zustand.vorlagenOffen === false, "rollt die Seite, bleibt das Menue offen");
+    pruefe(M.zustand.vorlagenOffen === true,
+           "rollt die Seite, und der Knopf bleibt sichtbar, geht das Menue zu");
+    for (const f of (window._h.resize || [])) f({});
+    pruefe(M.zustand.vorlagenOffen === true,
+           "nur die Hoehe aendert sich (Tastatur, Adressleiste), das Menue geht zu");
+    knopf._top = -100;
+    rolle(document);
+    pruefe(M.zustand.vorlagenOffen === false,
+           "der Knopf ist aus dem Fenster gerollt, das Menue steht irgendwo im Raum");
+    knopf._top = 300;
+    // Unsichtbar (`display: none`) meldet der Knopf ueberall 0.
+    M.vorlagenAuf(true);
+    knopf._top = 0; knopf._hoehe = 0;
+    rolle(document);
+    pruefe(M.zustand.vorlagenOffen === false,
+           "der Knopf ist unsichtbar, das Menue rutscht nach links oben");
+    knopf._top = 300; knopf._hoehe = 30;
+    M.vorlagenAuf(true);
+    window.innerWidth = 800;
+    for (const f of (window._h.resize || [])) f({});
+    pruefe(M.zustand.vorlagenOffen === false, "neue Breite, das Menue bleibt offen");
+    // Mit dem Finger kein Fokus ins Suchfeld: er holte die Tastatur, und die
+    // schloss das Menue im selben Augenblick. Ebenso nach «Übernahme».
+    const mmVorher = window.matchMedia;
+    window.matchMedia = (q) => ({ matches: /pointer:\s*coarse/.test(q) || mmVorher(q).matches,
+                                  addEventListener() {}, removeEventListener() {} });
+    fokus = null;
+    M.vorlagenAuf(true);
+    pruefe(fokus === null, "mit dem Finger setzt das Vorlagenmenue den Fokus ins Suchfeld");
+    M.vorlagenAuf(false);
+    window.matchMedia = mmVorher;
+    M.vorlagenAuf(true);
+    pruefe(fokus === document.getElementById("vorlagen-filter"),
+           "mit der Maus steht der Fokus nicht im Suchfeld");
+    M.vorlagenAuf(false);
+    pruefe(/fokusOhneSprung\(\$\("prompt"\)\)/.test(quelle)
+           && !/\$\("prompt"\)\.focus\(\)/.test(quelle),
+           "«Übernahme» setzt den Fokus mit Rollen: der Sprung zu 03 wird zurueckgeworfen");
+    pruefe(/Math\.min\(window\.innerWidth - 16/.test(quelle),
+           "das Vorlagenmenue darf breiter als das Fenster werden");
+    // Die Kopfzeile ragte beim Einpassen ueber den Rand: ohne Kuerzungen ist
+    // sie breiter als ein Handy, die Seite wurde kurz breiter, der Browser
+    // zoomte heraus und warf die Rollposition zurueck, bei jedem Neuzeichnen.
+    const einpassen = (quelle.match(/function kopfEinpassen\(\) \{[\s\S]*?\n\}/) || [""])[0];
+    pruefe(/kopf\.style\.overflow = "hidden";\s*try \{\s*kopfStufen\(/.test(einpassen)
+           && /finally \{\s*kopf\.style\.overflow = /.test(einpassen),
+           "die Kopfzeile darf beim Messen ueber den Rand ragen (Handy: Seite springt zurueck)");
+    const kopf = document.getElementById("kopfzeile");
+    if (kopf && kopf.style) {
+      kopf.style.overflow = "visible";
+      M.kopfEinpassen();
+      pruefe(kopf.style.overflow === "visible", "kopfEinpassen stellt den Ueberlauf nicht zurueck");
+    }
+    window.innerHeight = hoeheVorher; window.innerWidth = breiteVorher;
 
     // Vokabular hochladen: der Knopf oeffnet das Dateifeld, eine gewaehlte
     // Datei wird gelesen, geprueft und uebernommen.

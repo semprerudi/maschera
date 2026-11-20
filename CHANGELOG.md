@@ -1,5 +1,23 @@
 # Änderungen
 
+## 2.3.3 (2026-11-20)
+
+Bedienung auf dem Handy. Wie MASCHERA maskiert, bleibt gleich.
+
+### Behoben
+- Handy: Die Seite sprang nach einem Schritt wieder zurück. Beim Einpassen der
+  Kopfzeile wurde sie kurz breiter als der Bildschirm, der Browser zoomte heraus und
+  setzte die Rollposition neu, bei jedem Neuzeichnen.
+- Handy: Das Vorlagen-Menü ging im selben Augenblick zu, in dem es aufging. Die
+  Tastatur, die das Suchfeld holte, verkleinerte das Fenster. Es folgt jetzt dem Knopf
+  und geht erst zu, wenn der Knopf das Fenster verlässt oder sich die Breite ändert.
+- Handy: Das Vorlagen-Menü war breiter als der Bildschirm und rechts abgeschnitten.
+- Mit dem Finger setzt MASCHERA nach «Übernahme in Prompt» und im Vorlagen-Menü keinen
+  Cursor mehr in ein Textfeld, damit nicht ungefragt die Tastatur aufgeht.
+
+### Wartung
+- docker/login-action 4.8.0, weiter auf den Commit festgelegt.
+
 ## 2.3.2 (2026-11-13)
 
 Wichtig für die Sicherheit bei Word-Dateien. Wie MASCHERA maskiert, bleibt gleich.

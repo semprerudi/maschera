@@ -177,6 +177,14 @@ T-OBERFLAECHE-73, T-APP-23.
 
 Eine Rundung je Art von Element. Status `verbindlich`. Prüfung: T-APP-22.
 
+### NFA-056 Bedienung mit dem Finger
+
+Auf dem Handy bleibt die Seite nach einem Sprung dort, wo der Sprung hinführt, und
+Menüs bleiben offen, wenn die Tastatur aufgeht oder sich die Adressleiste ein- und
+ausblendet. Mit dem Finger setzt MASCHERA keinen Cursor ungefragt in ein Textfeld,
+damit die Tastatur nur kommt, wenn man sie holt. Seit dem Handytest vom 20.11.2026 (Android
+mit Firefox). Status `verbindlich`. Prüfung: T-OBERFLAECHE-93.
+
 ## Kompatibilität
 
 ### NFA-060 Plattformen

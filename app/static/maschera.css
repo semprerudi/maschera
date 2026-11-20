@@ -1461,8 +1461,9 @@ table.vokabular input:focus { outline: none; border-color: var(--gr-matt); }
 /* Das Vorlagenmenue muss in den PLATZ passen, nicht in seinen Inhalt. Ein
  * `min-width` breiter als die Spalte erzeugte waagrechtes Rollen und
  * schoebe die dritte Spalte beim Oeffnen nach links. Eng wird es so breit
- * wie der Knopf; die Eintraege kuerzt `.waehlen` mit «…», und ihr voller
- * Name steht im Tooltip.
+ * wie das Fenster abzueglich Rand: das Menue ist `position: fixed`, und
+ * `vorlagenMenuSetzen()` setzt Breite, `min-width` und `max-width` darauf.
+ * Die Eintraege kuerzt `.waehlen` mit «…», ihr voller Name steht im Tooltip.
  */
 @container teilkopf (max-width: 26rem) {
   /* `.vorlagenwahl.vorlagen-menu` und nicht `.vorlagen-menu`: Regeln in einer

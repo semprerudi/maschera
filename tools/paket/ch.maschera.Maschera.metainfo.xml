@@ -116,6 +116,12 @@
     <!-- Die erste Angabe muss zur Fassung in app/serve.py passen
          (test_fenster 12). Testbauten tragen `X.Y.Z-test.N` mit
          type="development"; Software-Stores zeigen das nicht als Release. -->
+    <release version="2.3.3" date="2026-11-20">
+      <description>
+        <p>Phone fixes: the page no longer jumps back after a step, and the
+        template menu opens, stays open and fits the screen.</p>
+      </description>
+    </release>
     <release version="2.3.2" date="2026-11-13">
       <description>
         <p>Security update for Word files: a document type declaration (DTD)

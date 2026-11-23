@@ -2,7 +2,7 @@
 """Jede Programmdatei eines .app-Buendels: richtige Architektur, Minimum eingehalten.
 
     python3 tools/paket/macho_pruefen.py dist/macos-bau/dist/MASCHERA.app \\
-        --arch x86_64 --minimum 13.0
+        --arch x86_64 --minimum 13.4
 
 Liest den Mach-O-Kopf selbst (64 Bit und fette Dateien), ohne `otool`, damit
 es auf jedem Rechner laeuft. Das Minimum steht in `LC_BUILD_VERSION` (minos)
@@ -30,6 +30,7 @@ LC_BUILD_VERSION = 0x32
 LC_VERSION_MIN_MACOSX = 0x24
 MH_MAGIC_64 = 0xFEEDFACF
 FAT_MAGIC = 0xCAFEBABE
+FAT_MAGIC_64 = 0xCAFEBABF
 
 
 def _fassung(v: int) -> tuple[int, int]:
@@ -60,16 +61,26 @@ def teile(pfad: Path) -> list[tuple[str, tuple[int, int] | None]]:
         kopf = f.read(8)
         if len(kopf) < 4:
             return []
-        if struct.unpack(">I", kopf[:4])[0] == FAT_MAGIC:
+        magie = struct.unpack(">I", kopf[:4])[0]
+        if magie in (FAT_MAGIC, FAT_MAGIC_64) and len(kopf) == 8:
             anzahl = struct.unpack(">I", kopf[4:8])[0]
+            # Java-Klassen tragen dieselbe Magie (CAFEBABE); dort steht an
+            # dieser Stelle die Klassenfassung, eine Zahl um 50. Eine fette
+            # Mach-O-Datei hat wenige Teile.
+            if not 0 < anzahl <= 16:
+                return []
+            breite, form = (32, ">iIQQII") if magie == FAT_MAGIC_64 else (20, ">iIIII")
             f.seek(0)
             roh = f.read()
             ergebnis = []
-            for i in range(anzahl):
-                _, _, ab, _, _ = struct.unpack_from(">iIIII", roh, 8 + 20 * i)
-                t = _teil(roh, ab)
-                if t:
-                    ergebnis.append(t)
+            try:
+                for i in range(anzahl):
+                    ab = struct.unpack_from(form, roh, 8 + breite * i)[2]
+                    t = _teil(roh, ab)
+                    if t:
+                        ergebnis.append(t)
+            except struct.error:
+                return []
             return ergebnis
         if struct.unpack("<I", kopf[:4])[0] != MH_MAGIC_64:
             return []

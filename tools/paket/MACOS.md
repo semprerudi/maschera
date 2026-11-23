@@ -6,10 +6,10 @@ Wie aus diesem Baum eine `.app` und ein `.dmg` werden. Das Gegenstück zu
 ✅ **Diesen Bau gibt es seit dem 3.10.2026**, und er läuft auf GitHub, nicht auf
 einem eigenen Mac: `.github/workflows/pakete.yml` (nur von Hand zu starten),
 Bauskript `tools/paket/macos_bauen.py`, Symbol `macos-symbol-1024.png`. Das
-Ergebnis sind zwei Artefakte, `MASCHERA-<fassung>-arm64.dmg` und seit 2.4.0
+Ergebnis sind zwei Artefakte, `MASCHERA-<fassung>-arm64.dmg` und seit dem 23.11.2026
 `MASCHERA-<fassung>-x86_64.dmg` für Intel (Abschnitt 2).
 
-**Was gemessen ist** (Lauf auf `macos-14`, Python 3.13, pywebview 6.2.1;
+**Was gemessen ist** (erster Lauf noch auf `macos-14`, seither `macos-15`, Python 3.13, pywebview 6.2.1;
 Test auf einem Apple-Silicon-Mac von Hand):
 
 | | Ergebnis |
@@ -156,7 +156,7 @@ Also:
 | Mac mit Apple-Chip, ab macOS 14 | `arm64` auf `macos-15`, torch |
 | Intel-Mac, ab macOS 13.4 | `x86_64` auf `macos-15-intel`, onnxruntime 1.23.2, Modell als ONNX FP32 |
 
-**Seit 2.4.0 (23.11.2026) gibt es beide.** Gemessen und entschieden:
+**Seit dem 23.11.2026 gibt es beide.** Gemessen und entschieden:
 
 - **Das Minimum hängt an den Rädern, nicht an einer Einstellung.** Am DMG 2.3.3 verlangten
   23 von 108 Programmdateien macOS 14 (torch und numpy), die Info.plist nannte nichts, und
@@ -166,8 +166,9 @@ Also:
 - **Für Intel gibt es kein torch mehr.** Letztes Rad 2.2.2, nur bis Python 3.12;
   transformers 5 verlangt torch 2.6. onnxruntime liefert ab 1.24 nur noch arm64, 1.23.2
   verlangt macOS 13.4 (das Rad sagt 13.0, die Bibliothek darin 13.4; der erste Probelauf
-  vom 23.11.2026 fand das, ebenso numpy fuer macOS 14, das pip auf dem macOS-15-Runner
-  waehlte; seither holt der Job numpy vorab als Rad fuer macOS 13). Deshalb rechnet das Intel-Paket mit onnxruntime 1.23.2.
+  vom 23.11.2026 fand das, ebenso numpy für macOS 14, das pip auf dem macOS-15-Runner
+  wählte; seither holt der Job numpy vorab als Rad für macOS 13). Deshalb rechnet das
+  Intel-Paket mit onnxruntime 1.23.2.
 - **ONNX FP32 ist gleichwertig, INT8 nicht.** Golddokumente: identisch zu torch (6 Lecks,
   95 Übermaskierungen, jede Zeile je Dokument gleich). Logits höchstens 3e-4 auseinander,
   kein Wert kippt an einer Schwelle. INT8: 7 % der Token mit anderem Label. Der Export

@@ -47,8 +47,8 @@ einer mit **macOS 26** (das neueste für Intel).
 ## Was geschrieben und gesendet wird
 
 13. [ ] Im *Terminal* `ls ~/.config/maschera/`: dort und nur dort liegen die Einstellungen.
-14. [ ] `find ~ -newer /Applications/MASCHERA.app -name "*maschera*" 2>/dev/null` nach einem
-    Lauf: nichts ausser `~/.config/maschera/` (und Einträgen von macOS selbst).
+14. [ ] Vor dem Start `touch /tmp/marke`, nach einem Lauf
+    `find ~/Library ~/.config ~/.local -newer /tmp/marke -iname "*maschera*" 2>/dev/null`: nichts ausser `~/.config/maschera/` (und Einträgen von macOS selbst).
 15. [ ] Kein Netzverkehr im Betrieb: in der *Aktivitätsanzeige* › *Netzwerk* den Prozess
     MASCHERA ansehen, während maskiert wird. Gesendet werden sollte 0 Byte. (Ausnahme nur
     «Nach Updates suchen», wenn man darauf klickt.)

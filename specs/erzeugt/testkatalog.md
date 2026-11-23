@@ -14,7 +14,7 @@ Jede Prüfung mit ihren Punkten. Die Kennung `T-<DATEI>-<PUNKT>` ist stabil, sol
 | `tests/test_dist_frisch.py` | 4 | 4 |
 | `tests/test_dokumente_docx.py` | 13 | 40 |
 | `tests/test_evaluate.py` | 8 | 21 |
-| `tests/test_fenster.py` | 34 | 218 |
+| `tests/test_fenster.py` | 34 | 219 |
 | `tests/test_gold_ersetzen.py` | 7 | 17 |
 | `tests/test_gold_markup.py` | 7 | 15 |
 | `tests/test_goldpfad.py` | 7 | 10 |
@@ -36,7 +36,7 @@ Jede Prüfung mit ihren Punkten. Die Kennung `T-<DATEI>-<PUNKT>` ist stabil, sol
 | `tests/test_user_rules.py` | 7 | 17 |
 | `tests/test_vertrauen.py` | 8 | 14 |
 | `tests/test_vorlieben.py` | 6 | 16 |
-| **Summe** | **379** | **1592** |
+| **Summe** | **379** | **1593** |
 
 ## `tests/test_alignment.py`
 
@@ -1110,7 +1110,7 @@ Das eigene Fenster: Adresse, Port und dass die Wahl bleibt.
 - core/inference.py schaltet die Telemetrie von onnxruntime nicht ab
 - …: pymupdf ohne Obergrenze <2; 2.0 zieht onnxruntime mit Telemetrie nach
 - …: pymupdf ohne Untergrenze >=1.28 (CVE-2026-3308)
-- …: Rueckgriff auf `import fitz` (nur Fassungen vor 1.24)
+- …: Rueckgriff auf `import fitz` (nur `fitz` hatten Fassungen vor 1.24)
 - …: pywebview nicht auf >=6.2.1,<7 festgelegt (…)
 
 ### T-FENSTER-32: Kein Zusatzindex: torch einzeln vom CPU-Index, alles andere von PyPI
@@ -1140,6 +1140,7 @@ Das eigene Fenster: Adresse, Port und dass die Wahl bleibt.
 - macho_pruefen uebersieht ein zu hohes Minimum
 - macho_pruefen uebersieht die falsche Architektur
 - macho_pruefen uebersieht die Info.plist
+- macho_pruefen liest fette Dateien oder Java-Klassen falsch: …
 
 ## `tests/test_gold_ersetzen.py`
 

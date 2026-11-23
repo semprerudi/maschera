@@ -1,15 +1,17 @@
 # Änderungen
 
-## 2.4.0 (in Arbeit)
+## 2.4.0 (2026-11-23)
 
 MASCHERA läuft jetzt auch auf Intel-Macs. Wie MASCHERA maskiert, bleibt gleich.
 
 ### Neu
-- Mac-Paket für Intel (`MASCHERA-latest-x86_64.dmg`), ab macOS 13.4 (Ventura mit Updates). Es rechnet
+- Mac-Paket für Intel (`MASCHERA-latest-x86_64.dmg`), ab macOS 13.4 (älteres Ventura:
+  zuerst Softwareupdate). Es rechnet
   dasselbe Modell als ONNX FP32 mit onnxruntime 1.23.2, weil es PyTorch für Intel-Macs
   nicht mehr gibt. Gemessen am Golddokument-Testset und an 200 synthetischen Fällen:
   genau dieselben Lecks und Übermaskierungen wie mit PyTorch, kein Vertrauenswert kippt
-  an einer Schwelle. Es braucht rund 0,8 statt 2,5 GB Arbeitsspeicher. Gebaut wird auf
+  an einer Schwelle. Die Erkennung braucht rund 0,8 statt 2,5 GB Arbeitsspeicher (unter
+  Linux gemessen). Gebaut wird auf
   dem letzten Intel-Runner von GitHub, den es bis etwa August 2027 gibt.
 - Der Bau exportiert das Modell selbst und bricht ab, wenn ONNX an einer Schwelle anders
   entscheidet als PyTorch (`tools/onnx_vergleich.py`). Beide Mac-Pakete starten im Bau,
@@ -17,9 +19,9 @@ MASCHERA läuft jetzt auch auf Intel-Macs. Wie MASCHERA maskiert, bleibt gleich.
 
 ### Behoben
 - Das Mac-Paket für Apple-Chips nennt sein Minimum, macOS 14 Sonoma. Bisher stand im
-  README «M1 oder neuer», aber PyTorch verlangt macOS 14; ein M1 mit macOS 11 bis 13
-  startete die App, ohne dass macOS einen Grund nannte. Jetzt meldet macOS einen zu
-  alten Mac. Nach dem Bau prüft der Workflow jede Programmdatei auf Architektur und
+  README «M1 oder neuer», aber 23 Programmdateien (PyTorch, numpy) verlangen macOS 14,
+  ohne dass das Paket es nannte; auf macOS 11 bis 13 konnte die App deshalb nicht
+  zuverlässig starten. Jetzt meldet macOS einen zu alten Mac. Nach dem Bau prüft der Workflow jede Programmdatei auf Architektur und
   Minimum (`tools/paket/macho_pruefen.py`).
 
 ### Geändert

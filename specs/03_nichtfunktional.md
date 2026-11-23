@@ -49,7 +49,8 @@ Spitze unter 2 GB im Lauf über 25 000 Zeichen. Gemessen 1.65 GB. Status `gemess
 
 ### NFA-011 Paket mit Modell
 
-AppImage, Windows und macOS unter 2 GB. Gemessen 1.69, 1.45 und 1.46 GB. Status
+AppImage, Windows und macOS unter 2 GB. Gemessen 1.69, 1.45 und 1.47 GB, das Intel-Paket
+für macOS 1.24 GB. Status
 `gemessen`, `ohne Prüfung`. Die Aufteilung steht in
 [12 Pakete](12_pakete_release.md).
 
@@ -204,7 +205,7 @@ Minimum in der Info.plist, damit macOS einen zu alten Mac meldet, statt dass die
 wortlos nicht startet. Nach dem Bau prüft der Workflow jede Programmdatei im Bündel auf
 Architektur und Minimum und bricht bei einer Abweichung ab. Das Intel-Paket trägt kein
 torch und rechnet mit onnxruntime 1.23.2; beide Pakete maskieren vier Referenzbriefe wie
-abgelegt ([EN-037](15_entscheide.md)). Seit 2.4.0. Status `verbindlich`.
+abgelegt ([EN-037](15_entscheide.md)). Seit dem 23.11.2026. Status `verbindlich`.
 Prüfung: T-FENSTER-33.
 
 ### NFA-062 Browser

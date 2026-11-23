@@ -1798,7 +1798,7 @@ for _f31 in ("requirements.txt", "tools/paket/requirements-paket.txt",
           f"{_f31}: pymupdf ohne Untergrenze >=1.28 (CVE-2026-3308)")
 for _f31 in ("tools/dokumente.py", "tests/test_scan_pdf.py"):
     check(not re.search(r"^\s*import fitz", (WURZEL / _f31).read_text(encoding="utf-8"), re.M),
-          f"{_f31}: Rueckgriff auf `import fitz` (nur Fassungen vor 1.24)")
+          f"{_f31}: Rueckgriff auf `import fitz` (nur `fitz` hatten Fassungen vor 1.24)")
 # pywebview festgelegt (6.x schaltete Downloads still ab).
 for _f31 in ("tools/paket/requirements-appimage.txt", "tools/paket/requirements-flatpak.txt",
              ".github/workflows/pakete.yml"):
@@ -1851,7 +1851,7 @@ if len(failures) == _vor32:
     print(f"   OK   {len(_listen32)} Paketlisten ohne weitere Quelle, torch einzeln und ohne Abhaengigkeiten")
 
 print("\n33. Mac-Pakete: Minimum je Architektur, Intel ohne torch")
-# Seit 2.4.0 (23.11.2026). Gemessen am DMG 2.3.3: torch-Teile verlangten
+# Seit dem 23.11.2026. Gemessen am DMG 2.3.3: torch-Teile verlangten
 # macOS 14, die Info.plist nannte nichts, das README sagte «M1 oder neuer».
 # Das Minimum steht an drei Stellen (MINIMUM in macos_bauen.py,
 # MACOSX_DEPLOYMENT_TARGET je Job, macho_pruefen danach) und muss gleich sein.
@@ -1919,10 +1919,20 @@ with _tf33.TemporaryDirectory() as _d33, _cl33.redirect_stdout(_io33.StringIO())
     _hoch = _mp33.pruefe(_app33(_d33 + "/h", [(0x01000007, (14, 0))], "13.0"), "x86_64", "13.0")
     _arch = _mp33.pruefe(_app33(_d33 + "/a", [(0x0100000C, (11, 0))], "13.0"), "x86_64", "13.0")
     _plist = _mp33.pruefe(_app33(_d33 + "/p", [(0x01000007, (12, 0))], "12.0"), "x86_64", "13.0")
+    # Fett (zwei Teile, einer arm64) und eine Java-Klasse mit derselben Magie.
+    _fett_app = _app33(_d33 + "/f", [], "13.0")
+    _x, _a = _mo33(0x01000007, (13, 0)), _mo33(0x0100000C, (11, 0))
+    _kopf = _st33.pack(">II", 0xCAFEBABE, 2) + _st33.pack(">iIIII", 0x01000007, 3, 64, len(_x), 0) \
+        + _st33.pack(">iIIII", 0x0100000C, 0, 64 + len(_x), len(_a), 0)
+    (_fett_app / "Contents/MacOS/fett").write_bytes(_kopf + b"\0" * (64 - len(_kopf)) + _x + _a)
+    (_fett_app / "Contents/MacOS/Klasse.class").write_bytes(_st33.pack(">IHH", 0xCAFEBABE, 0, 65) + b"\0" * 20)
+    _fett = _mp33.pruefe(_fett_app, "x86_64", "13.0")
 check(_gut == [], f"macho_pruefen weist ein passendes Buendel zurueck: {_gut}")
 check(any("verlangt macOS 14.0" in f for f in _hoch), "macho_pruefen uebersieht ein zu hohes Minimum")
 check(any("Architektur arm64" in f for f in _arch), "macho_pruefen uebersieht die falsche Architektur")
 check(any("LSMinimumSystemVersion" in f for f in _plist), "macho_pruefen uebersieht die Info.plist")
+check(any("fett: Architektur arm64" in f for f in _fett) and len(_fett) == 1,
+      f"macho_pruefen liest fette Dateien oder Java-Klassen falsch: {_fett}")
 if len(failures) == _vor33:
     print(f"   OK   arm64 ab {_min33[1]}, Intel ab {_min33[2]} ohne torch; Pruefung der Programmdateien greift")
 

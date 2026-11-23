@@ -571,7 +571,7 @@ def pdf_pruefen(dok) -> None:
 
 
 def pdf_zu_text(pfad: Path) -> tuple[str, list[str]]:
-    # Kein Rueckgriff auf den alten Namen `fitz` (23.11.2026): ihn tragen nur
+    # Kein Rueckgriff auf den alten Namen `fitz` (23.11.2026): nur `fitz` hatten
     # Fassungen vor 1.24, und unter 1.28 steht CVE-2026-3308 offen.
     try:
         import pymupdf

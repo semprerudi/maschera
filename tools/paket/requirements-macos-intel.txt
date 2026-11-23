@@ -1,4 +1,4 @@
-# Laufzeit des Mac-Pakets fuer Intel (x86_64), seit 2.4.0 (23.11.2026).
+# Laufzeit des Mac-Pakets fuer Intel (x86_64), seit dem 23.11.2026.
 #
 # Ohne torch und transformers: fuer macOS x86_64 gibt es kein aktuelles torch
 # mehr (letztes Rad 2.2.2, nur bis Python 3.12). Das Paket rechnet dieselben

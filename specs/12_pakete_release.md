@@ -8,7 +8,7 @@
 | Flatpak x86_64 | rund 0,3 GB, dazu die KDE-Laufzeit | wird nach Zustimmung geholt, 1,2 GB | Debian, Ubuntu, Fedora, openSUSE und andere |
 | Windows-Installer x64 | rund 1,4 GB | fährt mit | Windows 11, ohne Administratorrechte, nicht signiert |
 | macOS arm64 | rund 1,4 GB | fährt mit | Macs mit Apple-Chip ab macOS 14, nicht signiert |
-| macOS Intel | rund 1,3 GB (ungemessen) | fährt mit, als ONNX FP32 | Intel-Macs ab macOS 13.4, nicht signiert, onnxruntime statt torch ([EN-037](15_entscheide.md)) |
+| macOS Intel | rund 1,2 GB | fährt mit, als ONNX FP32 | Intel-Macs ab macOS 13.4, nicht signiert, onnxruntime statt torch ([EN-037](15_entscheide.md)) |
 | Docker | rund 4,2 GB | fährt mit | Betrieb als Dienst, Port nur auf `127.0.0.1` |
 | Arch | Bauanleitung | wird nach Zustimmung geholt | `tools/paket/PKGBUILD`, System-Python |
 

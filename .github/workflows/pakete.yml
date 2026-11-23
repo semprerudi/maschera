@@ -9,7 +9,7 @@
 #
 # Die Jobs sind unabhaengig: scheitert einer, laeuft der andere weiter.
 #
-# Seit 2.4.0 (23.11.2026) zwei Mac-Pakete:
+# Seit dem 23.11.2026 zwei Mac-Pakete:
 #   macos        arm64, torch, ab macOS 14
 #   macos-intel  x86_64, onnxruntime 1.23.2, ab macOS 13.4. Fuer x86_64 gibt es
 #                kein aktuelles torch; das Modell kommt als ONNX FP32 aus dem

@@ -214,7 +214,7 @@ Start geholt?**
 | **Flatpak** | rund 0,3 GB, dazu die KDE-Laufzeit von Flathub | wird geholt, 1,2 GB | Debian, Ubuntu, Fedora, openSUSE, Arch, überall, wo Flatpak läuft |
 | **Windows-Installer** | rund 1,4 GB | fährt mit | Windows 11, 64 Bit; installiert ohne Administratorrechte |
 | **macOS-Abbild, Apple-Chip** | rund 1,4 GB | fährt mit | Macs mit Apple-Chip, ab macOS 14 Sonoma; nicht signiert |
-| **macOS-Abbild, Intel** | rund 1,3 GB | fährt mit, als ONNX | Intel-Macs ab macOS 13.4 Ventura; nicht signiert |
+| **macOS-Abbild, Intel** | rund 1,2 GB | fährt mit, als ONNX | Intel-Macs ab macOS 13.4 Ventura; nicht signiert |
 | **Docker** | rund 4,2 GB | fährt mit | Betrieb als Dienst; Oberfläche im Browser |
 
 Wird das Modell geholt, **fragt der erste Start vorher**: er nennt
@@ -250,7 +250,8 @@ Informationen» → «Trotzdem ausführen».
 Unter macOS `MASCHERA-latest-arm64.dmg` (Apple-Chip) oder
 `MASCHERA-latest-x86_64.dmg` (Intel) öffnen und `MASCHERA` in *Programme* ziehen.
 Welches du brauchst: Apple-Menü → *Über diesen Mac*. Steht dort «Chip», ist es
-ein Apple-Chip, steht «Prozessor», ein Intel. Die App ist nicht signiert, und neuere macOS-Fassungen
+ein Apple-Chip, steht «Prozessor», ein Intel. Intel-Macs mit Ventura 13.0 bis 13.3
+zuerst über *Softwareupdate* aktualisieren. Die App ist nicht signiert, und neuere macOS-Fassungen
 lassen sie sich nicht per Rechtsklick öffnen. Einmal in *Terminal* die
 Quarantäne-Markierung entfernen:
 

@@ -22,7 +22,7 @@ Kennzahlen:
   Kipper   Spannen, die auf der einen Seite die Schwelle ihres Tags
            erreichen und auf der anderen nicht
   Knapp    Spannen, deren Wert weniger als 0,05 von der Schwelle liegt
-           (ORG mit 0,90 eingeschlossen) — sie kippen zuerst
+           (ORG mit 0,90 eingeschlossen), sie kippen zuerst
 """
 from __future__ import annotations
 

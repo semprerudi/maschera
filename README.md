@@ -210,7 +210,7 @@ first start?**
 | **Flatpak** | about 0.3 GB, plus the KDE runtime from Flathub | fetched, 1.2 GB | Debian, Ubuntu, Fedora, openSUSE, Arch, wherever Flatpak runs |
 | **Windows installer** | about 1.4 GB | included | Windows 11, 64-bit; installs without administrator rights |
 | **macOS disk image, Apple silicon** | about 1.4 GB | included | Macs with Apple silicon, macOS 14 Sonoma or newer; not signed |
-| **macOS disk image, Intel** | about 1.3 GB | included, as ONNX | Intel Macs, macOS 13.4 Ventura or newer; not signed |
+| **macOS disk image, Intel** | about 1.2 GB | included, as ONNX | Intel Macs, macOS 13.4 Ventura or newer; not signed |
 | **Docker** | about 4.2 GB | included | running as a service; interface in the browser |
 
 If the model is fetched, **the first start asks first**: it names source,
@@ -244,8 +244,9 @@ signed, so Windows warns on first start: "More info" → "Run anyway".
 
 On macOS, open `MASCHERA-latest-arm64.dmg` (Apple silicon) or
 `MASCHERA-latest-x86_64.dmg` (Intel) and drag `MASCHERA` into *Applications*.
-Which one you need: Apple menu → *About This Mac*, «Chip» means Apple silicon,
-«Processor» means Intel. The app is not signed, and recent macOS
+Which one you need: Apple menu → *About This Mac*, "Chip" means Apple silicon,
+"Processor" means Intel. Intel Macs on Ventura 13.0 to 13.3 update through
+*Software Update* first. The app is not signed, and recent macOS
 versions do not let you open it with a right click. Remove the quarantine flag
 once, in *Terminal*:
 

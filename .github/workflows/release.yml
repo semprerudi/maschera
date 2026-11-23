@@ -72,7 +72,7 @@ jobs:
 
   appimage:
     needs: pruefen
-    # ubuntu-24.04 seit 2.4.0 (23.11.2026): GitHub schaltet ubuntu-22.04 am
+    # ubuntu-24.04 seit dem 23.11.2026: GitHub schaltet ubuntu-22.04 am
     # 17.4.2027 ab. Die glibc des Runners reist NICHT mit: Python kommt ueber
     # `uv` (fuer alte glibc gebaut), alles andere aus manylinux-Raedern, und
     # Bibliotheken des Runners werden nicht kopiert. Gemessen an einer AppImage,

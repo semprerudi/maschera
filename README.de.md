@@ -214,7 +214,7 @@ Start geholt?**
 | **Flatpak** | rund 0,3 GB, dazu die KDE-Laufzeit von Flathub | wird geholt, 1,2 GB | Debian, Ubuntu, Fedora, openSUSE, Arch, überall, wo Flatpak läuft |
 | **Windows-Installer** | rund 1,4 GB | fährt mit | Windows 11, 64 Bit; installiert ohne Administratorrechte |
 | **macOS-Abbild, Apple-Chip** | rund 1,4 GB | fährt mit | Macs mit Apple-Chip, ab macOS 14 Sonoma; nicht signiert |
-| **macOS-Abbild, Intel** | rund 1,3 GB | fährt mit, als ONNX | Intel-Macs ab macOS 13 Ventura; nicht signiert |
+| **macOS-Abbild, Intel** | rund 1,3 GB | fährt mit, als ONNX | Intel-Macs ab macOS 13.4 Ventura; nicht signiert |
 | **Docker** | rund 4,2 GB | fährt mit | Betrieb als Dienst; Oberfläche im Browser |
 
 Wird das Modell geholt, **fragt der erste Start vorher**: er nennt

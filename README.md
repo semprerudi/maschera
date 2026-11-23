@@ -210,7 +210,7 @@ first start?**
 | **Flatpak** | about 0.3 GB, plus the KDE runtime from Flathub | fetched, 1.2 GB | Debian, Ubuntu, Fedora, openSUSE, Arch, wherever Flatpak runs |
 | **Windows installer** | about 1.4 GB | included | Windows 11, 64-bit; installs without administrator rights |
 | **macOS disk image, Apple silicon** | about 1.4 GB | included | Macs with Apple silicon, macOS 14 Sonoma or newer; not signed |
-| **macOS disk image, Intel** | about 1.3 GB | included, as ONNX | Intel Macs, macOS 13 Ventura or newer; not signed |
+| **macOS disk image, Intel** | about 1.3 GB | included, as ONNX | Intel Macs, macOS 13.4 Ventura or newer; not signed |
 | **Docker** | about 4.2 GB | included | running as a service; interface in the browser |
 
 If the model is fetched, **the first start asks first**: it names source,

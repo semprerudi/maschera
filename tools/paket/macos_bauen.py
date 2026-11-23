@@ -15,7 +15,7 @@ Seit 2.4.0 (23.11.2026) unterscheiden sie sich im Laeufer:
   arm64   torch, Modell unter `runs/ch-v63b`, ab macOS 14 (die torch-Raeder
           verlangen 14.0, gemessen am DMG 2.3.3)
   x86_64  onnxruntime 1.23.2, dasselbe Modell als ONNX FP32 unter
-          `onnx/ch-v63b`, ab macOS 13. Fuer x86_64 gibt es kein torch mehr
+          `onnx/ch-v63b`, ab macOS 13.4. Fuer x86_64 gibt es kein torch mehr
           (letztes Rad 2.2.2, nur bis Python 3.12), und onnxruntime liefert
           ab 1.24 nur noch arm64. Den Ordner nennt `MASCHERA_ONNX`, er
           entsteht mit `tools/build_release.py --no-trim --no-quantize`.
@@ -59,7 +59,7 @@ MODELL = wb.MODELL
 # Das macOS-Minimum je Architektur. `MACOSX_DEPLOYMENT_TARGET` im Workflow und
 # `macho_pruefen.py` lesen dieselbe Zahl; `tests/test_fenster.py` haelt sie
 # zusammen.
-MINIMUM = {"arm64": "14.0", "x86_64": "13.0"}
+MINIMUM = {"arm64": "14.0", "x86_64": "13.4"}
 
 # Was vom ONNX-Ordner ins Paket geht. `model.onnx*`, weil der Exporter grosse
 # Gewichte neben den Graphen legt (`model.onnx.data`) und der Verweis darauf

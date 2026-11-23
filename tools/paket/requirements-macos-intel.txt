@@ -8,7 +8,10 @@
 # Vertrauenswert kippt an einer Schwelle (`tools/onnx_vergleich.py`).
 #
 # onnxruntime FEST auf 1.23.2: ab 1.24 gibt es nur noch arm64-Raeder fuer
-# macOS. 1.23.2 verlangt macOS 13, daher das Minimum des Pakets. Dependabot
+# macOS. 1.23.2 verlangt macOS 13.4 (das Rad ist als 13.0 beschriftet, die
+# Bibliothek darin verlangt 13.4; gemessen 23.11.2026), daher das Minimum.
+# numpy holt der Workflow vorab als Rad fuer macOS 13 (`--platform`), sonst
+# nimmt pip auf dem macOS-15-Runner das Rad fuer macOS 14. Dependabot
 # ist dafuer angewiesen, keine hoehere Fassung vorzuschlagen
 # (`.github/dependabot.yml`).
 #

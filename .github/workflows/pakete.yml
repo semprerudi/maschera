@@ -11,7 +11,7 @@
 #
 # Seit 2.4.0 (23.11.2026) zwei Mac-Pakete:
 #   macos        arm64, torch, ab macOS 14
-#   macos-intel  x86_64, onnxruntime 1.23.2, ab macOS 13. Fuer x86_64 gibt es
+#   macos-intel  x86_64, onnxruntime 1.23.2, ab macOS 13.4. Fuer x86_64 gibt es
 #                kein aktuelles torch; das Modell kommt als ONNX FP32 aus dem
 #                Job `onnx-export`, der es auf Linux mit torch exportiert und
 #                gegen torch prueft (`tools/onnx_vergleich.py --streng`: kein
@@ -186,15 +186,23 @@ jobs:
     timeout-minutes: 120
     env:
       # Dieselbe Zahl wie `MINIMUM` in macos_bauen.py (test_fenster 33).
-      MACOSX_DEPLOYMENT_TARGET: "13.0"
+      MACOSX_DEPLOYMENT_TARGET: "13.4"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
         with:
           python-version: "3.13"
-      - name: Abhaengigkeiten (ohne torch)
+      # numpy ZUERST und fuer macOS 13: pip waehlt sonst auf dem macOS-15-Runner
+      # das Rad fuer macOS 14 (erster Probelauf 23.11.2026). Danach ist numpy
+      # erfuellt und wird nicht ersetzt. Ganz ueber `--platform` geht es nicht:
+      # `proxy_tools` (von pywebview) gibt es nur als Quellpaket. Was sonst ein
+      # zu neues Rad bringt, faengt `macho_pruefen.py` nach dem Bau.
+      - name: Abhaengigkeiten (ohne torch, numpy fuer macOS 13)
         run: |
           python -m pip install --upgrade pip
+          pip download numpy --no-deps --only-binary=:all: --platform macosx_13_0_x86_64 \
+            --python-version 3.13 --implementation cp -d raeder
+          pip install raeder/numpy-*.whl
           pip install -r tools/paket/requirements-macos-intel.txt "pywebview>=6.2.1,<7" pyinstaller
           pip freeze > pakete-macos-intel.txt
           python -c "import platform, onnxruntime; print(platform.machine(), 'onnxruntime', onnxruntime.__version__)"
@@ -211,7 +219,7 @@ jobs:
         env:
           MASCHERA_ONNX: onnx-fp32
         run: python tools/paket/macos_bauen.py
-      - name: Programmdateien (x86_64, hoechstens macOS 13.0)
+      - name: Programmdateien (x86_64, hoechstens macOS 13.4)
         run: python tools/paket/macho_pruefen.py dist/macos-bau/dist/MASCHERA.app --arch x86_64 --minimum "$MACOSX_DEPLOYMENT_TARGET"
       - name: Rauchtest und Referenz
         run: |

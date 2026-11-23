@@ -199,7 +199,7 @@ Prüfung: T-SCHRIFTEN-5, T-SCHRIFTEN-6.
 
 ### NFA-063 macOS-Minimum je Architektur
 
-Das Mac-Paket für Apple-Chips läuft ab macOS 14, das für Intel ab macOS 13. Beide nennen ihr
+Das Mac-Paket für Apple-Chips läuft ab macOS 14, das für Intel ab macOS 13.4. Beide nennen ihr
 Minimum in der Info.plist, damit macOS einen zu alten Mac meldet, statt dass die App
 wortlos nicht startet. Nach dem Bau prüft der Workflow jede Programmdatei im Bündel auf
 Architektur und Minimum und bricht bei einer Abweichung ab. Das Intel-Paket trägt kein

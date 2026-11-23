@@ -12,7 +12,7 @@ package). Never paste a real document or real names into an issue.
 | `MASCHERA-latest-x86_64.flatpak` | Linux with Flatpak | 0.3 GB + KDE runtime | fetched once on first start (1.3 GB), after you agree |
 | `MASCHERA-latest-x64-setup.exe` | Windows 11, 64-bit | 1.4 GB | included |
 | `MASCHERA-latest-arm64.dmg` | macOS 14 or newer, Apple silicon | 1.4 GB | included |
-| `MASCHERA-latest-x86_64.dmg` | macOS 13 or newer, Intel | 1.3 GB | included, as ONNX |
+| `MASCHERA-latest-x86_64.dmg` | macOS 13.4 or newer, Intel | 1.3 GB | included, as ONNX |
 | `ghcr.io/semprerudi/maschera:{FASSUNG}` | Docker, server | 4.2 GB | included |
 
 Checksums are in `SHA256SUMS`; SBOMs (SPDX) for the Docker image and the AppImage are

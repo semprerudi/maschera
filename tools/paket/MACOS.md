@@ -154,18 +154,20 @@ Also:
 | Zielgruppe | Bau |
 |---|---|
 | Mac mit Apple-Chip, ab macOS 14 | `arm64` auf `macos-15`, torch |
-| Intel-Mac, ab macOS 13 | `x86_64` auf `macos-15-intel`, onnxruntime 1.23.2, Modell als ONNX FP32 |
+| Intel-Mac, ab macOS 13.4 | `x86_64` auf `macos-15-intel`, onnxruntime 1.23.2, Modell als ONNX FP32 |
 
 **Seit 2.4.0 (23.11.2026) gibt es beide.** Gemessen und entschieden:
 
 - **Das Minimum hängt an den Rädern, nicht an einer Einstellung.** Am DMG 2.3.3 verlangten
   23 von 108 Programmdateien macOS 14 (torch und numpy), die Info.plist nannte nichts, und
   ein M1 mit macOS 11 bis 13 hätte die App wortlos nicht gestartet. Jetzt setzt
-  `macos_bauen.py` `LSMinimumSystemVersion` (14.0 bzw. 13.0) und signiert danach ad hoc
+  `macos_bauen.py` `LSMinimumSystemVersion` (14.0 bzw. 13.4) und signiert danach ad hoc
   neu; `macho_pruefen.py` prüft nach dem Bau jede Datei.
 - **Für Intel gibt es kein torch mehr.** Letztes Rad 2.2.2, nur bis Python 3.12;
   transformers 5 verlangt torch 2.6. onnxruntime liefert ab 1.24 nur noch arm64, 1.23.2
-  verlangt macOS 13. Deshalb rechnet das Intel-Paket mit onnxruntime 1.23.2.
+  verlangt macOS 13.4 (das Rad sagt 13.0, die Bibliothek darin 13.4; der erste Probelauf
+  vom 23.11.2026 fand das, ebenso numpy fuer macOS 14, das pip auf dem macOS-15-Runner
+  waehlte; seither holt der Job numpy vorab als Rad fuer macOS 13). Deshalb rechnet das Intel-Paket mit onnxruntime 1.23.2.
 - **ONNX FP32 ist gleichwertig, INT8 nicht.** Golddokumente: identisch zu torch (6 Lecks,
   95 Übermaskierungen, jede Zeile je Dokument gleich). Logits höchstens 3e-4 auseinander,
   kein Wert kippt an einer Schwelle. INT8: 7 % der Token mit anderem Label. Der Export

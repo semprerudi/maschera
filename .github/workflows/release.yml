@@ -144,7 +144,12 @@ jobs:
     timeout-minutes: 120
     container:
       image: ghcr.io/flathub-infra/flatpak-github-actions:kde-6.11
-      options: --privileged
+      # `--volume /var/lib/flatpak` (23.11.2026): die Laufzeiten liegen im Abbild
+      # in einer unteren Overlay-Schicht. Muss flatpak-builder sie aktualisieren,
+      # scheitert das mit «Invalid cross-device link», und der Builder stuerzt ab
+      # (flatpak-github-actions#267). Ein anonymes Volume fuellt Docker aus dem
+      # Abbild; die Aktualisierung laeuft dann auf dem Dateisystem des Runners.
+      options: --privileged --volume /var/lib/flatpak
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       - uses: flatpak/flatpak-github-actions/flatpak-builder@79327416609af08178ad73b352877e51450790b3  # v6.8

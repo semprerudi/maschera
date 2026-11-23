@@ -14,7 +14,7 @@ ein erfundener Brief, zum Beispiel: «Sehr geehrte Frau Petra Muster, Ihr Termin
 - [ ] macOS-Fassung (dort ebenfalls)
 - [ ] Prozessor: steht dort «Prozessor» mit Intel? Dann ist es der richtige Mac.
 
-Am wertvollsten sind ein Mac mit **macOS 13 Ventura** (das älteste unterstützte) und
+Am wertvollsten sind ein Mac mit **macOS 13.4 Ventura** (das älteste unterstützte; ein Mac mit 13.0 bis 13.3 sollte melden, dass er ein neueres macOS braucht) und
 einer mit **macOS 26** (das neueste für Intel).
 
 ## Installieren

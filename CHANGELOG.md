@@ -5,7 +5,7 @@
 MASCHERA läuft jetzt auch auf Intel-Macs. Wie MASCHERA maskiert, bleibt gleich.
 
 ### Neu
-- Mac-Paket für Intel (`MASCHERA-latest-x86_64.dmg`), ab macOS 13 Ventura. Es rechnet
+- Mac-Paket für Intel (`MASCHERA-latest-x86_64.dmg`), ab macOS 13.4 (Ventura mit Updates). Es rechnet
   dasselbe Modell als ONNX FP32 mit onnxruntime 1.23.2, weil es PyTorch für Intel-Macs
   nicht mehr gibt. Gemessen am Golddokument-Testset und an 200 synthetischen Fällen:
   genau dieselben Lecks und Übermaskierungen wie mit PyTorch, kein Vertrauenswert kippt

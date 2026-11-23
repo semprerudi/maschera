@@ -13,7 +13,7 @@ jinja2>=3.1.6
 pyyaml>=6.0
 onnxruntime>=1.17
 tokenizers>=0.15
-pymupdf>=1.24,<2
+pymupdf>=1.28,<2
 olefile>=0.46
 ```
 
@@ -26,7 +26,7 @@ jinja2>=3.1.6
 gunicorn>=22.0
 pyyaml>=6.0
 tokenizers>=0.15
-pymupdf>=1.24,<2
+pymupdf>=1.28,<2
 olefile>=0.46
 torch>=2.13
 transformers>=5.10
@@ -50,7 +50,7 @@ jinja2>=3.1.6
 gunicorn>=22.0
 pyyaml>=6.0
 tokenizers>=0.15
-pymupdf>=1.24,<2
+pymupdf>=1.28,<2
 olefile>=0.46
 torch>=2.13
 transformers>=5.10

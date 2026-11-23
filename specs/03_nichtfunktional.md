@@ -189,13 +189,23 @@ mit Firefox). Status `verbindlich`. Prüfung: T-OBERFLAECHE-93.
 
 ### NFA-060 Plattformen
 
-Linux x86_64 (AppImage, Flatpak, Arch), Windows x64, macOS arm64, Docker. Status
-`verbindlich`. Prüfung: T-FENSTER-12, T-FENSTER-22, T-FENSTER-26.
+Linux x86_64 (AppImage, Flatpak, Arch), Windows x64, macOS arm64 und Intel (x86_64),
+Docker. Status `verbindlich`. Prüfung: T-FENSTER-12, T-FENSTER-22, T-FENSTER-26.
 
 ### NFA-061 Zeichensatz
 
 Der amtliche Zeichensatz der Personenregister wird angezeigt. Status `verbindlich`.
 Prüfung: T-SCHRIFTEN-5, T-SCHRIFTEN-6.
+
+### NFA-063 macOS-Minimum je Architektur
+
+Das Mac-Paket für Apple-Chips läuft ab macOS 14, das für Intel ab macOS 13. Beide nennen ihr
+Minimum in der Info.plist, damit macOS einen zu alten Mac meldet, statt dass die App
+wortlos nicht startet. Nach dem Bau prüft der Workflow jede Programmdatei im Bündel auf
+Architektur und Minimum und bricht bei einer Abweichung ab. Das Intel-Paket trägt kein
+torch und rechnet mit onnxruntime 1.23.2; beide Pakete maskieren vier Referenzbriefe wie
+abgelegt ([EN-037](15_entscheide.md)). Seit 2.4.0. Status `verbindlich`.
+Prüfung: T-FENSTER-33.
 
 ### NFA-062 Browser
 

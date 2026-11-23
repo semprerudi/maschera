@@ -14,7 +14,7 @@ Jede Prüfung mit ihren Punkten. Die Kennung `T-<DATEI>-<PUNKT>` ist stabil, sol
 | `tests/test_dist_frisch.py` | 4 | 4 |
 | `tests/test_dokumente_docx.py` | 13 | 40 |
 | `tests/test_evaluate.py` | 8 | 21 |
-| `tests/test_fenster.py` | 33 | 199 |
+| `tests/test_fenster.py` | 34 | 218 |
 | `tests/test_gold_ersetzen.py` | 7 | 17 |
 | `tests/test_gold_markup.py` | 7 | 15 |
 | `tests/test_goldpfad.py` | 7 | 10 |
@@ -36,7 +36,7 @@ Jede Prüfung mit ihren Punkten. Die Kennung `T-<DATEI>-<PUNKT>` ist stabil, sol
 | `tests/test_user_rules.py` | 7 | 17 |
 | `tests/test_vertrauen.py` | 8 | 14 |
 | `tests/test_vorlieben.py` | 6 | 16 |
-| **Summe** | **378** | **1573** |
+| **Summe** | **379** | **1592** |
 
 ## `tests/test_alignment.py`
 
@@ -1109,6 +1109,8 @@ Das eigene Fenster: Adresse, Port und dass die Wahl bleibt.
 - Dockerfile setzt ORT_DISABLE_TELEMETRY nicht
 - core/inference.py schaltet die Telemetrie von onnxruntime nicht ab
 - …: pymupdf ohne Obergrenze <2; 2.0 zieht onnxruntime mit Telemetrie nach
+- …: pymupdf ohne Untergrenze >=1.28 (CVE-2026-3308)
+- …: Rueckgriff auf `import fitz` (nur Fassungen vor 1.24)
 - …: pywebview nicht auf >=6.2.1,<7 festgelegt (…)
 
 ### T-FENSTER-32: Kein Zusatzindex: torch einzeln vom CPU-Index, alles andere von PyPI
@@ -1118,6 +1120,26 @@ Das eigene Fenster: Adresse, Port und dass die Wahl bleibt.
 - …: --extra-index-url
 - …: torch vom CPU-Index MIT Abhaengigkeiten: …
 - …: holt das torch-Rad nicht einzeln vom CPU-Index
+
+### T-FENSTER-33: Mac-Pakete: Minimum je Architektur, Intel ohne torch
+
+- macos_bauen.py: MINIMUM nicht gefunden
+- pakete.yml: Job … fehlt
+- pakete.yml …: MACOSX_DEPLOYMENT_TARGET nicht …
+- pakete.yml …: keine Pruefung der Programmdateien fuer …
+- pakete.yml …: kein Vergleich mit der Referenz
+- pakete.yml …: Rauchtest bricht den Lauf nicht ab
+- requirements-macos-intel.txt traegt …
+- requirements-macos-intel.txt: onnxruntime nicht fest auf 1.23.2
+- pakete.yml: ONNX-Export ohne strengen Vergleich mit torch
+- pakete.yml: Export prueft nicht mit derselben onnxruntime wie das Paket
+- pakete.yml: Intel-Modell nicht als unbeschnittenes FP32 exportiert
+- release.yml: das Intel-DMG kommt nicht ins Release
+- fenster.py: suche_onnx steht nicht vor der Suche nach runs/
+- macho_pruefen weist ein passendes Buendel zurueck: …
+- macho_pruefen uebersieht ein zu hohes Minimum
+- macho_pruefen uebersieht die falsche Architektur
+- macho_pruefen uebersieht die Info.plist
 
 ## `tests/test_gold_ersetzen.py`
 

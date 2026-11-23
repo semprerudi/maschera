@@ -95,8 +95,12 @@ def main() -> int:
     tokenizer = AutoTokenizer.from_pretrained(ckpt)
     # Nur safetensors, kein stiller Rueckgriff auf eine Pickle-Datei (siehe
     # `TorchScorer` in `tools/evaluate_model.py`).
+    # `eager` (23.11.2026): kein Flash-Attention und kein Entpolstern im Graphen.
+    # ModernBERT entpolstert nur unter Flash-Attention; mit eager bleibt der
+    # Graph fuer jede Laenge und jedes Gerät derselbe, und onnxruntime braucht
+    # keine Sonderoperatoren.
     model = AutoModelForTokenClassification.from_pretrained(
-        ckpt, use_safetensors=True)
+        ckpt, use_safetensors=True, attn_implementation="eager")
     before = sum(p.numel() for p in model.parameters())
     print(f"Checkpoint: {before/1e6:.0f}M Parameter, "
           f"Vokabular {model.config.vocab_size}")

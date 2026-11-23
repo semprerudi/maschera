@@ -1,5 +1,35 @@
 # Änderungen
 
+## 2.4.0 (in Arbeit)
+
+MASCHERA läuft jetzt auch auf Intel-Macs. Wie MASCHERA maskiert, bleibt gleich.
+
+### Neu
+- Mac-Paket für Intel (`MASCHERA-latest-x86_64.dmg`), ab macOS 13 Ventura. Es rechnet
+  dasselbe Modell als ONNX FP32 mit onnxruntime 1.23.2, weil es PyTorch für Intel-Macs
+  nicht mehr gibt. Gemessen am Golddokument-Testset und an 200 synthetischen Fällen:
+  genau dieselben Lecks und Übermaskierungen wie mit PyTorch, kein Vertrauenswert kippt
+  an einer Schwelle. Es braucht rund 0,8 statt 2,5 GB Arbeitsspeicher. Gebaut wird auf
+  dem letzten Intel-Runner von GitHub, den es bis etwa August 2027 gibt.
+- Der Bau exportiert das Modell selbst und bricht ab, wenn ONNX an einer Schwelle anders
+  entscheidet als PyTorch (`tools/onnx_vergleich.py`). Beide Mac-Pakete starten im Bau,
+  maskieren vier Referenzbriefe und werden mit der abgelegten Ausgabe verglichen.
+
+### Behoben
+- Das Mac-Paket für Apple-Chips nennt sein Minimum, macOS 14 Sonoma. Bisher stand im
+  README «M1 oder neuer», aber PyTorch verlangt macOS 14; ein M1 mit macOS 11 bis 13
+  startete die App, ohne dass macOS einen Grund nannte. Jetzt meldet macOS einen zu
+  alten Mac. Nach dem Bau prüft der Workflow jede Programmdatei auf Architektur und
+  Minimum (`tools/paket/macho_pruefen.py`).
+
+### Geändert
+- PDF- und Word-Dateien bis 25 MB statt 10 MB. Darüber antwortet der Server weiter mit
+  413 und nennt die Grenze.
+
+### Sicherheit
+- PyMuPDF mindestens 1.28 (CVE-2026-3308). Der Rückgriff auf den alten Modulnamen
+  `fitz` fällt weg.
+
 ## 2.3.3 (2026-11-20)
 
 Bedienung auf dem Handy. Wie MASCHERA maskiert, bleibt gleich.

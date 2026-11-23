@@ -10,6 +10,20 @@ unter `runs/ch-v63b` (oder wird vorher geholt, siehe `.github/workflows/`).
 Ergebnis: `dist/MASCHERA-<fassung>-<arch>.dmg`, `<arch>` ist `arm64` oder
 `x86_64` — das sind zwei Pakete (`MACOS.md` Abschnitt 2).
 
+Seit 2.4.0 (23.11.2026) unterscheiden sie sich im Laeufer:
+
+  arm64   torch, Modell unter `runs/ch-v63b`, ab macOS 14 (die torch-Raeder
+          verlangen 14.0, gemessen am DMG 2.3.3)
+  x86_64  onnxruntime 1.23.2, dasselbe Modell als ONNX FP32 unter
+          `onnx/ch-v63b`, ab macOS 13. Fuer x86_64 gibt es kein torch mehr
+          (letztes Rad 2.2.2, nur bis Python 3.12), und onnxruntime liefert
+          ab 1.24 nur noch arm64. Den Ordner nennt `MASCHERA_ONNX`, er
+          entsteht mit `tools/build_release.py --no-trim --no-quantize`.
+
+Das Minimum steht als `LSMinimumSystemVersion` in der Info.plist (macOS
+meldet dann einen zu alten Mac, statt dass die App wortlos nicht startet),
+und `macho_pruefen.py` haelt fest, dass keine Datei im Buendel mehr verlangt.
+
 ⚠️ **Dieser Bau ist neu und auf einem Mac noch nicht gemessen.** Er teilt
 alles Teilbare mit `windows_bauen.py` — dieselben Listen (`DATEN`,
 `WERKZEUGE`, `draussen.txt`), dieselbe Zusammenstellung, dieselbe
@@ -42,6 +56,17 @@ WURZEL = wb.WURZEL
 BAU = WURZEL / "dist" / "macos-bau"
 MODELL = wb.MODELL
 
+# Das macOS-Minimum je Architektur. `MACOSX_DEPLOYMENT_TARGET` im Workflow und
+# `macho_pruefen.py` lesen dieselbe Zahl; `tests/test_fenster.py` haelt sie
+# zusammen.
+MINIMUM = {"arm64": "14.0", "x86_64": "13.0"}
+
+# Was vom ONNX-Ordner ins Paket geht. `model.onnx*`, weil der Exporter grosse
+# Gewichte neben den Graphen legt (`model.onnx.data`) und der Verweis darauf
+# im Graphen steht.
+ONNX_DATEIEN = ("model.onnx*", "tokenizer.json", "tokenizer_config.json",
+                "pack.json")
+
 
 # Die Vorlage fuer das Symbol: 1024 Pixel, die Maske auf abgerundeter Flaeche
 # wie ein macOS-Symbol. Erzeugt mit `fish tools/paket/macos_symbol_bauen.fish`.
@@ -71,19 +96,56 @@ def symbol_bauen(ziel: Path) -> Path:
     return icns
 
 
+def minimum_eintragen(app: Path, minimum: str) -> None:
+    """`LSMinimumSystemVersion` setzen und das Buendel neu ad hoc signieren.
+
+    PyInstaller signiert das Buendel ad hoc und schreibt kein Minimum. Eine
+    geaenderte Info.plist bricht diese Signatur, und auf Apple Silicon startet
+    ein Programm mit gebrochener Signatur nicht. Deshalb danach `codesign
+    --force` mit der Ad-hoc-Identitaet `-` und eine strenge Pruefung; das ist
+    keine Signatur eines Entwicklerkontos (MACOS.md Abschnitt 7 gilt weiter).
+    """
+    import plistlib
+    plist = app / "Contents" / "Info.plist"
+    daten = plistlib.loads(plist.read_bytes())
+    daten["LSMinimumSystemVersion"] = minimum
+    plist.write_bytes(plistlib.dumps(daten))
+    subprocess.run(["codesign", "--force", "--deep", "--sign", "-", str(app)],
+                   check=True)
+    subprocess.run(["codesign", "--verify", "--deep", "--strict", str(app)],
+                   check=True)
+    print(f"   LSMinimumSystemVersion {minimum}, ad hoc neu signiert")
+
+
 def main() -> int:
     if sys.platform != "darwin":
         raise SystemExit("Dieses Skript baut unter macOS.")
     zahl = wb.fassung()
     arch = platform.machine()
     print(f"MASCHERA {zahl} ({arch})")
-    # Anders als unter Windows gibt es hier keine CUDA-Rader: PyPI liefert
-    # fuer macOS nur die CPU-Fassung, ohne den Zusatz `+cpu`. Die Fassung
-    # wird gemeldet, nicht verlangt.
-    import torch
-    print(f"   torch {torch.__version__}")
-    if not (WURZEL / "runs" / MODELL / "model.safetensors").is_file():
-        raise SystemExit(f"Das Modell fehlt unter runs/{MODELL}.")
+    if arch not in MINIMUM:
+        raise SystemExit(f"Unbekannte Architektur: {arch}")
+    onnx_quelle = None
+    if arch == "x86_64":
+        # Ohne torch. Ist es doch installiert, wuerde PyInstaller es mitnehmen
+        # (die Importliste findet es), und das Paket waere 1 GB groesser.
+        if importlib.util.find_spec("torch") is not None:
+            raise SystemExit("x86_64 baut ohne torch: es ist installiert.")
+        import onnxruntime
+        print(f"   onnxruntime {onnxruntime.__version__}")
+        onnx_quelle = Path(os.environ.get("MASCHERA_ONNX", ""))
+        if not (onnx_quelle / "model.onnx").is_file():
+            raise SystemExit("MASCHERA_ONNX zeigt nicht auf einen Ordner mit "
+                             "model.onnx (tools/build_release.py "
+                             "--no-trim --no-quantize).")
+    else:
+        # Anders als unter Windows gibt es hier keine CUDA-Rader: PyPI liefert
+        # fuer macOS nur die CPU-Fassung, ohne den Zusatz `+cpu`. Die Fassung
+        # wird gemeldet, nicht verlangt.
+        import torch
+        print(f"   torch {torch.__version__}")
+        if not (WURZEL / "runs" / MODELL / "model.safetensors").is_file():
+            raise SystemExit(f"Das Modell fehlt unter runs/{MODELL}.")
 
     if BAU.exists():
         shutil.rmtree(BAU)
@@ -98,7 +160,15 @@ def main() -> int:
     zwischen = BAU / "maschera"
     wb.zusammenstellen(zwischen)
     modell = BAU / "modell" / MODELL
-    wb.modell_zusammenstellen(modell)
+    if onnx_quelle is not None:
+        modell.mkdir(parents=True)
+        for muster in ONNX_DATEIEN:
+            for datei in onnx_quelle.glob(muster):
+                shutil.copy2(datei, modell / datei.name)
+        modell_ziel = f"maschera/onnx/{MODELL}"
+    else:
+        wb.modell_zusammenstellen(modell)
+        modell_ziel = f"maschera/runs/{MODELL}"
 
     symbol = symbol_bauen(BAU)
     trenner = os.pathsep
@@ -115,14 +185,14 @@ def main() -> int:
     for teil in (*wb.DATEN, "tools"):
         argumente += ["--add-data",
                       f"{zwischen / teil}{trenner}maschera/{teil}"]
-    argumente += ["--add-data",
-                  f"{modell}{trenner}maschera/runs/{MODELL}"]
+    argumente += ["--add-data", f"{modell}{trenner}{modell_ziel}"]
     import PyInstaller.__main__
     PyInstaller.__main__.run(argumente)
 
     app = BAU / "dist" / "MASCHERA.app"
     if not app.is_dir():
         raise SystemExit("MASCHERA.app ist nicht entstanden")
+    minimum_eintragen(app, MINIMUM[arch])
     ziel = WURZEL / "dist"
     ziel.mkdir(exist_ok=True)
     dmg = ziel / f"MASCHERA-{zahl}-{arch}.dmg"

@@ -1582,6 +1582,17 @@ def main() -> int:
     WEITER = threading.Event()
     WEITER.set()
 
+    # Das Intel-Mac-Paket traegt das Modell als ONNX (`onnx/<name>`), ohne torch.
+    # Liegt es da, gilt es vor jeder Suche nach `runs/` und vor dem Onboarding.
+    if not (args.model or args.onnx or args.ohne_modell):
+        from core import modell as _modell_onnx
+        try:
+            _onnx = _modell_onnx.suche_onnx(_modell_onnx.manifest(args.pack)["name"])
+        except _modell_onnx.Abgelehnt:
+            _onnx = None
+        if _onnx is not None:
+            args.onnx = str(_onnx)
+
     if not (args.model or args.onnx or args.ohne_modell):
         # Hier importieren und nicht erst weiter unten. `einstellungen` wird in
         # `main()` nochmals geholt; ein Import irgendwo im Rumpf macht den Namen

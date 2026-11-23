@@ -200,7 +200,7 @@ through. The command line allows it for measurements and says so.
 
 ## Install
 
-Three ways on Linux, an installer for Windows, and a disk image for macOS. They differ in exactly one
+Three ways on Linux, an installer for Windows, and two disk images for macOS. They differ in exactly one
 question: **does the model ship with the package, or is it fetched on
 first start?**
 
@@ -209,7 +209,8 @@ first start?**
 | **AppImage** | about 1.7 GB | included | one executable file; no installation, no dependencies |
 | **Flatpak** | about 0.3 GB, plus the KDE runtime from Flathub | fetched, 1.2 GB | Debian, Ubuntu, Fedora, openSUSE, Arch, wherever Flatpak runs |
 | **Windows installer** | about 1.4 GB | included | Windows 11, 64-bit; installs without administrator rights |
-| **macOS disk image** | about 1.4 GB | included | Macs with Apple silicon (M1 or newer); not signed |
+| **macOS disk image, Apple silicon** | about 1.4 GB | included | Macs with Apple silicon, macOS 14 Sonoma or newer; not signed |
+| **macOS disk image, Intel** | about 1.3 GB | included, as ONNX | Intel Macs, macOS 13 Ventura or newer; not signed |
 | **Docker** | about 4.2 GB | included | running as a service; interface in the browser |
 
 If the model is fetched, **the first start asks first**: it names source,
@@ -241,8 +242,10 @@ The Flatpak fetches the KDE runtime from Flathub when installed.
 On Windows, run `MASCHERA-latest-x64-setup.exe`. The installer is not
 signed, so Windows warns on first start: "More info" → "Run anyway".
 
-On macOS (Apple silicon only), open `MASCHERA-latest-arm64.dmg` and drag
-`MASCHERA` into *Applications*. The app is not signed, and recent macOS
+On macOS, open `MASCHERA-latest-arm64.dmg` (Apple silicon) or
+`MASCHERA-latest-x86_64.dmg` (Intel) and drag `MASCHERA` into *Applications*.
+Which one you need: Apple menu → *About This Mac*, «Chip» means Apple silicon,
+«Processor» means Intel. The app is not signed, and recent macOS
 versions do not let you open it with a right click. Remove the quarantine flag
 once, in *Terminal*:
 
@@ -250,8 +253,13 @@ once, in *Terminal*:
 xattr -dr com.apple.quarantine /Applications/MASCHERA.app
 ```
 
-The macOS build is new and has been tested on one Mac so far, including
-"Copy and open …". Messages from Apple Mail cannot be dragged straight into
+The Intel build computes the same model with onnxruntime instead of PyTorch,
+because PyTorch no longer ships for Intel Macs. On the gold test set and on 200
+synthetic cases it masks exactly the same; it needs less memory. GitHub builds
+Intel Macs until about August 2027, after that this package may end.
+
+The Apple silicon build has been tested on one Mac so far, including
+"Copy and open …"; the Intel build so far only in GitHub's build. Messages from Apple Mail cannot be dragged straight into
 the window (Mail hands over no file); drag them to the desktop first, then in.
 
 ### Docker
@@ -260,7 +268,7 @@ A ready-made image, about 4.2 GB, the model included:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:2.3.3
+    ghcr.io/semprerudi/maschera:2.4.0
 ```
 
 Then open `http://127.0.0.1:4141` in the browser. The server keeps
@@ -278,7 +286,7 @@ and check them:
 sha256sum -c --ignore-missing SHA256SUMS
 ```
 
-On macOS, `shasum -a 256 MASCHERA-latest-arm64.dmg` prints the sum to compare
+On macOS, `shasum -a 256 MASCHERA-latest-arm64.dmg` (or `…-x86_64.dmg`) prints the sum to compare
 with the matching line in `SHA256SUMS`.
 
 The Docker image is signed (keyless, with [cosign](https://github.com/sigstore/cosign))
@@ -306,8 +314,8 @@ signs the image when a version is tagged. Verify those with the tag in the
 identity:
 
 ```fish
-cosign verify ghcr.io/semprerudi/maschera:2.3.3 \
-    --certificate-identity https://github.com/semprerudi/maschera/.github/workflows/release.yml@refs/tags/v2.3.3 \
+cosign verify ghcr.io/semprerudi/maschera:2.4.0 \
+    --certificate-identity https://github.com/semprerudi/maschera/.github/workflows/release.yml@refs/tags/v2.4.0 \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```
 

@@ -1,0 +1,6 @@
+{
+ "de": "Sehr geehrte Frau [GIVENNAME_1] [FULLNAME_1]\nWir bestätigen Ihren Termin vom [DATE_1] an der [STREET_1] [BUILDINGNUM_1] in [ZIPCODE_1] [CITY_1]. Ihre AHV-Nummer lautet [AHVN13_1], Ihre Telefonnummer [PHONE_1]. Bei Fragen wenden Sie sich an [GIVENNAME_2] [FULLNAME_2], [ORG_1], [EMAIL_1].\nFreundliche Grüsse\n",
+ "fr": "Madame [ORG_1]\nNous confirmons votre rendez-vous du [DATE_1] à la [STREET_1] [BUILDINGNUM_1], [ZIPCODE_1] [CITY_1]. Votre numéro AVS est [AHVN13_1]. Pour toute question, contactez [GIVENNAME_1] [FULLNAME_1], [ORG_2], au [PHONE_1].\n",
+ "it": "Gentile signor [GIVENNAME_1] [FULLNAME_1]\nConfermiamo l'appuntamento del [DATE_1] in [STREET_1] [BUILDINGNUM_1], [ZIPCODE_1] [CITY_1]. Il suo numero AVS è [AHVN13_1]. Per domande si rivolga a [GIVENNAME_2] [ORG_1], telefono [PHONE_1].\n",
+ "en": "Dear Mr [GIVENNAME_1] [FULLNAME_1]\nWe confirm your appointment on [DATE_1] [ORG_1] [STREET_1] [BUILDINGNUM_1], [ZIPCODE_1] [CITY_1]. Your AHV number is [AHVN13_1]. If you have questions, contact [GIVENNAME_2] [FULLNAME_2] [ORG_1] the [ORG_2], [EMAIL_1].\n"
+}

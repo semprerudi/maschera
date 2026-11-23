@@ -503,7 +503,7 @@ prüft, dass `/api/senden` mit 404 antwortet.
 | **Ein Dokument zur Zeit** | der Läufer merkt sich die Vertrauenswerte des letzten Laufs. Zwei gleichzeitige Anfragen würden sie vermischen. `/api/zustand` und `/api/fortschritt` bleiben daneben erreichbar |
 | **Nur `127.0.0.1`** | `--host 0.0.0.0` ist möglich und warnt. Der Betrieb hinter einem Reverse Proxy braucht es, der Arbeitsplatz nicht |
 | **Nichts wird geschrieben** | kein Protokoll, keine Zwischendatei. Ausnahmen sind die Einstellungen des Anwenders: `PUT /api/regeln`, `/api/vorlieben`, `/api/vorlagen`, `/api/einstellungen`, alle nach `~/.config/maschera/`, alle nur auf ausdrücklichen Befehl |
-| **Höchstens 10 MB** | darüber 413 |
+| **Höchstens 25 MB** | darüber 413. Gilt für jede Datei, auch PDF und Word |
 | **Mehrere Nachrichten in einer `.mbox`** | nur die erste wird verarbeitet, die Antwort sagt es. Stapel bleibt Sache der Kommandozeile |
 
 ---

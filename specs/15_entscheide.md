@@ -285,6 +285,19 @@ Der Halt vor dem Release vergleicht einen Fingerabdruck der Oberfläche statt Co
 läuft derselbe Check vor jedem Release auf dem Stand, der hinausgeht. Der Nachweis gilt für
 genau einen Commit, jede weitere Änderung verlangt ihn neu.
 
+### EN-037 Intel-Macs rechnen mit ONNX FP32
+
+Für macOS x86_64 gibt es kein aktuelles torch mehr: das letzte Rad ist 2.2.2, nur bis Python
+3.12, und transformers 5 verlangt torch 2.6. Das Intel-Paket rechnet deshalb dieselben
+Gewichte als ONNX FP32 mit onnxruntime 1.23.2, dem letzten x86_64-Rad, das macOS 13
+verlangt. Gemessen am 23.11.2026 auf dem Golddokument-Testset und auf 200 synthetischen
+Fällen: dieselben Lecks und Übermaskierungen, jede Zeile je Dokument gleich, kein
+Vertrauenswert kippt an einer Schwelle. INT8 schied aus, weil 7 % der Token ein anderes
+Label bekamen. Der Export entsteht im Workflow und wird dort streng gegen torch geprüft
+(`tools/onnx_vergleich.py`). Gebaut wird auf `macos-15-intel`, dem letzten x86_64-Runner von
+GitHub, bis etwa August 2027. Danach endet der Intel-Bau, sofern sich kein anderer Weg
+findet. Apple-Chips bleiben bei torch.
+
 ### EN-036 Der Kopf der GitHub-Seite
 
 Zuerst zählt, was MASCHERA ist und wie es aussieht: Logo, ein Satz, Vorschau, Webseite,

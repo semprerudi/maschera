@@ -7,11 +7,16 @@
 | AppImage x86_64 | rund 1,7 GB | fährt mit | Linux, eine Datei ohne Installation, mit zsync-Aktualisierung |
 | Flatpak x86_64 | rund 0,3 GB, dazu die KDE-Laufzeit | wird nach Zustimmung geholt, 1,2 GB | Debian, Ubuntu, Fedora, openSUSE und andere |
 | Windows-Installer x64 | rund 1,4 GB | fährt mit | Windows 11, ohne Administratorrechte, nicht signiert |
-| macOS arm64 | rund 1,4 GB | fährt mit | Macs mit Apple-Chip, nicht signiert |
+| macOS arm64 | rund 1,4 GB | fährt mit | Macs mit Apple-Chip ab macOS 14, nicht signiert |
+| macOS Intel | rund 1,3 GB (ungemessen) | fährt mit, als ONNX FP32 | Intel-Macs ab macOS 13, nicht signiert, onnxruntime statt torch ([EN-037](15_entscheide.md)) |
 | Docker | rund 4,2 GB | fährt mit | Betrieb als Dienst, Port nur auf `127.0.0.1` |
 | Arch | Bauanleitung | wird nach Zustimmung geholt | `tools/paket/PKGBUILD`, System-Python |
 
-Python 3.13 in allen Bauten ausser Arch, torch als CPU-Fassung. Die Paketlisten stehen in
+Python 3.13 in allen Bauten ausser Arch, torch als CPU-Fassung; das Intel-Paket für macOS
+ohne torch, mit onnxruntime 1.23.2 (`tools/paket/requirements-macos-intel.txt`).
+Die AppImage verlangt höchstens glibc 2.35 (gemessen 2.34, aus den PyQt6-Rädern) und läuft
+damit ab Ubuntu 22.04 und Debian 12. Die glibc des Bau-Rechners reist nicht mit; der
+Release-Lauf prüft die Grenze nach dem Bau. Die Paketlisten stehen in
 [abhaengigkeiten.md](erzeugt/abhaengigkeiten.md).
 
 | Bauweg | Anleitung |
@@ -45,7 +50,9 @@ Das Vorgehen als Diagramm steht in [05 Abläufe](05_ablaeufe.md).
 3. Prüfen: Fassung ist keine Testfassung, Baum sauber, Tag frei, alle Prüfungen grün.
 4. Öffentlichen Stand als normalen Commit nach GitHub schieben, dann den Tag.
 5. Der Tag löst `.github/workflows/release.yml` aus: Tag gegen `VERSION` prüfen,
-   Pakete bauen (`pakete.yml` für macOS und Windows), Modell mit Prüfsumme holen,
+   Pakete bauen (`pakete.yml` für macOS arm64 und Intel und für Windows; für Intel
+   exportiert ein Linux-Job das Modell als ONNX FP32 und prüft es gegen torch),
+   Modell mit Prüfsumme holen,
    Docker-Abbild nach GHCR mit cosign signieren, SBOM für AppImage und Docker, `SHA256SUMS`,
    Release anlegen.
 6. Der Server zieht das signierte Abbild.

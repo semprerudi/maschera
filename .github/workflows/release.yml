@@ -7,7 +7,7 @@
 #
 # Ablauf:
 #   pruefen     Tag gegen VERSION, Releasetext vorhanden
-#   pakete      macOS und Windows (`pakete.yml`)
+#   pakete      macOS arm64 und Intel, Windows (`pakete.yml`)
 #   appimage    AppImage mit zsync-Adresse und SBOM
 #   flatpak     Flatpak-Buendel (das Modell holt die App beim ersten Start)
 #   docker      Abbild nach GHCR (:X.Y.Z und :latest), signiert, mit SBOM
@@ -72,7 +72,13 @@ jobs:
 
   appimage:
     needs: pruefen
-    runs-on: ubuntu-22.04   # aelteres glibc: laeuft auch auf aelteren Systemen
+    # ubuntu-24.04 seit 2.4.0 (23.11.2026): GitHub schaltet ubuntu-22.04 am
+    # 17.4.2027 ab. Die glibc des Runners reist NICHT mit: Python kommt ueber
+    # `uv` (fuer alte glibc gebaut), alles andere aus manylinux-Raedern, und
+    # Bibliotheken des Runners werden nicht kopiert. Gemessen an einer AppImage,
+    # die auf glibc 2.44 entstand: hoechstens GLIBC_2.34 (PyQt6). Der Schritt
+    # «glibc-Bedarf» haelt die Grenze fest.
+    runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
@@ -104,6 +110,17 @@ jobs:
         env:
           MASCHERA_UPDATE_URL: https://github.com/semprerudi/maschera/releases/latest/download
         run: fish tools/paket/appimage_bauen.fish
+      # Laeuft weiter auf Ubuntu 22.04 (glibc 2.35) und Debian 12 (2.36)?
+      # Bricht ab, sobald eine Datei im AppDir eine neuere glibc verlangt.
+      - name: glibc-Bedarf (hoechstens 2.35)
+        run: |
+          hoechste=$(find dist/AppDir -type f \( -name '*.so*' -o -perm -u+x \) -print0 \
+            | xargs -0 -n 200 objdump -T 2>/dev/null | grep -o 'GLIBC_2\.[0-9]*' \
+            | sort -t. -k2,2n -u | tail -1)
+          echo "hoechster glibc-Bedarf: $hoechste"
+          [ -n "$hoechste" ] || { echo "::error::kein glibc-Bedarf gefunden, Pruefung misst nichts"; exit 1; }
+          stufe=${hoechste#GLIBC_2.}
+          [ "$stufe" -le 35 ] || { echo "::error::AppImage verlangt $hoechste, mehr als Ubuntu 22.04 hat"; exit 1; }
       - uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c  # v0.24.3
         with:
           path: dist/AppDir
@@ -235,6 +252,7 @@ jobs:
           mv lauf/docker/maschera-*-docker.spdx.json aus/
           mv lauf/MASCHERA-Windows-setup/MASCHERA-*-x64-setup.exe aus/MASCHERA-latest-x64-setup.exe
           mv lauf/MASCHERA-macOS-dmg/MASCHERA-*-arm64.dmg aus/MASCHERA-latest-arm64.dmg
+          mv lauf/MASCHERA-macOS-intel-dmg/MASCHERA-*-x86_64.dmg aus/MASCHERA-latest-x86_64.dmg
           cd aus
           sha256sum * > SHA256SUMS
           cat SHA256SUMS

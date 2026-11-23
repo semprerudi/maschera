@@ -85,6 +85,7 @@ NFA-055;Einheitliche Formen;verbindlich;T-APP-22
 NFA-056;Bedienung mit dem Finger;verbindlich;T-OBERFLAECHE-93
 NFA-060;Plattformen;verbindlich;T-FENSTER-12 T-FENSTER-22 T-FENSTER-26
 NFA-061;Zeichensatz;verbindlich;T-SCHRIFTEN-5 T-SCHRIFTEN-6
+NFA-063;macOS-Minimum je Architektur;verbindlich;T-FENSTER-33
 NFA-062;Browser;offen;
 NFA-070;Prüfbar ohne Modell;verbindlich;
 NFA-071;Eine Quelle;verbindlich;T-API-21 T-FENSTER-6 T-FENSTER-7 T-GOLDPFAD-6

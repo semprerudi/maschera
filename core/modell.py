@@ -99,6 +99,24 @@ def suche(name: str) -> Path | None:
     return None
 
 
+# Was ein ONNX-Modell zum Rechnen braucht: der Graph, der Tokenizer und der
+# Labelvertrag. `OnnxScorer` liest genau diese drei.
+PFLICHT_ONNX = ("model.onnx", "tokenizer.json", "pack.json")
+
+
+def suche_onnx(name: str) -> Path | None:
+    """Ein mitgeliefertes ONNX-Modell unter `onnx/<name>` neben dem Code.
+
+    Nur das Mac-Paket fuer Intel traegt es (seit 23.11.2026): fuer x86_64 gibt
+    es kein aktuelles torch mehr, onnxruntime rechnet dieselben Gewichte in
+    FP32. Ein ONNX-Modell wird nie nachgeholt; fehlt es, gilt `suche()`.
+    """
+    ort = WURZEL / "onnx" / name
+    if ort.is_dir() and all((ort / d).is_file() for d in PFLICHT_ONNX):
+        return ort
+    return None
+
+
 # ---------------------------------------------------------------------------
 # Das Manifest
 # ---------------------------------------------------------------------------

@@ -204,7 +204,7 @@ lässt es für Messungen zu und sagt es dabei.
 
 ## Installieren
 
-Drei Wege unter Linux, ein Installer für Windows und ein Datenträgerabbild für macOS. Sie unterscheiden sich
+Drei Wege unter Linux, ein Installer für Windows und zwei Datenträgerabbilder für macOS. Sie unterscheiden sich
 in genau einer Frage: **fährt das Modell mit, oder wird es beim ersten
 Start geholt?**
 
@@ -213,7 +213,8 @@ Start geholt?**
 | **AppImage** | rund 1,7 GB | fährt mit | eine einzige ausführbare Datei; keine Installation, keine Abhängigkeiten |
 | **Flatpak** | rund 0,3 GB, dazu die KDE-Laufzeit von Flathub | wird geholt, 1,2 GB | Debian, Ubuntu, Fedora, openSUSE, Arch, überall, wo Flatpak läuft |
 | **Windows-Installer** | rund 1,4 GB | fährt mit | Windows 11, 64 Bit; installiert ohne Administratorrechte |
-| **macOS-Abbild** | rund 1,4 GB | fährt mit | Macs mit Apple-Chip (M1 oder neuer); nicht signiert |
+| **macOS-Abbild, Apple-Chip** | rund 1,4 GB | fährt mit | Macs mit Apple-Chip, ab macOS 14 Sonoma; nicht signiert |
+| **macOS-Abbild, Intel** | rund 1,3 GB | fährt mit, als ONNX | Intel-Macs ab macOS 13 Ventura; nicht signiert |
 | **Docker** | rund 4,2 GB | fährt mit | Betrieb als Dienst; Oberfläche im Browser |
 
 Wird das Modell geholt, **fragt der erste Start vorher**: er nennt
@@ -246,8 +247,10 @@ Unter Windows `MASCHERA-latest-x64-setup.exe` starten. Der Installer ist
 nicht signiert, deshalb warnt Windows beim ersten Start: «Weitere
 Informationen» → «Trotzdem ausführen».
 
-Unter macOS (nur Apple-Chip) `MASCHERA-latest-arm64.dmg` öffnen und `MASCHERA`
-in *Programme* ziehen. Die App ist nicht signiert, und neuere macOS-Fassungen
+Unter macOS `MASCHERA-latest-arm64.dmg` (Apple-Chip) oder
+`MASCHERA-latest-x86_64.dmg` (Intel) öffnen und `MASCHERA` in *Programme* ziehen.
+Welches du brauchst: Apple-Menü → *Über diesen Mac*. Steht dort «Chip», ist es
+ein Apple-Chip, steht «Prozessor», ein Intel. Die App ist nicht signiert, und neuere macOS-Fassungen
 lassen sie sich nicht per Rechtsklick öffnen. Einmal in *Terminal* die
 Quarantäne-Markierung entfernen:
 
@@ -255,8 +258,14 @@ Quarantäne-Markierung entfernen:
 xattr -dr com.apple.quarantine /Applications/MASCHERA.app
 ```
 
-Der macOS-Bau ist neu und bisher auf einem Mac getestet, auch «Kopieren und …
-öffnen». Nachrichten aus Apple Mail lassen sich nicht direkt ins Fenster ziehen
+Das Intel-Paket rechnet dasselbe Modell mit onnxruntime statt PyTorch, weil
+es PyTorch für Intel-Macs nicht mehr gibt. Auf dem Golddokument-Testset und auf
+200 synthetischen Fällen maskiert es genau gleich und braucht weniger
+Arbeitsspeicher. GitHub baut für Intel-Macs bis etwa August 2027, danach kann
+dieses Paket enden.
+
+Das Paket für Apple-Chips ist bisher auf einem Mac getestet, auch «Kopieren und …
+öffnen»; das Intel-Paket bisher nur im Bau auf GitHub. Nachrichten aus Apple Mail lassen sich nicht direkt ins Fenster ziehen
 (Mail übergibt keine Datei); zuerst auf den Schreibtisch ziehen, dann hinein.
 
 ### Docker
@@ -265,7 +274,7 @@ Ein fertiges Abbild, rund 4,2 GB, das Modell fährt mit:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:2.3.3
+    ghcr.io/semprerudi/maschera:2.4.0
 ```
 
 Danach im Browser `http://127.0.0.1:4141` öffnen. Der Server speichert
@@ -284,7 +293,7 @@ und prüfen:
 sha256sum -c --ignore-missing SHA256SUMS
 ```
 
-Unter macOS gibt `shasum -a 256 MASCHERA-latest-arm64.dmg` die Summe aus, die du
+Unter macOS gibt `shasum -a 256 MASCHERA-latest-arm64.dmg` (oder `…-x86_64.dmg`) die Summe aus, die du
 mit der passenden Zeile in `SHA256SUMS` vergleichst.
 
 Das Docker-Abbild ist ab 1.0.2 signiert (ohne eigenen Schlüssel, mit
@@ -312,8 +321,8 @@ das Abbild, sobald eine Fassung getaggt wird. Diese prüfst du mit dem Tag in de
 Identität:
 
 ```fish
-cosign verify ghcr.io/semprerudi/maschera:2.3.3 \
-    --certificate-identity https://github.com/semprerudi/maschera/.github/workflows/release.yml@refs/tags/v2.3.3 \
+cosign verify ghcr.io/semprerudi/maschera:2.4.0 \
+    --certificate-identity https://github.com/semprerudi/maschera/.github/workflows/release.yml@refs/tags/v2.4.0 \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```
 

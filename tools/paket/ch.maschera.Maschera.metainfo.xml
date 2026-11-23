@@ -116,6 +116,16 @@
     <!-- Die erste Angabe muss zur Fassung in app/serve.py passen
          (test_fenster 12). Testbauten tragen `X.Y.Z-test.N` mit
          type="development"; Software-Stores zeigen das nicht als Release. -->
+    <release version="2.4.0-test.2" date="2026-11-23" type="development">
+      <description>
+        <p>Test build: Intel Macs (ONNX), macOS minimum per architecture.</p>
+      </description>
+    </release>
+    <release version="2.4.0-test.1" date="2026-11-23" type="development">
+      <description>
+        <p>Test build: files up to 25 MB, PyMuPDF 1.28 or newer.</p>
+      </description>
+    </release>
     <release version="2.3.3" date="2026-11-20">
       <description>
         <p>Phone fixes: the page no longer jumps back after a step, and the

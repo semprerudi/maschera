@@ -85,12 +85,15 @@ from filter_document import Mitschreiber  # noqa: E402
 # hier heraus. `tests/test_fenster.py` Punkt 7 prueft, dass es bei dieser
 # einen Stelle bleibt. In einem Fehlerbericht sagt sie, welcher Stand
 # gemeint ist.
-VERSION = "2.3.3"
+VERSION = "2.4.0-test.2"
 
 # Mehr nimmt der Server nicht an. Ein Dokument ist laut Messung 1500 bis 4500
-# Zeichen; 10 MB fangen auch ein PDF mit Bildern ab, ohne dass ein
-# versehentlich abgelegtes Archiv den Speicher fuellt.
-MAX_UPLOAD = 10 * 1024 * 1024
+# Zeichen, aber ein PDF mit eingescannten Beilagen oder ein Word-Dokument mit
+# Bildern wird schnell gross; seit 23.11.2026 deshalb 25 MB statt 10. Das
+# haelt ein versehentlich abgelegtes Archiv weiter vom Speicher fern. Davor
+# liegen: Traefik mit 50 MB (`compose.traefik.yaml`), der Auspackschutz fuer
+# .docx mit 64 MB (`DOCX_HOECHSTENS` in `tools/dokumente.py`).
+MAX_UPLOAD = 25 * 1024 * 1024
 
 # ---------------------------------------------------------------------------
 # Unter welchem Namen dieser Dienst antwortet

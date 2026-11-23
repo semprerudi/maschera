@@ -46,6 +46,10 @@ updates:
     ignore:
       - dependency-name: "pymupdf"
         versions: [">=2"]
+      # Das Mac-Paket fuer Intel (`requirements-macos-intel.txt`): ab 1.24
+      # liefert onnxruntime keine x86_64-Raeder fuer macOS mehr (23.11.2026).
+      - dependency-name: "onnxruntime"
+        versions: [">=1.24"]
 
   - package-ecosystem: "docker"
     directory: "/tools/paket"

@@ -1786,10 +1786,19 @@ check(re.search(r"^ENV ORT_DISABLE_TELEMETRY=1$",
 check("ort.disable_telemetry_events()" in (WURZEL / "core/inference.py").read_text(encoding="utf-8"),
       "core/inference.py schaltet die Telemetrie von onnxruntime nicht ab")
 for _f31 in ("requirements.txt", "tools/paket/requirements-paket.txt",
-             "tools/paket/requirements-flatpak.txt"):
+             "tools/paket/requirements-flatpak.txt",
+             "tools/paket/requirements-macos-intel.txt"):
     _z31 = re.search(r"^pymupdf([^\s#]*)", (WURZEL / _f31).read_text(encoding="utf-8"), re.M)
     check(_z31 is not None and "<2" in _z31.group(1),
           f"{_f31}: pymupdf ohne Obergrenze <2; 2.0 zieht onnxruntime mit Telemetrie nach")
+    # Untergrenze (23.11.2026): unter 1.28 steht CVE-2026-3308 offen, und
+    # pip-audit sieht die Luecken von MuPDF nicht. Deshalb hier und nicht im Audit.
+    _unten31 = re.search(r">=\s*(\d+)\.(\d+)", _z31.group(1)) if _z31 else None
+    check(_unten31 is not None and (int(_unten31[1]), int(_unten31[2])) >= (1, 28),
+          f"{_f31}: pymupdf ohne Untergrenze >=1.28 (CVE-2026-3308)")
+for _f31 in ("tools/dokumente.py", "tests/test_scan_pdf.py"):
+    check(not re.search(r"^\s*import fitz", (WURZEL / _f31).read_text(encoding="utf-8"), re.M),
+          f"{_f31}: Rueckgriff auf `import fitz` (nur Fassungen vor 1.24)")
 # pywebview festgelegt (6.x schaltete Downloads still ab).
 for _f31 in ("tools/paket/requirements-appimage.txt", "tools/paket/requirements-flatpak.txt",
              ".github/workflows/pakete.yml"):
@@ -1799,7 +1808,7 @@ for _f31 in ("tools/paket/requirements-appimage.txt", "tools/paket/requirements-
     check(_angaben31 and all(">=6.2.1,<7" in a for a in _angaben31),
           f"{_f31}: pywebview nicht auf >=6.2.1,<7 festgelegt ({_angaben31})")
 if len(failures) == _vor31:
-    print("   OK   Schalter an fuenf Einstiegen, AppRun, Dockerfile; pymupdf<2; pywebview festgelegt")
+    print("   OK   Schalter an fuenf Einstiegen, AppRun, Dockerfile; pymupdf >=1.28,<2; pywebview festgelegt")
 
 print("\n32. Kein Zusatzindex: torch einzeln vom CPU-Index, alles andere von PyPI")
 # Befund Lockpick, 28.10.2026: `--extra-index-url download.pytorch.org` in
@@ -1840,6 +1849,82 @@ for _f32 in ("tools/paket/Dockerfile", "tools/paket/appimage_bauen.fish",
           f"{_f32}: holt das torch-Rad nicht einzeln vom CPU-Index")
 if len(failures) == _vor32:
     print(f"   OK   {len(_listen32)} Paketlisten ohne weitere Quelle, torch einzeln und ohne Abhaengigkeiten")
+
+print("\n33. Mac-Pakete: Minimum je Architektur, Intel ohne torch")
+# Seit 2.4.0 (23.11.2026). Gemessen am DMG 2.3.3: torch-Teile verlangten
+# macOS 14, die Info.plist nannte nichts, das README sagte «M1 oder neuer».
+# Das Minimum steht an drei Stellen (MINIMUM in macos_bauen.py,
+# MACOSX_DEPLOYMENT_TARGET je Job, macho_pruefen danach) und muss gleich sein.
+_vor33 = len(failures)
+_mb33 = (WURZEL / "tools/paket/macos_bauen.py").read_text(encoding="utf-8")
+_min33 = re.search(r'^MINIMUM = \{"arm64": "([\d.]+)", "x86_64": "([\d.]+)"\}', _mb33, re.M)
+check(_min33 is not None, "macos_bauen.py: MINIMUM nicht gefunden")
+_wf33 = (WURZEL / ".github/workflows/pakete.yml").read_text(encoding="utf-8")
+if _min33:
+    for _job33, _arch33, _soll33 in (("macos", "arm64", _min33[1]),
+                                     ("macos-intel", "x86_64", _min33[2])):
+        _block33 = re.search(rf"^  {re.escape(_job33)}:\n(.*?)(?=^  [a-z][a-z0-9-]*:\n|\Z)",
+                             _wf33, re.M | re.S)
+        check(_block33 is not None, f"pakete.yml: Job {_job33} fehlt")
+        if _block33:
+            _b33 = _block33[1]
+            check(f'MACOSX_DEPLOYMENT_TARGET: "{_soll33}"' in _b33,
+                  f"pakete.yml {_job33}: MACOSX_DEPLOYMENT_TARGET nicht {_soll33}")
+            check(f"macho_pruefen.py dist/macos-bau/dist/MASCHERA.app --arch {_arch33}" in _b33,
+                  f"pakete.yml {_job33}: keine Pruefung der Programmdateien fuer {_arch33}")
+            check("referenz_pruefen.py" in _b33,
+                  f"pakete.yml {_job33}: kein Vergleich mit der Referenz")
+            check("continue-on-error" not in _b33.split("Rauchtest und Referenz", 1)[-1].split("upload-artifact", 1)[0],
+                  f"pakete.yml {_job33}: Rauchtest bricht den Lauf nicht ab")
+# Intel: ohne torch und transformers, onnxruntime fest auf 1.23.2 (das letzte
+# x86_64-Rad), und der Export im CI prueft streng gegen torch.
+_intel33 = (WURZEL / "tools/paket/requirements-macos-intel.txt").read_text(encoding="utf-8")
+_pak33 = {re.split(r"[<>=!\[ ]", z.split("#")[0].strip())[0].lower()
+          for z in _intel33.splitlines() if z.split("#")[0].strip()}
+check(not ({"torch", "transformers"} & _pak33),
+      f"requirements-macos-intel.txt traegt {sorted({'torch','transformers'} & _pak33)}")
+check(re.search(r"^onnxruntime==1\.23\.2\b", _intel33, re.M) is not None,
+      "requirements-macos-intel.txt: onnxruntime nicht fest auf 1.23.2")
+check("onnx_vergleich.py --torch runs/ch-v63b --onnx onnx-fp32 --streng" in _wf33,
+      "pakete.yml: ONNX-Export ohne strengen Vergleich mit torch")
+check('"onnxruntime==1.23.2"' in _wf33,
+      "pakete.yml: Export prueft nicht mit derselben onnxruntime wie das Paket")
+check("--no-quantize" in _wf33 and "--no-trim" in _wf33,
+      "pakete.yml: Intel-Modell nicht als unbeschnittenes FP32 exportiert")
+_rel33 = (WURZEL / ".github/workflows/release.yml").read_text(encoding="utf-8")
+check("aus/MASCHERA-latest-x86_64.dmg" in _rel33,
+      "release.yml: das Intel-DMG kommt nicht ins Release")
+# Die App findet ein mitgeliefertes ONNX-Modell vor jeder Suche nach `runs/`.
+_fe33 = (WURZEL / "app/fenster.py").read_text(encoding="utf-8")
+_p_onnx, _p_man = _fe33.find("suche_onnx("), _fe33.find("_gefunden = _modell.suche(")
+check(0 < _p_onnx < _p_man, "fenster.py: suche_onnx steht nicht vor der Suche nach runs/")
+# Der Leser der Programmdateien erkennt, was er erkennen soll.
+import importlib.util as _ilu33, plistlib as _pl33, struct as _st33, tempfile as _tf33
+_sp33 = _ilu33.spec_from_file_location("_macho33", WURZEL / "tools/paket/macho_pruefen.py")
+_mp33 = _ilu33.module_from_spec(_sp33)
+_sp33.loader.exec_module(_mp33)
+def _mo33(cpu, minos):
+    lc = _st33.pack("<IIIIII", 0x32, 24, 1, (minos[0] << 16) | (minos[1] << 8), 0, 0)
+    return _st33.pack("<IiIIIIII", 0xFEEDFACF, cpu, 0, 2, 1, len(lc), 0, 0) + lc
+def _app33(wurzel, teile, ls):
+    a = Path(wurzel) / "X.app"
+    (a / "Contents/MacOS").mkdir(parents=True)
+    for i, (c, m) in enumerate(teile):
+        (a / f"Contents/MacOS/b{i}").write_bytes(_mo33(c, m))
+    (a / "Contents/Info.plist").write_bytes(_pl33.dumps({"LSMinimumSystemVersion": ls}))
+    return a
+import contextlib as _cl33, io as _io33
+with _tf33.TemporaryDirectory() as _d33, _cl33.redirect_stdout(_io33.StringIO()):
+    _gut = _mp33.pruefe(_app33(_d33 + "/g", [(0x01000007, (10, 13)), (0x01000007, (13, 0))], "13.0"), "x86_64", "13.0")
+    _hoch = _mp33.pruefe(_app33(_d33 + "/h", [(0x01000007, (14, 0))], "13.0"), "x86_64", "13.0")
+    _arch = _mp33.pruefe(_app33(_d33 + "/a", [(0x0100000C, (11, 0))], "13.0"), "x86_64", "13.0")
+    _plist = _mp33.pruefe(_app33(_d33 + "/p", [(0x01000007, (12, 0))], "12.0"), "x86_64", "13.0")
+check(_gut == [], f"macho_pruefen weist ein passendes Buendel zurueck: {_gut}")
+check(any("verlangt macOS 14.0" in f for f in _hoch), "macho_pruefen uebersieht ein zu hohes Minimum")
+check(any("Architektur arm64" in f for f in _arch), "macho_pruefen uebersieht die falsche Architektur")
+check(any("LSMinimumSystemVersion" in f for f in _plist), "macho_pruefen uebersieht die Info.plist")
+if len(failures) == _vor33:
+    print(f"   OK   arm64 ab {_min33[1]}, Intel ab {_min33[2]} ohne torch; Pruefung der Programmdateien greift")
 
 print()
 if failures:

@@ -571,16 +571,15 @@ def pdf_pruefen(dok) -> None:
 
 
 def pdf_zu_text(pfad: Path) -> tuple[str, list[str]]:
+    # Kein Rueckgriff auf den alten Namen `fitz` (23.11.2026): ihn tragen nur
+    # Fassungen vor 1.24, und unter 1.28 steht CVE-2026-3308 offen.
     try:
         import pymupdf
     except ImportError:
-        try:
-            import fitz as pymupdf  # aeltere Paketnamen
-        except ImportError:
-            raise Abbruch(
-                "PDF braucht pymupdf:\n"
-                "  pip install pymupdf",
-                schluessel="pdf_ohne_pymupdf")
+        raise Abbruch(
+            "PDF braucht pymupdf:\n"
+            "  pip install pymupdf",
+            schluessel="pdf_ohne_pymupdf")
 
     roh = Path(pfad).read_bytes()
     if pdf_verdeckter_filter(roh):
@@ -679,8 +678,8 @@ def docx_zu_text(pfad: Path) -> tuple[str, list[str]]:
             namen = set(z.namelist())
             # Erst die angekuendigte Groesse, dann lesen. `z.read()` packt aus, so
             # weit der Inhalt reicht — die Datei selbst sagt darueber nichts. DEFLATE
-            # schafft rund 1 : 1000 (50 MB Inhalt in 48 KB); aus dem 10-MB-Limit des
-            # Servers wuerden sonst rund 10 GB im Arbeitsspeicher. Die Grenze steht VOR
+            # schafft rund 1 : 1000 (50 MB Inhalt in 48 KB); aus dem 25-MB-Limit des
+            # Servers wuerden sonst rund 25 GB im Arbeitsspeicher. Die Grenze steht VOR
             # dem Auspacken.
             gross = z.getinfo("word/document.xml").file_size
             if gross > DOCX_HOECHSTENS:

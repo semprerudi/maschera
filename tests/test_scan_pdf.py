@@ -31,11 +31,8 @@ sys.path.insert(0, str(WURZEL / "tools"))
 try:
     import pymupdf
 except ImportError:
-    try:
-        import fitz as pymupdf
-    except ImportError:
-        print("UEBERSPRUNGEN: pymupdf nicht installiert.")
-        raise SystemExit(0)
+    print("UEBERSPRUNGEN: pymupdf nicht installiert.")
+    raise SystemExit(0)
 
 try:
     import flask  # noqa: F401

@@ -1,0 +1,123 @@
+# Vorlagen EN — Berufs- und Funktionsbezeichnungen (JOBTITLE), seit 24.11.2026
+#
+# JOBTITLE und ORG stehen nebeneinander, damit das Modell die Grenze lernt.
+# {KOEDER} ist ein Nachname, der zugleich ein Beruf ist (Tanner, Smith,
+# Baker), und bleibt FULLNAME.
+
+templates:
+  - id: en_jobtitle_signature
+    doc_type: signaturblock
+    text: |
+      Subject: Your request of {DATE}
+
+      Dear Sir or Madam,
+
+      We have received your documents and will get back to you {~deadline}.
+
+      Kind regards
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}
+      {ORG}
+      {@address}
+      Phone {PHONE}
+      {EMAIL}
+
+  - id: en_jobtitle_signature_koeder
+    doc_type: signaturblock
+    text: |
+      Dear Sir or Madam,
+
+      Pursuant to {~legal}, please find the requested documents attached.
+
+      Yours faithfully
+
+      {GIVENNAME} {KOEDER}
+      {JOBTITLE}, {ORG}
+
+      cc: {GIVENNAME} {FULLNAME}, {JOBTITLE}
+
+  - id: en_jobtitle_addressee
+    doc_type: official letter
+    text: |
+      {ORG}
+      Attn: {GIVENNAME} {FULLNAME}, {JOBTITLE}
+      {@address}
+
+      {CITY}, {DATE}
+
+      Dear Ms {FULLNAME},
+
+      In your capacity as {JOBTITLE}, you asked us on {DATE} for a
+      statement. The deadline runs {~deadline}.
+
+      Kind regards
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}
+
+  - id: en_jobtitle_ticket
+    doc_type: Support-Ticket
+    text: |
+      Ticket {CASE_ID} – access rights for the line-of-business application
+
+      Distribution:
+      - {GIVENNAME} {FULLNAME} ({JOBTITLE}, {ORG})
+      - {GIVENNAME} {KOEDER} ({JOBTITLE})
+      - {GIVENNAME} {FULLNAME}, {JOBTITLE}
+
+      The error has occurred since {~number} ({~technical}). Please check by
+      {DATE}.
+
+  - id: en_jobtitle_orgchart
+    doc_type: Firmendokument
+    text: |
+      Organisation chart {ORG}, as of {DATE}
+      Basis: {~legal}
+
+      {JOBTITLE}: {GIVENNAME} {FULLNAME}
+      Deputy: {GIVENNAME} {FULLNAME}, {JOBTITLE}
+      {JOBTITLE}: {GIVENNAME} {KOEDER}
+      {JOBTITLE}: {GIVENNAME} {FULLNAME}
+
+  - id: en_jobtitle_email
+    doc_type: mailverlauf
+    text: |
+      From: {GIVENNAME} {FULLNAME} <{EMAIL}>
+      Sent: {DATE} {TIME}
+      Subject: Handover of case {CASE_ID}
+
+      Hi all,
+
+      From {DATE}, Mr {KOEDER} takes over the case as {JOBTITLE} at {ORG}.
+      Ms {FULLNAME} remains {JOBTITLE} until then and can be reached at
+      {PHONE}. The documents will follow {~deadline}.
+
+      Best
+      {GIVENNAME}
+
+  # Doppelwoerter: Name ({KOEDER}) und Beruf ({BERUF_KOEDER}).
+  - id: en_jobtitle_doppelwort_site
+    doc_type: Firmendokument
+    text: |
+      Site report {CASE_ID}, {DATE}
+
+      Present: {GIVENNAME} {KOEDER} ({JOBTITLE}), {GIVENNAME} {FULLNAME}
+      ({BERUF_KOEDER}) and two colleagues from {ORG}.
+
+      Mr {KOEDER} reports that the {BERUF_KOEDER} must finish {~deadline}.
+      The {JOBTITLE} coordinates the work.
+
+  - id: en_jobtitle_doppelwort_letter
+    doc_type: official letter
+    text: |
+      Dear Ms {KOEDER},
+
+      You applied as a {BERUF_KOEDER} with {ORG}. Your {BERUF_KOEDER}
+      certificate of {DATE} has been received. We will reply
+      {~deadline}.
+
+      Kind regards
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}

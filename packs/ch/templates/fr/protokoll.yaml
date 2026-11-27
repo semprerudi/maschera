@@ -1,0 +1,51 @@
+# Vorlagen FR: Sitzungsprotokolle mit tabellarischem Kopf, seit 25.11.2026.
+#
+# Feedback Test 2: Im echten Protokollkopf stehen Personen als
+# «Vorname Nachname, Kuerzel», getrennt durch Tabs und Semikolons, dazu
+# Vornamen und Nachnamen allein. Das Modell nahm sie als ORG. {ROLLE} ist
+# ein Rollenkuerzel (JOBTITLE), {EINHEIT} das Kuerzel einer Einheit (ORG),
+# {~systemkuerzel} und {~fachwort} bleiben O. Alle Werte synthetisch.
+
+templates:
+  - id: fr_protokoll_kopf_tabs
+    doc_type: Sitzungsprotokoll
+    text: |
+      Procès-verbal de la séance du comité #{CASE_ID} du projet {EINHEIT}
+      Date :	{DATE}
+      Lieu :	{EINHEIT}, salle {~systemkuerzel}
+      Heure :	{TIME} h
+      Présidence :	{GIVENNAME} {FULLNAME}, {ROLLE}
+      Procès-verbal :	{GIVENNAME} {FULLNAME}, {ROLLE}
+      Présents :	{GIVENNAME} {FULLNAME}; {ROLLE}		{GIVENNAME} {FULLNAME}, {ROLLE};		{GIVENNAME} {FULLNAME},
+      {ROLLE};	{GIVENNAME} {FULLNAME}, {ROLLE} {EINHEIT};		{GIVENNAME} {FULLNAME}, {ROLLE}
+      Excusés :	{GIVENNAME} {FULLNAME}, {ROLLE}		{GIVENNAME} {FULLNAME}, {ROLLE} {EINHEIT}
+      Pour information :	{GIVENNAME} {FULLNAME}, {ROLLE},		{GIVENNAME} {FULLNAME}, {ROLLE} {EINHEIT};		{GIVENNAME} {FULLNAME}, {ROLLE}
+
+      Référence : {CASE_ID}
+      Ordre du jour
+      1	Accueil et informations générales	2
+      2	État du projet	3
+      2.1	{~fachwort}	3
+      2.2	{~systemkuerzel}	4
+      3	Divers	5
+
+      Décision : {~personenwort} approuve {~fachwort}.
+  - id: fr_protokoll_kopf_listen
+    doc_type: Sitzungsprotokoll
+    text: |
+      Procès-verbal de la séance du comité #{CASE_ID} du projet {EINHEIT}
+      Date : {DATE}, {TIME}
+
+      Présents :
+      {GIVENNAME} {FULLNAME}, {ROLLE}
+      {GIVENNAME} {FULLNAME}, {ROLLE} {EINHEIT}
+      {GIVENNAME} {FULLNAME} ({ROLLE})
+      {GIVENNAME} {FULLNAME}
+      Excusés : {GIVENNAME} {FULLNAME}; {GIVENNAME} {FULLNAME}, {ROLLE}
+      Pour information : {FULLNAME}, {FULLNAME}, {GIVENNAME} {FULLNAME} ({EINHEIT})
+
+      1. {GIVENNAME} informe sur {~fachwort}. {FULLNAME} complète que {~systemkuerzel} sera prêt d'ici le {DATE}.
+      2. {GIVENNAME} et {GIVENNAME} examinent {~fachwort}.
+      3. Décision : {~personenwort} approuve {~fachwort}.
+
+      Procès-verbal : {GIVENNAME} {FULLNAME}

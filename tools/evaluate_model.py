@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Trainiertes Modell auswerten (SPEC §4, §11).
 
-    python3 tools/evaluate_model.py --model runs/ch-v63b --data eval.jsonl
-    python3 tools/evaluate_model.py --model runs/ch-v63b --data eval.jsonl --show 5
+    python3 tools/evaluate_model.py --model runs/ch-v71f --data eval.jsonl
+    python3 tools/evaluate_model.py --model runs/ch-v71f --data eval.jsonl --show 5
 
 Misst die **Leckrate** — den gewichteten Anteil der Personendaten, die
 unmaskiert ans Frontier-Modell durchgehen. Micro-F1 steht daneben, ist aber
@@ -71,6 +71,12 @@ class TorchScorer:
             json.loads(contract.read_text(encoding="utf-8")).get("label_hash")
             if contract.exists() else None
         )
+        # Zwei Koepfe (seit 25.11.2026, `train.py --nur-kopf`), siehe
+        # `core.inference.kopf_paesse`.
+        self.kopf_alt = (
+            json.loads(contract.read_text(encoding="utf-8")).get("kopf_alt")
+            if contract.exists() else None
+        )
 
     def check_contract(self, pack) -> None:
         if self.label_hash and self.label_hash != pack.get_label_hash():
@@ -116,7 +122,8 @@ class TorchScorer:
         ids = enc["input_ids"]
         offsets = enc["offset_mapping"]
 
-        results: dict[tuple[int, int], tuple[str, float]] = {}
+        from core.inference import kopf_paesse, spannen_aus_paessen
+        paesse: list[dict[tuple[int, int], tuple[str, float]]] = []
         nutz = self.max_length - 2          # Platz fuer [CLS] und [SEP]
         step = max(1, nutz - self.stride)
         # ⚠️ Die Zahl der Fenster steht VOR der Rechnung fest. Das ist der
@@ -141,27 +148,24 @@ class TorchScorer:
                     input_ids=arr,
                     attention_mask=torch.ones_like(arr),
                 ).logits[0]
-            probs = torch.softmax(logits, dim=-1)
-            best = probs.argmax(dim=-1).tolist()
-            conf = probs.max(dim=-1).values.tolist()
-            for i, (a, b) in enumerate(chunk_off):
-                if b <= a:
-                    continue
-                j = i + 1                   # [CLS] steht davor
-                # Bei Ueberlappung gewinnt die sicherere Vorhersage.
-                prev = results.get((a, b))
-                if prev is None or conf[j] > prev[1]:
-                    results[(a, b)] = (self.labels[best[j]], conf[j])
+            werte = logits.float().cpu().numpy()
+            for k, (best, conf) in enumerate(kopf_paesse(werte,
+                                                         self.kopf_alt)):
+                if len(paesse) <= k:
+                    paesse.append({})
+                results = paesse[k]
+                for i, (a, b) in enumerate(chunk_off):
+                    if b <= a:
+                        continue
+                    j = i + 1               # [CLS] steht davor
+                    # Bei Ueberlappung gewinnt die sicherere Vorhersage.
+                    prev = results.get((a, b))
+                    if prev is None or float(conf[j]) > prev[1]:
+                        results[(a, b)] = (self.labels[int(best[j])],
+                                           float(conf[j]))
             if begin + nutz >= len(ids):
                 break
 
-        ordered = sorted(results.items())
-        offsets = [k for k, _ in ordered]
-        labels = [v[0] for _, v in ordered]
-        confidence = {k: v[1] for k, v in ordered}
-
-        out: list[Scored] = []
-        for span in decode(offsets, labels, text):
         # Vertrauen aus allen Token, die sich mit der Spanne UEBERSCHNEIDEN —
         # nicht nur aus den vollstaendig enthaltenen.
         #
@@ -171,13 +175,7 @@ class TorchScorer:
         # Entitaet aus genau einem Wort-Token gar kein Token, das Vertrauen waere
         # 0.0, und die Schwelle wuerfe die Entitaet weg — obwohl das Modell auf
         # Tokenebene richtig lag.
-            überlappend = [
-                confidence[(a, b)] for (a, b) in offsets
-                if b > a and a < span.end and span.start < b
-            ]
-            out.append(Scored(span.tag, span.start, span.end,
-                              min(überlappend) if überlappend else 0.0))
-        return out
+        return spannen_aus_paessen(paesse, self.labels, text)
 
 
 def main() -> int:

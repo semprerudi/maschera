@@ -2,8 +2,8 @@
 """Der Flask-Kern. Die bestehende Kette hinter den Endpunkten aus
 `docs/API_OBERFLAECHE.md`.
 
-    python3 app/serve.py --model runs/ch-v63b
-    python3 app/serve.py --onnx release/ch-v63b --port 4141
+    python3 app/serve.py --model runs/ch-v71f
+    python3 app/serve.py --onnx release/ch-v71f --port 4141
     python3 app/serve.py --ohne-modell            # nur Stufe 1 und 2
 
 Dies ist derselbe Kern, den das eigene Fenster (`app/fenster.py`) benutzt —
@@ -85,7 +85,7 @@ from filter_document import Mitschreiber  # noqa: E402
 # hier heraus. `tests/test_fenster.py` Punkt 7 prueft, dass es bei dieser
 # einen Stelle bleibt. In einem Fehlerbericht sagt sie, welcher Stand
 # gemeint ist.
-VERSION = "2.4.0"
+VERSION = "2.5.0"
 
 # Mehr nimmt der Server nicht an. Ein Dokument ist laut Messung 1500 bis 4500
 # Zeichen, aber ein PDF mit eingescannten Beilagen oder ein Word-Dokument mit

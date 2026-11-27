@@ -1,0 +1,113 @@
+# Vorlagen DE — Familienbeziehungen (FAMILYROLE) und Berufe im Fliesstext,
+# seit 25.11.2026.
+#
+# Fliesstext statt Signatur: ch-v66 sah JOBTITLE fast nur in Signaturen und
+# Verteilern und versagte in Berichten. Hier stehen Funktion, Beziehung, Name
+# und Stelle in ganzen Saetzen. {~verwandt} ist ein Wort, das eine Beziehung
+# ENTHAELT, aber keine ist («die Muttergesellschaft»), und bleibt O.
+
+templates:
+  - id: de_familie_psychiatrie
+    doc_type: Psychiatrischer Bericht
+    text: |
+      {ORG}
+      Psychiatrischer Bericht vom {DATE}
+
+      Patientin: {GIVENNAME} {FULLNAME}, geboren am {DATE}, wohnhaft in {CITY}
+
+      Anamnese
+      Die Patientin ({AGE}) wurde von ihrer {FAMILYROLE} begleitet. Gemäss
+      Angaben des {FAMILYROLE} kam es nach der Trennung vom {FAMILYROLE} zu
+      einer deutlichen Verschlechterung. Die {FAMILYROLE} lebt seit {DATE}
+      im selben Haushalt. Ein {FAMILYROLE} arbeitet für {~verwandt} und ist
+      selten erreichbar.
+
+      Die Behandlung übernimmt {GIVENNAME} {FULLNAME}, {JOBTITLE}, in
+      Absprache mit der zuständigen {JOBTITLE}.
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}
+
+  - id: de_familie_austrittsbericht
+    doc_type: Arztbericht
+    text: |
+      Austrittsbericht {CASE_ID}
+
+      Sehr geehrte Frau Kollegin
+
+      Wir berichten über {GIVENNAME} {FULLNAME}, die vom {DATE} bis {DATE}
+      bei uns hospitalisiert war. Die {FAMILYROLE} der Patientin hat die
+      Pflege zu Hause zugesagt; der {FAMILYROLE} übernimmt die Fahrten.
+      Die Physiotherapie erfolgt durch eine {JOBTITLE} in {CITY}. Eine
+      Nachkontrolle ist {~deadline} vorgesehen.
+
+      Freundliche Grüsse
+
+      {GIVENNAME} {FULLNAME}, {JOBTITLE}
+      {ORG}
+
+  - id: de_familie_kesb
+    doc_type: Behördenbrief mit Verfügung
+    text: |
+      {ORG}
+      Entscheid vom {DATE}, Verfahren {CASE_ID}
+
+      In Sachen {GIVENNAME} {FULLNAME}, geboren am {DATE}
+
+      Der {FAMILYROLE}, {GIVENNAME} {FULLNAME}, und die {FAMILYROLE},
+      {GIVENNAME} {FULLNAME}, leben getrennt. Das {FAMILYROLE=Kind} wohnt bei der
+      {FAMILYROLE} in {CITY}. Für das {FAMILYROLE=Kind} wird eine {FAMILYROLE} ernannt:
+      {GIVENNAME} {FULLNAME}, {JOBTITLE} bei der {ORG}. Die {FAMILYROLE}
+      bleiben gemäss {~legal} informiert. Die Frist läuft {~deadline}.
+
+      Für die Behörde
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}
+
+  - id: de_familie_polizeirapport
+    doc_type: Polizeirapport
+    text: |
+      Rapport {CASE_ID}, {DATE}, {TIME}
+
+      Am Einsatzort in {CITY} trafen wir die beschuldigte Person
+      {GIVENNAME} {FULLNAME} ({AGE}) sowie deren {FAMILYROLE} an. Der
+      {FAMILYROLE} der beschuldigten Person gab an, die {FAMILYROLE} habe um
+      Hilfe gerufen. Eine {FAMILYROLE} aus dem Nachbarhaus bestätigte dies.
+      Der Sachverhalt wurde gestützt auf {~legal} aufgenommen.
+
+      Rapportierender: {JOBTITLE} {GIVENNAME} {FULLNAME}, {ORG}
+
+  - id: de_familie_unterhalt
+    doc_type: Vereinbarung
+    text: |
+      Unterhaltsvereinbarung vom {DATE}
+
+      zwischen {GIVENNAME} {FULLNAME} ({FAMILYROLE}) und
+      {GIVENNAME} {FULLNAME} ({FAMILYROLE}), betreffend die gemeinsamen
+      {FAMILYROLE}.
+
+      Der {FAMILYROLE} bezahlt monatlich {AMOUNT}. Die {FAMILYROLE} des
+      {FAMILYROLE=Kindes} übernehmen die Betreuung an zwei Tagen pro Woche. Die Firma
+      des {FAMILYROLE} gehört als Tochter zu einer Holding; {~verwandt}
+      ist nicht Partei.
+
+      Genehmigt durch {GIVENNAME} {FULLNAME}, {JOBTITLE}, {ORG}
+
+  - id: de_familie_urteil
+    doc_type: Gerichtsentscheid
+    text: |
+      Urteil vom {DATE}, Verfahren {CASE_ID}
+
+      Verfahrensbeteiligte
+      {GIVENNAME} {FULLNAME}, vertreten durch {JOBTITLE} {GIVENNAME} {FULLNAME},
+      Beschwerdeführer,
+      gegen
+      {GIVENNAME} {FULLNAME}, Beschwerdegegnerin.
+
+      Sachverhalt
+      Der {FAMILYROLE} und die {FAMILYROLE} sind die {FAMILYROLE=Eltern} von
+      {GIVENNAME} (geb. {DATE}). Am {DATE} beantragte die {FAMILYROLE}
+      Änderungen betreffend {~verwandt}. Das Gericht hörte den
+      {FAMILYROLE} sowie die {FAMILYROLE} des {FAMILYROLE=Kindes} an; {~verwandt} bleibt
+      unverändert. Die {FAMILYROLE} wurde vom {JOBTITLE} informiert.

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Das Modell-Manifest erzeugen — woher, wie gross, welche Pruefsumme.
 
-    python3 tools/modell_manifest.py --pack ch --aus runs/ch-v63b \
-        --repo semprerudi/maschera-ch-v63b
+    python3 tools/modell_manifest.py --pack ch --aus runs/ch-v71f \
+        --repo semprerudi/maschera-ch-v71f
 
 ⚠️ **WARUM ES DIESES WERKZEUG GIBT.** Die Pruefsummen im Manifest sind das
 Einzige, was zwischen «das Modell ist da» und «irgendetwas ist da» steht.
@@ -48,7 +48,7 @@ def main() -> int:
     ap.add_argument("--aus", required=True,
                     help="Verzeichnis mit dem fertigen Modell")
     ap.add_argument("--repo", required=True,
-                    help="z. B. benutzer/maschera-ch-v63b")
+                    help="z. B. benutzer/maschera-ch-v71f")
     ap.add_argument("--rev", required=True,
                     help="Commit auf Hugging Face, 40 Hexzeichen (nicht main)")
     ap.add_argument("--trocken", action="store_true",

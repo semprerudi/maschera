@@ -1,0 +1,51 @@
+# Vorlagen IT: Sitzungsprotokolle mit tabellarischem Kopf, seit 25.11.2026.
+#
+# Feedback Test 2: Im echten Protokollkopf stehen Personen als
+# «Vorname Nachname, Kuerzel», getrennt durch Tabs und Semikolons, dazu
+# Vornamen und Nachnamen allein. Das Modell nahm sie als ORG. {ROLLE} ist
+# ein Rollenkuerzel (JOBTITLE), {EINHEIT} das Kuerzel einer Einheit (ORG),
+# {~systemkuerzel} und {~fachwort} bleiben O. Alle Werte synthetisch.
+
+templates:
+  - id: it_protokoll_kopf_tabs
+    doc_type: Sitzungsprotokoll
+    text: |
+      Verbale della seduta del comitato #{CASE_ID} del progetto {EINHEIT}
+      Data:	{DATE}
+      Luogo:	{EINHEIT}, sala {~systemkuerzel}
+      Ora:	{TIME} 
+      Presidenza:	{GIVENNAME} {FULLNAME}, {ROLLE}
+      Verbale:	{GIVENNAME} {FULLNAME}, {ROLLE}
+      Presenti:	{GIVENNAME} {FULLNAME}; {ROLLE}		{GIVENNAME} {FULLNAME}, {ROLLE};		{GIVENNAME} {FULLNAME},
+      {ROLLE};	{GIVENNAME} {FULLNAME}, {ROLLE} {EINHEIT};		{GIVENNAME} {FULLNAME}, {ROLLE}
+      Assenti giustificati:	{GIVENNAME} {FULLNAME}, {ROLLE}		{GIVENNAME} {FULLNAME}, {ROLLE} {EINHEIT}
+      Per conoscenza:	{GIVENNAME} {FULLNAME}, {ROLLE},		{GIVENNAME} {FULLNAME}, {ROLLE} {EINHEIT};		{GIVENNAME} {FULLNAME}, {ROLLE}
+
+      Riferimento: {CASE_ID}
+      Ordine del giorno
+      1	Saluto e informazioni generali	2
+      2	Stato del progetto	3
+      2.1	{~fachwort}	3
+      2.2	{~systemkuerzel}	4
+      3	Varie	5
+
+      Decisione: {~personenwort} approva {~fachwort}.
+  - id: it_protokoll_kopf_listen
+    doc_type: Sitzungsprotokoll
+    text: |
+      Verbale della seduta del comitato #{CASE_ID} del progetto {EINHEIT}
+      Data: {DATE}, {TIME}
+
+      Presenti:
+      {GIVENNAME} {FULLNAME}, {ROLLE}
+      {GIVENNAME} {FULLNAME}, {ROLLE} {EINHEIT}
+      {GIVENNAME} {FULLNAME} ({ROLLE})
+      {GIVENNAME} {FULLNAME}
+      Assenti giustificati: {GIVENNAME} {FULLNAME}; {GIVENNAME} {FULLNAME}, {ROLLE}
+      Per conoscenza: {FULLNAME}, {FULLNAME}, {GIVENNAME} {FULLNAME} ({EINHEIT})
+
+      1. {GIVENNAME} informa su {~fachwort}. {FULLNAME} aggiunge che {~systemkuerzel} sarà pronto entro il {DATE}.
+      2. {GIVENNAME} e {GIVENNAME} esaminano {~fachwort}.
+      3. Decisione: {~personenwort} approva {~fachwort}.
+
+      Verbale: {GIVENNAME} {FULLNAME}

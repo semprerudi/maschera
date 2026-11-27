@@ -1,0 +1,108 @@
+# Vorlagen EN — Familienbeziehungen (FAMILYROLE) und Berufe im Fliesstext,
+# seit 25.11.2026. {~verwandt} enthaelt eine Beziehung, ist aber keine
+# («the parent company») und bleibt O.
+
+templates:
+  - id: en_familie_psychiatry
+    doc_type: Psychiatrischer Bericht
+    text: |
+      {ORG}
+      Psychiatric report of {DATE}
+
+      Patient: {GIVENNAME} {FULLNAME}, born on {DATE}, resident in {CITY}
+
+      History
+      The patient ({AGE}) was accompanied by her {FAMILYROLE}. According to
+      her {FAMILYROLE}, her condition deteriorated markedly after the
+      separation from her {FAMILYROLE}. Her {FAMILYROLE} has lived in the
+      same household since {DATE}. A {FAMILYROLE} works for {~verwandt}
+      and is rarely reachable.
+
+      Treatment is provided by {GIVENNAME} {FULLNAME}, {JOBTITLE}, in
+      consultation with the responsible {JOBTITLE}.
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}
+
+  - id: en_familie_discharge
+    doc_type: Arztbericht
+    text: |
+      Discharge report {CASE_ID}
+
+      Dear colleague,
+
+      We report on {GIVENNAME} {FULLNAME}, who was admitted from {DATE} to
+      {DATE}. The patient's {FAMILYROLE} has agreed to provide care at
+      home; her {FAMILYROLE} will handle transport. Physiotherapy will be
+      provided by a {JOBTITLE} in {CITY}. A follow-up is planned
+      {~deadline}.
+
+      Kind regards
+
+      {GIVENNAME} {FULLNAME}, {JOBTITLE}
+      {ORG}
+
+  - id: en_familie_kesb
+    doc_type: Behördenbrief mit Verfügung
+    text: |
+      {ORG}
+      Decision of {DATE}, proceedings {CASE_ID}
+
+      Concerning {GIVENNAME} {FULLNAME}, born on {DATE}
+
+      The {FAMILYROLE}, {GIVENNAME} {FULLNAME}, and the {FAMILYROLE},
+      {GIVENNAME} {FULLNAME}, live apart. The {FAMILYROLE=child} lives with the
+      {FAMILYROLE} in {CITY}. A {FAMILYROLE} is appointed for the {FAMILYROLE=child}:
+      {GIVENNAME} {FULLNAME}, {JOBTITLE} at {ORG}. The {FAMILYROLE} remain
+      informed pursuant to {~legal}. The deadline runs {~deadline}.
+
+      For the authority
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}
+
+  - id: en_familie_police
+    doc_type: Polizeirapport
+    text: |
+      Report {CASE_ID}, {DATE}, {TIME}
+
+      At the scene in {CITY} we met the accused {GIVENNAME} {FULLNAME}
+      ({AGE}) and his {FAMILYROLE}. The accused's {FAMILYROLE} stated that
+      the {FAMILYROLE} had called for help. A {FAMILYROLE} from the
+      neighbouring building confirmed this. The facts were recorded
+      pursuant to {~legal}.
+
+      Reporting officer: {JOBTITLE} {GIVENNAME} {FULLNAME}, {ORG}
+
+  - id: en_familie_maintenance
+    doc_type: Vereinbarung
+    text: |
+      Maintenance agreement of {DATE}
+
+      between {GIVENNAME} {FULLNAME} ({FAMILYROLE}) and {GIVENNAME}
+      {FULLNAME} ({FAMILYROLE}), concerning their joint {FAMILYROLE}.
+
+      The {FAMILYROLE} pays {AMOUNT} per month. The {FAMILYROLE} of the {FAMILYROLE=child}
+      provide care two days a week. The company of the {FAMILYROLE} is a
+      subsidiary of a group; {~verwandt} is not a party.
+
+      Approved by {GIVENNAME} {FULLNAME}, {JOBTITLE}, {ORG}
+
+  - id: en_familie_judgment
+    doc_type: Gerichtsentscheid
+    text: |
+      Judgment of {DATE}, proceedings {CASE_ID}
+
+      Parties
+      {GIVENNAME} {FULLNAME}, represented by {JOBTITLE} {GIVENNAME} {FULLNAME},
+      appellant,
+      against
+      {GIVENNAME} {FULLNAME}, respondent.
+
+      Facts
+      The {FAMILYROLE} and the {FAMILYROLE} are the {FAMILYROLE=parents} of {GIVENNAME}
+      (born on {DATE}). The {FAMILYROLE=child} attends school.
+      On {DATE}, the {FAMILYROLE} applied for a change
+      concerning {~verwandt}. The court heard the {FAMILYROLE} and the
+      {FAMILYROLE} of the {FAMILYROLE=child}; {~verwandt} remains unchanged. The {FAMILYROLE}
+      was informed by the {JOBTITLE}.

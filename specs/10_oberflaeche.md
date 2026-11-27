@@ -50,16 +50,39 @@ Fünf Schritte, abgeleitet aus dem Arbeitsstand: nichts maskiert 0, maskiert 1,
 übernommen 2, Antwort da 3, finaler Text 5. Ein Klick springt zur Kachel und
 zeigt sie kurz umrandet. Passt die Leiste nicht, rollt sie seitlich mit dem
 aktuellen Schritt in der Mitte.
+Vor dem ersten Schritt steht «Neu» (seit 2.5). Untereinander fehlt er dort; dann
+steht er nur am Ende des Weges, als grüner Hauptknopf.
 
 ## Kacheln
 
 Jede Kachel hat einen Kopf mit Nummer, Titel, Meldung, Zahl und Vergrössern, einen
-Rumpf und einen Fuss mit Hauptknopf und Nebenknöpfen. Vergrössern legt die Kachel
+Rumpf und einen Fuss mit Hauptknopf und Nebenknöpfen. Die Nebenknöpfe stehen links,
+der Hauptknopf rechts oder untereinander in voller Breite darunter. Vergrössern legt die Kachel
 über die Seite; Escape, derselbe Knopf oder ein Klick daneben bringen sie zurück.
+Das Vokabular nimmt dabei die volle Höhe, nicht die volle Breite (seit 2.5), und
+gleitet ohne Versatz in die Mitte. Die Liste ist natürlich sortiert: `DATE_2` vor
+`DATE_10` (`T-OBERFLAECHE-95`, ebenso «Neu» in der Schrittleiste). Untereinander
+steht unter dem Vokabular ein zweiter Knopf «Übernahme in Prompt», derselbe Weg
+wie in 02: wer im Vokabular korrigiert, muss nicht zurück nach oben.
+Der Fuss des Vokabulars bleibt eine Zeile (seit 2.5): wird es eng, zeigen zuerst
+Hochladen und dann Herunterladen nur noch ihr Zeichen, «Übernahme in Prompt» behält
+sein Wort (`T-OBERFLAECHE-96`, ebenso Kachelhöhe, Tooltip und Versionshinweise). Gemessen wird wie in den anderen Füssen (`fussEinpassen`, `data-rang`), damit
+die Länge der Wörter je Sprache zählt.
+
+Gestapelt richtet sich die Höhe der Kacheln nach der Fensterhöhe (seit 2.5). Ab
+56.25em Höhe stehen die aktuelle und die nächste Kachel gleich hoch ganz im Bild, je die
+Hälfte dessen, was unter Kopfzeile und Schrittleiste bleibt (`--kachel-frei`). Darunter
+füllt die Kachel des aktuellen Schritts (`.dran`) diesen Platz allein, die anderen
+behalten die halbe Höhe, mindestens 18rem.
+
+Gestapelt fehlt im Vokabular die Spalte «Typ» (seit 2.5): der Typ steht schon in der ID,
+und die Breite gehört dem Originalwert. Der Rechtsklick zum Wechseln des Typs geht auf der
+ID. Die Leerknöpfe sehen in 01, 02, 03 und 04 gleich aus, auch beim Überfahren; die
+schwarze Schrift der roten Spalte nimmt sie aus (`T-OBERFLAECHE-97`).
 
 | Kachel | Inhalt | Hauptknopf |
 |---|---|---|
-| 01 Originaltext | Ablage, Beispiel, Warnungen, Textfeld | Maskieren, dazu Neu |
+| 01 Originaltext | Ablage, Beispiel, Warnungen, Textfeld | Maskieren |
 | 02 Maskiert | Hinweise, Laufbalken, Text mit Platzhaltern, Bearbeiten als Textfeld | Übernahme in Prompt |
 | Vokabular | Suche, Legende und Gruppenfilter, Liste, Herunterladen, Hochladen | keiner |
 | 03 Promptzusammenführung | Vorlagenwahl, Speichern, Prompt, aufklappbar «Prompt & maskierter Text», Warnung zur Zone | Alles kopieren und … öffnen, Dienstmenü daneben |
@@ -87,8 +110,12 @@ Rumpf und einen Fuss mit Hauptknopf und Nebenknöpfen. Vergrössern legt die Kac
 - Der Tooltip nennt den Originalwert, wodurch maskiert wurde und die Sicherheit
   des Modells in Prozent.
 - **Rechtsklick auf eine Plakette oder ein Wort:** Das Menü mit Suche zeigt zuerst
-  die häufigsten Tags, dann Gruppen, die einzeln auf- und zugehen. Es springt dabei
-  nicht. Man kann Tag wechseln, Maskierung entfernen oder ein Wort maskieren.
+  die zuletzt verwendeten Tags (bis fünf, seit 2.5; im Browserspeicher, im eigenen
+  Fenster also nur bis zum nächsten Start), dann die häufigsten, dann
+  Gruppen, die einzeln auf- und zugehen. Es springt dabei nicht. Man kann Tag
+  wechseln, Maskierung entfernen oder ein Wort maskieren; bei einer Plakette sagt
+  eine Zeile, dass ein anderes Tag den Typ ändert. Dasselbe Menü öffnet ein
+  Rechtsklick auf ID oder Typ im Vokabular.
   `CANTON` ist eine eigene Gruppe «nur erkannt».
 - Ein Laufbalken zeigt den gemessenen Fortschritt, keine Schätzung.
 - Hinweise stehen hinter dem Info-Knopf.
@@ -107,6 +134,10 @@ herunterladen und wieder einlesen; der Dienst sieht diese Datei nie.
   blossen Änderung der Höhe (Tastatur, Adressleiste). Mit der Maus steht der Cursor
   gleich im Filter, mit dem Finger nicht (NFA-056).
 - «Übernahme in Prompt» zeigt einen leeren Kreis, dreht kurz, dann steht ein Haken.
+  Der Balken leuchtet zweimal in der Farbe der Spalte auf, und daneben steht, dass
+  der Text den Änderungen in 02 folgt: übernommen wird keine Kopie, sondern die
+  Freigabe, den jeweils aktuellen maskierten Text mitzuschicken. Der Balken bricht nie
+  um: lang, kurz oder knapp («folgt 02»), je nach seiner eigenen Breite.
   Untereinander springt die Seite zu 03. Mit der Maus steht der Cursor danach im
   Prompt, ohne dass die Seite dafür rollt; mit dem Finger bleibt er weg (NFA-056).
 - Der Sendeknopf kopiert Prompt und maskierten Text und öffnet den Dienst. Der
@@ -131,6 +162,7 @@ herunterladen und wieder einlesen; der Dienst sieht diese Datei nie.
 | Einstellungen | Suche, dann Darstellung, Schriftart, Allgemein (nur Fenster), Server (nur Fenster), Dienste, Klartext-Tags, Eigene Regeln. Fuss mit Abbrechen und «Speichern & schliessen» |
 | Hilfe, Impressum | Aus `seiten.js`, ohne Nachladen |
 | Willkommen | Fünf Seiten und Schluss, Punkte, Zurück, Weiter, Sprachwahl, «Nicht mehr anzeigen» |
+| Bedienung | Seit 2.5. Drei Seiten mit kleiner Szene: Maske setzen, Typ ändern oder Maske entfernen, dasselbe im Vokabular. Gebaut aus denselben Bausteinen wie Tagmenü und Vokabular; Zeiger und Menü stehen an der gemessenen Stelle. Erscheint eine Sekunde nach dem ersten Maskieren, bis «Nicht mehr anzeigen» gesetzt ist. Die Szene ist mindestens 18rem hoch, damit das Menü auch auf dem Handy ganz hineinpasst |
 | Frage | Eigener Dialog, nie `window.confirm` |
 
 Regeln für alle Dialoge:
@@ -157,17 +189,26 @@ Regeln für alle Dialoge:
 
 ## Burgermenü
 
-In dieser Reihenfolge: Willkommen, Hilfe, Fehler melden, Kontakt, maschera.ch,
-Herunterladen, Nach Updates suchen, Quellcode auf GitHub, Impressum, Im Browser öffnen. Die Liste steht in
-`app/static/adressen.json`. Hilfe, Impressum und Willkommen liegen im Paket.
+In dieser Reihenfolge: Willkommen, Bedienung, Hilfe, Fehler melden, Kontakt, maschera.ch,
+Herunterladen, Versionshinweise, Nach Updates suchen, Quellcode auf GitHub, Impressum, Im Browser öffnen. Die Liste steht in
+`app/static/adressen.json`. Hilfe, Impressum, Willkommen, Bedienung und Versionshinweise liegen im Paket.
+
+**Versionshinweise** (seit 2.5) zeigen je Fassung einen Titel mit Nummer und Datum,
+darunter die Punkte, neueste zuerst. Der Text ist derselbe wie bei den Releases auf
+GitHub (Englisch und Deutsch), dazu Französisch und Italienisch nur für die App. Er reist
+in `app/static/versionshinweise.json` mit dem Paket; die App holt nichts von aussen.
+Release-Beiwerk (Downloads, Lizenz, Prüfsummen, Meldeweg) fällt weg. Gelesen wird eine
+kleine Markdown-Teilmenge (Zwischentitel, Aufzählung, fett, schräg, Code), gebaut mit
+`textContent`. Geführt wird die Datei von `tools/versionshinweise.py`, und
+`tools/ausliefern.fish` hält an, wenn die Fassung darin in einer Sprache fehlt.
 
 ## Tastatur
 
 - **Tab** folgt dem Arbeitsweg `ARBEITSWEG` in `maschera.js`, in dieser Folge:
   `orig`, `knopf-maskieren`, `maskiert` oder im Bearbeiten `maskiert-feld`,
-  `knopf-uebernahme`, `knopf-vorlagen`, `prompt`, `knopf-senden`, `antwort04`,
+  `knopf-uebernahme`, gestapelt `knopf-uebernahme-vok`, `knopf-vorlagen`, `prompt`, `knopf-senden`, `antwort04`,
   `knopf-einpflegen04`, `final`, `knopf-final-kopieren`, dann `knopf-neu`, gestapelt
-  `knopf-neu-unten`. «Neu» steht in 01, kommt aber zuletzt.
+  `knopf-neu-unten`. «Neu» steht vor den Schritten, kommt aber zuletzt.
 - Ein Element zählt nur, wenn es nicht deaktiviert, nicht verborgen, ohne negativen
   `tabIndex` und sichtbar ist. Geprüft wird bei jedem Tab neu, ein eben deaktiviertes
   Element fällt also einfach heraus.
@@ -191,6 +232,14 @@ Herunterladen, Nach Updates suchen, Quellcode auf GitHub, Impressum, Im Browser 
 - **F5 und Strg-R** fragen im eigenen Dialog nach, solange ein Wörterbuch besteht.
 
 Die Fokusfolge prüft `T-OBERFLAECHE-94` mit einer Attrappe, die den Fokus mitschreibt.
+
+## Tooltips
+
+Ein `title` wird nicht vom Browser angezeigt, sondern von einem eigenen Tooltip über
+dem Element (seit 2.5): Der Browser setzt seinen unter den Mauszeiger, und der Zeiger
+deckte ihn zu. Beim Hineinfahren wandert der `title` nach `data-titel` und kommt beim
+Hinausfahren zurück. Fehlt oben der Platz, steht der Tooltip darunter. Nur mit Maus,
+nach 450 ms; Klick, Taste und Rollen schliessen ihn.
 
 ## Ansichten nach Breite
 

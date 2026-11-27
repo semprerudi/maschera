@@ -737,6 +737,14 @@ footer {
   flex: none; display: flex; align-items: center; flex-wrap: wrap;
   gap: 0.25rem 0.375rem; padding: 0.75rem 1rem 0.5rem; background: var(--color-bg);
 }
+/* «Neu» vor den Schritten (Feedback 25.11.2026): so hoch wie eine
+ * Schrittpille, mit Abstand zum ersten Schritt. Rollt die Leiste
+ * (einspaltig), bleibt er links stehen. */
+.schritte .schritt-neu {
+  flex: none; height: 1.875rem; padding: 0 0.75rem 0 0.5rem; margin-right: 0.5rem;
+  position: sticky; left: 0; z-index: 1;
+  box-shadow: 0.375rem 0 0.375rem -0.125rem var(--color-bg);
+}
 .schritt {
   display: inline-flex; align-items: center; gap: 0.5rem; height: 1.875rem;
   padding: 0 0.75rem 0 0.25rem; border: 0; border-radius: 999px;
@@ -782,6 +790,20 @@ footer {
   .schritte::-webkit-scrollbar { display: none; }
   .schritt, .schritt-pfeil { flex: none; }
   .schritt { scroll-snap-align: center; }
+}
+/* NIEDRIGES FENSTER: EINE KACHEL (seit 2.5, Feedback 27.11.2026). Unter
+   56.25em Hoehe (900 px bei Skala 1) waeren zwei Haelften zu niedrig zum
+   Arbeiten. Dann fuellt die AKTUELLE Kachel (`.dran`, der Schritt aus
+   `schrittJetzt()`) den Platz unter der Schrittleiste allein, die naechste
+   folgt beim Rollen. Die anderen behalten die halbe Hoehe, mindestens aber
+   18rem, damit ein Feld darin nutzbar bleibt. */
+@media (max-width: 81.24em) and (max-height: 56.24em), (max-height: 44em) {
+  main.raster > .spalte > .bereich,
+  main.raster > .spalte > .bereich.hinaus {
+    min-height: max(18rem, calc(var(--kachel-frei) / 2 - 0.375rem));
+  }
+  main.raster > .spalte > .bereich.dran,
+  main.raster > .spalte > .bereich.hinaus.dran { min-height: var(--kachel-frei); }
 }
 /* INNEN, nicht aussen: die Spalte schneidet mit `overflow: hidden` einen
    aeusseren Schatten an drei Seiten ab — bei 01, 02 und 05 blieb nur ein
@@ -1964,6 +1986,26 @@ button.tat.einpflegen:hover:not(:disabled) { background: var(--bx-tief); border-
   .seite-tab { grid-template-columns: 1fr; gap: 0.125rem 0; }
   .seite-tab-rechts { margin-bottom: 0.625rem; }
 }
+/* «Versionshinweise» (seit 2.5): je Fassung ein Titel mit Datum, darunter
+   die Punkte. Eine Linie trennt die Fassungen, wie die Teile der Einstellungen. */
+.versionen-fassung { padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-neutral-300); }
+.versionen-fassung:last-child { border-bottom: 0; }
+.versionen-titel {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+  font-size: 1rem;
+}
+.versionen-datum {
+  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 400;
+  letter-spacing: 0; color: var(--color-neutral-700);
+}
+.versionen-h {
+  margin: 0.75rem 0 0.25rem; font-size: 0.8125rem; font-weight: 600;
+  color: var(--color-neutral-700);
+}
+.versionen-fassung code {
+  font-family: var(--font-mono); font-size: 0.85em;
+  overflow-wrap: anywhere;
+}
 .einst-teil { padding: 1.125rem 0; border-bottom: 1px solid var(--color-neutral-300); }
 .einst-teil:last-child { border-bottom: none; }
 .einst-teil h3 {
@@ -2238,6 +2280,13 @@ button.tat.einpflegen:hover:not(:disabled) { background: var(--bx-tief); border-
   box-shadow: var(--shadow-lg); pointer-events: none;
 }
 .tipp[hidden] { display: none; }
+/* Der Tooltip an Knoepfen (seit 2.5): eine Zeile, klein, ueber dem Knopf.
+   Dieselbe Huelle wie am Platzhalter. */
+.knopftipp {
+  padding: 0.3125rem 0.625rem; font-size: 0.75rem; line-height: 1.35;
+  color: var(--color-text); max-width: min(20rem, calc(100vw - 1rem));
+  width: max-content;  /* nicht am rechten Rand auf den Zeilenrest schrumpfen */
+}
 .tipp-wert {
   font-family: var(--font-mono); font-size: 0.8125rem;
   color: var(--color-text); word-break: break-word;
@@ -2604,6 +2653,21 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
   main.raster > .spalte > .bereich,
   main.raster > .spalte > .bereich.hinaus { min-height: 62dvh; }
 
+  /* ZWEI KACHELN AUF EINEN BLICK (seit 2.5, Feedback 27.11.2026). Am PC
+     ist das schmale Fenster oft hoch: dann stehen die aktuelle und die
+     naechste Kachel ganz im Bild, gleich hoch. `--kachel-frei` ist, was
+     unter Kopfzeile und Schrittleiste bleibt, beide gemessen
+     (`kopfMessen()`), abzueglich der Abstaende. Die 62dvh davor bleiben als
+     Rueckfall fuer einen Browser ohne `calc` mit Variablen. */
+  :root {
+    --kachel-frei: calc(100dvh - var(--kopfhoehe, 3.5rem)
+                        - var(--schritthoehe, 3rem) - 0.75rem);
+  }
+  main.raster > .spalte > .bereich,
+  main.raster > .spalte > .bereich.hinaus {
+    min-height: calc(var(--kachel-frei) / 2 - 0.375rem);
+  }
+
   /* ⚠️ NUR DIE RICHTUNGSPFEILE, im HTML als solche ausgezeichnet
      (`class="richtung"`). Ein Pfeil, der eine Richtung MEINT, wird
      gedreht; ein Zeichen, das etwas anderes meint, nicht. Mit `button.tat
@@ -2621,6 +2685,17 @@ button.tat.breit { width: 100%; justify-content: center; gap: 0.75rem; }
      `flex: 1` den Kopierknopf in Spaltenrichtung flach. */
   .fuss-05 { align-items: center; gap: 0.5rem; }
   button.tat.neu-unten { display: inline-flex; justify-content: center; }
+  /* Der zweite «Übernahme in Prompt» unter dem Vokabular (Feedback
+     25.11.2026): untereinander liegt 02 eine Bildschirmlaenge weiter oben. */
+  body .vokabular-fuss button.tat.uebernahme-vok { display: inline-flex; margin-left: auto; }
+  /* Untereinander nur der untere «Neu», gruen (Feedback 25.11.2026): oben in
+     der Schrittleiste nahm er Platz weg, und am Ende des Weges ist er das
+     Ziel. */
+  .schritte .schritt-neu { display: none; }
+  /* Die Hauptaktion steht rechts und fuehrt nach unten; «Leeren» links
+     (Feedback 25.11.2026). Nur die Reihenfolge im Bild: der Tab-Weg folgt
+     weiter `ARBEITSWEG`. */
+  .fuss-04 .feldknoepfe { order: -1; margin-left: 0; }
 
   /* ⚠️ Der unterste Knopf braucht Luft unter sich. `100dvh` haelt die
      Adressleiste aus der Rechnung heraus; die GESTENLEISTE am unteren Rand
@@ -3021,6 +3096,8 @@ table.vokabular td:first-child { width: 1%; white-space: nowrap; padding-right: 
   background: var(--color-neutral-200); border-color: var(--color-neutral-400);
 }
 .vokabular-fuss .ghostknopf.bleibt-hier:disabled { opacity: .4; }
+/* Nebeneinander ist 02 gleich daneben: dort genuegt ein Knopf. */
+.vokabular-fuss button.tat.uebernahme-vok { display: none; }
 
 /* Vokabular: die ID-Plakette genau wie im Text von 02 (dort 0.84em der
    Textgroesse), der Typ eine Stufe kleiner. */
@@ -3036,9 +3113,17 @@ table.vokabular .ph.ph-typ { font-size: calc(var(--textgroesse) * 0.7); }
 }
 .vokabular-fuss .ghostknopf span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .vokabular-fuss .ghostknopf svg { flex: none; }
-/* Reicht die Zeile fuer beide nicht (Handy), rutscht der zweite Knopf in die
-   naechste Zeile, statt dass beide Woerter gekuerzt werden. */
-.vokabular-fuss { flex-wrap: wrap; }
+/* Eine Zeile (seit 2.5, Feedback 27.11.2026). Reicht sie nicht, zeigen
+   Hochladen und dann Herunterladen nur noch das Zeichen (`data-rang`,
+   `fussEinpassen()`); «Übernahme in Prompt» behaelt sein Wort. Der Zweck
+   steht im Tooltip. Vorher rutschte der Hauptknopf in eine zweite Zeile. */
+.vokabular-fuss { flex-wrap: nowrap; }
+.vokabular-fuss .kurz > span { display: none; }
+/* Nicht schrumpfen: ein Wort mit «…» liest die Messung als «passt», und
+   gekuerzt wird jetzt mit dem Zeichen statt mit Auslassungspunkten. */
+.vokabular-fuss .ghostknopf { flex: none; }
+.vokabular-fuss .ghostknopf.kurz { padding: 0 0.5rem; }
+.vokabular-fuss button.tat.uebernahme-vok { flex: none; white-space: nowrap; }
 
 /* 2.1 — SCHMALE BREITE (Feedback 20.10.2026) -------------------------------
  * Auf dem Handy bleibt von der Wortmarke nur die Maske, und die Sprachwahl
@@ -3337,6 +3422,14 @@ button.tat.einpflegen:disabled {
   .einpflegen-zeile.an { display: flex; }
 }
 
+/* Gestapelt ohne Typspalte im Vokabular (Feedback 27.11.2026): die Breite
+ * gehoert dem Originalwert, damit man ihn lesen kann. Der Typ steht schon in
+ * der ID, und der Rechtsklick zum Wechseln geht dort genauso. Nur die echte
+ * Tabelle; die Bedienung zeigt den Typwechsel weiter in ihrer Spalte. */
+@media (max-width: 81.24em), (max-height: 44em) {
+  #vokabular-inhalt table.vokabular .vok-typ { display: none; }
+}
+
 /* Danach bleibt die Zeile mit gruenem Haken statt Ladezeichen stehen. */
 .einpflegen-zeile .haken { display: none; flex: none; color: var(--gr-flaeche); }
 .einpflegen-zeile.fertig .haken { display: block; }
@@ -3371,6 +3464,39 @@ button.tat.einpflegen:disabled {
 .uebernahme-zeichen.fertig .kreis { display: none; }
 .uebernahme-zeichen.dreht .dreher { display: block; }
 .uebernahme-zeichen.fertig .haken { display: block; }
+/* Nach der Uebernahme (Feedback 25.11.2026): der Balken leuchtet zweimal
+ * in der Farbe der Spalte auf, und daneben steht, dass der Text 02 folgt. */
+/* Eine Zeile, immer: `.teil-kopf` bricht sonst um, und bei fester Hoehe
+ * fiel der Pfeil aus dem Balken (Feedback 25.11.2026). Haken, Titel und
+ * Pfeil stehen fest; nur die Unterzeile gibt nach, erst lang -> kurz, ganz
+ * zuletzt mit Auslassungspunkten. */
+#hinaus-klappe { flex-wrap: nowrap; align-items: center; }
+#hinaus-klappe > .uebernahme-zeichen, #hinaus-klappe > .teil-titel,
+#hinaus-klappe > .pfeil { flex: none; }
+#hinaus-klappe .teil-unter {
+  flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 0.6875rem; color: var(--color-neutral-600);
+}
+/* Drei Stufen: lang, kurz, knapp. Knapp fehlt «übernommen»: das sagt der
+ * Haken davor schon. */
+#hinaus-klappe .unter-kurz, #hinaus-klappe .unter-knapp { display: none; }
+@container teilkopf (max-width: 36rem) {
+  #hinaus-klappe .unter-lang { display: none; }
+  #hinaus-klappe .unter-kurz { display: inline; }
+}
+@container teilkopf (max-width: 24rem) {
+  #hinaus-klappe .unter-kurz { display: none; }
+  #hinaus-klappe .unter-knapp { display: inline; }
+}
+#hinaus-klappe.blitz { animation: hinaus-blitz 0.8s ease-in-out 2; }
+@keyframes hinaus-blitz {
+  0%, 100% { background: var(--papier); border-color: var(--bx-kante2); }
+  45% { background: var(--bx-grund); border-color: var(--bx-schrift);
+        box-shadow: 0 0 0 0.1875rem color-mix(in srgb, var(--bx-schrift) 25%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #hinaus-klappe.blitz { animation: none; background: var(--bx-grund); }
+}
 
 /* 2.1 — MESSWERTE IM KOPF, KACHEL 03 (Feedback 21.10.2026) ------------------
  * 02: Alle Messwerte im Kopf; die uebrigen ruhigen Hinweise hinter einem
@@ -3585,16 +3711,21 @@ main.raster > .spalte > .bereich.gross, .bereich.gross {
  * die naechste rote Zeile. `!important`, weil diese Schicht ueber jeder
  * davon stehen muss; die Ausnahmen stehen hier und nirgends sonst.
  * `tests/test_oberflaeche.js` Punkt 90 haelt die Schicht fest.
+ *
+ * Die Leerknoepfe sind ausgenommen, auch deaktiviert (Feedback 27.11.2026):
+ * sie sehen in 03 und 04 aus wie in 01, mit weissem Wort beim Ueberfahren.
+ * Vorher blieb das Wort hier dunkel, nur das Zeichen wurde weiss.
  */
 .spalte.hinaus *:not(svg, svg *, .ph, .ph *, .kreuz, .kreuz *,
     .fehler-text, .warnhinweis,
+    .imfeld.loeschen, .imfeld.loeschen *,
     button.tat.senden:not(:disabled), button.tat.senden:not(:disabled) *,
     button.tat.einpflegen:not(:disabled), button.tat.einpflegen:not(:disabled) *) {
   color: var(--color-text) !important;
 }
 .spalte.hinaus textarea::placeholder { color: var(--color-neutral-600) !important; }
-.spalte.hinaus :is(button, input, select):disabled,
-.spalte.hinaus :is(button, input, select):disabled * {
+.spalte.hinaus :is(button, input, select):disabled:not(.imfeld.loeschen),
+.spalte.hinaus :is(button, input, select):disabled:not(.imfeld.loeschen) * {
   color: var(--color-neutral-600) !important; opacity: 1 !important;
 }
 #hinaus-klappe.leer .teil-titel,
@@ -3646,8 +3777,14 @@ main.raster > .spalte > .bereich.gross, .bereich.gross {
      Blatt 1.5rem von der Seite herein, ragte kurz ueber den Rand, und fuer
      die Dauer der Bewegung erschien unten ein Rollbalken. */
   overflow-x: hidden;
+  /* Die Spalte so breit wie der Dialog und nie breiter (Feedback 27.11.2026):
+     alle Blaetter liegen in derselben Zelle, und eine breite Zeile auf einem
+     davon (die Legende im Vokabular der Bedienung) zog auf dem Handy jedes
+     Blatt mit, Titel und Text liefen rechts aus dem Bild. */
+  grid-template-columns: minmax(0, 1fr);
 }
 .willkommen-blatt {
+  min-width: 0;
   grid-area: 1 / 1; display: flex; flex-direction: column; gap: 0.75rem;
   visibility: hidden;
 }
@@ -3758,3 +3895,145 @@ main.raster > .spalte > .bereich.gross, .bereich.gross {
   flex: 0 1 auto; min-width: 0; white-space: nowrap;
   overflow: hidden; text-overflow: ellipsis;
 }
+
+
+/* Vokabular gross (Feedback 25.11.2026): volle HOEHE, nicht volle Breite.
+ * Breiter half nichts, das Kreuz rueckte nur nach rechts aussen. So stehen
+ * viele Zeilen untereinander, und Kreuz und Tabelle bleiben beisammen. */
+main.raster > .spalte > #bvok.bereich.gross, #bvok.bereich.gross {
+  left: 50%; right: auto; width: min(42rem, calc(100vw - 2.5rem));
+  transform: translateX(-50%);
+}
+
+/* DIE ANLEITUNG (seit 25.11.2026): derselbe Rahmen wie der
+ * Willkommensschirm, die Bildflaeche traegt eine kleine Szene aus den
+ * ECHTEN Bausteinen (Feedback zu Test 2): ein Ausschnitt aus 02, das
+ * Tagmenue mit den Klassen von `.kontext`, das Vokabular als
+ * `table.vokabular`. Zeiger und Menue stehen an Stellen, die
+ * `anleitungAusrichten()` misst (--zx/--zy Ziel, --mx/--my Menue,
+ * --wx/--wy gewaehltes Tag, --kx/--ky Kreuz, --sx/--sy Start). Eine Runde
+ * dauert 5 s. Erst mit `.bereit` laeuft etwas; vorher stuende der Zeiger
+ * ungemessen in der Ecke. */
+.anl-flaeche { display: block; position: relative; }
+/* Das Menue muss ganz hinein (Feedback 27.11.2026): auf dem Handy war die
+   Flaeche nach 16:10 rund 195 px hoch, das Menue 271 px, und das gewaehlte
+   Tag lag unter dem Rand. Hier gibt die Flaeche nach, nicht das Menue: sie
+   ist mindestens 18rem hoch, auch wenn das Fenster niedrig ist; der Dialog
+   rollt dann. Die Bilder des Willkommensschirms behalten ihr Mass. */
+.willkommen-bild.anl-flaeche { min-height: 18rem; max-height: none; }
+.anl-szene {
+  position: relative; width: 100%; height: 100%; padding: 1rem;
+  box-sizing: border-box; color: var(--color-text); text-align: left;
+}
+.anl-text {
+  border: 1px solid var(--color-neutral-300); border-radius: var(--radius-md);
+  background: var(--papier); padding: 0.75rem;
+  font-family: var(--textschrift); font-size: var(--textgroesse); line-height: 2;
+}
+.anl-ziel { position: relative; display: inline-grid; vertical-align: baseline; }
+.anl-ziel > * { grid-area: 1 / 1; justify-self: start; }
+.anl-text .anl-ziel > span:not(.ph) { border-radius: var(--radius-md); }
+.anl-vok {
+  border: 1px solid var(--color-neutral-300); border-radius: var(--radius-md);
+  background: var(--papier); padding: 0.75rem 0.75rem 0.25rem;
+}
+.anl-vok { overflow: hidden; }
+.anl-vok .legende-reihe { padding-bottom: 0.625rem; overflow: hidden; }
+.anl-vok table.vokabular td:first-child { width: 1%; white-space: nowrap; padding-right: 0.75rem; }
+.anl-vok table.vokabular input {
+  width: 100%; box-sizing: border-box; pointer-events: none;
+}
+.anl-szene .kontext.anl-menue {
+  position: absolute; left: var(--mx, 0); top: var(--my, 0); z-index: 2;
+  width: 15.625rem; max-height: none; opacity: 0; visibility: hidden;
+}
+.anl-szene .kontext.anl-menue .tagrollen { overflow: hidden; }
+.anl-zeiger {
+  position: absolute; left: var(--sx, 0); top: var(--sy, 0); z-index: 3;
+  width: 1rem; height: 1.25rem; opacity: 0;
+  background: var(--color-text); transform-origin: 0 0;
+  clip-path: polygon(0 0, 0 100%, 30% 75%, 55% 100%, 70% 90%, 45% 68%, 85% 65%);
+  filter: drop-shadow(0 0 1px var(--papier));
+}
+.anl-ziel > :last-child { opacity: 0; }
+.anl-szene.bereit .anl-zeiger { animation: anl-zeiger 5s infinite; }
+.anl-szene.anl-2.bereit .anl-zeiger { animation-name: anl-zeiger-vok; }
+.anl-szene.bereit .anl-menue { animation: anl-menue 5s infinite; }
+.anl-szene.bereit .anl-wahl { animation: anl-wahl 5s infinite; }
+.anl-szene.bereit .anl-wort { animation: anl-weg 5s infinite; }
+.anl-szene.bereit .anl-ziel > :last-child { animation: anl-her 5s infinite; }
+.anl-szene.bereit .anl-text .anl-wort:not(.ph) { animation-name: anl-markiert; }
+.anl-szene.bereit .anl-zeile2 { animation: anl-zeile-weg 5s infinite; }
+.anl-szene.bereit .anl-zeile2 .vok-weg { animation: anl-kreuz 5s infinite; }
+@keyframes anl-zeiger {
+  0% { left: var(--sx); top: var(--sy); opacity: 0; transform: none; }
+  6% { left: var(--sx); top: var(--sy); opacity: 1; }
+  24%, 30% { left: var(--zx); top: var(--zy); transform: none; }
+  27% { transform: scale(.85); }
+  42%, 58% { left: var(--wx); top: var(--wy); transform: none; }
+  54% { transform: scale(.85); }
+  90% { left: var(--wx); top: var(--wy); opacity: 1; }
+  100% { left: var(--wx); top: var(--wy); opacity: 0; }
+}
+@keyframes anl-zeiger-vok {
+  0% { left: var(--sx); top: var(--sy); opacity: 0; transform: none; }
+  5% { left: var(--sx); top: var(--sy); opacity: 1; }
+  20%, 25% { left: var(--zx); top: var(--zy); transform: none; }
+  22% { transform: scale(.85); }
+  35%, 48% { left: var(--wx); top: var(--wy); transform: none; }
+  45% { transform: scale(.85); }
+  66%, 72% { left: var(--kx); top: var(--ky); transform: none; }
+  69% { transform: scale(.85); }
+  92% { left: var(--kx); top: var(--ky); opacity: 1; }
+  100% { left: var(--kx); top: var(--ky); opacity: 0; }
+}
+/* Die Zeiten der Vokabularszene sind kuerzer; das Menue folgt dem Zeiger. */
+@keyframes anl-menue {
+  0%, 27% { opacity: 0; visibility: hidden; transform: scale(.97); }
+  30%, 56% { opacity: 1; visibility: visible; transform: none; }
+  60%, 100% { opacity: 0; visibility: hidden; }
+}
+.anl-szene.anl-2.bereit .anl-menue { animation-name: anl-menue-vok; }
+@keyframes anl-menue-vok {
+  0%, 22% { opacity: 0; visibility: hidden; transform: scale(.97); }
+  25%, 47% { opacity: 1; visibility: visible; transform: none; }
+  51%, 100% { opacity: 0; visibility: hidden; }
+}
+@keyframes anl-wahl { 0%, 38% { background: var(--papier); }
+  40%, 56% { background: var(--color-neutral-200); } 100% { background: var(--papier); } }
+/* ⚠️ Jede Eigenschaft in JEDEM Abschnitt (Feedback 25.11.2026): stand die
+ * Deckkraft nur ab 60 %, blendete der Browser das Wort von 0 % an gleitend
+ * aus, und bei offenem Menue war die Stelle leer. */
+@keyframes anl-markiert { 0%, 26% { background: transparent; opacity: 1; }
+  28%, 58% { background: color-mix(in srgb, var(--color-accent) 22%, transparent); opacity: 1; }
+  60%, 100% { background: transparent; opacity: 0; } }
+@keyframes anl-weg { 0%, 57% { opacity: 1; } 60%, 100% { opacity: 0; } }
+@keyframes anl-her { 0%, 57% { opacity: 0; } 60%, 100% { opacity: 1; } }
+.anl-szene.anl-2.bereit .anl-wort { animation-name: anl-weg-vok; }
+.anl-szene.anl-2.bereit .anl-ziel > :last-child { animation-name: anl-her-vok; }
+@keyframes anl-weg-vok { 0%, 48% { opacity: 1; } 51%, 100% { opacity: 0; } }
+@keyframes anl-her-vok { 0%, 48% { opacity: 0; } 51%, 100% { opacity: 1; } }
+/* Das Kreuz wie in der App, in zwei Stufen und mit denselben Werten wie
+ * `table.vokabular … .vok-weg` (Feedback 25.11.2026: rot, nicht grau):
+ * erst die Zeile unter der Maus (Zelle grau, Kreuz rot auf hellrot), dann
+ * das Kreuz selbst (voll rot, Zeichen weiss). */
+@keyframes anl-kreuz {
+  0%, 59% { background: transparent; border-color: transparent; color: var(--color-neutral-600); }
+  61%, 65% { background: color-mix(in srgb, var(--bx-loeschen) 14%, transparent);
+    border-color: transparent; color: var(--bx-loeschen); }
+  66%, 73% { background: var(--bx-loeschen); border-color: var(--bx-loeschen-kante);
+    color: var(--auf-farbe); }
+  75%, 100% { background: transparent; border-color: transparent; color: var(--color-neutral-600); }
+}
+@keyframes anl-zeile-hover {
+  0%, 59% { background: transparent; } 61%, 73% { background: var(--color-neutral-200); }
+  75%, 100% { background: transparent; }
+}
+.anl-szene.bereit .anl-zeile2 > td { animation: anl-zeile-hover 5s infinite; }
+@keyframes anl-zeile-weg { 0%, 72% { opacity: 1; } 78%, 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .anl-szene.bereit * { animation: none !important; }
+  .anl-szene .anl-wort { opacity: 0; }
+  .anl-szene .anl-ziel > :last-child { opacity: 1; }
+}
+

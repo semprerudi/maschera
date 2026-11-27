@@ -14,6 +14,8 @@ normalisiert sie; `raw/` und `dist/` stehen nicht im Repository.
 | `FULLNAME`, `GIVENNAME` | Nach- und Vornamen der ständigen Wohnbevölkerung (BFS) |
 | `ORG` | Zefix über LINDAS (Handelsregister), dazu Behördennamen kombinatorisch |
 | `NATIONALITY` u. a. | Amtlicher Katalog der Merkmale (BFS), viersprachig |
+| `JOBTITLE` | CH-ISCO-19 mit Berufsverzeichnis v1.2.4 (BFS), Englisch zusätzlich ESCO (Europäische Kommission), beide angepasst |
+| `FAMILYROLE` | kombinatorisch aus Wortteilen, ohne fremde Quelle |
 
 **eCH-0135**, Befunde, die den Generator prägen:
 
@@ -64,6 +66,11 @@ die Wachen prüfen die Form, nicht den Sinn.
 {TAG}           echte Entität, wird getaggt
 {@makro}        gekoppelte Gruppe aus macros.yaml
 {~decoy}        sieht aus wie eine Entität, bleibt O
+{TAG=wert}      fester Wert, getaggt (z. B. eine Familienrolle im Satz)
+{KOEDER}        Nachname, der zugleich Beruf ist, als FULLNAME
+{BERUF_KOEDER}  dasselbe Wort als JOBTITLE
+{ROLLE}         Rollenkürzel aus Sitzungsprotokollen (PL, Stv. BL), JOBTITLE
+{EINHEIT}       Kürzel einer Organisationseinheit, ORG
 ```
 
 **Makros erzwingen Kohärenz.** `@address` zieht Strasse, Hausnummer, PLZ und
@@ -78,6 +85,10 @@ Modell lernt, dass PLZ und Ort nichts miteinander zu tun haben.
 | `~deadline` | innert 30 Tagen seit Eröffnung |
 | `~threshold` | Vermögensfreibetrag von 4000 Franken |
 | `~doc_meta` | Version 2.1, Stand 01.2026 |
+| `~personenwort` | die Kundin, die Projektleitung |
+| `~verwandt` | die Muttergesellschaft, das Besuchsrecht |
+| `~fachwort` | die Risikoanalyse, die Datenbank, die Kantone |
+| `~systemkuerzel` | erzeugt: GBDBS, (EGBA), -/UID |
 
 Verwaltungstexte wimmeln von Zahlen, die keine Personendaten sind. Ohne
 Decoys übertaggt das Modell. **Decoys sind das Precision-Werkzeug und
@@ -151,16 +162,60 @@ ab, hat das Modell die Liste gelernt und nicht die Form.
 - **Streuung messen.** Derselbe Datensatz mit verschiedenen Keimen kann
   weiter auseinanderliegen als zwei Bedingungen (`tools/streuung.py`).
 
+### Weitertrainieren mit angehängten Tags
+
+Seit 2.5 wird nicht neu trainiert, sondern ein bewährtes Modell erweitert:
+
+| Option | Wirkung |
+|---|---|
+| `--start-von MODELL` | lädt das Modell und erweitert den Ausgabekopf um die angehängten Labels; die alten Zeilen bleiben exakt |
+| `--nur-kopf` | friert alles ausser den neuen Zeilen ein |
+| `--lehrer MODELL` | das alte Modell schaut mit: weicht das neue bei den alten Labels ab, kostet das (KL-Divergenz) |
+| `--lehrer-gewicht` | wie stark; 4 hält das alte Verhalten fest, 1 lässt es umlernen und brachte im Testset neue Lecks |
+| `--lehrer-frei MUSTER` | in Beispielen aus Vorlagen mit diesem Kennungsteil schweigt der Lehrer |
+| `--lehrer-frei-tags TAGS` | und dort nur an Token dieser Tags (z. B. Namen im Protokollkopf) |
+
+⚠️ `TrainingArguments(remove_unused_columns=False)`: sonst wirft der Trainer
+das Feld `lehrer_frei` ohne Meldung weg, und der Lehrer wirkt überall. Ist
+`--lehrer-frei` gesetzt und kommt das Feld nicht an, bricht der Lauf ab.
+
 ## Der ausgelieferte Lauf
 
-Das ausgelieferte Modell heisst `ch-v63b`. Die Gewichte selbst sind nicht Teil
-dieses Katalogs; `packs/ch/modell.json` nennt Quelle, festen Commit, Grössen und
-Prüfsummen. Die Werte unten stammen aus den Trainingsargumenten dieses Laufs.
+Das ausgelieferte Modell heisst `ch-v71f` (seit 2.5). Die Gewichte selbst sind
+nicht Teil dieses Katalogs; `packs/ch/modell.json` nennt Quelle, festen Commit,
+Grössen und Prüfsummen. Die Werte unten stammen aus den Trainingsargumenten und dem
+Protokoll dieses Laufs.
+
+`ch-v71f` setzt `ch-v63b` fort (bis 2.4 das ausgelieferte Modell, 3 Epochen, lr
+3e-5, Keim 4711, sonst dieselben Werte). Der Kopf wurde um `JOBTITLE` und
+`FAMILYROLE` erweitert, `ch-v63b` wachte als Lehrer über die alten Labels, ausser
+an Namen in Protokollköpfen ([EN-038](15_entscheide.md)).
+
+```fish
+python3 train.py --data dataset.jsonl --eval-data eval.jsonl \
+    --out runs/neu --start-von runs/ch-v63b \
+    --lehrer runs/ch-v63b --lehrer-gewicht 4 \
+    --lehrer-frei protokoll_kopf --lehrer-frei-tags GIVENNAME,FULLNAME \
+    --epochs 2 --lr 2e-5 --seed 1291
+```
+
+Was `ch-v71f` anders macht als ein Lauf mit den Vorgaben:
+
+| | `ch-v71f` |
+|---|---|
+| Start | `ch-v63b`, Kopf von 91 auf 95 Labels |
+| Lehrer | `ch-v63b`, Gewicht 4, frei für `GIVENNAME`/`FULLNAME` in 1507 Protokollköpfen |
+| Daten | 40 000 Beispiele Training, 4000 Auswertung |
+| Epochen, Lernrate | 2, 2e-5 |
+| Keim Training | 1291 |
+
+Alles Übrige wie in der Tabelle der Vorgaben von `train.py`, mit denen `ch-v63b`
+trainiert wurde (Keim dort 4711, Vorgabe 2026):
 
 | Parameter | Wert |
 |---|---|
 | Backbone | `jhu-clsp/mmBERT-base`, ModernBERT-Architektur |
-| Kopf | Token-Klassifikation, 91 Labels |
+| Kopf | Token-Klassifikation, 91 Labels (`ch-v63b`) |
 | Epochen | 3 |
 | Stapel | 8, Gradienten über 2 Stapel, effektiv 16 |
 | Lernrate | 3e-5 |
@@ -174,10 +229,7 @@ Prüfsummen. Die Werte unten stammen aus den Trainingsargumenten dieses Laufs.
 | Sequenzlänge | 512 |
 | Zwischenstände | keine, `save_strategy="no"` |
 
-Die Vorgaben von `train.py` entsprechen diesen Werten, ausser dem Keim (Vorgabe
-2026).
-
-### Daten und Befehle
+### Daten und Befehle für einen Lauf von vorn
 
 Trainiert wird nur aus der Zone `training`, ausgewertet nur aus der Zone
 `halten`. Ohne diese Trennung lässt sich nicht unterscheiden, ob das Modell
@@ -206,8 +258,8 @@ Speicher. Die Anwendung braucht keine GPU.
 ⚠️ Ein Neulauf ergibt **nicht** dieselben Gewichte. Der ursprüngliche Datensatz
 ist nicht veröffentlicht, Vorlagen und Erzeuger haben sich seither weiterbewegt,
 und die Streuung zwischen zwei Keimen kann grösser sein als der Unterschied
-zwischen zwei Bedingungen. `ch-v63b` war eine günstige Ziehung aus seiner
-Bedingung, nicht ein typischer Lauf.
+zwischen zwei Bedingungen. `ch-v63b`, der Ausgangspunkt von `ch-v71f`, war eine
+günstige Ziehung aus seiner Bedingung, nicht ein typischer Lauf.
 
 Daraus folgen die Anforderungen an ein neues Modell:
 

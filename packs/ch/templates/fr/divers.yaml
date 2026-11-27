@@ -30,7 +30,7 @@ templates:
       Nationalité: {NATIONALITY}
       Pays de naissance: {COUNTRY}
 
-      Parents: {@person} et {@person}
+      {FAMILYROLE=Parents}: {@person} et {@person}
       Inscription {CASE_ID}
 
       Délivré le {DATE}. Il est perçu {~amount}.

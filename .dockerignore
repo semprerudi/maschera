@@ -12,20 +12,20 @@
 # Modelle und Trainingsdaten
 #
 # EINE Ausnahme: das Arbeitsmodell. Im Paket laeuft der Torch-Weg
-# (`tools/paket/requirements-paket.txt`), dafuer muss `runs/ch-v63b` in den
+# (`tools/paket/requirements-paket.txt`), dafuer muss `runs/ch-v71f` in den
 # Kontext — NUR dieses eine Verzeichnis.
 runs/*
-!runs/ch-v63b/
-runs/ch-v63b/checkpoint-*
+!runs/ch-v71f/
+runs/ch-v71f/checkpoint-*
 # Pickle-Dateien: `training_args.bin` sagt nur, wie trainiert wurde, wird zur
 # Laufzeit nicht gelesen (`core/modell.py`, `PFLICHT`) und kann beim Oeffnen
 # Code ausfuehren. Dieselbe Liste: `appimage_bauen.fish`, `windows_bauen.py`.
-runs/ch-v63b/*.bin
-runs/ch-v63b/*.pt
-runs/ch-v63b/*.pth
-runs/ch-v63b/*.pkl
-runs/ch-v63b/*.ckpt
-runs/ch-v63b/*.pickle
+runs/ch-v71f/*.bin
+runs/ch-v71f/*.pt
+runs/ch-v71f/*.pth
+runs/ch-v71f/*.pkl
+runs/ch-v71f/*.ckpt
+runs/ch-v71f/*.pickle
 *.jsonl
 
 # Was die Laufzeit nicht liest: Erzeugung synthetischer Trainingsdaten,

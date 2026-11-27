@@ -158,6 +158,18 @@ bezeichnungen:
     it: Nome utente
     en: Username
 
+  JOBTITLE:
+    de: Berufsbezeichnung
+    fr: Désignation de profession      # ?
+    it: Designazione della professione # ?
+    en: Job title                      # ?
+
+  FAMILYROLE:
+    de: Familienbeziehung
+    fr: Lien familial                  # ?
+    it: Rapporto di parentela          # ?
+    en: Family relationship            # ?
+
   # --- Amtliche Nummern ----------------------------------------------------
 
   AHVN13:

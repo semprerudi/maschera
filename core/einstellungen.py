@@ -102,7 +102,7 @@ THEMEN = ("automatisch", "hell", "dunkel")
 # Unbekannte Marken fallen still weg statt abgelehnt zu werden: eine Datei
 # von einer NEUEREN Fassung soll eine aeltere nicht auf die ganze Vorgabe
 # zurueckwerfen (dieselbe Falle wie bei `schriftart`).
-MARKEN = ("beispiel", "willkommen")
+MARKEN = ("beispiel", "willkommen", "anleitung")
 
 VORGABE = {
     "adresse": "127.0.0.1",

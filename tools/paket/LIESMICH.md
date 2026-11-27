@@ -21,10 +21,10 @@ Bauskripte lesen sie dort über `tools/paket/fassung.fish`.
 ### Das Modell holen
 
 Die Gewichte sind nicht im Repository — 1,2 GB gehören nicht in Git. Das
-Abbild erwartet sie unter `runs/ch-v63b` im Projektstamm:
+Abbild erwartet sie unter `runs/ch-v71f` im Projektstamm:
 
 ```fish
-hf download semprerudi/maschera-ch-v63b --local-dir runs/ch-v63b
+hf download semprerudi/maschera-ch-v71f --local-dir runs/ch-v71f
 ```
 
 `.dockerignore` lässt aus `runs/` **nur** dieses eine Verzeichnis in den
@@ -40,7 +40,7 @@ fish tools/paket/bauen.fish
 
 | | |
 |---|---|
-| `runs/ch-v63b` | 1,26 GB — das Modell, **torch statt ONNX** |
+| `runs/ch-v71f` | 1,26 GB — das Modell, **torch statt ONNX** |
 | Abhängigkeiten | 1,23 GB — torch 746 MB, transformers 109, sympy 72, pymupdf 64 |
 | Python-Unterbau | rund 130 MB |
 | MASCHERA selbst | unter 1 MB |
@@ -188,7 +188,7 @@ die Anwendung.
 | | warum |
 |---|---|
 | `packs/*/nomenclatures/` | rund 100 MB, und **die Laufzeit liest sie nicht**. Nur `core/injector.py` greift darauf zu, und der erzeugt synthetische Trainingsdaten |
-| `runs/*` ausser `ch-v63b` | andere Trainingsläufe |
+| `runs/*` ausser `ch-v71f` | andere Trainingsläufe |
 | `release/` | der ONNX-Bau |
 | `*.jsonl` | Trainingsdaten |
 | `tests/`, `docs/`, `beispiele/` | Entwicklung |
@@ -211,7 +211,7 @@ fish tools/paket/appimage_bauen.fish
 Ergebnis: `dist/MASCHERA-<fassung>-x86_64.AppImage`, **rund 1,7 GB**.
 Eine Datei, kein root, kein Paketmanager, läuft auf Arch wie auf Ubuntu.
 
-Braucht `appimagetool` und `uv`, und das Modell unter `runs/ch-v63b`
+Braucht `appimagetool` und `uv`, und das Modell unter `runs/ch-v71f`
 wie beim Docker-Bau.
 
 ⚠️ **Warum `uv` und nicht das System-Python.** Eine AppImage wird zur

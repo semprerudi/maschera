@@ -1,0 +1,65 @@
+# Vorlagen EN — Fliesstext mit Berufen, Familie und Gegenbeispielen, seit 25.11.2026.
+# {~personenwort} («the customer», «the project management team») bleibt O.
+
+templates:
+  - id: en_personen_reference
+    doc_type: Arbeitszeugnis
+    text: |
+      Employment reference
+
+      {GIVENNAME} {FULLNAME}, born on {DATE}, worked from {DATE} to {DATE}
+      as {JOBTITLE} at our company {ORG}. Previously she was a {JOBTITLE}
+      in {CITY}.
+
+      She looked after {~personenwort} independently and supported
+      {~personenwort} with all questions. Her work was always appreciated
+      by {~personenwort}. She is leaving at her own request.
+
+      {CITY}, {DATE}
+
+      {GIVENNAME} {FULLNAME}, {JOBTITLE}
+
+  - id: en_personen_minutes
+    doc_type: Sitzungsprotokoll
+    text: |
+      Minutes of the meeting of {DATE}, {TIME}
+
+      Present: {GIVENNAME} {FULLNAME} ({JOBTITLE}), {GIVENNAME} {FULLNAME}
+      ({JOBTITLE}), {GIVENNAME} {FULLNAME} ({JOBTITLE})
+      Apologies: {GIVENNAME} {FULLNAME}
+
+      1. {~personenwort} reports on the status of the project. The
+         {JOBTITLE} confirms the date. The deadline runs {~deadline}.
+      2. {~personenwort} asks for feedback by {DATE}.
+      3. The {JOBTITLE} will clarify the matter with {ORG}.
+
+      Minutes: {GIVENNAME} {FULLNAME}
+
+  - id: en_personen_social_report
+    doc_type: Sozialbericht
+    text: |
+      Social report {CASE_ID}
+
+      {GIVENNAME} {FULLNAME} ({AGE}) lives with her {FAMILYROLE} and two
+      {FAMILYROLE} in {CITY}. Her {FAMILYROLE} works as a {JOBTITLE}; her
+      {FAMILYROLE} is currently unemployed. There is also contact with her
+      {FAMILYROLE} in {CITY}.
+
+      According to {~personenwort}, the situation is stable.
+      {~personenwort} has been informed of the assessment.
+
+      {GIVENNAME} {FULLNAME}, {JOBTITLE}, {ORG}
+
+  - id: en_personen_project_report
+    doc_type: Projektbericht
+    text: |
+      Project report {CASE_ID}, as of {DATE}
+
+      The project is led by {GIVENNAME} {FULLNAME} as {JOBTITLE}.
+      {~personenwort} has confirmed the requirements; {~personenwort}
+      receives a report every month. Implementation lies with a
+      {JOBTITLE} and a {JOBTITLE} from {ORG}.
+
+      Risks: the resources of {~personenwort} are limited.
+
+      {GIVENNAME} {FULLNAME}

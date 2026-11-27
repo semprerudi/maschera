@@ -2,7 +2,7 @@
 """Misst, ob die Kette den amtlichen Zeichensatz traegt.
 
     python3 tools/mess_zeichensatz.py --proben /tmp/zeichensatz
-    python3 tools/filter_document.py --model runs/ch-v63b \\
+    python3 tools/filter_document.py --model runs/ch-v71f \\
         --ohne-regeln --ohne-vorlieben --knapp \\
         --bericht /tmp/bericht.json /tmp/zeichensatz
     python3 tools/mess_zeichensatz.py --auswerten /tmp/bericht.json
@@ -381,7 +381,7 @@ def main() -> int:
         print("Alle Namen und Nummern sind erfunden.")
         print()
         print("Naechster Schritt — dieser braucht das Modell:")
-        print(f"  python3 tools/filter_document.py --model runs/ch-v63b \\")
+        print(f"  python3 tools/filter_document.py --model runs/ch-v71f \\")
         print(f"      --ohne-regeln --ohne-vorlieben --knapp \\")
         print(f"      --bericht {ziel}/bericht.json {ziel}")
     if args.auswerten:

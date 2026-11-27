@@ -178,7 +178,15 @@ const I18N = {
   de: { uebernahme: "Übernahme in Prompt",
         einpflegen: "Vokabular einpflegen", kopiertK: "Kopiert",
         maskeWeg: "Maske entfernen",
-        haeufig: "Häufig",
+        haeufig: "Häufig", zuletzt: "Zuletzt verwendet",
+        typHinweis: "Anderes Tag wählen = Typ ändern",
+        mAnleitung: "Bedienung", anlFertig: "Verstanden",
+        anlSatz1a: "Termin mit ", anlSatz1b: " am Montag.",
+        anlSatz2a: "Die ", anlSatz2b: " hat geantwortet.", anlWert2: "Projektleiterin",
+        anlSeiten: [
+          ["Maske setzen", "Rechtsklick auf ein Wort im maskierten Text und ein Tag wählen. Das Wort wird im ganzen Dokument maskiert."],
+          ["Typ ändern oder Maske entfernen", "Rechtsklick auf einen Platzhalter: ein anderes Tag wählen ändert den Typ, «Maske entfernen» stellt den Wert wieder her."],
+          ["Im Vokabular", "Dasselbe Menü öffnet ein Rechtsklick auf die ID oder den Typ. Das Kreuz am Zeilenende entfernt die Maske."]],
         maskiertDurch: { model: "durch das KI-Modell maskiert", propagation: "maskiert, weil derselbe Wert schon erkannt war", manuell: "von Hand maskiert", checksum: "durch Prüfziffer bestätigt und maskiert", regex: "durch ein Muster maskiert", rule: "durch eine eigene Regel maskiert" },
         maskiertSonst: "maskiert",
         spracheW: "Sprache",
@@ -249,7 +257,7 @@ const I18N = {
         offenText: "{} Platzhalter blieben stehen. Im fertigen Text nachsehen:",
         gutText: "{} Platzhalter zurückgesetzt.",
         hinausT: "Prompt & maskierter Text", trenner: "den oberen Prompt auf folgenden Text anwenden",
-        sendenZu: "Alles kopieren und {} öffnen", onlineWarnung: "In {} arbeitest du online, sei vorsichtig!", origPlatz: "Originaltext hier einfügen …", promptPlatz: "Dein Prompt, z. B. «Beantworte diese E-Mail freundlich.»", hinausLeer: "Erst «Übernahme in Prompt», dann steht hier, was hinausgeht.",
+        hinausFolgt: "übernommen · folgt deinen Änderungen in 02", hinausFolgtKurz: "übernommen · folgt 02", hinausFolgtKnapp: "folgt 02", sendenZu: "Alles kopieren und {} öffnen", onlineWarnung: "In {} arbeitest du online, sei vorsichtig!", origPlatz: "Originaltext hier einfügen …", promptPlatz: "Dein Prompt, z. B. «Beantworte diese E-Mail freundlich.»", hinausLeer: "Erst «Übernahme in Prompt», dann steht hier, was hinausgeht.",
         spalteId: "ID",
         spalteWert: "Originalwert", spalteTyp: "Typ", anteilW: "Maskierter Anteil",
         keinVokabular: "Noch kein Vokabular. Es entsteht beim Maskieren.",
@@ -271,6 +279,7 @@ const I18N = {
         herunterladen: "Herunterladen", hochladen: "Hochladen", einfuegen: "Einfügen",
         einfuegenHinweis: "Zwischenablage gesperrt. Bitte Ctrl+V drücken.",
         drop_ohne_datei: "Aus diesem Programm kommt keine Datei an. Ziehe die Nachricht zuerst auf den Schreibtisch und dann hierher.",
+        mVersionen: "Versionshinweise", versionenLeer: "Die Versionshinweise fehlen in diesem Paket.",
         mUpdate: "Nach Updates suchen", neuesteSucht: "Frage GitHub nach der neuesten Fassung …", neuesteAktuell: "Du hast {aktuell}. Das ist die neueste Fassung.", neuesteNeu: "Fassung {neueste} ist da. Du hast {aktuell}.", neuesteSeite: "Zur Download-Seite",
         kAusschneiden: "Ausschneiden", kKopieren: "Kopieren", kEinfuegen: "Einfügen",
         menu: "Menü",
@@ -473,7 +482,15 @@ const I18N = {
   fr: { uebernahme: "Reprise dans le prompt",
         einpflegen: "Appliquer le vocabulaire", kopiertK: "Copié",
         maskeWeg: "Retirer le masque",
-        haeufig: "Fréquents",
+        haeufig: "Fréquents", zuletzt: "Utilisés récemment",
+        typHinweis: "Choisir un autre tag = changer le type",
+        mAnleitung: "Utilisation", anlFertig: "Compris",
+        anlSatz1a: "Réunion avec ", anlSatz1b: " lundi.",
+        anlSatz2a: "La ", anlSatz2b: " a répondu.", anlWert2: "cheffe de projet",
+        anlSeiten: [
+          ["Masquer", "Clic droit sur un mot du texte masqué, puis choisir un tag. Le mot est masqué dans tout le document."],
+          ["Changer le type ou retirer le masque", "Clic droit sur un espace réservé : choisir un autre tag change le type, « Retirer le masque » rétablit la valeur."],
+          ["Dans le vocabulaire", "Un clic droit sur l’ID ou le type ouvre le même menu. La croix en fin de ligne retire le masque."]],
         maskiertDurch: { model: "masqué par le modèle d’IA", propagation: "masqué, car la même valeur avait déjà été détectée", manuell: "masqué à la main", checksum: "confirmé par chiffre de contrôle et masqué", regex: "masqué par un motif", rule: "masqué par une règle personnelle" },
         maskiertSonst: "masqué",
         spracheW: "Langue",
@@ -544,7 +561,7 @@ const I18N = {
         offenText: "{} substituts sont restés. À vérifier dans le texte final :",
         gutText: "{} substituts rétablis.",
         hinausT: "Prompt & texte masqué", trenner: "appliquer le prompt ci-dessus au texte suivant",
-        sendenZu: "Tout copier et ouvrir {}", onlineWarnung: "Dans {}, tu travailles en ligne, sois prudent !", origPlatz: "Coller ici le texte original …", promptPlatz: "Ton prompt, p. ex. « Réponds à ce courriel poliment. »", hinausLeer: "D’abord « Reprise dans le prompt », ensuite tu verras ici ce qui sort.",
+        hinausFolgt: "repris · suit tes modifications dans 02", hinausFolgtKurz: "repris · suit 02", hinausFolgtKnapp: "suit 02", sendenZu: "Tout copier et ouvrir {}", onlineWarnung: "Dans {}, tu travailles en ligne, sois prudent !", origPlatz: "Coller ici le texte original …", promptPlatz: "Ton prompt, p. ex. « Réponds à ce courriel poliment. »", hinausLeer: "D’abord « Reprise dans le prompt », ensuite tu verras ici ce qui sort.",
         spalteId: "ID",
         spalteWert: "Valeur d’origine", spalteTyp: "Type", anteilW: "Part masquée",
         keinVokabular: "Pas encore de vocabulaire. Il naît au masquage.",
@@ -566,6 +583,7 @@ const I18N = {
         herunterladen: "Télécharger", hochladen: "Téléverser", einfuegen: "Coller",
         einfuegenHinweis: "Presse-papiers bloqué. Utilise Ctrl+V.",
         drop_ohne_datei: "Ce programme ne fournit aucun fichier. Glisse d’abord le message sur le bureau, puis ici.",
+        mVersionen: "Notes de version", versionenLeer: "Les notes de version manquent dans ce paquet.",
         mUpdate: "Rechercher des mises à jour", neuesteSucht: "Je demande à GitHub la version la plus récente …", neuesteAktuell: "Tu as la {aktuell}. C’est la version la plus récente.", neuesteNeu: "La version {neueste} est disponible. Tu as la {aktuell}.", neuesteSeite: "Vers la page de téléchargement",
         kAusschneiden: "Couper", kKopieren: "Copier", kEinfuegen: "Coller",
         menu: "Menu",
@@ -759,7 +777,15 @@ const I18N = {
   it: { uebernahme: "Riprendi nel prompt",
         einpflegen: "Applica il vocabolario", kopiertK: "Copiato",
         maskeWeg: "Togli la maschera",
-        haeufig: "Frequenti",
+        haeufig: "Frequenti", zuletzt: "Usati di recente",
+        typHinweis: "Scegliere un altro tag = cambiare il tipo",
+        mAnleitung: "Utilizzo", anlFertig: "Capito",
+        anlSatz1a: "Appuntamento con ", anlSatz1b: " lunedì.",
+        anlSatz2a: "La ", anlSatz2b: " ha risposto.", anlWert2: "capoprogetto",
+        anlSeiten: [
+          ["Mascherare", "Clic destro su una parola del testo mascherato e scegliere un tag. La parola viene mascherata in tutto il documento."],
+          ["Cambiare il tipo o togliere la maschera", "Clic destro su un segnaposto: scegliere un altro tag cambia il tipo, «Togli la maschera» ripristina il valore."],
+          ["Nel vocabolario", "Un clic destro sull’ID o sul tipo apre lo stesso menu. La croce a fine riga toglie la maschera."]],
         maskiertDurch: { model: "mascherato dal modello di IA", propagation: "mascherato perché lo stesso valore era già stato rilevato", manuell: "mascherato a mano", checksum: "confermato da cifra di controllo e mascherato", regex: "mascherato da un modello di testo", rule: "mascherato da una regola personale" },
         maskiertSonst: "mascherato",
         spracheW: "Lingua",
@@ -830,7 +856,7 @@ const I18N = {
         offenText: "{} segnaposto sono rimasti. Da controllare nel testo finale:",
         gutText: "{} segnaposto ripristinati.",
         hinausT: "Prompt & testo mascherato", trenner: "applica il prompt qui sopra al testo seguente",
-        sendenZu: "Copia tutto e apri {}", onlineWarnung: "In {} lavori online, fai attenzione!", origPlatz: "Incolla qui il testo originale …", promptPlatz: "Il tuo prompt, p. es. «Rispondi a questa e-mail gentilmente.»", hinausLeer: "Prima «Riprendi nel prompt», poi qui vedrai cosa esce.",
+        hinausFolgt: "ripreso · segue le tue modifiche in 02", hinausFolgtKurz: "ripreso · segue 02", hinausFolgtKnapp: "segue 02", sendenZu: "Copia tutto e apri {}", onlineWarnung: "In {} lavori online, fai attenzione!", origPlatz: "Incolla qui il testo originale …", promptPlatz: "Il tuo prompt, p. es. «Rispondi a questa e-mail gentilmente.»", hinausLeer: "Prima «Riprendi nel prompt», poi qui vedrai cosa esce.",
         spalteId: "ID",
         spalteWert: "Valore originale", spalteTyp: "Tipo", anteilW: "Quota mascherata",
         keinVokabular: "Nessun vocabolario. Nasce con la mascheratura.",
@@ -852,6 +878,7 @@ const I18N = {
         herunterladen: "Scarica", hochladen: "Carica", einfuegen: "Incolla",
         einfuegenHinweis: "Appunti bloccati. Usa Ctrl+V.",
         drop_ohne_datei: "Da questo programma non arriva alcun file. Trascina prima il messaggio sulla scrivania, poi qui.",
+        mVersionen: "Note di rilascio", versionenLeer: "Le note di rilascio mancano in questo pacchetto.",
         mUpdate: "Cerca aggiornamenti", neuesteSucht: "Chiedo a GitHub la versione più recente …", neuesteAktuell: "Hai la {aktuell}. È la versione più recente.", neuesteNeu: "È disponibile la versione {neueste}. Tu hai la {aktuell}.", neuesteSeite: "Alla pagina di download",
         kAusschneiden: "Taglia", kKopieren: "Copia", kEinfuegen: "Incolla",
         menu: "Menu",
@@ -1044,7 +1071,15 @@ const I18N = {
   en: { uebernahme: "Take into prompt",
         einpflegen: "Apply vocabulary", kopiertK: "Copied",
         maskeWeg: "Remove mask",
-        haeufig: "Frequent",
+        haeufig: "Frequent", zuletzt: "Recently used",
+        typHinweis: "Choose another tag = change the type",
+        mAnleitung: "How it works", anlFertig: "Got it",
+        anlSatz1a: "Meeting with ", anlSatz1b: " on Monday.",
+        anlSatz2a: "The ", anlSatz2b: " replied.", anlWert2: "project manager",
+        anlSeiten: [
+          ["Mask a word", "Right-click a word in the masked text and choose a tag. The word is masked throughout the document."],
+          ["Change the type or remove a mask", "Right-click a placeholder: choosing another tag changes the type, “Remove mask” restores the value."],
+          ["In the vocabulary", "Right-clicking the ID or the type opens the same menu. The cross at the end of the row removes the mask."]],
         maskiertDurch: { model: "masked by the AI model", propagation: "masked because the same value was already detected", manuell: "masked by hand", checksum: "confirmed by check digit and masked", regex: "masked by a pattern", rule: "masked by a custom rule" },
         maskiertSonst: "masked",
         spracheW: "Language",
@@ -1115,7 +1150,7 @@ const I18N = {
         offenText: "{} placeholders remained. Check them in the final text:",
         gutText: "{} placeholders restored.",
         hinausT: "Prompt & masked text", trenner: "apply the prompt above to the following text",
-        sendenZu: "Copy all and open {}", onlineWarnung: "In {} you are working online, be careful!", origPlatz: "Paste the original text here …", promptPlatz: "Your prompt, e.g. \u00abReply to this e-mail politely.\u00bb", hinausLeer: "First «Take into prompt», then you see here what goes out.",
+        hinausFolgt: "taken over · follows your edits in 02", hinausFolgtKurz: "taken over · follows 02", hinausFolgtKnapp: "follows 02", sendenZu: "Copy all and open {}", onlineWarnung: "In {} you are working online, be careful!", origPlatz: "Paste the original text here …", promptPlatz: "Your prompt, e.g. \u00abReply to this e-mail politely.\u00bb", hinausLeer: "First «Take into prompt», then you see here what goes out.",
         spalteId: "ID",
         spalteWert: "Original value", spalteTyp: "Type", anteilW: "Masked share",
         keinVokabular: "No vocabulary yet. It appears when you mask.",
@@ -1137,6 +1172,7 @@ const I18N = {
         herunterladen: "Download", hochladen: "Upload", einfuegen: "Paste",
         einfuegenHinweis: "Clipboard blocked. Press Ctrl+V.",
         drop_ohne_datei: "This program does not hand over a file. Drag the message to the desktop first, then here.",
+        mVersionen: "Release notes", versionenLeer: "The release notes are missing from this package.",
         mUpdate: "Check for updates", neuesteSucht: "Asking GitHub for the newest version …", neuesteAktuell: "You have {aktuell}. That is the newest version.", neuesteNeu: "Version {neueste} is out. You have {aktuell}.", neuesteSeite: "To the download page",
         kAusschneiden: "Cut", kKopieren: "Copy", kEinfuegen: "Paste",
         menu: "Menu",
@@ -1345,7 +1381,8 @@ const DIENSTE = [
  * ohne Gruppe landete sonst unter «-».
  */
 const TAG_GRUPPEN = {
-  person: ["FULLNAME", "GIVENNAME", "AGE", "SEX", "MARITALSTATUS"],
+  person: ["FULLNAME", "GIVENNAME", "JOBTITLE", "FAMILYROLE", "AGE", "SEX",
+           "MARITALSTATUS"],
   herkunft: ["NATIONALITY", "RELIGION", "PLACE_OF_ORIGIN",
              "RESIDENCE_STATUS", "PERMIT_TYPE", "VOTING_RIGHTS",
              "COUNTRY"],
@@ -1442,6 +1479,8 @@ const z = {
   // Fenster (siehe `markeGesetzt`).
   marken: [],
   willkommenSeite: 0,
+  anleitungSeite: 0,
+  anleitungFaellig: false,
   beispielGeprueft: false,
   // Holt den Stand, solange maskiert wird.
   fortschrittUhr: null,
@@ -1458,7 +1497,7 @@ const z = {
   kontext: null,
   // Offene Gruppen im Kontextmenue, jede von Hand auf- und zugeklappt
   // (seit 2.1); «Häufig» steht zu Beginn offen. Gilt fuer die Sitzung.
-  kontextOffen: new Set(["haeufig"]),
+  kontextOffen: new Set(["zuletzt", "haeufig"]),
   kontextSuche: "",      // Suchwort im Kontextmenue, gilt bis zum Schliessen
   gross: null,           // Kennung der vergroesserten Kachel, sonst null
   hinweiseAuf: false,    // ruhige Hinweise unter dem Kopf von 02 offen
@@ -1899,6 +1938,72 @@ function rolltUm(ziel, anker) {
     || ziel === document.body || !!(ziel && ziel.contains && ziel.contains(anker));
 }
 
+/* Der Tooltip an Knoepfen und Verweisen (seit 2.5, Feedback 27.11.2026).
+ *
+ * Der Browser setzt den Tooltip eines `title` unter den Mauszeiger, und
+ * der Zeiger deckt ihn zu: «Dienst wählen» am Pfeil in 03 war nicht zu
+ * lesen. Die Lage des Browser-Tooltips laesst sich nicht steuern. Deshalb
+ * zieht dieser Tooltip den `title` beim Hineinfahren ab, merkt ihn sich in
+ * `data-titel` und zeigt ihn selbst UEBER dem Element; fehlt dort der
+ * Platz, darunter. Beim Hinausfahren kommt der `title` zurueck, ausser das
+ * Skript hat inzwischen einen neuen gesetzt.
+ *
+ * Fuer ALLE `title` der Seite und nicht fuer eine Liste: dieselbe Lage am
+ * Rand hatten die Symbolknoepfe in den Fuessen und im Vokabular. Nur bei
+ * einer Maus: auf dem Finger gibt es kein Darueberfahren.
+ */
+const KNOPFTIPP_VERZUG = 450;
+
+function knopftippEinrichten() {
+  const tipp = $("knopftipp");
+  if (!tipp || !window.matchMedia
+      || !window.matchMedia("(hover: hover)").matches) return;
+  let ziel = null;
+  let uhr = 0;
+  const weg = () => {
+    clearTimeout(uhr);
+    tipp.hidden = true;
+    if (!ziel) return;
+    const alt = ziel.getAttribute("data-titel");
+    ziel.removeAttribute("data-titel");
+    if (alt && !ziel.hasAttribute("title")) ziel.setAttribute("title", alt);
+    ziel = null;
+  };
+  const zeigen = (k, text) => {
+    if (ziel !== k || !k.isConnected) return;
+    tipp.textContent = text;
+    // Erst links oben messen: am rechten Rand schrumpfte er sonst auf den
+    // Rest der Zeile und brach um.
+    tipp.style.left = "0px";
+    tipp.style.top = "0px";
+    tipp.hidden = false;
+    const r = k.getBoundingClientRect();
+    const b = tipp.getBoundingClientRect();
+    const mitte = r.left + r.width / 2 - b.width / 2;
+    const links = Math.max(8, Math.min(mitte, window.innerWidth - b.width - 8));
+    const oben = r.top - 8 - b.height;
+    tipp.style.left = links + "px";
+    tipp.style.top = (oben >= 8 ? oben : r.bottom + 8) + "px";
+  };
+  document.addEventListener("mouseover", (e) => {
+    if (ziel && ziel.contains(e.target)) return;
+    const k = e.target && e.target.closest ? e.target.closest("[title]") : null;
+    weg();
+    const text = k && k.getAttribute("title");
+    if (!text) return;
+    ziel = k;
+    k.setAttribute("data-titel", text);
+    k.removeAttribute("title");
+    uhr = setTimeout(() => zeigen(k, text), KNOPFTIPP_VERZUG);
+  });
+  document.addEventListener("mouseout", (e) => {
+    if (ziel && !ziel.contains(e.relatedTarget)) weg();
+  });
+  for (const art of ["mousedown", "keydown", "scroll"]) {
+    document.addEventListener(art, weg, true);
+  }
+}
+
 function tippWeg() {
   const tipp = $("tipp");
   if (tipp) tipp.hidden = true;
@@ -2097,6 +2202,8 @@ const MENUEBILDER = {
   buch: ["M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2Z",
          "M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7Z"],
   // Fragezeichen im Kreis
+  // Mauszeiger: die Anleitung zum Rechtsklick (seit 25.11.2026)
+  zeiger: ["M4 3l7 17 2.5-7.5L21 10Z", "m13.5 13.5 5 5"],
   frage: ["M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z",
           "M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3", "M12 17h.01"],
   // Globus
@@ -2112,6 +2219,9 @@ const MENUEBILDER = {
   // Briefumschlag
   brief: ["M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z",
           "m3 7 9 6 9-6"],
+  // Blatt mit Zeilen — «Versionshinweise» (seit 2.5)
+  notiz: ["M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z",
+          "M14 3v6h6", "M8 13h8", "M8 17h5"],
   // Kreispfeil — «Nach Updates suchen»
   kreispfeil: ["M21 12a9 9 0 1 1-2.6-6.4", "M21 3v6h-6"],
   // Kaefer — «Fehler melden». Rumpf, Fuehler, sechs Beine.
@@ -2448,6 +2558,8 @@ function zeichneKontext(x, y, lage, lageBehalten) {
   kopf.append(el("div", "unter", lage.ph
     ? lage.ph + " · " + ((st.maskiertDurch || {})[lage.quelle] || st.maskiertSonst)
     : st.nichtMaskiert));
+  // Dass ein anderes Tag den Typ aendert, sah niemand (Feedback 25.11.2026).
+  if (lage.ph) kopf.append(el("div", "unter typhinweis", st.typHinweis));
   menu.append(kopf);
 
   let weg = null;
@@ -2555,11 +2667,13 @@ function zeichneKontext(x, y, lage, lageBehalten) {
   for (const g of Object.keys(TAG_GRUPPEN)) {
     for (const tag of TAG_GRUPPEN[g]) uebrig.delete(tag);
   }
-  const gruppen = ["haeufig"].concat(Object.keys(TAG_GRUPPEN),
-                                     uebrig.size ? ["rest"] : []);
+  const zuletzt = zuletztTags().filter((x) => z.tags[x]);
+  const gruppen = (zuletzt.length ? ["zuletzt"] : []).concat(
+    ["haeufig"], Object.keys(TAG_GRUPPEN), uebrig.size ? ["rest"] : []);
   let treffer = 0;
   for (const g of gruppen) {
-    const tags = (g === "haeufig" ? FREQUENT
+    const tags = (g === "zuletzt" ? zuletzt
+                  : g === "haeufig" ? FREQUENT
                   : g === "rest" ? [...uebrig].sort()
                   : TAG_GRUPPEN[g]).filter((x) => z.tags[x] && passt(x));
     if (!tags.length) continue;
@@ -2577,7 +2691,8 @@ function zeichneKontext(x, y, lage, lageBehalten) {
     const pfeil = el("span", "pfeil");
     pfeil.append(zeichenSinnbild(offen ? "hoch" : "runter", KNOPFBILDER));
     kopfKnopf.append(document.createTextNode(
-      g === "haeufig" ? st.haeufig : ((st.gruppen || {})[g] || g)), pfeil);
+      g === "haeufig" ? st.haeufig : g === "zuletzt" ? st.zuletzt
+        : ((st.gruppen || {})[g] || g)), pfeil);
     kopfKnopf.addEventListener("click", (e) => {
       e.stopPropagation();
       if (suche) return;
@@ -2663,6 +2778,23 @@ async function handlungEntfernen(lage) {
   kontextSchliessen();
 }
 
+/* «Zuletzt verwendet» (seit 25.11.2026): die fuenf zuletzt gesetzten Tags
+ * ganz oben im Menue. Gemerkt werden nur Tagnamen, nie ein Wert, im
+ * Browserspeicher; fehlt er, ist die Gruppe eben leer.
+ */
+const ZULETZT_SPEICHER = "maschera.zuletztTags";
+function zuletztTags() {
+  try {
+    const roh = JSON.parse(window.localStorage.getItem(ZULETZT_SPEICHER) || "[]");
+    return Array.isArray(roh) ? roh.filter((x) => typeof x === "string").slice(0, 5) : [];
+  } catch (e) { return []; }
+}
+function zuletztMerken(tag) {
+  const neu = [tag].concat(zuletztTags().filter((x) => x !== tag)).slice(0, 5);
+  try { window.localStorage.setItem(ZULETZT_SPEICHER, JSON.stringify(neu)); }
+  catch (e) { /* kein Speicher: die Gruppe bleibt leer */ }
+}
+
 async function handlungTag(lage, tag, meta) {
   if (meta.bspd && !lage.ph
       && !(await frage(t().bspdSetzen.replace("{}", tag)))) {
@@ -2671,7 +2803,7 @@ async function handlungTag(lage, tag, meta) {
   }
   const ok = lage.ph ? tagWechseln(lage.ph, tag)
                      : wertMaskieren(lage.wort, tag);
-  if (ok) zeichne();
+  if (ok) { zuletztMerken(tag); zeichne(); }
   kontextSchliessen();
 }
 
@@ -2686,6 +2818,11 @@ function plakette(tag) {
   return s;
 }
 
+
+/* Platzhalter wie Menschen sie zaehlen: Typ nach Alphabet, dann die Zahl. */
+function phVergleich(a, b) {
+  return String(a).localeCompare(String(b), "de", { numeric: true });
+}
 
 function zeichneVokabular() {
   const s = t();
@@ -2753,7 +2890,7 @@ function zeichneVokabular() {
   const wegKopf = el("th", "vok-weg-kopf");
   wegKopf.setAttribute("aria-label", s.entfernen);
   kopf.append(el("th", null, s.spalteId), el("th", null, s.spalteWert),
-              el("th", null, s.spalteTyp), wegKopf);
+              el("th", "vok-typ", s.spalteTyp), wegKopf);
   const thead = el("thead"); thead.append(kopf);
   const tbody = el("tbody");
 
@@ -2765,7 +2902,9 @@ function zeichneVokabular() {
   // Sortiert nach Platzhalter, nicht nach Fundreihenfolge — sonst springt
   // die Tabelle bei jedem Lauf, und man sucht Zeilen statt sie zu lesen.
   let treffer = 0;
-  for (const ph of schluessel.sort()) {
+  // Natuerlich sortiert: `_2` vor `_10` (Feedback 25.11.2026). Als Text
+  // stand `DATE_10` vor `DATE_1`.
+  for (const ph of schluessel.sort(phVergleich)) {
     const typ = typOf(ph);
     if (z.vokFilter !== "alle" && (GRUPPE_VON[typ] || "rest") !== z.vokFilter) continue;
     // Gesucht wird in Platzhalter, Originalwert und Typ.
@@ -2795,7 +2934,8 @@ function zeichneVokabular() {
     td2.append(feld);
 
     // Der Typ im selben Stil, eine Stufe kleiner (`.ph-typ`): nur Auskunft.
-    const td3 = el("td");
+    // Gestapelt ausgeblendet (`.vok-typ`), dann steht er nur in der ID.
+    const td3 = el("td", "vok-typ");
     const art = platzhalter(ph, spanZu[ph]);
     art.textContent = typ;
     art.classList.add("ph-typ");
@@ -2818,6 +2958,16 @@ function zeichneVokabular() {
       if (maskeEntfernen(ph)) zeichne();
     });
     td4.append(weg);
+
+    // Rechtsklick auf ID und Typ (Feedback 25.11.2026): dasselbe Menue wie
+    // im maskierten Text, mit «Typ ändern» und «Maske entfernen».
+    for (const zelle of [marke, art]) {
+      zelle.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        zeichneKontext(e.clientX, e.clientY,
+                       { ph: ph, quelle: (spanZu[ph] || {}).quelle });
+      });
+    }
 
     tr.append(td1, td2, td3, td4);
     tbody.append(tr);
@@ -2929,6 +3079,7 @@ function zeichneBeschriftung() {
   $("ablage-text").textContent = s.dropN;
   $("ablage-gross-text").textContent = s.dropGross;
   if (!$("willkommen").hidden) zeichneWillkommen(0);
+  if (!$("anleitung").hidden) zeichneAnleitung(0);
   $("ablage").title = s.dropT;
   // Zuletzt: erst stehen alle Beschriftungen, dann werden daraus die
   // Tooltips. Vorher gerufen traege der Tooltip die Sprache von vorhin.
@@ -2968,6 +3119,7 @@ function zeichneBeschriftung() {
        // ·Verarbeitung» da (gesehen 20.10.2026).
        i < fussTeile.length - 1 ? teil + " ·\u00a0" : teil)));
   $("uebernahme-text").textContent = s.uebernahme;
+  $("uebernahme-vok-text").textContent = s.uebernahme;
   $("herunter-mask-text").textContent = s.herunterladen;
   $("herunter-final-text").textContent = s.herunterladen;
   $("einfuegen-antwort-text").textContent = s.einfuegen;
@@ -3112,6 +3264,15 @@ function zeichneHinaus() {
   $("hinaus-klappe").classList.toggle("leer", !z.uebernommen);
   zeichen03.classList.toggle("dreht", z.uebernahmeLaeuft);
   zeichen03.classList.toggle("fertig", z.uebernommen && !z.uebernahmeLaeuft);
+  // Was die Uebernahme bedeutet, steht im Balken selbst (Feedback
+  // 25.11.2026): der Text in 03 ist keine Kopie, er folgt 02.
+  // Lang und kurz nebeneinander; welche steht, entscheidet die Breite des
+  // Balkens (Container-Abfrage im CSS), nicht die des Fensters. Schmal brach
+  // die lange Zeile um und schob den Pfeil aus dem Balken (Feedback 25.11.2026).
+  $("hinaus-unter").replaceChildren(...(z.uebernommen
+    ? [el("span", "unter-lang", s.hinausFolgt), el("span", "unter-kurz", s.hinausFolgtKurz),
+       el("span", "unter-knapp", s.hinausFolgtKnapp)]
+    : []));
   const ziel = $("hinaus");
   ziel.replaceChildren();
   const anhang = uebernommenerText();
@@ -3263,7 +3424,7 @@ function zeichneDienstliste() {
   }
 }
 
-/* Alle 45 Tags, die besonders schuetzenswerten sichtbar anders. `CANTON`
+/* Alle 47 Tags, die besonders schuetzenswerten sichtbar anders. `CANTON`
  * ist `tag_only` und laesst sich nicht umlegen — ein Schalter dafuer waere
  * eine Einstellung ohne Wirkung.
  */
@@ -3896,6 +4057,98 @@ async function neuesteZeigen(seite) {
   if (seite) rumpf.append(verweis);
 }
 
+/* «Versionshinweise» (seit 2.5): derselbe Text wie die Releases auf
+ * GitHub, in vier Sprachen. Er reist in `versionshinweise.json` mit dem Paket
+ * und kommt vom EIGENEN Server, wie `adressen.json`; nach draussen geht
+ * nichts. Gefuehrt wird die Datei von `tools/versionshinweise.py`.
+ *
+ * Der Text ist Markdown in einer kleinen Teilmenge. Gebaut wird er mit
+ * `createElement` und `textContent`, nie mit `innerHTML`, auch wenn er aus
+ * dem eigenen Paket kommt (siehe `seiteZeigen`).
+ */
+function mdZeile(knoten, text) {
+  // **fett**, *schraeg*, `code`. Was nicht passt, bleibt Text.
+  const teile = String(text).split(/(\*\*[^*]+\*\*|`[^`]+`|\*[^*\s][^*]*\*)/);
+  for (const t of teile) {
+    if (!t) continue;
+    if (t.startsWith("**") && t.endsWith("**") && t.length > 4) {
+      knoten.append(el("b", null, t.slice(2, -2)));
+    } else if (t.startsWith("`") && t.endsWith("`") && t.length > 2) {
+      knoten.append(el("code", null, t.slice(1, -1)));
+    } else if (t.startsWith("*") && t.endsWith("*") && t.length > 2) {
+      knoten.append(el("em", null, t.slice(1, -1)));
+    } else {
+      knoten.append(document.createTextNode(t));
+    }
+  }
+  return knoten;
+}
+
+function mdBloecke(ziel, text) {
+  for (const absatz of String(text || "").split(/\n\s*\n/)) {
+    const zeilen = absatz.split("\n");
+    if (!absatz.trim()) continue;
+    if (zeilen[0].startsWith("## ")) {
+      ziel.append(mdZeile(el("h4", "versionen-h"), zeilen[0].slice(3)));
+      zeilen.shift();
+      if (!zeilen.length) continue;
+    }
+    if (/^- /.test(zeilen[0])) {
+      // Eine Aufzaehlung; eingerueckte Folgezeilen gehoeren zum Punkt davor.
+      const liste = el("ul", "seite-liste");
+      let punkt = null;
+      for (const z0 of zeilen) {
+        if (/^- /.test(z0)) {
+          punkt = z0.slice(2);
+          liste.append(el("li"));
+        } else {
+          punkt += " " + z0.trim();
+        }
+        liste.lastChild.replaceChildren();
+        mdZeile(liste.lastChild, punkt);
+      }
+      ziel.append(liste);
+    } else {
+      ziel.append(mdZeile(el("p", "seite-p"),
+                          zeilen.map((x) => x.trim()).join(" ")));
+    }
+  }
+}
+
+async function versionenZeigen() {
+  const st = t();
+  $("seite-titel").textContent = st.mVersionen;
+  const rumpf = $("seite-rumpf");
+  rumpf.replaceChildren();
+  rumpf.append(seitenKopf(st));
+  dialogVonOben($("seite"), rumpf);
+  let liste = [];
+  try {
+    const a = await fetch("versionshinweise.json");
+    if (!a.ok) throw serverFehler({}, a.status);
+    const d = await a.json();
+    liste = Array.isArray(d.fassungen) ? d.fassungen : [];
+  } catch (e) {
+    liste = [];
+  }
+  if (!liste.length) {
+    rumpf.append(el("p", "seite-p fehler-text", st.versionenLeer));
+    return;
+  }
+  for (const f of liste) {
+    const block = el("section", "versionen-fassung");
+    const kopf = el("h3", "seite-h versionen-titel", "MASCHERA " + f.fassung);
+    if (f.datum) {
+      const [j, m, tg] = String(f.datum).split("-");
+      kopf.append(el("span", "versionen-datum",
+                     `${Number(tg)}.${Number(m)}.${j}`));
+    }
+    block.append(kopf);
+    mdBloecke(block, f[z.sprache] || f.en || f.de);
+    rumpf.append(block);
+  }
+}
+
 function zeichneBurger() {
   const knopf = $("knopf-burger");
   const menu = $("burgermenu");
@@ -3926,6 +4179,8 @@ function zeichneBurger() {
       b.addEventListener("click", () => {
         burgerAuf(false);
         if (e.dialog === "willkommen") willkommenZeigen(0);
+        else if (e.dialog === "anleitung") anleitungZeigen(0);
+        else if (e.dialog === "versionen") versionenZeigen();
         else seiteZeigen(e.dialog);
       });
       menu.append(b);
@@ -4093,7 +4348,9 @@ function zeichneSchritte() {
   const jetzt = schrittJetzt();
   // Rueckt der Ablauf weiter, gilt wieder der aktuelle Schritt als Mitte.
   if (z.schrittZuletzt !== jetzt) { z.schrittMitte = null; z.schrittZuletzt = jetzt; }
-  nav.replaceChildren();
+  // «Neu» steht vor den Schritten und bleibt beim Neuzeichnen stehen.
+  const neu = $("knopf-neu");
+  nav.replaceChildren(...(neu ? [neu] : []));
   namen.forEach((wort, i) => {
     const b = el("button", "schritt"
       + (i < jetzt ? " fertig" : i === jetzt ? " jetzt" : "")
@@ -4114,6 +4371,11 @@ function zeichneSchritte() {
     if (i < namen.length - 1) nav.append(el("span", "schritt-pfeil", "→"));
   });
   schrittMitteMarkieren();
+  // Die Kachel des aktuellen Schritts traegt `.dran`: gestapelt in einem
+  // niedrigen Fenster fuellt sie den Bildschirm allein (seit 2.5).
+  SCHRITT_ZIEL.forEach((id, i) => {
+    if ($(id)) $(id).classList.toggle("dran", i === jetzt);
+  });
   // Nach dem Zeichnen, damit die Masse stimmen — mit `setTimeout` und nicht
   // `requestAnimationFrame`: der haelt in einem verdeckten Fenster an, und die
   // Leiste bliebe dann am falschen Schritt stehen (gemessen).
@@ -4209,6 +4471,7 @@ function zeichne() {
   $("knopf-bearbeiten").disabled = !(z.antwort && z.antwort.maskiert);
   $("knopf-bearbeiten").classList.toggle("aktiv", bearbeitet);
   $("knopf-uebernahme").disabled = !(z.antwort && z.antwort.maskiert);
+  $("knopf-uebernahme-vok").disabled = $("knopf-uebernahme").disabled;
   zeichneFinal();
   $("knopf-einpflegen04").disabled =
     !z.antwort04.trim() || !hatWoerterbuch();
@@ -4605,6 +4868,8 @@ async function laufen() {
     z.antwort = await maskiere(z.orig);
     z.bearbeiten = false;
     z.vokMeldung = null;
+    // Beim ersten Ergebnis die Bedienung erklaeren (seit 25.11.2026).
+    if (!markeGesetzt("anleitung")) z.anleitungFaellig = true;
   } catch (e) {
     z.antwort = null;
     z.bearbeiten = false;
@@ -4628,6 +4893,18 @@ async function laufen() {
     z.laeuft = false;
     laufAus();
     zeichne();
+    // Eine Sekunde spaeter, nicht sofort (Feedback 25.11.2026): sonst legte
+    // sich der Dialog genau ueber den frisch maskierten Text, und man sah
+    // nicht, was gerade passiert war. Laeuft inzwischen ein neuer Lauf oder
+    // ist ein anderer Dialog offen, wartet er auf das naechste Maskieren.
+    if (z.anleitungFaellig && z.antwort) {
+      setTimeout(() => {
+        if (!z.anleitungFaellig || z.laeuft || !z.antwort) return;
+        if (["willkommen", "einst", "frage"].some((k) => $(k) && !$(k).hidden)) return;
+        z.anleitungFaellig = false;
+        anleitungZeigen(0);
+      }, ANLEITUNG_VERZUG);
+    }
     // Hier wird nicht gesprungen. Der Sprung VOR dem Lauf setzt den Kasten
     // bereits an seinen Platz. Wer den maskierten Text ansieht, korrigiert
     // darin — eine Bewegung in dem Augenblick naehme ihm die Stelle weg, an der
@@ -4688,13 +4965,14 @@ async function ablegen(datei) {
  * Deaktivierte und unsichtbare Elemente fallen von selbst heraus. */
 const ARBEITSWEG = [
   "orig", "knopf-maskieren",
-  "maskiert", "maskiert-feld", "knopf-uebernahme",
+  "maskiert", "maskiert-feld", "knopf-uebernahme", "knopf-uebernahme-vok",
   "knopf-vorlagen", "prompt", "knopf-senden",
   "antwort04", "knopf-einpflegen04",
   "final", "knopf-final-kopieren",
   "knopf-neu", "knopf-neu-unten",
 ];
-// Die Stelle einer Kachel auf dem Weg. «Neu» steht in 01, kommt aber zuletzt.
+// Die Stelle einer Kachel auf dem Weg. «Neu» steht vor den Schritten (seit
+// 25.11.2026), kommt im Weg aber weiter zuletzt: zuerst wird gearbeitet.
 const WEGRANG = { b01: 1, b02: 2, bvok: 2, b03: 3, b04: 4, b05: 5 };
 const WEGENDE = new Set(["knopf-neu", "knopf-neu-unten"]);
 
@@ -5019,9 +5297,21 @@ function verbinde() {
   window.addEventListener("resize", schattenPruefen);
   // Die Schrittleiste klebt untereinander direkt unter der Kopfzeile — dafuer
   // braucht das Blatt deren Hoehe, und die aendert sich mit Schrift und Breite.
-  const kopfMessen = () => document.documentElement.style.setProperty(
-    "--kopfhoehe", $("kopfzeile").offsetHeight + "px");
+  // Dazu die Hoehe der Schrittleiste: aus beiden rechnet `--kachel-frei`,
+  // wie hoch eine Kachel gestapelt sein darf (seit 2.5).
+  const kopfMessen = () => {
+    const wurzel = document.documentElement.style;
+    wurzel.setProperty("--kopfhoehe", $("kopfzeile").offsetHeight + "px");
+    if ($("schritte")) {
+      wurzel.setProperty("--schritthoehe", $("schritte").offsetHeight + "px");
+    }
+  };
   window.addEventListener("resize", kopfMessen);
+  // Die Schrittleiste wird erst nach dem Start gezeichnet und aendert ihre
+  // Hoehe mit der Sprache; ein `resize` des Fensters kommt dabei nicht.
+  if (typeof ResizeObserver === "function" && $("schritte")) {
+    new ResizeObserver(kopfMessen).observe($("schritte"));
+  }
   window.addEventListener("resize", fussEinpassenBald);
   window.addEventListener("resize", () => schrittZentrieren(false));
   kopfMessen();
@@ -5163,6 +5453,26 @@ function verbinde() {
   });
   $("willkommen-nie").addEventListener("change",
     (e) => markeSetzen("willkommen", e.target.checked));
+  const anleitungZu = $("knopf-anleitung-zu");
+  anleitungZu.append(zeichenSinnbild("schliessen", KNOPFBILDER));
+  anleitungZu.addEventListener("click", anleitungSchliessen);
+  hintergrundSchliesst($("anleitung"), anleitungSchliessen);
+  $("knopf-anleitung-zurueck").addEventListener("click",
+    () => anleitungBlaettern(-1));
+  $("knopf-anleitung-weiter").addEventListener("click", () => {
+    if (z.anleitungSeite >= (t().anlSeiten || []).length - 1) anleitungSchliessen();
+    else anleitungBlaettern(1);
+  });
+  window.addEventListener("resize", () => {
+    if (!$("anleitung").hidden) anleitungAusrichten();
+  });
+  $("anleitung-nie").addEventListener("change",
+    (e) => markeSetzen("anleitung", e.target.checked));
+  $("anleitung").addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { e.preventDefault(); anleitungSchliessen(); }
+    else if (e.key === "ArrowRight") { e.preventDefault(); anleitungBlaettern(1); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); anleitungBlaettern(-1); }
+  });
   $("willkommen").addEventListener("keydown", (e) => {
     if (e.key === "Escape") { e.preventDefault(); willkommenSchliessen(false); }
     else if (e.key === "ArrowRight") { e.preventDefault(); willkommenBlaettern(1); }
@@ -5332,19 +5642,32 @@ function verbinde() {
   });
 
   // Der maskierte Text wandert in den Anhang, und es geht weiter zu 03.
-  $("knopf-uebernahme").addEventListener("click", () => {
+  // Zwei Knoepfe, ein Weg: untereinander steht derselbe Knopf auch unter dem
+  // Vokabular (Feedback 25.11.2026), wer dort korrigiert, geht von dort weiter.
+  const uebernehmen = () => {
     // ⚠️ HIER wandert der maskierte Text hinueber, nirgends sonst.
     z.uebernommen = true;
     // Der Balken zeigt, dass im Kasten etwas dazugekommen ist: erst dreht
     // es, dann bleibt ein Haken stehen, solange uebernommen ist.
     z.uebernahmeLaeuft = true;
     setTimeout(() => { z.uebernahmeLaeuft = false; zeichne(); }, UEBERNAHME_DAUER);
+    // Der Haken allein war zu klein, um ihn zu bemerken (Feedback
+    // 25.11.2026): der ganze Balken leuchtet zweimal auf. Aufgeklappt wird
+    // er nicht, sonst laege die Tafel ueber dem Promptfeld, in dem der
+    // Fokus gleich steht.
+    const klappe = $("hinaus-klappe");
+    klappe.classList.remove("blitz");
+    void klappe.offsetWidth;
+    klappe.classList.add("blitz");
+    setTimeout(() => klappe.classList.remove("blitz"), BLITZ_DAUER);
     zeichne();
     handlungSprung("b03");
     // Ohne Rollen: ein `focus()` rollte selbst und warf den Sprung zu 03
     // wieder 415 px zurueck (gemessen 20.11.2026, 375 px breit).
     fokusOhneSprung($("prompt"));
-  });
+  };
+  $("knopf-uebernahme").addEventListener("click", uebernehmen);
+  $("knopf-uebernahme-vok").addEventListener("click", uebernehmen);
 
   $("antwort04").addEventListener("input", (e) => {
     z.antwort04 = e.target.value;
@@ -5715,7 +6038,9 @@ const GROSS_ZU = ["M4 14h6v6", "M20 10h-6V4", "m14 10 7-7", "m3 21 7-7"];
  * Raster zurueck.
  */
 const GROSS_DAUER = 320, GROSS_KURVE = "cubic-bezier(.2,.7,.2,1)";
-const UEBERNAHME_DAUER = 650;   // ms, wie die Vokabular-Phase beim Einpflegen
+const UEBERNAHME_DAUER = 650;
+const ANLEITUNG_VERZUG = 1000;  // ms nach dem ersten Maskieren
+const BLITZ_DAUER = 1600;       // ms, zweimal Aufleuchten des Balkens in 03   // ms, wie die Vokabular-Phase beim Einpflegen
 let grossVon = null;
 let grossPlatz = null;
 function grossBewegung(kachel, von, nach, zurueck) {
@@ -5728,6 +6053,11 @@ function grossBewegung(kachel, von, nach, zurueck) {
     left: r.left + "px", top: r.top + "px",
     width: r.width + "px", height: r.height + "px",
     right: "auto", bottom: "auto",
+    // Die gemessenen Rechtecke tragen eine Verschiebung aus dem CSS schon
+    // in sich (das grosse Vokabular steht mit `translateX(-50%)` mittig).
+    // Liefe sie in der Bewegung mit, stuende die Tafel um eine halbe Breite
+    // daneben, bis zum letzten Bild (Feedback 25.11.2026).
+    transform: "none",
   });
   return kachel.animate(
     zurueck ? [rahmen(nach), rahmen(von)] : [rahmen(von), rahmen(nach)],
@@ -5911,7 +6241,7 @@ function allesLeeren() {
   // Seit 2.2 auch das Uebrige, was eine Sitzung hinterlaesst (Musterfrage
   // zu 12.49): offene Rubriken im Rechtsklickmenue, Suchwoerter und Filter,
   // die vergroesserte Kachel. Nach «Neu» sieht MASCHERA aus wie beim Start.
-  z.kontextOffen = new Set(["haeufig"]);
+  z.kontextOffen = new Set(["zuletzt", "haeufig"]);
   z.kontextSuche = "";
   z.vokSuche = "";
   z.vokFilter = "alle";
@@ -6613,7 +6943,10 @@ function fussEinpassen() {
     return !kinder.some((k) => k.offsetTop > oben + 2)
       && f.scrollWidth <= f.clientWidth + 1;
   };
-  for (const f of document.querySelectorAll(".fuss")) {
+  // Der Fuss des Vokabulars zaehlt mit (seit 2.5, Feedback 27.11.2026):
+  // gestapelt traegt er drei Knoepfe, und die Zeile brach um. Wie lang die
+  // Woerter sind, haengt an der Sprache; deshalb gemessen.
+  for (const f of document.querySelectorAll(".fuss, .vokabular-fuss")) {
     f.classList.remove("eng");
     const gerankt = [...f.querySelectorAll("[data-rang]")];
     for (const k of gerankt) k.classList.remove("kurz");
@@ -6750,7 +7083,9 @@ function kopfStufen(kopf, passt) {
 function fussBeobachten() {
   if (typeof ResizeObserver === "function") {
     const beob = new ResizeObserver(fussEinpassenBald);
-    for (const f of document.querySelectorAll(".fuss")) beob.observe(f);
+    for (const f of document.querySelectorAll(".fuss, .vokabular-fuss")) {
+      beob.observe(f);
+    }
     if ($("kopfzeile")) new ResizeObserver(kopfEinpassen).observe($("kopfzeile"));
   }
   if (document.fonts && document.fonts.ready) {
@@ -6790,6 +7125,7 @@ function teststufeZeigen(fassung) {
 const MARKE_SPEICHER = {
   beispiel: "maschera.beispielGesehen",
   willkommen: "maschera.willkommenAus",
+  anleitung: "maschera.anleitungAus",
 };
 function markeGesetzt(name) {
   if (imEigenenFenster()) return z.marken.includes(name);
@@ -6861,6 +7197,269 @@ function fensterBereit() {
       clearTimeout(uhr); fertig();
     }, { once: true });
   });
+}
+
+/* DIE ANLEITUNG (seit 25.11.2026, Feedback): wie man im maskierten Text
+ * und im Vokabular maskiert, den Typ aendert und Masken entfernt. Drei
+ * Seiten, je eine kleine Szene, die sich in einer Schleife bewegt: der
+ * Zeiger faehrt auf ein Wort, das Menue geht auf, das Wort wird zur Maske.
+ * Erscheint nach dem ersten Maskieren, bis «Nicht mehr anzeigen» gesetzt
+ * ist; im Burgermenue jederzeit. Aufbau wie der Willkommensschirm, gebaut
+ * mit `el()` und `textContent`.
+ */
+function anleitungSzene(nr) {
+  // Seit dem Feedback zu Test 2 (25.11.2026) aus DENSELBEN Bausteinen wie
+  // die Oberflaeche: Plaketten aus `platzhalter()`, das Menue mit den
+  // Klassen von `zeichneKontext`, das Vokabular als `table.vokabular`.
+  // Nachgemalt sah es anders aus als das Echte, und wer es wiedererkennen
+  // soll, muss es wiedererkennen koennen. Die Lage von Zeiger und Menue
+  // misst `anleitungAusrichten()` am Wort, nicht feste Prozente im CSS.
+  const st = t();
+  const szene = el("div", "anl-szene anl-" + nr);
+  szene.inert = true;
+  const ph = (text, tag) => {
+    const p = platzhalter(text);
+    if (tag) { p.textContent = tag; p.classList.add("ph-typ"); }
+    return p;
+  };
+  const menue = (kopfWert, phName, gewaehlt, tags) => {
+    const m = el("div", "kontext tagmenu anl-menue");
+    const kopf = el("div", "kopf");
+    kopf.append(el("div", "wert", kopfWert));
+    kopf.append(el("div", "unter", phName
+      ? phName + " · " + (st.maskiertDurch || {}).model : st.nichtMaskiert));
+    if (phName) kopf.append(el("div", "unter typhinweis", st.typHinweis));
+    m.append(kopf);
+    const werk = el("div", "werkzeile");
+    if (phName) {
+      const weg = el("button", "entfernen mit-kreuz");
+      weg.type = "button";
+      const kreuz = el("span", "marke kreuz");
+      kreuz.append(zeichenSinnbild("schliessen", KNOPFBILDER));
+      weg.append(kreuz, document.createTextNode(st.maskeWeg));
+      werk.append(weg);
+    }
+    const huelle = el("span", "suchhuelle");
+    const feld = document.createElement("input");
+    feld.type = "search"; feld.className = "tagsuche suchfeld";
+    feld.placeholder = st.suchen; feld.tabIndex = -1;
+    huelle.append(feld);
+    werk.append(huelle);
+    m.append(werk);
+    const rollen = el("div", "tagrollen");
+    const gk = el("button", "gruppenkopf aufgeklappt");
+    gk.type = "button";
+    const pfeil = el("span", "pfeil");
+    pfeil.append(zeichenSinnbild("hoch", KNOPFBILDER));
+    gk.append(document.createTextNode(st.haeufig), pfeil);
+    rollen.append(gk);
+    for (const tag of tags) {
+      const b = el("button", tag === gewaehlt ? "tagwahl anl-wahl" : "tagwahl");
+      b.type = "button";
+      const jetzt = phName && typOf(phName) === tag;
+      b.append(el("span", jetzt ? "marke jetzt" : "marke", jetzt ? "•" : " "));
+      const c = farbe(tag);
+      const punkt = el("i", "punkt"); punkt.style.background = c[1];
+      const name = el("span", "tagname", tag); name.style.color = c[2];
+      b.append(punkt, name);
+      const bez = (z.tags[tag] || {}).bezeichnung;
+      if (bez) b.append(el("span", "bez", bez));
+      rollen.append(b);
+    }
+    m.append(rollen);
+    return m;
+  };
+  const zeiger = el("i", "anl-zeiger");
+  if (nr === 0 || nr === 1) {
+    // Ein Ausschnitt aus 02: derselbe Rahmen, dieselbe Schrift.
+    const text = el("div", "anl-text");
+    const ziel = el("span", "anl-ziel");
+    if (nr === 0) {
+      ziel.append(el("span", "anl-wort", "Anna Weber"), ph("FULLNAME_1"));
+      text.append(document.createTextNode(st.anlSatz1a), ziel,
+                  document.createTextNode(st.anlSatz1b));
+      szene.append(text, menue("Anna Weber", null, "FULLNAME",
+        ["FULLNAME", "GIVENNAME", "CITY", "DATE"]), zeiger);
+    } else {
+      const alt = ph("ORG_1"); alt.classList.add("anl-wort");
+      ziel.append(alt, ph("JOBTITLE_1"));
+      text.append(document.createTextNode(st.anlSatz2a), ziel,
+                  document.createTextNode(st.anlSatz2b));
+      szene.append(text, menue(st.anlWert2, "ORG_1", "JOBTITLE",
+        ["FULLNAME", "ORG", "JOBTITLE", "CITY"]), zeiger);
+    }
+    return szene;
+  }
+  // Im Vokabular: Rechtsklick auf die ID, Typ waehlen; dann das Kreuz.
+  const rahmen = el("div", "anl-vok");
+  const reihe = el("div", "legende-reihe");
+  const chip = (wort, n, probe, an) => {
+    const b = el("button", "chip");
+    b.type = "button";
+    b.setAttribute("aria-pressed", String(an));
+    const punkt = el("i");
+    if (probe) punkt.style.background = farbe(probe)[2];
+    b.append(punkt, document.createTextNode(wort + " "), el("b", null, String(n)));
+    return b;
+  };
+  const leg = el("div", "legende");
+  leg.append(chip(st.vokAlle, 2, null, true),
+             chip((st.gruppen || {}).person || "Person", 2, "FULLNAME", false));
+  reihe.append(leg);
+  const tab = el("table", "vokabular");
+  const kopf = el("tr");
+  kopf.append(el("th", null, st.spalteId), el("th", null, st.spalteWert),
+              el("th", null, st.spalteTyp), el("th", "vok-weg-kopf"));
+  const thead = el("thead"); thead.append(kopf);
+  const tbody = el("tbody");
+  // «Anna» wechselt von FULLNAME auf GIVENNAME: ein Wechsel, der fachlich
+  // stimmt (Feedback 25.11.2026; vorher wurde «Weber» zum Vornamen).
+  for (const [phName, wert, neu] of [["FULLNAME_1", "Anna", "GIVENNAME_1"],
+                                     ["FULLNAME_2", "Weber", null]]) {
+    const tr = el("tr", neu ? "anl-zeile1" : "anl-zeile2");
+    const td1 = el("td"), td2 = el("td"), td3 = el("td"), td4 = el("td");
+    if (neu) {
+      const z1 = el("span", "anl-ziel");
+      const alt = ph(phName); alt.classList.add("anl-wort");
+      z1.append(alt, ph(neu));
+      td1.append(z1);
+      const z3 = el("span", "anl-ziel");
+      const altTyp = ph(phName, typOf(phName)); altTyp.classList.add("anl-wort");
+      z3.append(altTyp, ph(neu, typOf(neu)));
+      td3.append(z3);
+    } else {
+      td1.append(ph(phName));
+      td3.append(ph(phName, typOf(phName)));
+    }
+    const feld = document.createElement("input");
+    feld.value = wert; feld.tabIndex = -1;
+    td2.append(feld);
+    const weg = el("button", "imfeld nurbild loeschen vok-weg");
+    weg.type = "button";
+    weg.append(zeichenSinnbild("schliessen", KNOPFBILDER));
+    td4.append(weg);
+    tr.append(td1, td2, td3, td4);
+    tbody.append(tr);
+  }
+  tab.append(thead, tbody);
+  rahmen.append(reihe, tab);
+  szene.append(rahmen, menue("Anna", "FULLNAME_1", "GIVENNAME",
+    ["FULLNAME", "GIVENNAME", "CITY", "DATE"]), zeiger);
+  return szene;
+}
+
+/* Zeiger und Menue an die Stelle, auf die gezeigt wird. Gemessen, sobald
+ * das Blatt steht: die Schrift laeuft je Sprache, Skala und Fensterbreite
+ * anders, und feste Prozente trafen das Wort nicht (Feedback 25.11.2026).
+ * Das Menue geht wie das echte an der Klickstelle auf und bleibt in der
+ * Flaeche. Die Werte landen als Variablen; die Keyframes lesen sie. */
+function anleitungAusrichten() {
+  const buehne = $("anleitung-buehne");
+  if (!buehne || typeof buehne.querySelector !== "function") return;
+  const szene = buehne.querySelector(".willkommen-blatt.aktiv .anl-szene");
+  if (!szene) return;
+  const s = szene.getBoundingClientRect();
+  if (!s.width || !szene.offsetWidth) return;
+  // Blendet der Dialog mit einer Skalierung ein, ist alles Gemessene um
+  // denselben Faktor kleiner; die Variablen gelten aber ungeskaliert.
+  const k = s.width / szene.offsetWidth;
+  const breite = szene.offsetWidth, hoehe = szene.offsetHeight;
+  const mitte = (e, fx, fy) => {
+    const r = e.getBoundingClientRect();
+    return [(r.left - s.left + r.width * fx) / k,
+            (r.top - s.top + r.height * fy) / k];
+  };
+  const ziel = szene.querySelector(".anl-ziel");
+  const menue = szene.querySelector(".anl-menue");
+  const wahl = szene.querySelector(".anl-wahl");
+  if (!ziel || !menue || !wahl) return;
+  const [zx, zy] = mitte(ziel, 0.5, 0.6);
+  const mb = menue.offsetWidth, mh = menue.offsetHeight;
+  const mx = Math.max(4, Math.min(zx, breite - mb - 4));
+  const my = Math.max(4, Math.min(zy, hoehe - mh - 4));
+  // Die Wahl liegt im Menue; ihre Lage gilt erst, wenn das Menue steht.
+  const m = menue.getBoundingClientRect(), w = wahl.getBoundingClientRect();
+  const wx = mx + (w.left - m.left) / k + Math.min(w.width / k * 0.35, 90);
+  const wy = my + (w.top - m.top) / k + w.height / k * 0.55;
+  const setze = (k, v) => szene.style.setProperty(k, Math.round(v) + "px");
+  setze("--zx", zx); setze("--zy", zy);
+  setze("--mx", mx); setze("--my", my);
+  setze("--wx", wx); setze("--wy", wy);
+  setze("--sx", breite * 0.08); setze("--sy", hoehe * 0.88);
+  const kreuz = szene.querySelector(".anl-zeile2 .vok-weg");
+  if (kreuz) {
+    const [kx, ky] = mitte(kreuz, 0.5, 0.6);
+    setze("--kx", kx); setze("--ky", ky);
+  }
+  szene.classList.add("bereit");
+}
+
+function anleitungZeigen(nr) {
+  z.anleitungSeite = nr;
+  $("anleitung-nie").checked = markeGesetzt("anleitung");
+  zeichneAnleitung(0);
+  dialogVonOben($("anleitung"), $("anleitung-buehne"));
+  // Gleich messen (die Lage steht schon) und nach dem naechsten Bild noch
+  // einmal, falls Schrift oder Einblenden die Masse noch verschieben.
+  anleitungAusrichten();
+  requestAnimationFrame(anleitungAusrichten);
+  $("knopf-anleitung-weiter").focus();
+}
+
+function anleitungSchliessen() {
+  if ($("anleitung").hidden) return;
+  $("anleitung").hidden = true;
+}
+
+function anleitungBlaettern(schritt) {
+  const n = (t().anlSeiten || []).length;
+  const neu = Math.max(0, Math.min(n - 1, z.anleitungSeite + schritt));
+  if (neu === z.anleitungSeite) return;
+  z.anleitungSeite = neu;
+  zeichneAnleitung(schritt);
+}
+
+function zeichneAnleitung(richtung) {
+  const st = t();
+  const seiten = st.anlSeiten || [];
+  const nr = Math.max(0, Math.min(z.anleitungSeite || 0, seiten.length - 1));
+  z.anleitungSeite = nr;
+  const blaetter = seiten.map(([titel, text], i) => {
+    const blatt = el("div", i === nr ? "willkommen-blatt aktiv" : "willkommen-blatt");
+    if (i !== nr) blatt.setAttribute("aria-hidden", "true");
+    const flaeche = el("div", "willkommen-bild anl-flaeche");
+    flaeche.append(anleitungSzene(i));
+    const h = el("h2", "willkommen-titel", titel);
+    if (i === nr) h.id = "anleitung-titel";
+    blatt.append(flaeche, h, el("p", "willkommen-text", text));
+    return blatt;
+  });
+  $("anleitung-buehne").replaceChildren(...blaetter);
+  const aktiv = blaetter[nr];
+  if (richtung && aktiv) {
+    void aktiv.offsetWidth;
+    aktiv.classList.add(richtung > 0 ? "von-rechts" : "von-links");
+  }
+  const punkte = $("anleitung-punkte");
+  punkte.replaceChildren();
+  seiten.forEach((_, i) => {
+    const p = el("button", i === nr ? "punkt aktiv" : "punkt");
+    p.type = "button";
+    p.setAttribute("aria-label", st.wSeite.replace("{}", String(i + 1)));
+    if (i === nr) p.setAttribute("aria-current", "step");
+    p.addEventListener("click", () => anleitungBlaettern(i - nr));
+    punkte.append(p);
+  });
+  $("knopf-anleitung-zurueck").disabled = nr === 0;
+  $("anleitung-weiter-text").textContent =
+    nr === seiten.length - 1 ? st.anlFertig : st.wWeiter;
+  $("anleitung-zurueck-text").textContent = st.wZurueck;
+  $("anleitung-nie-text").textContent = st.wNie;
+  $("knopf-anleitung-zu").title = st.schliessen;
+  // Gleich messen (die Lage steht schon) und nach dem naechsten Bild noch
+  // einmal, falls Schrift oder Einblenden die Masse noch verschieben.
+  anleitungAusrichten();
+  requestAnimationFrame(anleitungAusrichten);
 }
 
 function willkommenSeiten() {
@@ -7018,6 +7617,7 @@ async function start() {
     suchfeldMitKreuz($(id));
   }
   fussBeobachten();
+  knopftippEinrichten();
   // ⚠️ Frueh, aber NACH `verbinde`: der Probeklotz braucht den Koerper.
   // Der gemessene Wert steckt danach in `--rollbalken` und bestimmt den
   // Abstand der Knoepfe in den Textfeldern.
@@ -7117,7 +7717,7 @@ if (typeof module !== "undefined" && module.exports) {
     fehlerText, serverFehler, frage, eingabe, frageZeigen, frageErsetzen,
     markdownZurueck, entwerteteReste, antwortUebernehmen,
     zerschlageneErgaenzen,
-    ausgehend, uebernommenerText,
+    ausgehend, uebernommenerText, phVergleich,
     laufAnzeigen, laufAus, dauerWort, restWort, fortschrittHolen,
     springeZu, gestapelt, einspaltig,
     zeichneSchritte, schrittJetzt, SCHRITT_ZIEL,

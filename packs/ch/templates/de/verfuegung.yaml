@@ -47,7 +47,7 @@ templates:
 
     {FULLNAME}
 
-    Abteilungsleiter'
+    {JOBTITLE}'
 - id: de_behoerde_verfuegung_02
   doc_type: Behördenbrief mit Verfügung
   text: "{ORG}\n\nEinschreiben\n{FULLNAME} {GIVENNAME}\n{STREET} {BUILDINGNUM}\n{@plz_ort}\n\nBetreff:\
@@ -55,7 +55,7 @@ templates:
     \ wurde festgestellt, dass die eingereichten Pläne nicht den Vorgaben entsprechen. \nDaher entscheiden\
     \ wir:\nDas Gesuch wird in der vorliegenden Form abgewiesen.\nWir weisen darauf hin, dass {~technical}\
     \ eine Anpassung erfordert.\n\nEine Kopie dieses Bescheids wurde dem Archiv übermittelt.\n\nMit freundlichen\
-    \ Grüssen\n\n{ORG}\n{FULLNAME}\nSachbearbeiter"
+    \ Grüssen\n\n{ORG}\n{FULLNAME}\n{JOBTITLE}"
 - id: de_behoerde_verfuegung_03
   doc_type: Behördenbrief mit Verfügung
   text: '{ORG}
@@ -102,7 +102,7 @@ templates:
     \ nehmen Bezug auf das Gespräch vom {DATE}. \nEs wurde entschieden, dass die Frist zur Einreichung\
     \ der Dokumente verlängert wird.\nWir stellen fest, dass {~deadline} einzuhalten ist.\nDie neue Frist\
     \ endet am {DATE}.\n\nBei Fragen stehen wir Ihnen gerne zur Verfügung.\n\nMit freundlichen Grüssen\n\
-    \n{ORG}\n{FULLNAME}\nAmtschef"
+    \n{ORG}\n{FULLNAME}\n{JOBTITLE}"
 - id: de_behoerde_verfuegung_06
   doc_type: Behördenbrief mit Verfügung
   text: '{ORG}

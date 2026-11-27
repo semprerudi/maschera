@@ -1,0 +1,124 @@
+# Vorlagen FR — Berufs- und Funktionsbezeichnungen (JOBTITLE), seit 24.11.2026
+#
+# JOBTITLE und ORG stehen nebeneinander, damit das Modell die Grenze lernt.
+# {KOEDER} ist ein Nachname, der zugleich ein Beruf ist (Berger, Mercier),
+# und bleibt FULLNAME. Im Fliesstext steht die Funktion klein; die Liste
+# liefert beide Schreibweisen.
+
+templates:
+  - id: fr_fonction_signature
+    doc_type: signaturblock
+    text: |
+      Objet : votre demande du {DATE}
+
+      Madame, Monsieur,
+
+      Nous avons bien reçu vos documents et reviendrons vers vous {~deadline}.
+
+      Meilleures salutations
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}
+      {ORG}
+      {@address}
+      Tél. {PHONE}
+      {EMAIL}
+
+  - id: fr_fonction_signature_koeder
+    doc_type: signaturblock
+    text: |
+      Madame, Monsieur,
+
+      En vertu de {~legal}, nous vous transmettons les documents demandés.
+
+      Veuillez agréer nos salutations distinguées.
+
+      {GIVENNAME} {KOEDER}
+      {JOBTITLE}, {ORG}
+
+      Copie : {GIVENNAME} {FULLNAME}, {JOBTITLE}
+
+  - id: fr_fonction_destinataire
+    doc_type: courrier administratif
+    text: |
+      {ORG}
+      À l'att. de {GIVENNAME} {FULLNAME}, {JOBTITLE}
+      {@address}
+
+      {CITY}, le {DATE}
+
+      Madame,
+
+      En votre qualité de {JOBTITLE}, vous nous avez demandé le {DATE} une
+      prise de position. Le délai court {~deadline}.
+
+      Meilleures salutations
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}
+
+  - id: fr_fonction_ticket
+    doc_type: Support-Ticket
+    text: |
+      Ticket {CASE_ID} – droits d'accès à l'application métier
+
+      Destinataires :
+      - {GIVENNAME} {FULLNAME} ({JOBTITLE}, {ORG})
+      - {GIVENNAME} {KOEDER} ({JOBTITLE})
+      - {GIVENNAME} {FULLNAME}, {JOBTITLE}
+
+      L'erreur apparaît depuis la {~number} ({~technical}). Merci de vérifier
+      d'ici au {DATE}.
+
+  - id: fr_fonction_organigramme
+    doc_type: Firmendokument
+    text: |
+      Organigramme {ORG}, état au {DATE}
+      Base : {~legal}
+
+      {JOBTITLE} : {GIVENNAME} {FULLNAME}
+      Suppléance : {GIVENNAME} {FULLNAME}, {JOBTITLE}
+      {JOBTITLE} : {GIVENNAME} {KOEDER}
+      {JOBTITLE} : {GIVENNAME} {FULLNAME}
+
+  - id: fr_fonction_courriel
+    doc_type: mailverlauf
+    text: |
+      De : {GIVENNAME} {FULLNAME} <{EMAIL}>
+      Envoyé : {DATE} {TIME}
+      Objet : reprise du dossier {CASE_ID}
+
+      Bonjour à tous,
+
+      Dès le {DATE}, M. {KOEDER} reprend le dossier en tant que {JOBTITLE}
+      auprès de {ORG}. Mme {FULLNAME} reste {JOBTITLE} jusque-là et peut
+      être jointe au {PHONE}. Les documents suivront {~deadline}.
+
+      Bonne journée
+      {GIVENNAME}
+
+  # Doppelwoerter: Name ({KOEDER}) und Beruf ({BERUF_KOEDER}).
+  - id: fr_fonction_doppelwort_chantier
+    doc_type: Firmendokument
+    text: |
+      Rapport de chantier {CASE_ID}, {DATE}
+
+      Présents : {GIVENNAME} {KOEDER} ({JOBTITLE}), {GIVENNAME} {FULLNAME}
+      ({BERUF_KOEDER}) et deux collègues de {ORG}.
+
+      M. {KOEDER} indique que le {BERUF_KOEDER} doit terminer {~deadline}.
+      Le {JOBTITLE} coordonne le travail.
+
+  - id: fr_fonction_doppelwort_lettre
+    doc_type: courrier administratif
+    text: |
+      Madame {KOEDER},
+
+      Vous avez postulé en tant que {BERUF_KOEDER} auprès de {ORG}. Votre
+      certificat de {BERUF_KOEDER} du {DATE} nous est parvenu. Nous vous
+      répondrons {~deadline}.
+
+      Meilleures salutations
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}

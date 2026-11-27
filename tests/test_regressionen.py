@@ -90,9 +90,11 @@ for e in generate(800, seed=5):
         # Nach der Umstellung auf sprachspezifische Makros erschienen "né le"
         # und "nato il" — der Test kannte sie nicht und zaehlte Geburtsdaten
         # als gewoehnliche Daten, die dann natuerlich rueckwaerts standen.
-        if any(w in before for w in ("geboren", "geburtsdatum", "naissance",
-                                     "né le", "ne le", "nato il", "nata il",
-                                     "nascita", "birth", "born on")):
+        # Als GANZE Woerter: seit dem 25.11.2026 stehen Familienwoerter in den
+        # Vorlagen, und «Adoptivsoehne lebt» enthielt als Zeichenfolge «ne le».
+        # «née le» fehlte, obwohl der Injektor es kennt.
+        if re.search(r"\b(geboren|geburtsdatum|naissance|née? le|ne le|"
+                     r"nat[oa] il|nascita|birth|born on)\b", before):
             birth_years.append(d.year)
         else:
             ordinary.append(d)

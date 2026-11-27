@@ -20,7 +20,7 @@ italienische Oberfläche sie nicht mitübersetzen muss.
 [PLACE_OF_ORIGIN_1]               [CASE_ID_1]    [EMAIL_1]
 ```
 
-44 Platzhalter für 45 Tags (`CANTON` ist `tag_only`, wird erkannt und nicht
+46 Platzhalter für 47 Tags (`CANTON` ist `tag_only`, wird erkannt und nicht
 ersetzt). Dazu die Benutzerregeln mit frei gewählten Namen: `[Dossier_1]`.
 
 **Die eckigen Klammern sind einfach, nicht doppelt.** `[[TAG:wert]]` gehört
@@ -278,7 +278,7 @@ sehen, sonst verschickt er einen Brief, in dem `[FULLNAME_1]` steht.
 
 ### `GET /api/tags`
 
-Die 45 Tags mit Bezeichnung, Platzhalter, Budget, `bspd`, `aktion` und der
+Die 47 Tags mit Bezeichnung, Platzhalter, Budget, `bspd`, `aktion` und der
 aktuellen Schwelle. Für den Tag-Filter und die Legende.
 
 Die Antwort trägt `tags`, die gewählte `sprache`, die Liste `sprachen` und den
@@ -369,7 +369,7 @@ Adresse, Port, Dienste, Darstellung, Fensterschalter
   "thema": "automatisch",          // automatisch | hell | dunkel
   "tray": true,                    // beim Schliessen in den Infobereich
   "fenstermodus": "widget",        // voll | widget
-  "marken": [],                    // beispiel | willkommen, seit 2.2
+  "marken": [],                    // beispiel | willkommen | anleitung
   "dienste": [ { "id": "claude", "name": "Claude",
                  "url": "https://claude.ai/new" } ] }
 ```
@@ -400,7 +400,8 @@ Datei auf die Vorgabe zurück, statt das Werkzeug unbenutzbar zu machen.
 
 ⚠️ **`marken`** (seit 2.2) merkt «schon gesehen» der Oberfläche: `beispiel`
 (das Leuchten von «Beispiel» ist aus), `willkommen` («Nicht mehr anzeigen»
-im Willkommensschirm). Nur im eigenen Fenster; dort vergisst pywebview den
+im Willkommensschirm), seit 2.5 `anleitung` («Nicht mehr anzeigen» im Dialog
+Bedienung). Nur im eigenen Fenster; dort vergisst pywebview den
 Browserspeicher bei jedem Neustart. Im Browser liegen die Marken im
 `localStorage`, damit sich die Nutzer eines Servers keine Marke teilen.
 Unbekannte Werte fallen still weg, eine Nicht-Liste → 400 `marken_keine_liste`.
@@ -436,8 +437,8 @@ Läuft der Server, mit welchem Modell, unter welchem Labelvertrag.
 
 ```jsonc
 { "dienst": "maschera", "version": "x.y.z", "pack": "ch",
-  "label_hash": "b7a96dc9…", "tags": 45,
-  "modell": "runs/ch-v63b", "ohne_modell": false, "max_mb": 10,
+  "label_hash": "6abcddcc…", "tags": 47,
+  "modell": "runs/ch-v71f", "ohne_modell": false, "max_mb": 10,
   "hinweise": [], "lokal": true }
 ```
 

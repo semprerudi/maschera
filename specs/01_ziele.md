@@ -13,7 +13,7 @@ Privatpersonen.
 | | |
 |---|---|
 | Sprachen | DE/FR/IT/EN gleichwertig, ein Modell |
-| Tags | 45, in drei Stufen |
+| Tags | 47, in drei Stufen |
 | Rechtsrahmen | RHG (SR 431.02) Art. 6 + revDSG |
 | Erkennen ≠ Maskieren | getrennt (`TAG_MAP` + `ACTION_MAP`) |
 | Fehlerbudget | drei Klassen, getrennt ausgewiesen |

@@ -38,9 +38,11 @@ backbone_alternative: jhu-clsp/mmBERT-small   # nur nach Messung
 # falschem Mapping und bekommt plausibel aussehenden Unsinn.
 # -----------------------------------------------------------------------------
 label_contract:
-  tag_count: 45
-  label_count: 91
-  sha256: b7a96dc99b05c6150302fc11943e0a357c7078b593e7382b4b06390245cceeee
+  tag_count: 47
+  label_count: 95
+  sha256: 6abcddcc90e672691e0a53c0acc6138c9fb3df5b40daf54aeff19ddb06a463c4
+  # Vorgaenger: 45 Tags, 91 Labels, b7a96dc9 (bis 24.11.2026). JOBTITLE
+  # und FAMILYROLE angehaengt; die ersten 91 Labels sind unveraendert.
   frozen: false         # -> true beim ersten ernsthaften Training (Stufe 1)
   frozen_since: null
 

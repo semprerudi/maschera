@@ -51,8 +51,8 @@ NAME = "Mathias Ramseyer und Toni La Rosa haben reagiert."
 TEXT = NAME + " " + FUELL * 10 + " " + NAME + " " + FUELL * 40 + " " + NAME
 STELLEN = [0, TEXT.index(NAME, 100), TEXT.rindex(NAME)]
 
-MODELL = WURZEL / "release" / "ch-v63b"
-TRAINING = WURZEL / "runs" / "ch-v63b"
+MODELL = WURZEL / "release" / "ch-v71f"
+TRAINING = WURZEL / "runs" / "ch-v71f"
 
 
 print("1. Der Quelltext schaltet die Abschneidung ab")

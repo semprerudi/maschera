@@ -5,7 +5,7 @@
 
 Auf einer Windows-Maschine, im Projektstamm, in einer Umgebung mit
 `requirements-paket.txt`, `pywebview` und `pyinstaller` (siehe
-`tools/paket/WINDOWS.md`). Das Modell liegt unter `runs/ch-v63b`.
+`tools/paket/WINDOWS.md`). Das Modell liegt unter `runs/ch-v71f`.
 
 Ergebnis: `dist/MASCHERA-<fassung>-x64-setup.exe`.
 
@@ -38,7 +38,7 @@ from pathlib import Path
 
 WURZEL = Path(__file__).resolve().parent.parent.parent
 BAU = WURZEL / "dist" / "windows-bau"
-MODELL = "ch-v63b"
+MODELL = "ch-v71f"
 
 # Was der Quellcode zur Laufzeit liest — als Daten, unveraendert.
 DATEN = ("app", "core", "packs")

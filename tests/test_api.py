@@ -69,7 +69,7 @@ r = c.get("/api/zustand")
 check(r.status_code == 200, f"zustand {r.status_code}")
 d = r.get_json()
 check(d["dienst"] == "maschera", "Dienstname fehlt")
-check(d["tags"] == 45, f"45 Tags erwartet, {d['tags']}")
+check(d["tags"] == 47, f"47 Tags erwartet, {d['tags']}")
 check(len(d["label_hash"]) == 64, "Labelvertrag-Fingerabdruck fehlt")
 check(d["ohne_modell"] is True, "ohne_modell nicht gemeldet")
 check(d["hinweise"], "ohne Modell ohne Hinweis — das ist eine Leckquelle")
@@ -85,7 +85,7 @@ check(d["max_mb"] > 0, "die Hilfe bekaeme eine Null als Obergrenze")
 print("2. Tags")
 r = c.get("/api/tags")
 d = r.get_json()
-check(len(d["tags"]) == 45, f"45 Tags erwartet, {len(d['tags'])}")
+check(len(d["tags"]) == 47, f"47 Tags erwartet, {len(d['tags'])}")
 eintraege = {t["tag"]: t for t in d["tags"]}
 check(all(t["bezeichnung"] for t in d["tags"]),
       "Tag ohne Bezeichnung — leerer Menueeintrag in der Oberflaeche")
@@ -109,7 +109,7 @@ for sprache, probe, erwartet in [("fr", "PLACE_OF_ORIGIN", "Lieu d'origine"),
                                  ("it", "PLACE_OF_ORIGIN", "Luogo di attinenza"),
                                  ("en", "PLACE_OF_ORIGIN", "Place of origin")]:
     ds = c.get(f"/api/tags?sprache={sprache}").get_json()
-    check(len(ds["tags"]) == 45, f"{sprache}: 45 Tags erwartet")
+    check(len(ds["tags"]) == 47, f"{sprache}: 47 Tags erwartet")
     check(all(t["bezeichnung"] for t in ds["tags"]),
           f"{sprache}: Tag ohne Bezeichnung")
     treffer = {t["tag"]: t["bezeichnung"] for t in ds["tags"]}

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Die gemessenen NFAs erneut messen und mit dem Sollwert vergleichen.
 
-    python3 tools/mess_nfa.py --model runs/ch-v63b
-    python3 tools/mess_nfa.py --model runs/ch-v63b --release v1.2.3
+    python3 tools/mess_nfa.py --model runs/ch-v71f
+    python3 tools/mess_nfa.py --model runs/ch-v71f --release v1.2.3
 
 Text ist das erfundene Beispiel der Oberflaeche, nichts Echtes. Gerechnet wird
 nur auf der CPU, wie im ausgelieferten Paket. Die Sollwerte stehen in

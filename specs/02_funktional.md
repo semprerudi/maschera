@@ -50,10 +50,12 @@ PDF bleiben lesbar. Prüfung: T-SCAN-PDF-6, T-SCAN-PDF-7, T-SCAN-PDF-8.
 Prüfsummen, Muster mit Kontextankern und Modell laufen zusammen, jede Stufe mit
 ihrer Aufgabe. Prüfung: T-INFERENCE-2, T-INFERENCE-3, T-INFERENCE-4, T-INFERENCE-6.
 
-### FA-011 45 Tags in vier Sprachen
+### FA-011 47 Tags in vier Sprachen
 
-Der Labelvertrag umfasst 45 Tags und 91 BIO-Labels, de, fr, it, en sind gleichwertig.
-Prüfung: T-LABELVERTRAG-EINGEFROREN-1, T-LABELVERTRAG-EINGEFROREN-2, T-PATTERNS-1,
+Der Labelvertrag umfasst 47 Tags und 95 BIO-Labels, de, fr, it, en sind gleichwertig.
+Neue Tags werden angehängt, nie eingefügt.
+Prüfung: T-LABELVERTRAG-EINGEFROREN-1, T-LABELVERTRAG-EINGEFROREN-2,
+T-LABELVERTRAG-EINGEFROREN-5, T-PATTERNS-1,
 T-PATTERNS-11.
 
 ### FA-012 Prüfsummen entscheiden
@@ -259,8 +261,12 @@ eigener Punkt, die Kette dahinter prüfen T-INFERENCE-4 und T-VERTRAUEN-8.
 ### FA-070 Trainingsdaten
 
 Der Injektor erzeugt Beispiele aus Vorlagen und Nomenklaturen. Spannen sitzen
-zeichengenau, Decoys bleiben ohne Label. Prüfung: T-INJECTOR-1, T-INJECTOR-2,
-T-INJECTOR-3, T-INJECTOR-4, T-INJECTOR-5, T-ALIGNMENT-7.
+zeichengenau, Decoys bleiben ohne Label. Nachnamen, die zugleich
+Berufsbezeichnungen sind (`{KOEDER}`), werden als `FULLNAME` getaggt; jeder
+solche Nachname steht auch in der Berufsliste, damit das Modell beide Rollen
+am Kontext lernt. Prüfung:
+T-INJECTOR-1, T-INJECTOR-2, T-INJECTOR-3, T-INJECTOR-4, T-INJECTOR-5,
+T-INJECTOR-10, T-ALIGNMENT-7.
 
 ### FA-071 Rauschen und Haltezone
 
@@ -279,3 +285,12 @@ Prüfung: T-STREUUNG-1, T-STREUUNG-3.
 
 Werkzeuge legen ein eigenes Testset an, ausserhalb des Projektbaums. Prüfung:
 T-GOLDPFAD-3, T-GOLDPFAD-4, T-GOLD-MARKUP-2, T-GOLD-ERSETZEN-4.
+
+### FA-075 Berufe und Familienbeziehungen im Testset nachmarkieren
+
+`tools/gold_berufe.py` zeigt Fundstellen von Berufsbezeichnungen (mit `--tag
+FAMILYROLE` von Familienbeziehungen) im eigenen Terminal und trägt das Tag auf
+Tastendruck ein: neu, umgetaggt oder aus
+einer umschliessenden Spanne herausgeteilt. Vor dem ersten Schreiben legt es
+eine Sicherung an. `eval_documents.py --berufe` und `--familie` listen dieselben
+Stellen nur mit Position. Prüfung: T-GOLD-BERUFE-1, T-GOLD-BERUFE-2, T-GOLD-BERUFE-3.

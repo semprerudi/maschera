@@ -47,7 +47,7 @@ templates:
       Address: {@address}
       Nationality: {NATIONALITY}, residence status: {RESIDENCE_STATUS}
       Country of birth: {COUNTRY}
-      Guardian: {@person}, {@contact}
+      {FAMILYROLE=Guardian}: {@person}, {@contact}
 
       Enrolled since {DATE}. Fee: {AMOUNT}. {~amount}.
       Registration number {CASE_ID}. {~number}.

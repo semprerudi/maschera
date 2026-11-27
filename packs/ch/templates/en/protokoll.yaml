@@ -1,0 +1,51 @@
+# Vorlagen EN: Sitzungsprotokolle mit tabellarischem Kopf, seit 25.11.2026.
+#
+# Feedback Test 2: Im echten Protokollkopf stehen Personen als
+# «Vorname Nachname, Kuerzel», getrennt durch Tabs und Semikolons, dazu
+# Vornamen und Nachnamen allein. Das Modell nahm sie als ORG. {ROLLE} ist
+# ein Rollenkuerzel (JOBTITLE), {EINHEIT} das Kuerzel einer Einheit (ORG),
+# {~systemkuerzel} und {~fachwort} bleiben O. Alle Werte synthetisch.
+
+templates:
+  - id: en_protokoll_kopf_tabs
+    doc_type: Sitzungsprotokoll
+    text: |
+      Minutes of steering committee meeting #{CASE_ID}, project {EINHEIT}
+      Date:	{DATE}
+      Location:	{EINHEIT}, room {~systemkuerzel}
+      Time:	{TIME} 
+      Chair:	{GIVENNAME} {FULLNAME}, {ROLLE}
+      Minutes:	{GIVENNAME} {FULLNAME}, {ROLLE}
+      Present:	{GIVENNAME} {FULLNAME}; {ROLLE}		{GIVENNAME} {FULLNAME}, {ROLLE};		{GIVENNAME} {FULLNAME},
+      {ROLLE};	{GIVENNAME} {FULLNAME}, {ROLLE} {EINHEIT};		{GIVENNAME} {FULLNAME}, {ROLLE}
+      Apologies:	{GIVENNAME} {FULLNAME}, {ROLLE}		{GIVENNAME} {FULLNAME}, {ROLLE} {EINHEIT}
+      For information:	{GIVENNAME} {FULLNAME}, {ROLLE},		{GIVENNAME} {FULLNAME}, {ROLLE} {EINHEIT};		{GIVENNAME} {FULLNAME}, {ROLLE}
+
+      Reference: {CASE_ID}
+      Agenda
+      1	Welcome and general information	2
+      2	Project status	3
+      2.1	{~fachwort}	3
+      2.2	{~systemkuerzel}	4
+      3	Any other business	5
+
+      Decision: {~personenwort} approves {~fachwort}.
+  - id: en_protokoll_kopf_listen
+    doc_type: Sitzungsprotokoll
+    text: |
+      Minutes of steering committee meeting #{CASE_ID}, project {EINHEIT}
+      Date: {DATE}, {TIME}
+
+      Present:
+      {GIVENNAME} {FULLNAME}, {ROLLE}
+      {GIVENNAME} {FULLNAME}, {ROLLE} {EINHEIT}
+      {GIVENNAME} {FULLNAME} ({ROLLE})
+      {GIVENNAME} {FULLNAME}
+      Apologies: {GIVENNAME} {FULLNAME}; {GIVENNAME} {FULLNAME}, {ROLLE}
+      For information: {FULLNAME}, {FULLNAME}, {GIVENNAME} {FULLNAME} ({EINHEIT})
+
+      1. {GIVENNAME} reports on {~fachwort}. {FULLNAME} adds that {~systemkuerzel} will be ready by {DATE}.
+      2. {GIVENNAME} and {GIVENNAME} review {~fachwort}.
+      3. Decision: {~personenwort} approves {~fachwort}.
+
+      Minutes: {GIVENNAME} {FULLNAME}

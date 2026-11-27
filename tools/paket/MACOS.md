@@ -43,7 +43,7 @@ und wie man drankommt, gehört nicht in dieses Repository.
 | | |
 |---|---|
 | `MASCHERA-<fassung>.dmg` | rund 1,6 GB |
-| enthält | `MASCHERA.app` mit Python, Modell `ch-v63b`, PyTorch (CPU) |
+| enthält | `MASCHERA.app` mit Python, Modell `ch-v71f`, PyTorch (CPU) |
 | lädt im Betrieb | **nichts** |
 | signiert | **nein**, vorerst — siehe Abschnitt 7 |
 
@@ -196,7 +196,7 @@ python3.13 -m venv .venv
 source .venv/bin/activate
 ```
 
-Das Modell gehört nach `runs/ch-v63b/` und ist nicht im Repository.
+Das Modell gehört nach `runs/ch-v71f/` und ist nicht im Repository.
 
 ---
 
@@ -221,7 +221,7 @@ Dann:
 pyinstaller --noconfirm --windowed --name MASCHERA \
   --add-data "app/static:app/static" \
   --add-data "packs:packs" \
-  --add-data "runs/ch-v63b:runs/ch-v63b" \
+  --add-data "runs/ch-v71f:runs/ch-v71f" \
   app/fenster.py
 
 create-dmg --volname "MASCHERA" dist/MASCHERA.dmg dist/MASCHERA.app

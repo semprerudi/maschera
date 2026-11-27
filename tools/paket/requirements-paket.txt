@@ -5,11 +5,11 @@
 # Laeufer, mit dem gemessen wird. Am Golddokument-Testset (280 Goldspannen):
 #
 #     Laeufer                     Lecks   Micro-F1   Uebermask
-#     torch      runs/ch-v63b         6      0.736          95
-#     ONNX int8  release/ch-v63b     13      0.712         120
+#     torch      runs/ch-v71f         6      0.757         119
+#     ONNX int8  release/ch-v71f     10      0.750         123
 #
-# (Gemessen am 3.10.2026 mit 1.0.1; vorher stand dort 0.739 / 94 und
-# 0.711 / 109 — das Testset und die Vorlagen haben sich seither bewegt.)
+# (Gemessen am 27.11.2026 mit 2.5.0. Das Modell davor, ch-v63b, am
+# 3.10.2026 mit 1.0.1: torch 6 / 0.736 / 95, ONNX int8 13 / 0.712 / 120.)
 #
 # Zwei Laeufer mit eigener Fensterung, eigenen Sondertoken und eigener
 # Abschneidung koennen sich unterschiedlich verhalten, und jeder solche

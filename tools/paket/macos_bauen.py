@@ -5,17 +5,17 @@
 
 Auf einem Mac, im Projektstamm, in einer Umgebung mit
 `requirements-paket.txt`, `pywebview` und `pyinstaller`; das Modell liegt
-unter `runs/ch-v63b` (oder wird vorher geholt, siehe `.github/workflows/`).
+unter `runs/ch-v71f` (oder wird vorher geholt, siehe `.github/workflows/`).
 
 Ergebnis: `dist/MASCHERA-<fassung>-<arch>.dmg`, `<arch>` ist `arm64` oder
 `x86_64` — das sind zwei Pakete (`MACOS.md` Abschnitt 2).
 
 Seit dem 23.11.2026 unterscheiden sie sich im Laeufer:
 
-  arm64   torch, Modell unter `runs/ch-v63b`, ab macOS 14 (die torch-Raeder
+  arm64   torch, Modell unter `runs/ch-v71f`, ab macOS 14 (die torch-Raeder
           verlangen 14.0, gemessen am 23.11.2026)
   x86_64  onnxruntime 1.23.2, dasselbe Modell als ONNX FP32 unter
-          `onnx/ch-v63b`, ab macOS 13.4. Fuer x86_64 gibt es kein torch mehr
+          `onnx/ch-v71f`, ab macOS 13.4. Fuer x86_64 gibt es kein torch mehr
           (letztes Rad 2.2.2, nur bis Python 3.12), und onnxruntime liefert
           ab 1.24 nur noch arm64. Den Ordner nennt `MASCHERA_ONNX`, er
           entsteht mit `tools/build_release.py --no-trim --no-quantize`.

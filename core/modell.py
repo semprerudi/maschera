@@ -1,7 +1,7 @@
 """Das Modell finden — und wenn es fehlt, es holen. Auf Befehl, nie von selbst.
 
     from core import modell
-    ort = modell.suche("ch-v63b")          # None, wenn es fehlt
+    ort = modell.suche("ch-v71f")          # None, wenn es fehlt
     m   = modell.manifest("ch")            # woher, wie gross, welche Pruefsumme
     modell.hole(m, ziel, melde=...)        # holt und prueft
 

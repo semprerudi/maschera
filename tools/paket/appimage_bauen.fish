@@ -39,8 +39,8 @@ for w in appimagetool uv
     end
 end
 
-if not test -f runs/ch-v63b/model.safetensors
-    echo "ABBRUCH: runs/ch-v63b/model.safetensors fehlt."
+if not test -f runs/ch-v71f/model.safetensors
+    echo "ABBRUCH: runs/ch-v71f/model.safetensors fehlt."
     echo "  Ohne Modell leckt jeder Name — eine AppImage ohne Modell"
     echo "  ist kein Betriebszustand, sondern eine Leckquelle."
     exit 1
@@ -119,13 +119,13 @@ rm -rf $BAU/usr/lib/maschera/packs/*/nomenclatures \
 find $BAU/usr/lib/maschera -name __pycache__ -type d -exec rm -rf {} + 2>/dev/null
 
 mkdir -p $BAU/usr/lib/maschera/runs
-cp -a runs/ch-v63b $BAU/usr/lib/maschera/runs/
-rm -rf $BAU/usr/lib/maschera/runs/ch-v63b/checkpoint-*
+cp -a runs/ch-v71f $BAU/usr/lib/maschera/runs/
+rm -rf $BAU/usr/lib/maschera/runs/ch-v71f/checkpoint-*
 # Und alles, was Pickle sein kann — `training_args.bin` ist eine. Wird zur
 # Laufzeit nicht gelesen (`core/modell.py`, `PFLICHT`), und eine Pickle-Datei
 # im Paket kann beim Oeffnen Code ausfuehren. Dieselbe Liste: `.dockerignore`,
 # `windows_bauen.py`; `tests/test_fenster.py` Punkt 25 haelt sie zusammen.
-find $BAU/usr/lib/maschera/runs/ch-v63b -type f '(' -name '*.bin' -o -name '*.pt' \
+find $BAU/usr/lib/maschera/runs/ch-v71f -type f '(' -name '*.bin' -o -name '*.pt' \
     -o -name '*.pth' -o -name '*.pkl' -o -name '*.ckpt' -o -name '*.pickle' ')' -delete
 
 # Die Lizenztexte fahren mit — das gebaute Paket steht unter AGPL-3.0, und

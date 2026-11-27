@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Ein echtes Dokument durch die volle Kette schicken und lesbar berichten.
 
-    python3 tools/filter_document.py --model runs/ch-v63b brief.txt
-    python3 tools/filter_document.py --model runs/ch-v63b /pfad/zu/dokumenten/ --klartext
+    python3 tools/filter_document.py --model runs/ch-v71f brief.txt
+    python3 tools/filter_document.py --model runs/ch-v71f /pfad/zu/dokumenten/ --klartext
     python3 tools/filter_document.py brief.txt --ohne-modell
-    python3 tools/filter_document.py --model runs/ch-v63b /pfad/zu/dokumenten/ \\
+    python3 tools/filter_document.py --model runs/ch-v71f /pfad/zu/dokumenten/ \\
         --bericht /tmp/bericht.json --woerterbuch /tmp/dict.json
 
 Der Unterschied zu `evaluate_model.py`: dort braucht es Gold-Spannen, und es
@@ -443,7 +443,7 @@ def main() -> int:
     ap.add_argument("pfad", nargs="?", help="Datei oder Verzeichnis. "
                                  "txt, md, eml, mbox, pdf")
     ap.add_argument("--model", default=None,
-                    help="Trainingsordner, z.B. runs/ch-v63b")
+                    help="Trainingsordner, z.B. runs/ch-v71f")
     ap.add_argument("--onnx", default=None,
                     help="Release-Ordner mit model.onnx statt --model")
     ap.add_argument("--ohne-modell", action="store_true",

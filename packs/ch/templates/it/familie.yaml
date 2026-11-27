@@ -1,0 +1,111 @@
+# Vorlagen IT — Familienbeziehungen (FAMILYROLE) und Berufe im Fliesstext,
+# seit 25.11.2026. {~verwandt} enthaelt eine Beziehung, ist aber keine
+# («la società madre») und bleibt O.
+
+templates:
+  - id: it_familie_psichiatria
+    doc_type: Psychiatrischer Bericht
+    text: |
+      {ORG}
+      Rapporto psichiatrico del {DATE}
+
+      Paziente: {GIVENNAME} {FULLNAME}, nata il {DATE}, domiciliata a {CITY}
+
+      Anamnesi
+      La paziente ({AGE}) era accompagnata dalla {FAMILYROLE}. Secondo il
+      {FAMILYROLE}, dopo la separazione dal {FAMILYROLE} il suo stato è
+      peggiorato nettamente. La {FAMILYROLE} vive nella stessa economia
+      domestica dal {DATE}. Un {FAMILYROLE} lavora per {~verwandt} ed è
+      raramente raggiungibile.
+
+      Il trattamento è affidato a {GIVENNAME} {FULLNAME}, {JOBTITLE}, in
+      accordo con la {JOBTITLE} responsabile.
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}
+
+  - id: it_familie_dimissione
+    doc_type: Arztbericht
+    text: |
+      Rapporto di dimissione {CASE_ID}
+
+      Gentile collega,
+
+      la informiamo su {GIVENNAME} {FULLNAME}, ricoverata dal {DATE} al
+      {DATE}. La {FAMILYROLE} della paziente si è impegnata a curarla a
+      domicilio; il {FAMILYROLE} si occupa dei trasporti. La fisioterapia
+      sarà svolta da una {JOBTITLE} a {CITY}. Un controllo è previsto
+      {~deadline}.
+
+      Cordiali saluti
+
+      {GIVENNAME} {FULLNAME}, {JOBTITLE}
+      {ORG}
+
+  - id: it_familie_arp
+    doc_type: Behördenbrief mit Verfügung
+    text: |
+      {ORG}
+      Decisione del {DATE}, procedura {CASE_ID}
+
+      Concernente {GIVENNAME} {FULLNAME}, nato il {DATE}
+
+      Il {FAMILYROLE}, {GIVENNAME} {FULLNAME}, e la {FAMILYROLE},
+      {GIVENNAME} {FULLNAME}, vivono separati. Il {FAMILYROLE=figlio} vive presso la
+      {FAMILYROLE} a {CITY}. Per il {FAMILYROLE=figlio} viene nominata una {FAMILYROLE}:
+      {GIVENNAME} {FULLNAME}, {JOBTITLE} presso {ORG}. I {FAMILYROLE}
+      restano informati ai sensi di {~legal}. Il termine decorre
+      {~deadline}.
+
+      Per l'autorità
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}
+
+  - id: it_familie_rapporto_polizia
+    doc_type: Polizeirapport
+    text: |
+      Rapporto {CASE_ID}, {DATE}, {TIME}
+
+      Sul posto a {CITY} abbiamo incontrato la persona imputata
+      {GIVENNAME} {FULLNAME} ({AGE}) e il suo {FAMILYROLE}. Il
+      {FAMILYROLE} della persona imputata ha dichiarato che la
+      {FAMILYROLE} aveva chiesto aiuto. Una {FAMILYROLE} dello stabile
+      vicino lo ha confermato. I fatti sono stati verbalizzati ai sensi di
+      {~legal}.
+
+      Verbalizzante: {JOBTITLE} {GIVENNAME} {FULLNAME}, {ORG}
+
+  - id: it_familie_mantenimento
+    doc_type: Vereinbarung
+    text: |
+      Convenzione di mantenimento del {DATE}
+
+      tra {GIVENNAME} {FULLNAME} ({FAMILYROLE}) e {GIVENNAME} {FULLNAME}
+      ({FAMILYROLE}), concernente i loro {FAMILYROLE} comuni.
+
+      Il {FAMILYROLE} versa ogni mese {AMOUNT}. I {FAMILYROLE} del {FAMILYROLE=figlio}
+      assicurano la custodia due giorni alla settimana. L'azienda del
+      {FAMILYROLE} è una filiale di un gruppo; {~verwandt} non è parte
+      della convenzione.
+
+      Approvato da {GIVENNAME} {FULLNAME}, {JOBTITLE}, {ORG}
+
+  - id: it_familie_sentenza
+    doc_type: Gerichtsentscheid
+    text: |
+      Sentenza del {DATE}, procedura {CASE_ID}
+
+      Parti nel procedimento
+      {GIVENNAME} {FULLNAME}, patrocinato da {JOBTITLE} {GIVENNAME} {FULLNAME},
+      ricorrente,
+      contro
+      {GIVENNAME} {FULLNAME}, opponente.
+
+      Fatti
+      Il {FAMILYROLE} e la {FAMILYROLE} sono i {FAMILYROLE=genitori} di {GIVENNAME}
+      (nato il {DATE}). Il bambino frequenta la scuola.
+      Il {DATE} la {FAMILYROLE} ha chiesto una modifica
+      concernente {~verwandt}. Il tribunale ha sentito il {FAMILYROLE} e la
+      {FAMILYROLE} del {FAMILYROLE=figlio}; {~verwandt} resta invariato. La {FAMILYROLE}
+      è stata informata dal {JOBTITLE}.

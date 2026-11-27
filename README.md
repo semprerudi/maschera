@@ -10,7 +10,7 @@
 **English** · [Deutsch](README.de.md)
 
 <p>
-<img src="https://img.shields.io/badge/tags-45-1f5f3d" alt="45 tags">
+<img src="https://img.shields.io/badge/tags-47-1f5f3d" alt="47 tags">
 <img src="https://img.shields.io/badge/languages-DE%20FR%20IT%20EN-1f5f3d" alt="German, French, Italian, English">
 <img src="https://img.shields.io/badge/runs%20on-CPU-1f5f3d" alt="Runs on the CPU">
 <img src="https://img.shields.io/badge/offline-no%20account-1f5f3d" alt="Offline, no account">
@@ -69,7 +69,7 @@ equally offline.**
 *maschera* is Italian for **mask** and carries the Swiss country code
 **CH** in the middle.
 
-- Model: [semprerudi/maschera-ch-v63b](https://huggingface.co/semprerudi/maschera-ch-v63b)
+- Model: [semprerudi/maschera-ch-v71f](https://huggingface.co/semprerudi/maschera-ch-v71f)
 - Report a bug: [Issues](https://github.com/semprerudi/maschera/issues)
 
 > ⚠️ **Pseudonymisation, not anonymisation.** As long as the dictionary
@@ -83,15 +83,15 @@ to the "Rizzo AI Academy" name are claimed.
 
 ## How good is it?
 
-The shipped model (`runs/ch-v63b`) was tested in two ways. **Both results
+The shipped model (`runs/ch-v71f`) was tested in two ways. **Both results
 are here, including the less flattering one.**
 
 | | practice texts (synthetic) | real documents (gold documents) |
 |---|---|---|
-| Size | 2000 generated texts, 29,210 personal details (gold spans) | 9 real documents, 280 personal details (gold spans) |
-| **Left visible** (leak rate) | **0.02 %**: 13 details missed in whole or in part | **1.27 %**: 6 details missed in whole or in part |
-| Overall score (micro-F1, 1 = perfect) | 0.997 | 0.736 |
-| Masked too much | 84 places | 95 places |
+| Size | 2000 generated texts, 31,168 personal details (gold spans) | 9 real documents, 280 personal details (gold spans) |
+| **Left visible** (leak rate) | **0.16 %**: 426 details missed in whole or in part | **1.27 %**: 6 details missed in whole or in part |
+| Overall score (micro-F1, 1 = perfect) | 0.900 | 0.757 |
+| Masked too much | 2757 places | 119 places |
 | Anyone can recheck it | **yes** | **no** |
 
 The **leak rate** is the share of letters and digits belonging to personal
@@ -104,12 +104,21 @@ and lists of names. Anyone with the source code gets exactly the same
 numbers with this command:
 
 ```fish
-python3 tools/mess_synthetisch.py --model runs/ch-v63b --n 2000
+python3 tools/mess_synthetisch.py --model runs/ch-v71f --n 2000
 ```
 
-The numbers in the table were measured this way with MASCHERA 1.0.1. The
+The numbers in the table were measured this way with MASCHERA 2.5.0. The
 texts depend on the templates and the generator: if those change, the
 numbers change with them, and the table has to be measured again.
+
+⚠️ **Most of the practice-text leaks are job titles and family roles.**
+These two kinds of detail are new in 2.5.0, and they are hard on purpose:
+"Lehrer" or "Mutter" is often an ordinary word, and the practice texts
+contain many such words that should stay visible. 379 of the 426 leaks
+are job titles (325) and family roles (54). All other personal details
+together leak 47 times in 27,322. The figures are therefore not
+comparable to those of the previous model (0.02 %), which knew neither
+kind of detail.
 
 ⚠️ **The practice texts are familiar to the model.** They are built from
 the same templates as the texts it learned from. It has never seen the
@@ -139,13 +148,13 @@ detail. When in doubt, MASCHERA hides too much.
 
 ## The model
 
-`ch-v63b`, a fine-tuned **ModernBERT** (`jhu-clsp/mmBERT-base`), 22
+`ch-v71f`, a fine-tuned **ModernBERT** (`jhu-clsp/mmBERT-base`), 22
 layers, 308 M parameters. Trained on **synthetic** data generated from the
 templates and nomenclatures in this repository. It has never seen a real
 document.
 
 The weights are on Hugging Face under **MIT**:
-[semprerudi/maschera-ch-v63b](https://huggingface.co/semprerudi/maschera-ch-v63b).
+[semprerudi/maschera-ch-v71f](https://huggingface.co/semprerudi/maschera-ch-v71f).
 They are not part of this repository, because 1.2 GB does not belong in Git.
 
 **The training path is open.** The training data is not shipped as a
@@ -161,30 +170,49 @@ python3 train.py --data dataset.jsonl --eval-data eval.jsonl \
         --out runs/eigenes --max-length 512 --seed 4711
 ```
 
-### What `ch-v63b` was trained with
+### What `ch-v71f` was trained with
 
-Read from `training_args.bin` of the shipped run, not copied from the
-defaults:
+`ch-v71f` was not trained from scratch. It continues its predecessor
+`ch-v63b` (weights on Hugging Face as well), which was trained with the
+commands above and seed 4711. Its output layer was extended by the two new
+kinds of detail, job title and family role; what `ch-v63b` already knew
+was taken over exactly. While it learned the new kinds, `ch-v63b` watched
+over the old ones as a teacher (distillation). Only for names in the
+header of minutes did the teacher stay silent, because `ch-v63b` read
+those as organisations:
+
+```fish
+python3 train.py --data dataset.jsonl --eval-data eval.jsonl \
+        --out runs/eigenes --start-von runs/ch-v63b \
+        --lehrer runs/ch-v63b --lehrer-gewicht 4 \
+        --lehrer-frei protokoll_kopf --lehrer-frei-tags GIVENNAME,FULLNAME \
+        --epochs 2 --lr 2e-5 --seed 1291
+```
+
+Read from `training_args.bin` and the log of the shipped run, not copied
+from the defaults:
 
 | | |
 |---|---|
-| Epochs | 3 |
-| Learning rate | 3e-5, linear, warmup 0.1 |
+| Start | `ch-v63b`, output layer from 91 to 95 labels |
+| Teacher | `ch-v63b` on the old labels, weight 4 |
+| Data | 40,000 training examples, 4,000 for evaluation (not 2000 as in the command above) |
+| Epochs | 2 |
+| Learning rate | 2e-5, linear, warmup 0.1 |
 | Batch | 8 × 2 (gradient accumulation) |
 | Weight decay | 0.01 |
 | Precision | bf16 |
 | max_length | 512 |
-| **Training seed** | **4711** |
+| **Training seed** | **1291** |
 
-⚠️ **`train.py` defaults to seed 2026**; the shipped run used **4711**.
+⚠️ **`train.py` defaults to seed 2026**; the shipped run used **1291**.
 Without `--seed` you get a different model.
 
-⚠️ **The seed of the TRAINING SET was not recorded.** `training_args.bin`
-records how the model was trained, not on what. The command above
-therefore uses 2026; that is a recommendation for rebuilding, **not a
-statement about the shipped run**. The path can be walked; the exact
-trail of that one run cannot. Future runs record both:
-`generate_dataset.py` writes its seed into the header of the `.jsonl`.
+⚠️ **The seed of the TRAINING SET is not published.**
+`generate_dataset.py` writes it into the header of the `.jsonl`, but that
+file is not part of the repository. The command above uses 2026; that is
+a recommendation for rebuilding, **not a statement about the shipped
+run**. The path can be walked; the exact trail of that one run cannot.
 
 ⚠️ **`--zone` is not optional.** Without it, training and evaluation sets
 draw from the same nomenclature, and the numbers would fit "recognises
@@ -269,7 +297,7 @@ A ready-made image, about 4.2 GB, the model included:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:2.4.0
+    ghcr.io/semprerudi/maschera:2.5.0
 ```
 
 Then open `http://127.0.0.1:4141` in the browser. The server keeps
@@ -315,8 +343,8 @@ signs the image when a version is tagged. Verify those with the tag in the
 identity:
 
 ```fish
-cosign verify ghcr.io/semprerudi/maschera:2.4.0 \
-    --certificate-identity https://github.com/semprerudi/maschera/.github/workflows/release.yml@refs/tags/v2.4.0 \
+cosign verify ghcr.io/semprerudi/maschera:2.5.0 \
+    --certificate-identity https://github.com/semprerudi/maschera/.github/workflows/release.yml@refs/tags/v2.5.0 \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```
 
@@ -348,10 +376,10 @@ builds. `WINDOWS.md` (German) describes the Windows build as it was run;
 python3 tools/run_tests.py
 ```
 
-31 checks, no dependencies except PyYAML and Flask. No model, no GPU, no
-downloads needed: **30 pass straight away in a fresh clone.**
+32 checks, no dependencies except PyYAML and Flask. No model, no GPU, no
+downloads needed: **31 pass straight away in a fresh clone.**
 
-The 31st needs the model and says so; two more skip one point each as
+The 32nd needs the model and says so; two more skip one point each as
 long as the nomenclature has not been built
 (`python3 packs/ch/nomenclatures/build.py`). Both show up in the output:
 **a skipped check has checked nothing**, and the runner does not count it
@@ -378,7 +406,7 @@ generated from the code.
 
 ```
 packs/ch/          everything Swiss-specific
-  taxonomy.yaml      45 tags, frozen BIO order  <- source of truth
+  taxonomy.yaml      47 tags, frozen BIO order  <- source of truth
   patterns.yaml      regexes with context anchors in four languages
   macros.yaml        coupled slot groups (@address, @person)
   pack.yaml          manifest, label contract hash, backbone
@@ -408,7 +436,7 @@ tools/             tools
 
 
 train.py           training (needs torch + GPU)
-tests/             30 test files
+tests/             31 test files
 specs/             full requirements catalog (German)
 ```
 
@@ -431,6 +459,11 @@ here.
 - Company names: Zefix, Federal Commercial Registry Office (EHRA), via
   LINDAS. Terms of use: Provide-the-Source (free use, attribution
   required)
+- Job titles: Swiss Federal Statistical Office (BFS), CH-ISCO-19 with the
+  occupation index v1.2.4; for English also ESCO. This service uses the
+  ESCO classification of the European Commission. Both adapted (filtered
+  and extended).
+- Family roles: built in the repository from word parts, no outside source
 
 ## Licence
 

@@ -81,7 +81,7 @@ print("\n3. Ein leerer Ort meldet sich")
 # Eine Messung ueber ein leeres Verzeichnis meldete sonst «0 Lecks».
 with tempfile.TemporaryDirectory() as t:
     with Umgebung(MASCHERA_GOLD=t):
-        for art in ("real", "markup"):
+        for art in ("real", "markup", "berufe", "familie", "protokoll"):
             _, hinweis = pfade.gold_lesen("ch", art)
             check(bool(hinweis) and "MASCHERA_GOLD" in hinweis,
                   f"leerer Ort fuer {art} bleibt still oder nennt die "
@@ -92,7 +92,7 @@ print("\n4. Nie im Projektbaum")
 for gold in (None, "/tmp/irgendwo"):
     with tempfile.TemporaryDirectory() as t:
         with Umgebung(MASCHERA_GOLD=gold, XDG_DATA_HOME=t):
-            for art in ("real", "markup"):
+            for art in ("real", "markup", "berufe", "familie", "protokoll"):
                 for fn in (pfade.gold_lesen, pfade.gold_schreiben):
                     ort = fn("ch", art)
                     ort = ort[0] if isinstance(ort, tuple) else ort
@@ -110,7 +110,7 @@ for art in ("rael", "", "synthetic"):
                          f"muessen")
         except ValueError:
             pass
-print("   OK   nur 'real' und 'markup'")
+print("   OK   nur 'real', 'markup', 'berufe', 'familie' und 'protokoll'")
 
 print("\n6. Der Pfad steht nur an EINER Stelle")
 # Die Werkzeuge holen den Ort aus `core.pfade` und bauen ihn nicht selbst.

@@ -7,7 +7,7 @@
 Legt `.txt`-Dateien im Goldordner unter `ch/markup/` ab (siehe
 `core/pfade.py`: `MASCHERA_GOLD`, sonst der Datenordner), bereit fuer
 
-    python3 tools/gold_from_markup.py --vormarkieren <datei> --model runs/ch-v63b \\
+    python3 tools/gold_from_markup.py --vormarkieren <datei> --model runs/ch-v71f \\
         --out $MASCHERA_GOLD/ch/markup/<name>.markiert.txt
 
 `--liste` zeigt den tatsaechlich aufgeloesten Ort.
@@ -241,7 +241,7 @@ def befehl_holen(nur: str | None) -> int:
     ordner = _ziel()
     print("Naechster Schritt je Datei:")
     print("  python3 tools/gold_from_markup.py --vormarkieren \\")
-    print(f"      {ordner}/<name>.txt --model runs/ch-v63b \\")
+    print(f"      {ordner}/<name>.txt --model runs/ch-v71f \\")
     print(f"      --out {ordner}/<name>.markiert.txt")
     print()
     print("Dann im Editor: Markierungen pruefen UND die Platzhalter durch")

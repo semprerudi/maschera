@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """torch gegen ONNX: rohe Logits und Vertrauenswerte an den Schwellen.
 
-    python3 tools/onnx_vergleich.py --torch runs/ch-v63b \\
-        --onnx release/ch-v63b-fp32 [--onnx release/ch-v63b] [--streng]
+    python3 tools/onnx_vergleich.py --torch runs/ch-v71f \\
+        --onnx release/ch-v71f-fp32 [--onnx release/ch-v71f] [--streng]
 
 Warum es das braucht (23.11.2026): Das Mac-Paket fuer Intel rechnet mit
 onnxruntime statt torch, weil es fuer x86_64 kein aktuelles torch mehr gibt.

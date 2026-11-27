@@ -1,0 +1,65 @@
+# Vorlagen FR — Fliesstext mit Berufen, Familie und Gegenbeispielen, seit 25.11.2026.
+# {~personenwort} («la cliente», «la direction de projet») bleibt O.
+
+templates:
+  - id: fr_personen_certificat
+    doc_type: Arbeitszeugnis
+    text: |
+      Certificat de travail
+
+      {GIVENNAME} {FULLNAME}, née le {DATE}, a travaillé du {DATE} au
+      {DATE} en qualité de {JOBTITLE} au sein de notre entreprise {ORG}.
+      Auparavant, elle était {JOBTITLE} à {CITY}.
+
+      Elle s'occupait de {~personenwort} de manière autonome et soutenait
+      {~personenwort} pour toutes les questions. Son travail a toujours été
+      apprécié par {~personenwort}. Elle nous quitte de son plein gré.
+
+      {CITY}, le {DATE}
+
+      {GIVENNAME} {FULLNAME}, {JOBTITLE}
+
+  - id: fr_personen_proces_verbal
+    doc_type: Sitzungsprotokoll
+    text: |
+      Procès-verbal de la séance du {DATE}, {TIME}
+
+      Présents : {GIVENNAME} {FULLNAME} ({JOBTITLE}), {GIVENNAME} {FULLNAME}
+      ({JOBTITLE}), {GIVENNAME} {FULLNAME} ({JOBTITLE})
+      Excusé : {GIVENNAME} {FULLNAME}
+
+      1. {~personenwort} informe sur l'état du projet. Le {JOBTITLE}
+         confirme la date. Le délai court {~deadline}.
+      2. {~personenwort} souhaite une réponse d'ici au {DATE}.
+      3. La {JOBTITLE} se charge de clarifier la question avec {ORG}.
+
+      Procès-verbal : {GIVENNAME} {FULLNAME}
+
+  - id: fr_personen_rapport_social
+    doc_type: Sozialbericht
+    text: |
+      Rapport social {CASE_ID}
+
+      {GIVENNAME} {FULLNAME} ({AGE}) vit avec sa {FAMILYROLE} et deux
+      {FAMILYROLE} à {CITY}. Le {FAMILYROLE} travaille comme {JOBTITLE},
+      la {FAMILYROLE} est actuellement sans emploi. Des contacts existent
+      aussi avec la {FAMILYROLE} à {CITY}.
+
+      Selon {~personenwort}, la situation est stable. {~personenwort} a été
+      informé de l'évaluation.
+
+      {GIVENNAME} {FULLNAME}, {JOBTITLE}, {ORG}
+
+  - id: fr_personen_rapport_projet
+    doc_type: Projektbericht
+    text: |
+      Rapport de projet {CASE_ID}, état au {DATE}
+
+      Le projet est dirigé par {GIVENNAME} {FULLNAME} en tant que
+      {JOBTITLE}. {~personenwort} a confirmé les exigences ;
+      {~personenwort} reçoit un rapport chaque mois. La mise en œuvre est
+      confiée à un {JOBTITLE} et à une {JOBTITLE} de {ORG}.
+
+      Risques : les ressources de {~personenwort} sont limitées.
+
+      {GIVENNAME} {FULLNAME}

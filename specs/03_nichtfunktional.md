@@ -4,12 +4,12 @@ Status: `verbindlich` ist durch Prüfung oder Grundsatz festgelegt, `gemessen` i
 aus der Messung aufgerundeter Sollwert, `offen` wartet auf einen Entscheid.
 
 **Referenzprofil der Messung:** Intel Core Ultra 9, 16 logische Kerne, 12 Rechenfäden,
-62 GB Speicher, nur CPU, torch 2.14, Modell `ch-v63b`, 30.10.2026. Text: das
+62 GB Speicher, nur CPU, torch 2.14, Modell `ch-v63b`, 30.10.2026 (`ch-v71f` hat dieselbe Bauart und Grösse). Text: das
 synthetische Beispiel der App, mehrfach aneinandergehängt, Median aus drei Läufen.
 ⚠️ Die Laufzeiten hängen stark vom Zustand des Rechners ab: Unter fremder Last und im
 Energieprofil «balanced» wurde derselbe Lauf mit 12 Rechenfäden rund zehnmal langsamer,
 mit 6 Fäden blieb er bei den Werten unten (31.10.2026). Paketgrössen stammen vom
-aktuellen Release. `python3 tools/mess_nfa.py --model runs/ch-v63b
+aktuellen Release. `python3 tools/mess_nfa.py --model runs/ch-v71f
 --release <Tag>` misst erneut und vergleicht mit den Sollwerten hier.
 
 ## Leistung
@@ -77,8 +77,11 @@ Schwellen `R` 0.30, `A` 0.50, `P` 0.70, Ausnahmen je Tag mit Messung. Status
 
 ### NFA-022 Leckrate synthetisch
 
-Unter 0.1 % der Spannen im Befehl aus dem README. Veröffentlicht sind 0.02 %. Status
-`gemessen`, `ohne Prüfung`.
+Unter 0.1 % der Spannen im Befehl aus dem README, ohne die zwei seit 2.5 angehängten
+Tags `JOBTITLE` und `FAMILYROLE`: 47 Lecks bei 27 322 Spannen (0.17 % ungewichtet). Mit
+ihnen veröffentlicht sind 0.16 % gewichtet (426 Lecks, davon 379 in den zwei neuen Tags).
+Damit liegt `ch-v71f` über dem Sollwert; bis 2.4 waren es 0.02 % (`ch-v63b`, älterer
+Erzeuger, nicht vergleichbar). Status `offen`, `ohne Prüfung`.
 
 ### NFA-023 Leckrate an Dokumenten
 

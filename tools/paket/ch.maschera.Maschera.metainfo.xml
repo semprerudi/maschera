@@ -116,6 +116,13 @@
     <!-- Die erste Angabe muss zur Fassung in app/serve.py passen
          (test_fenster 12). Testbauten tragen `X.Y.Z-test.N` mit
          type="development"; Software-Stores zeigen das nicht als Release. -->
+    <release version="2.5.0" date="2026-11-27">
+      <description>
+        <p>Job titles and family relationships as new tags, with a new model.
+        Change a mask's type from the vocabulary, recently used tags first, a
+        how-to dialog and release notes in the menu.</p>
+      </description>
+    </release>
     <release version="2.4.0" date="2026-11-23">
       <description>
         <p>Intel Macs: a separate macOS package computes the same model with ONNX.

@@ -1,0 +1,52 @@
+# Vorlagen DE: Sitzungsprotokolle mit tabellarischem Kopf, seit 25.11.2026.
+#
+# Feedback Test 2: Im echten Protokollkopf stehen Personen als
+# «Vorname Nachname, Kuerzel», getrennt durch Tabs und Semikolons, dazu
+# Vornamen und Nachnamen allein. Das Modell nahm sie als ORG. {ROLLE} ist
+# ein Rollenkuerzel (JOBTITLE), {EINHEIT} das Kuerzel einer Einheit (ORG),
+# {~systemkuerzel} und {~fachwort} bleiben O. Alle Werte synthetisch.
+
+templates:
+  - id: de_protokoll_kopf_tabs
+    doc_type: Sitzungsprotokoll
+    text: |
+      Protokoll zur Ausschusssitzung #{CASE_ID} des Projekts {EINHEIT}
+      Datum:	{DATE}
+      Ort:	{EINHEIT}, Raum {~systemkuerzel}
+      Zeit:	{TIME} Uhr
+      Vorsitz:	{GIVENNAME} {FULLNAME}, {ROLLE}
+      Protokoll:	{GIVENNAME} {FULLNAME}, {ROLLE}
+      Anwesend:	{GIVENNAME} {FULLNAME}; {ROLLE}		{GIVENNAME} {FULLNAME}, {ROLLE};		{GIVENNAME} {FULLNAME},
+      {ROLLE};	{GIVENNAME} {FULLNAME}, {ROLLE} {EINHEIT};		{GIVENNAME} {FULLNAME}, {ROLLE}
+      Entschuldigt:	{GIVENNAME} {FULLNAME}, {ROLLE}		{GIVENNAME} {FULLNAME}, {ROLLE} {EINHEIT}
+      Zur Kenntnis:	{GIVENNAME} {FULLNAME}, {ROLLE},		{GIVENNAME} {FULLNAME}, {ROLLE} {EINHEIT};		{GIVENNAME} {FULLNAME}, {ROLLE}
+
+      Aktenzeichen: {CASE_ID}
+      Traktanden
+      1	Begrüssung und allgemeine Informationen	2
+      2	Projektstatus	3
+      2.1	{~fachwort}	3
+      2.2	{~systemkuerzel}	4
+      3	Varia	5
+
+      Beschluss: {~personenwort} genehmigt {~fachwort}.
+  - id: de_protokoll_kopf_listen
+    doc_type: Sitzungsprotokoll
+    text: |
+      Protokoll zur Ausschusssitzung #{CASE_ID} des Projekts {EINHEIT}
+      Datum: {DATE}, {TIME}
+
+      Anwesend:
+      {GIVENNAME} {FULLNAME}, {ROLLE}
+      {GIVENNAME} {FULLNAME}, {ROLLE} {EINHEIT}
+      {GIVENNAME} {FULLNAME} ({ROLLE})
+      {GIVENNAME} {FULLNAME}
+      Entschuldigt: {GIVENNAME} {FULLNAME}; {GIVENNAME} {FULLNAME}, {ROLLE}
+      Zur Kenntnis: {FULLNAME}, {FULLNAME}, {GIVENNAME} {FULLNAME} ({EINHEIT})
+
+      1. {GIVENNAME} informiert über {~fachwort}. {FULLNAME} ergänzt,
+         dass {~systemkuerzel} bis {DATE} bereit ist.
+      2. {GIVENNAME} und {GIVENNAME} prüfen {~fachwort}.
+      3. Beschluss: {~personenwort} genehmigt {~fachwort}.
+
+      Protokoll: {GIVENNAME} {FULLNAME}

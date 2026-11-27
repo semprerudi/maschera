@@ -75,7 +75,15 @@ sind hier beschrieben.
 ```
 <gold>/<pack>/real/      die Golddokumente (JSON)
 <gold>/<pack>/markup/    die markierten Fassungen (Text)
+<gold>/<pack>/berufe/    Prüfset Berufe (seit 2.5)
+<gold>/<pack>/familie/   Prüfset Familienrollen (seit 2.5)
+<gold>/<pack>/protokoll/ Prüfset Protokollköpfe (seit 2.5, synthetisch)
 ```
+
+Die Arten stehen in `core/pfade.ARTEN`. `eval_documents.py --art ART` misst eine davon,
+`--ohne TAG` lässt Tags im Klartext (für «Namen bei ORG offen» im Prüfset `protokoll`:
+`--art protokoll --ohne ORG`), `--lecks-ohne-wert` zeigt jedes Leck mit Ort, offenen
+Zeichen und den Vorhersagen dort, ohne den Wert.
 
 `<gold>` ist:
 
@@ -143,7 +151,7 @@ python3 tools/hole_musterbriefe.py --holen
 
 # Vormarkieren — die Kette schlägt vor
 python3 tools/gold_from_markup.py --vormarkieren <datei> \
-    --model runs/ch-v63b --out <datei>.markiert.txt
+    --model runs/ch-v71f --out <datei>.markiert.txt
 
 # Im Editor, in EINEM Durchgang:
 #    Tags korrigieren UND die Werte durch erfundene ersetzen
@@ -153,7 +161,7 @@ python3 tools/gold_from_markup.py --anlegen <datei>.markiert.txt \
     --id de-brief-001 --lang de --doctype mailverlauf
 
 # Messen
-python3 tools/eval_documents.py --model runs/ch-v63b
+python3 tools/eval_documents.py --model runs/ch-v71f
 ```
 
 Vor dem Anlegen läuft `restverdacht()` über den unmarkierten Text. Findet es

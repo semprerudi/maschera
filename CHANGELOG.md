@@ -1,5 +1,80 @@
 # Änderungen
 
+## 2.5.0 (2026-11-27)
+
+MASCHERA erkennt Berufs- und Funktionsbezeichnungen und Familienbeziehungen als eigene Tags.
+
+### Neu
+- Tag `JOBTITLE` (Berufsbezeichnung): «Projektleiterin», «Amtschef», «cheffe de projet»,
+  «Head of Legal». Bisher erkannte das Modell solche Bezeichnungen teils als Organisation,
+  teils als Namen und meist gar nicht. In «Projektleiterin, Bundesamt für Justiz» sind es
+  jetzt zwei Stellen: die Funktion und die Organisation. Maskiert wie alle anderen Tags,
+  in den Einstellungen unter «Person» auf Klartext umschaltbar.
+- Wörter, die Beruf und Nachname zugleich sind (Schreiner, Maler, Berger, Tanner), lernt
+  das Modell in beiden Rollen und entscheidet am Zusammenhang.
+- Quellen der Berufsbezeichnungen: CH-ISCO-19 mit Berufsverzeichnis des Bundesamts für
+  Statistik (v1.2.4), für Englisch zusätzlich ESCO. This service uses the ESCO
+  classification of the European Commission. Beide Listen sind für MASCHERA angepasst
+  (gefiltert und ergänzt).
+- Tag `FAMILYROLE` (Familienbeziehung): Vater, Mutter, Grossmutter, Kindsvater, Ehefrau,
+  Götti, auch Beistand und Vormund. In Akten der Justiz, der KESB oder der Psychiatrie
+  führt die Beziehung zusammen mit dem Umfeld auf die Person. Maskiert, unter «Person»
+  auf Klartext umschaltbar.
+- Die neuen Tags maskieren nur zusätzlich: Das Modell entscheidet sie getrennt von den
+  bisherigen, und bei einer Überschneidung hat das bisherige Tag Vorrang. Die bisherigen
+  Tags erkennen weitgehend wie in 2.4; das alte Modell hielt sie beim Lernen fest, nur
+  Namen in Protokollköpfen durften sich ändern.
+- Rechtsklick auf ID oder Typ im Vokabular öffnet dasselbe Menü wie im maskierten
+  Text: Typ ändern oder Maske entfernen. Im Menü steht ein Hinweis, dass ein anderes
+  Tag den Typ ändert.
+- Im Rechtsklickmenü stehen die zuletzt verwendeten Tags ganz oben.
+- Neuer Dialog «Bedienung» mit kleinen Szenen: Maske setzen, Typ ändern, Maske
+  entfernen, im Text und im Vokabular. Die Szenen zeigen das echte Menü und das echte
+  Vokabular, der Zeiger trifft das Wort, das Wort bleibt bis zur Wahl sichtbar, und das
+  Kreuz wird rot wie in der App. Der Dialog erscheint eine Sekunde nach dem
+  ersten Maskieren, bis «Nicht mehr anzeigen» gesetzt ist, und steht im Burgermenü.
+  Auf dem Handy ist die Szene hoch genug für das ganze Menü, und der Text läuft nicht
+  mehr rechts aus dem Dialog.
+- Neuer Menüpunkt «Versionshinweise»: je Fassung die Neuerungen, derselbe Text wie bei
+  den Releases auf GitHub, in allen vier Sprachen. Er reist mit dem Paket; die App holt
+  dafür nichts aus dem Netz.
+
+### Geändert
+- Das vergrösserte Vokabular nimmt die volle Höhe statt der vollen Breite und gleitet
+  ohne Versatz in die Mitte.
+- Das Vokabular sortiert die Platzhalter natürlich: `DATE_2` vor `DATE_10`.
+- «Neu» steht oben vor den Schritten statt unten in 01. Im schmalen Design steht er nur
+  ganz unten, grün wie die anderen Hauptknöpfe.
+- Im schmalen Design steht «Leeren» in 04 links; die Hauptaktion steht rechts.
+- Im schmalen Design steht «Übernahme in Prompt» auch unter dem Vokabular: wer dort
+  korrigiert, geht von dort weiter, ohne zurück nach oben zu rollen. Der Fuss des
+  Vokabulars bleibt eine Zeile; wird es eng, zeigen Herunter- und Hochladen nur ihr
+  Zeichen.
+- Im schmalen Design richtet sich die Höhe der Kacheln nach dem Fenster: in einem hohen
+  Fenster stehen die aktuelle und die nächste Kachel gleich hoch ganz im Bild, in einem
+  niedrigeren füllt die aktuelle den Bildschirm allein.
+- Tooltips an Knöpfen erscheinen über dem Knopf statt unter dem Mauszeiger, wo der
+  Zeiger sie verdeckte (etwa «Dienst wählen» in 03).
+- Im schmalen Design fehlt im Vokabular die Spalte «Typ»: der Typ steht schon in der
+  ID, und der Originalwert bekommt die Breite, damit man ihn lesen kann.
+- Die Leeren-Knöpfe in 03 und 04 sehen aus wie in 01: dieselben Farben, beim Überfahren
+  rot mit weissem Wort.
+- Klammern und Satzzeichen am Rand einer Berufs- oder Familienbezeichnung gehören
+  nicht mehr zur Maske («(EGBA)» wird zu «EGBA»).
+- Namen in Köpfen von Sitzungsprotokollen («Vorname Nachname, PL; …») erkennt das
+  Modell als Personen statt als Organisation. In einem Prüfset aus acht Protokollen
+  blieben mit ORG im Klartext beim Testmodell davor 28 Namen offen, jetzt 6. Rollenkürzel (PL, PO,
+  Stv. BL) gelten als Berufsbezeichnung, Fachwörter und Systemkürzel nicht.
+- Nach «Übernahme in Prompt» leuchtet der Balken in 03 auf, und dort steht, dass der
+  Text den Änderungen in 02 folgt; im schmalen Balken kürzer, ohne Umbruch.
+- Labelvertrag: 47 Tags und 95 Labels statt 45 und 91, Hash `6abcddcc`. JOBTITLE und
+  FAMILYROLE sind angehängt, die ersten 91 Labels sind unverändert. Ein Modell mit dem alten Vertrag
+  lädt diese Fassung nicht.
+- Neues Modell `ch-v71f` (Hugging Face `semprerudi/maschera-ch-v71f`, MIT). Es setzt
+  `ch-v63b` fort, statt von vorn zu lernen. An den neun Golddokumenten: 6 Lecks wie
+  bisher, Micro-F1 0.757 statt 0.736, 119 statt 95 Stellen zu viel verdeckt. Die
+  Flatpak-Fassung lädt das neue Modell beim ersten Start nach Rückfrage, 1.2 GB.
+
 ## 2.4.0 (2026-11-23)
 
 MASCHERA läuft jetzt auch auf Intel-Macs. Wie MASCHERA maskiert, bleibt gleich.

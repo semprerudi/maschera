@@ -10,7 +10,7 @@
 [English](README.md) · **Deutsch**
 
 <p>
-<img src="https://img.shields.io/badge/Tags-45-1f5f3d" alt="45 Tags">
+<img src="https://img.shields.io/badge/Tags-47-1f5f3d" alt="47 Tags">
 <img src="https://img.shields.io/badge/Sprachen-DE%20FR%20IT%20EN-1f5f3d" alt="Deutsch, Französisch, Italienisch, Englisch">
 <img src="https://img.shields.io/badge/l%C3%A4uft%20auf-CPU-1f5f3d" alt="Läuft auf der CPU">
 <img src="https://img.shields.io/badge/offline-ohne%20Konto-1f5f3d" alt="Offline, ohne Konto">
@@ -72,7 +72,7 @@ andermal. **Danach ist beides gleich offline.**
 *maschera* ist italienisch für **Maske** und trägt die Landeskennung
 **CH** in der Mitte.
 
-- Modell: [semprerudi/maschera-ch-v63b](https://huggingface.co/semprerudi/maschera-ch-v63b)
+- Modell: [semprerudi/maschera-ch-v71f](https://huggingface.co/semprerudi/maschera-ch-v71f)
 - Fehler melden: [Issues](https://github.com/semprerudi/maschera/issues)
 
 > ⚠️ **Pseudonymisierung, nicht Anonymisierung.** Solange das Wörterbuch
@@ -85,15 +85,15 @@ Markenrechte an "Rizzo AI Academy" beansprucht.
 
 ## Wie gut ist es?
 
-Das mitgelieferte Modell (`runs/ch-v63b`) wurde auf zwei Arten geprüft.
+Das mitgelieferte Modell (`runs/ch-v71f`) wurde auf zwei Arten geprüft.
 **Beide Ergebnisse stehen hier, auch das weniger schöne.**
 
 | | Übungstexte (synthetisch) | echte Dokumente (Golddokumente) |
 |---|---|---|
-| Umfang | 2000 erzeugte Texte, 29 210 Personenangaben (Goldspannen) | 9 echte Dokumente, 280 Personenangaben (Goldspannen) |
-| **Sichtbar geblieben** (Leckrate) | **0,02 %**: 13 Angaben ganz oder teilweise übersehen | **1,27 %**: 6 Angaben ganz oder teilweise übersehen |
-| Gesamtnote (Micro-F1, 1 = perfekt) | 0,997 | 0,736 |
-| Zu viel verdeckt | 84 Stellen | 95 Stellen |
+| Umfang | 2000 erzeugte Texte, 31 168 Personenangaben (Goldspannen) | 9 echte Dokumente, 280 Personenangaben (Goldspannen) |
+| **Sichtbar geblieben** (Leckrate) | **0,16 %**: 426 Angaben ganz oder teilweise übersehen | **1,27 %**: 6 Angaben ganz oder teilweise übersehen |
+| Gesamtnote (Micro-F1, 1 = perfekt) | 0,900 | 0,757 |
+| Zu viel verdeckt | 2757 Stellen | 119 Stellen |
 | Kann jeder nachprüfen | **ja** | **nein** |
 
 Die **Leckrate** ist der Anteil der Buchstaben und Ziffern aus
@@ -106,12 +106,21 @@ Namenslisten. Wer den Quellcode hat, bekommt mit diesem Befehl genau
 dieselben Zahlen:
 
 ```fish
-python3 tools/mess_synthetisch.py --model runs/ch-v63b --n 2000
+python3 tools/mess_synthetisch.py --model runs/ch-v71f --n 2000
 ```
 
-Die Zahlen in der Tabelle sind so mit MASCHERA 1.0.1 gemessen. Die Texte
+Die Zahlen in der Tabelle sind so mit MASCHERA 2.5.0 gemessen. Die Texte
 hängen von den Vorlagen und vom Erzeuger ab: ändern sich diese, ändern sich
 die Zahlen mit, und die Tabelle muss neu gemessen werden.
+
+⚠️ **Die meisten Lecks in den Übungstexten sind Berufe und
+Familienrollen.** Diese zwei Arten sind neu in 2.5.0, und sie sind mit
+Absicht schwer: «Lehrer» oder «Mutter» ist oft ein gewöhnliches Wort, und
+die Übungstexte enthalten viele solche Wörter, die sichtbar bleiben
+sollen. 379 der 426 Lecks sind Berufe (325) und Familienrollen (54). Alle
+übrigen Personenangaben zusammen lecken 47-mal bei 27 322. Mit dem
+vorherigen Modell (0,02 %), das beide Arten nicht kannte, lassen sich die
+Zahlen deshalb nicht vergleichen.
 
 ⚠️ **Die Übungstexte sind dem Modell vertraut.** Sie sind nach denselben
 Vorlagen gebaut wie die Texte, mit denen es gelernt hat. Die Namen und
@@ -141,13 +150,13 @@ preis. Im Zweifel verdeckt MASCHERA deshalb lieber zu viel.
 
 ## Das Modell
 
-`ch-v63b`, ein feinjustiertes **ModernBERT** (`jhu-clsp/mmBERT-base`),
+`ch-v71f`, ein feinjustiertes **ModernBERT** (`jhu-clsp/mmBERT-base`),
 22 Schichten, 308 Mio Parameter. Trainiert auf **synthetischen** Daten,
 die aus den Vorlagen und Nomenklaturen dieses Repositoriums erzeugt
 werden. Es hat nie ein echtes Dokument gesehen.
 
 Die Gewichte liegen auf Hugging Face unter **MIT**:
-[semprerudi/maschera-ch-v63b](https://huggingface.co/semprerudi/maschera-ch-v63b).
+[semprerudi/maschera-ch-v71f](https://huggingface.co/semprerudi/maschera-ch-v71f).
 Sie sind nicht Teil dieses Repositoriums, denn 1,2 GB gehören nicht in Git.
 
 **Der Trainingsweg ist offen.** Die Trainingsdaten liegen nicht als
@@ -163,31 +172,49 @@ python3 train.py --data dataset.jsonl --eval-data eval.jsonl \
         --out runs/eigenes --max-length 512 --seed 4711
 ```
 
-### Womit `ch-v63b` trainiert wurde
+### Womit `ch-v71f` trainiert wurde
 
-Gelesen aus `training_args.bin` des ausgelieferten Laufs, nicht aus den
-Vorgaben abgeschrieben:
+`ch-v71f` wurde nicht von vorn trainiert. Es setzt seinen Vorgänger
+`ch-v63b` fort (Gewichte ebenfalls auf Hugging Face), der mit den Befehlen
+oben und dem Keim 4711 trainiert wurde. Seine Ausgabeschicht bekam die
+zwei neuen Arten Beruf und Familienrolle dazu; was `ch-v63b` schon
+konnte, wurde genau übernommen. Während es die neuen Arten lernte, wachte
+`ch-v63b` als Lehrer über die alten (Distillation). Nur bei Namen im Kopf
+von Protokollen schwieg der Lehrer, denn `ch-v63b` las sie als
+Organisationen:
+
+```fish
+python3 train.py --data dataset.jsonl --eval-data eval.jsonl \
+        --out runs/eigenes --start-von runs/ch-v63b \
+        --lehrer runs/ch-v63b --lehrer-gewicht 4 \
+        --lehrer-frei protokoll_kopf --lehrer-frei-tags GIVENNAME,FULLNAME \
+        --epochs 2 --lr 2e-5 --seed 1291
+```
+
+Gelesen aus `training_args.bin` und dem Protokoll des ausgelieferten
+Laufs, nicht aus den Vorgaben abgeschrieben:
 
 | | |
 |---|---|
-| Epochen | 3 |
-| Lernrate | 3e-5, linear, warmup 0.1 |
+| Start | `ch-v63b`, Ausgabeschicht von 91 auf 95 Labels |
+| Lehrer | `ch-v63b` auf den alten Labels, Gewicht 4 |
+| Daten | 40 000 Beispiele Training, 4000 Auswertung (nicht 2000 wie im Befehl oben) |
+| Epochen | 2 |
+| Lernrate | 2e-5, linear, warmup 0.1 |
 | Stapel | 8 × 2 (Gradientensammlung) |
 | Gewichtszerfall | 0.01 |
 | Rechengenauigkeit | bf16 |
 | max_length | 512 |
-| **Keim des Trainings** | **4711** |
+| **Keim des Trainings** | **1291** |
 
 ⚠️ **`train.py` hat als Vorgabe den Keim 2026**, der ausgelieferte Lauf
-benutzte **4711**. Ohne `--seed` entsteht ein anderes Modell.
+benutzte **1291**. Ohne `--seed` entsteht ein anderes Modell.
 
-⚠️ **Der Keim des TRAININGSSATZES ist nicht überliefert.**
-`training_args.bin` hält nur fest, wie trainiert wurde, nicht, woraus.
-Der Befehl oben nennt darum 2026; das ist eine Empfehlung für den
-Nachbau, **keine Angabe über den ausgelieferten Lauf**. Der Weg ist
-begehbar, die Spur des einen Laufs ist es nicht ganz. Künftige Läufe
-schreiben beides mit: `generate_dataset.py` legt seinen Keim in den Kopf
-der `.jsonl`.
+⚠️ **Der Keim des TRAININGSSATZES ist nicht veröffentlicht.**
+`generate_dataset.py` legt ihn in den Kopf der `.jsonl`, aber diese Datei
+gehört nicht zum Repositorium. Der Befehl oben nennt darum 2026; das ist
+eine Empfehlung für den Nachbau, **keine Angabe über den ausgelieferten
+Lauf**. Der Weg ist begehbar, die Spur des einen Laufs ist es nicht ganz.
 
 ⚠️ **`--zone` ist nicht optional.** Ohne sie ziehen Trainings- und
 Auswertungssatz aus derselben Nomenklatur, und die Zahlen liessen sich
@@ -275,7 +302,7 @@ Ein fertiges Abbild, rund 4,2 GB, das Modell fährt mit:
 
 ```fish
 docker run -d --name maschera -p 127.0.0.1:4141:4141 \
-    ghcr.io/semprerudi/maschera:2.4.0
+    ghcr.io/semprerudi/maschera:2.5.0
 ```
 
 Danach im Browser `http://127.0.0.1:4141` öffnen. Der Server speichert
@@ -322,8 +349,8 @@ das Abbild, sobald eine Fassung getaggt wird. Diese prüfst du mit dem Tag in de
 Identität:
 
 ```fish
-cosign verify ghcr.io/semprerudi/maschera:2.4.0 \
-    --certificate-identity https://github.com/semprerudi/maschera/.github/workflows/release.yml@refs/tags/v2.4.0 \
+cosign verify ghcr.io/semprerudi/maschera:2.5.0 \
+    --certificate-identity https://github.com/semprerudi/maschera/.github/workflows/release.yml@refs/tags/v2.5.0 \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```
 
@@ -355,11 +382,11 @@ beschreibt den macOS-Bau, der auf GitHub läuft (Workflow `Pakete bauen`, von Ha
 python3 tools/run_tests.py
 ```
 
-Einunddreissig Prüfungen, keine Abhängigkeiten ausser PyYAML und Flask.
-Kein Modell, keine GPU, keine Downloads nötig: **dreissig laufen in einem
+Zweiunddreissig Prüfungen, keine Abhängigkeiten ausser PyYAML und Flask.
+Kein Modell, keine GPU, keine Downloads nötig: **einunddreissig laufen in einem
 frischen Klon sofort durch.**
 
-Die einunddreissigste braucht das Modell und sagt es; zwei weitere lassen je
+Die zweiunddreissigste braucht das Modell und sagt es; zwei weitere lassen je
 einen Punkt aus, solange die Nomenklatur nicht gebaut ist
 (`python3 packs/ch/nomenclatures/build.py`). Beides steht in der Ausgabe:
 **eine übersprungene Prüfung hat nichts geprüft**, und der Läufer
@@ -382,7 +409,7 @@ erzeugter Testkatalog.
 
 ```
 packs/ch/          Alles Schweizspezifische
-  taxonomy.yaml      45 Tags, eingefrorene BIO-Reihenfolge  <- Quelle der Wahrheit
+  taxonomy.yaml      47 Tags, eingefrorene BIO-Reihenfolge  <- Quelle der Wahrheit
   patterns.yaml      Regexe mit viersprachigen Kontextankern
   macros.yaml        gekoppelte Slotgruppen (@address, @person)
   pack.yaml          Manifest, Labelvertrag-Hash, Backbone
@@ -412,7 +439,7 @@ tools/             Werkzeuge
 
 
 train.py           Training (braucht torch + GPU)
-tests/             dreissig Prüfdateien
+tests/             einunddreissig Prüfdateien
 specs/             vollständiger Anforderungskatalog
 ```
 
@@ -434,6 +461,11 @@ hierhin.
 - Firmennamen: Zefix, Eidgenössisches Amt für das Handelsregister (EHRA),
   über LINDAS. Nutzungsbedingungen: Provide-the-Source (freie Nutzung,
   Quellenangabe Pflicht)
+- Berufsbezeichnungen: Bundesamt für Statistik (BFS), CH-ISCO-19 mit
+  Berufsverzeichnis v1.2.4; für Englisch zusätzlich ESCO. This service uses
+  the ESCO classification of the European Commission. Beide angepasst
+  (gefiltert und ergänzt).
+- Familienrollen: im Repositorium aus Wortteilen gebaut, ohne fremde Quelle
 
 ## Lizenz
 

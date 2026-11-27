@@ -20,6 +20,7 @@ SUITE = [
     ("Modell holen",  "tests/test_modell.py"),
     ("Goldpfad",      "tests/test_goldpfad.py"),
     ("Gold-Markierung", "tests/test_gold_markup.py"),
+    ("Gold-Berufe",     "tests/test_gold_berufe.py"),
     ("Klartext-Vorlieben", "tests/test_vorlieben.py"),
     ("dist frisch",     "tests/test_dist_frisch.py"),
     ("Rauschen+Zone",   "tests/test_rauschen.py"),

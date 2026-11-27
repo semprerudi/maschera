@@ -1,0 +1,109 @@
+# Vorlagen FR — Familienbeziehungen (FAMILYROLE) und Berufe im Fliesstext,
+# seit 25.11.2026. {~verwandt} enthaelt eine Beziehung, ist aber keine
+# («la société mère») und bleibt O.
+
+templates:
+  - id: fr_familie_psychiatrie
+    doc_type: Psychiatrischer Bericht
+    text: |
+      {ORG}
+      Rapport psychiatrique du {DATE}
+
+      Patiente : {GIVENNAME} {FULLNAME}, née le {DATE}, domiciliée à {CITY}
+
+      Anamnèse
+      La patiente ({AGE}) était accompagnée de sa {FAMILYROLE}. Selon le
+      {FAMILYROLE}, son état s'est nettement dégradé après la séparation
+      d'avec son {FAMILYROLE}. La {FAMILYROLE} vit dans le même ménage
+      depuis le {DATE}. Un {FAMILYROLE} travaille pour {~verwandt} et est
+      rarement joignable.
+
+      Le traitement est assuré par {GIVENNAME} {FULLNAME}, {JOBTITLE}, en
+      accord avec la {JOBTITLE} responsable.
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}
+
+  - id: fr_familie_rapport_sortie
+    doc_type: Arztbericht
+    text: |
+      Rapport de sortie {CASE_ID}
+
+      Chère Consœur,
+
+      Nous vous informons au sujet de {GIVENNAME} {FULLNAME}, hospitalisée
+      du {DATE} au {DATE}. La {FAMILYROLE} de la patiente s'est engagée à
+      assurer les soins à domicile ; le {FAMILYROLE} s'occupe des
+      transports. La physiothérapie sera assurée par une {JOBTITLE} à
+      {CITY}. Un contrôle est prévu {~deadline}.
+
+      Meilleures salutations
+
+      {GIVENNAME} {FULLNAME}, {JOBTITLE}
+      {ORG}
+
+  - id: fr_familie_apea
+    doc_type: Behördenbrief mit Verfügung
+    text: |
+      {ORG}
+      Décision du {DATE}, procédure {CASE_ID}
+
+      Concernant {GIVENNAME} {FULLNAME}, né le {DATE}
+
+      Le {FAMILYROLE}, {GIVENNAME} {FULLNAME}, et la {FAMILYROLE},
+      {GIVENNAME} {FULLNAME}, vivent séparés. L'enfant vit chez la
+      {FAMILYROLE} à {CITY}. Une {FAMILYROLE} est désignée pour l'enfant :
+      {GIVENNAME} {FULLNAME}, {JOBTITLE} auprès de {ORG}. Les {FAMILYROLE}
+      restent informés en vertu de {~legal}. Le délai court {~deadline}.
+
+      Pour l'autorité
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}
+
+  - id: fr_familie_rapport_police
+    doc_type: Polizeirapport
+    text: |
+      Rapport {CASE_ID}, {DATE}, {TIME}
+
+      Sur place à {CITY}, nous avons rencontré la personne prévenue
+      {GIVENNAME} {FULLNAME} ({AGE}) ainsi que son {FAMILYROLE}. Le
+      {FAMILYROLE} de la personne prévenue a déclaré que la {FAMILYROLE}
+      avait appelé à l'aide. Une {FAMILYROLE} de l'immeuble voisin l'a
+      confirmé. Les faits ont été consignés en vertu de {~legal}.
+
+      Rapporteur : {JOBTITLE} {GIVENNAME} {FULLNAME}, {ORG}
+
+  - id: fr_familie_entretien
+    doc_type: Vereinbarung
+    text: |
+      Convention d'entretien du {DATE}
+
+      entre {GIVENNAME} {FULLNAME} ({FAMILYROLE}) et {GIVENNAME} {FULLNAME}
+      ({FAMILYROLE}), concernant leurs {FAMILYROLE} communs.
+
+      Le {FAMILYROLE} verse chaque mois {AMOUNT}. Les {FAMILYROLE} de
+      l'enfant assurent la garde deux jours par semaine. L'entreprise du
+      {FAMILYROLE} est une filiale d'un groupe ; {~verwandt} n'est pas
+      partie à la convention.
+
+      Approuvé par {GIVENNAME} {FULLNAME}, {JOBTITLE}, {ORG}
+
+  - id: fr_familie_arret
+    doc_type: Gerichtsentscheid
+    text: |
+      Arrêt du {DATE}, procédure {CASE_ID}
+
+      Participants à la procédure
+      {GIVENNAME} {FULLNAME}, représenté par {JOBTITLE} {GIVENNAME} {FULLNAME},
+      recourant,
+      contre
+      {GIVENNAME} {FULLNAME}, intimée.
+
+      Faits
+      Le {FAMILYROLE} et la {FAMILYROLE} sont les {FAMILYROLE=parents} de {GIVENNAME}
+      (né le {DATE}). L'enfant est scolarisé.
+      Le {DATE}, la {FAMILYROLE} a requis une modification
+      concernant {~verwandt}. Le tribunal a entendu le {FAMILYROLE} ainsi
+      que la {FAMILYROLE} de l'enfant ; {~verwandt} reste inchangé. La
+      {FAMILYROLE} a été informée par le {JOBTITLE}.

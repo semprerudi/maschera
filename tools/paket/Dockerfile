@@ -86,7 +86,7 @@ WORKDIR /maschera
 
 # Reihenfolge nach Aenderungshaeufigkeit: das Modell zuerst, damit eine
 # Codeaenderung nicht 329 MB neu schichtet.
-COPY --chown=maschera:maschera runs/ch-v63b/ runs/ch-v63b/
+COPY --chown=maschera:maschera runs/ch-v71f/ runs/ch-v71f/
 COPY --chown=maschera:maschera packs/ packs/
 COPY --chown=maschera:maschera core/ core/
 # DREI Dateien aus `tools/`: `app/serve.py` legt `tools/` auf den
@@ -152,7 +152,7 @@ u.urlopen('http://127.0.0.1:4141/api/zustand', timeout=4)" || exit 1
 #
 # `--timeout 300`: ein grosses PDF braucht auf wenigen CPU-Kernen Minuten.
 # Die Vorgabe von 30 s wuerde den Arbeiter mitten im Dokument abschiessen.
-ENV MASCHERA_MODELL=runs/ch-v63b
+ENV MASCHERA_MODELL=runs/ch-v71f
 # Keine Telemetrie von onnxruntime (Befund 26.10.2026, siehe app/serve.py).
 ENV ORT_DISABLE_TELEMETRY=1
 ENTRYPOINT ["gunicorn"]

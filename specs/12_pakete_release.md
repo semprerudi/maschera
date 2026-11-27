@@ -106,7 +106,7 @@ kommt; die 2,86 GB sind die Summe der Dateien darin.
 
 | Posten | entpackt | Anteil | wofür |
 |---|---:|---:|---|
-| **Das Modell** `ch-v63b` | 1206 MB | 41 % | die Erkennung selbst |
+| **Das Modell** `ch-v71f` | 1206 MB | 41 % | die Erkennung selbst |
 | **PyTorch** (CPU) | 712 MB | 24 % | rechnet das Modell |
 | **PyQt6 / Qt 6** | 515 MB | 18 % | das Fenster |
 | **Python-Unterbau** | 104 MB | 4 % | eigener Python 3.13 |
@@ -132,7 +132,7 @@ verhindert werden soll.
 
 #### Das Modell: 1206 MB
 
-`runs/ch-v63b`, ein **ModernBERT** zur Token-Klassifikation. Es liest den
+`runs/ch-v71f`, ein **ModernBERT** zur Token-Klassifikation. Es liest den
 Text und sagt für jedes Token, ob es Teil eines Personendatums ist und
 welcher Art.
 
@@ -140,7 +140,7 @@ welcher Art.
 |---|---:|---|
 | `model.safetensors` | 1173 MB | die Gewichte: 308 Mio Parameter als `float32` |
 | `tokenizer.json` | 33 MB | der Wortschatz, 256 000 Einträge |
-| `config.json`, `pack.json` | < 1 MB | Bauart und der Labelvertrag, 45 Tags |
+| `config.json`, `pack.json` | < 1 MB | Bauart und der Labelvertrag, 47 Tags |
 
 ⚠️ **Zwei Drittel der Gewichte sind der Wortschatz.** 256 000 Token mal 768
 Dimensionen sind allein 197 Mio Parameter; der eigentliche Rechenteil ist

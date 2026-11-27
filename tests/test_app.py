@@ -649,6 +649,8 @@ check(html.index("maske.svg") < html.index("favicon.ico"),
 # Und es wird wirklich ausgeliefert.
 check(c.get("/favicon.ico").status_code == 200, "/favicon.ico kommt nicht")
 check(c.get("/adressen.json").status_code == 200, "/adressen.json kommt nicht")
+check(c.get("/versionshinweise.json").status_code == 200,
+      "/versionshinweise.json kommt nicht (Burgermenue, seit 2.5)")
 print("   OK   ICO aus der Maske, beide Verweise, beide ausgeliefert")
 
 print("\n21. Jede Antwort traegt die Sicherheitskopfzeilen")

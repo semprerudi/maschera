@@ -91,7 +91,7 @@ jobs:
           python -c "
           from pathlib import Path
           from core import modell
-          modell.hole(modell.manifest('ch'), Path('runs/ch-v63b'))
+          modell.hole(modell.manifest('ch'), Path('runs/ch-v71f'))
           print('Modell geholt')
           "
 
@@ -167,12 +167,12 @@ jobs:
           python -c "
           from pathlib import Path
           from core import modell
-          modell.hole(modell.manifest('ch'), Path('runs/ch-v63b'))
+          modell.hole(modell.manifest('ch'), Path('runs/ch-v71f'))
           "
       - name: Export ONNX FP32
-        run: python tools/build_release.py --checkpoint runs/ch-v63b --out onnx-fp32 --no-trim --no-quantize
+        run: python tools/build_release.py --checkpoint runs/ch-v71f --out onnx-fp32 --no-trim --no-quantize
       - name: Vergleich mit torch (bricht ab, wenn etwas kippt)
-        run: python tools/onnx_vergleich.py --torch runs/ch-v63b --onnx onnx-fp32 --streng
+        run: python tools/onnx_vergleich.py --torch runs/ch-v71f --onnx onnx-fp32 --streng
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
         with:
           name: onnx-fp32
@@ -319,7 +319,7 @@ jobs:
           python -c "
           from pathlib import Path
           from core import modell
-          modell.hole(modell.manifest('ch'), Path('runs/ch-v63b'))
+          modell.hole(modell.manifest('ch'), Path('runs/ch-v71f'))
           print('Modell geholt')
           "
 

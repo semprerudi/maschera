@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """MASCHERA als eigenes Fenster — nicht als Webseite im Browser.
 
-    python3 app/fenster.py --model runs/ch-v63b
+    python3 app/fenster.py --model runs/ch-v71f
 
 Das ist keine Geschmacksfrage. MASCHERA verspricht, dass nichts das
 Geraet verlaesst — und ein Fenster mit Adresszeile, Lesezeichen und

@@ -44,7 +44,7 @@ templates:
       Staatsangehoerigkeit: {NATIONALITY}
       Geburtsland: {COUNTRY}
 
-      Eltern: {@person} und {@person}
+      {FAMILYROLE=Eltern}: {@person} und {@person}
       Eintrag im Register {CASE_ID}
 
       Ausgestellt am {DATE} in {CITY}. Verrechnet wird {~amount}.

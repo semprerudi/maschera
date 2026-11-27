@@ -22,7 +22,7 @@ Workflow tut. Die Sichtprüfung aus Abschnitt 5 kann GitHub nicht.
 |---|---|
 | `dist\MASCHERA-<fassung>-x64-setup.exe` | ein Installer, rund 1,4 GB |
 | installiert | ohne Administratorrechte in den Benutzerordner, rund 1,7 GB in gut 5000 Dateien |
-| enthält | Python, das Modell `ch-v63b`, PyTorch (CPU), die Anzeigeschicht Edge (WebView2) |
+| enthält | Python, das Modell `ch-v71f`, PyTorch (CPU), die Anzeigeschicht Edge (WebView2) |
 | lädt im Betrieb | **nichts** — dieselbe Zusage wie bei der AppImage |
 
 ⚠️ **Die Gewichte fahren mit**, wie bei der AppImage: das Werkzeug ist nach
@@ -104,13 +104,13 @@ Set-NetConnectionProfile -InterfaceAlias Ethernet -NetworkCategory Private
 
 ## 2. Der Baum
 
-Der Quellcode aus diesem Repository, dazu das Modell unter `runs\ch-v63b\`
+Der Quellcode aus diesem Repository, dazu das Modell unter `runs\ch-v71f\`
 (nicht im Repository — 1,2 GB gehören nicht in Git):
 
 ```powershell
 py -3.13 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install huggingface_hub
-.\.venv\Scripts\hf.exe download semprerudi/maschera-ch-v63b --local-dir runs\ch-v63b
+.\.venv\Scripts\hf.exe download semprerudi/maschera-ch-v71f --local-dir runs\ch-v71f
 ```
 
 ---

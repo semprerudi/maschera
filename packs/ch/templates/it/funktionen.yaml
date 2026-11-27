@@ -1,0 +1,124 @@
+# Vorlagen IT — Berufs- und Funktionsbezeichnungen (JOBTITLE), seit 24.11.2026
+#
+# JOBTITLE und ORG stehen nebeneinander, damit das Modell die Grenze lernt.
+# {KOEDER} ist ein Nachname, der zugleich ein Beruf ist (Pastore, Sarto),
+# und bleibt FULLNAME. Im Fliesstext steht die Funktion klein; die Liste
+# liefert beide Schreibweisen.
+
+templates:
+  - id: it_funzione_firma
+    doc_type: signaturblock
+    text: |
+      Oggetto: la sua richiesta del {DATE}
+
+      Gentili signore e signori,
+
+      abbiamo ricevuto i documenti e vi ricontatteremo {~deadline}.
+
+      Cordiali saluti
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}
+      {ORG}
+      {@address}
+      Tel. {PHONE}
+      {EMAIL}
+
+  - id: it_funzione_firma_koeder
+    doc_type: signaturblock
+    text: |
+      Gentili signore e signori,
+
+      in virtù di {~legal} vi trasmettiamo i documenti richiesti.
+
+      Distinti saluti
+
+      {GIVENNAME} {KOEDER}
+      {JOBTITLE}, {ORG}
+
+      Copia: {GIVENNAME} {FULLNAME}, {JOBTITLE}
+
+  - id: it_funzione_destinatario
+    doc_type: lettera amministrativa
+    text: |
+      {ORG}
+      All'att. di {GIVENNAME} {FULLNAME}, {JOBTITLE}
+      {@address}
+
+      {CITY}, {DATE}
+
+      Gentile signora {FULLNAME},
+
+      in qualità di {JOBTITLE} ci ha chiesto il {DATE} una presa di
+      posizione. Il termine decorre {~deadline}.
+
+      Cordiali saluti
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}
+
+  - id: it_funzione_ticket
+    doc_type: Support-Ticket
+    text: |
+      Ticket {CASE_ID} – diritti d'accesso all'applicazione specialistica
+
+      Destinatari:
+      - {GIVENNAME} {FULLNAME} ({JOBTITLE}, {ORG})
+      - {GIVENNAME} {KOEDER} ({JOBTITLE})
+      - {GIVENNAME} {FULLNAME}, {JOBTITLE}
+
+      L'errore compare dalla {~number} ({~technical}). Vi preghiamo di
+      verificare entro il {DATE}.
+
+  - id: it_funzione_organigramma
+    doc_type: Firmendokument
+    text: |
+      Organigramma {ORG}, stato al {DATE}
+      Base: {~legal}
+
+      {JOBTITLE}: {GIVENNAME} {FULLNAME}
+      Supplenza: {GIVENNAME} {FULLNAME}, {JOBTITLE}
+      {JOBTITLE}: {GIVENNAME} {KOEDER}
+      {JOBTITLE}: {GIVENNAME} {FULLNAME}
+
+  - id: it_funzione_email
+    doc_type: mailverlauf
+    text: |
+      Da: {GIVENNAME} {FULLNAME} <{EMAIL}>
+      Inviato: {DATE} {TIME}
+      Oggetto: passaggio del dossier {CASE_ID}
+
+      Buongiorno a tutti,
+
+      dal {DATE} il signor {KOEDER} riprende il dossier come {JOBTITLE}
+      presso {ORG}. La signora {FULLNAME} resta {JOBTITLE} fino ad allora
+      ed è raggiungibile al {PHONE}. I documenti seguiranno {~deadline}.
+
+      Saluti
+      {GIVENNAME}
+
+  # Doppelwoerter: Name ({KOEDER}) und Beruf ({BERUF_KOEDER}).
+  - id: it_funzione_doppelwort_cantiere
+    doc_type: Firmendokument
+    text: |
+      Rapporto di cantiere {CASE_ID}, {DATE}
+
+      Presenti: {GIVENNAME} {KOEDER} ({JOBTITLE}), {GIVENNAME} {FULLNAME}
+      ({BERUF_KOEDER}) e due colleghi di {ORG}.
+
+      Il signor {KOEDER} segnala che il {BERUF_KOEDER} deve finire
+      {~deadline}. Il {JOBTITLE} coordina i lavori.
+
+  - id: it_funzione_doppelwort_lettera
+    doc_type: lettera amministrativa
+    text: |
+      Gentile signora {KOEDER},
+
+      si è candidata come {BERUF_KOEDER} presso {ORG}. Il suo attestato di
+      {BERUF_KOEDER} del {DATE} ci è pervenuto. Le risponderemo
+      {~deadline}.
+
+      Cordiali saluti
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}

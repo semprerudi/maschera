@@ -52,9 +52,21 @@ from packs import load_pack  # noqa: E402
 
 # Aendern NUR zusammen mit einer Begruendung, die die Luecke nennt, und
 # einem neu trainierten Modell.
-HASH = "b7a96dc99b05c6150302fc11943e0a357c7078b593e7382b4b06390245cceeee"
-TAGS = 45
-LABELS = 91
+#
+# Aufgetaut am 24.11.2026 fuer JOBTITLE (Tag 46). Die Luecke: Berufs- und
+# Funktionsbezeichnungen hatten kein Tag und wurden teils als ORG erkannt,
+# obwohl eine Funktion keine Stelle ist (ORG-Entscheid vom 7.8.2026).
+# Am 25.11.2026 zusaetzlich FAMILYROLE (Tag 47): Verwandtschaft, Partnerschaft,
+# Beistand und Vormund hatten kein Tag. Beide im selben Vertrag, damit es
+# nur einen Wechsel und ein Neutraining gibt.
+# Angehaengt, nicht eingefuegt: Punkt 5 haelt fest, dass jeder fruehere
+# Vertrag ein Praefix des heutigen ist.
+HASH = "6abcddcc90e672691e0a53c0acc6138c9fb3df5b40daf54aeff19ddb06a463c4"
+TAGS = 47
+LABELS = 95
+# Jeder fruehere Vertrag muss ein PRAEFIX des heutigen sein (Laenge, Hash).
+VORGAENGER = [(91, "b7a96dc99b05c6150302fc11943e0a357c7078b593e7382b4b06390245cceeee"),
+              (93, "047939a48135b0a826d00d0bf92ee3f7feb282854784e3a959c6226043351442")]
 
 PACK = load_pack("ch")
 failures: list[str] = []
@@ -122,6 +134,21 @@ namen = {t.tag for t in PACK.get_tags()}
 fremd = sorted(t for t in namen if t.startswith("X_"))
 check(not fremd, f"X_-Tags im Labelvertrag: {fremd}")
 print(f"   OK   kein X_-Tag unter den {len(namen)}")
+
+print("\n5. Neue Tags sind ANGEHAENGT, nicht eingefuegt")
+# Die Taxonomie verlangt es im Kopf; hier wird es geprueft. Waere ein Tag
+# eingefuegt worden, verschoeben sich die Indizes aller folgenden Labels, und
+# ein altes Modell laese still falsche Klassen. Der Hash der ersten n Labels
+# muss deshalb jeder frueheren Fassung gleichen.
+import hashlib  # noqa: E402
+labels = PACK.get_labels()
+for n, alt in VORGAENGER:
+    ist_praefix = hashlib.sha256("\n".join(labels[:n]).encode("utf-8")).hexdigest()
+    check(ist_praefix == alt,
+          f"die ersten {n} Labels sind nicht mehr der Vertrag {alt[:8]}: "
+          "ein Tag wurde eingefuegt, umsortiert oder umbenannt")
+    if ist_praefix == alt:
+        print(f"   OK   die ersten {n} Labels = Vertrag {alt[:8]}")
 
 print()
 if failures:

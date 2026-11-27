@@ -124,7 +124,7 @@ templates:
       Cordiali saluti
 
       {GIVENNAME} {FULLNAME}
-      Collaboratore scientifico
+      {JOBTITLE}
       {ORG}
       {ORG}
 

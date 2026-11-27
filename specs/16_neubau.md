@@ -43,7 +43,7 @@ flowchart TD
 
 - **Die Gewichte:** Ein neues Training liefert ein anderes Modell, siehe
   [Was ein Neulauf liefert](08_synthese_training.md). Für dasselbe Verhalten
-  übernimmt man `ch-v63b`.
+  übernimmt man `ch-v71f`.
 - **Die Golddaten:** Sie sind nicht öffentlich, eigene Messwerte weichen ab.
 - **Das Aussehen im Detail:** Die Werte stehen im Katalog. Wer gleich aussehen will,
   nimmt `app/static/` als Vorlage.

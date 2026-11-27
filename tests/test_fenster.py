@@ -1501,8 +1501,8 @@ if not failures:
     print("   OK   Symbol, zwei Eintraege, Beenden beendet, zweiter Start holt hervor")
 
 print("\n25. Kein Paket nimmt Pickle-Dateien aus dem Modellordner mit")
-# ⚠️ `runs/ch-v63b/training_args.bin` ist eine Pickle-Datei. Docker
-# (`COPY runs/ch-v63b/`), AppImage (`cp -a`) und Windows (`--add-data`)
+# ⚠️ `runs/ch-v71f/training_args.bin` ist eine Pickle-Datei. Docker
+# (`COPY runs/ch-v71f/`), AppImage (`cp -a`) und Windows (`--add-data`)
 # kopierten das ganze Verzeichnis; ausgeschlossen war nur `checkpoint-*`.
 # Die Datei wird zur Laufzeit nicht gelesen (`core/modell.py`, `PFLICHT`),
 # kann aber beim Oeffnen Code ausfuehren — im Paket hat sie nichts verloren.
@@ -1518,8 +1518,22 @@ check(all(_e in _wbm.MODELL_DRAUSSEN for _e in _endungen25)
 _docker25 = (WURZEL / ".dockerignore").read_text(encoding="utf-8")
 _appimage25 = ohne_kommentare((WURZEL / "tools/paket/appimage_bauen.fish")
                               .read_text(encoding="utf-8"))
+# Der Modellordner kommt aus dem Dockerfile, nicht aus dieser Datei: stuende
+# er hier fest, wuerde ein neues Modell (ch-v66, 25.11.2026) die Sperre in
+# `.dockerignore` am alten Namen pruefen und gruen bleiben, waehrend die
+# Pickle-Datei des neuen ins Abbild reist.
+import re as _re25  # noqa: E402
+_mod25 = _re25.search(r"ENV MASCHERA_MODELL=runs/(\S+)",
+                      (WURZEL / "tools/paket/Dockerfile").read_text(encoding="utf-8"))
+check(_mod25 is not None, "Dockerfile setzt MASCHERA_MODELL nicht")
+_mod25 = _mod25.group(1) if _mod25 else "?"
+check(f"COPY --chown=maschera:maschera runs/{_mod25}/ runs/{_mod25}/"
+      in (WURZEL / "tools/paket/Dockerfile").read_text(encoding="utf-8"),
+      f"Dockerfile kopiert nicht runs/{_mod25}, setzt es aber als Modell")
+check(f"!runs/{_mod25}/" in _docker25,
+      f".dockerignore laesst runs/{_mod25}/ nicht in den Bau-Kontext")
 for _e in _endungen25:
-    check(f"runs/ch-v63b/{_e}" in _docker25,
+    check(f"runs/{_mod25}/{_e}" in _docker25,
           f".dockerignore laesst {_e} im Modellordner nicht weg")
     check(f"-name '{_e}'" in _appimage25,
           f"appimage_bauen.fish loescht {_e} im Modellordner nicht")
@@ -1885,7 +1899,7 @@ check(not ({"torch", "transformers"} & _pak33),
       f"requirements-macos-intel.txt traegt {sorted({'torch','transformers'} & _pak33)}")
 check(re.search(r"^onnxruntime==1\.23\.2\b", _intel33, re.M) is not None,
       "requirements-macos-intel.txt: onnxruntime nicht fest auf 1.23.2")
-check("onnx_vergleich.py --torch runs/ch-v63b --onnx onnx-fp32 --streng" in _wf33,
+check("onnx_vergleich.py --torch runs/ch-v71f --onnx onnx-fp32 --streng" in _wf33,
       "pakete.yml: ONNX-Export ohne strengen Vergleich mit torch")
 check('"onnxruntime==1.23.2"' in _wf33,
       "pakete.yml: Export prueft nicht mit derselben onnxruntime wie das Paket")

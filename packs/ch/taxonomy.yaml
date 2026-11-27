@@ -454,3 +454,36 @@ tags:
     budget: R
     bspd: false
     note: Kontoname, Pfadbestandteil, Anmeldename
+
+  # Berufs- und Funktionsbezeichnungen («Projektleiterin», «Amtschef»,
+  # «cheffe de projet»). Bis zum 24.11.2026 taggte das Modell sie teils als
+  # ORG. ORG ist nach dem Entscheid vom 7.8.2026 eine STELLE, der eine Person
+  # zugeordnet werden kann; eine Funktion ist keine Stelle. In «Projektleiterin,
+  # Bundesamt für Justiz» sind es zwei Spannen: JOBTITLE und ORG.
+  # Maskiert wie alle anderen, in den Einstellungen auf Klartext umschaltbar.
+  # Budget A bis zur Kalibrierung. Quelle: CH-ISCO-19 (BFS), en auch ESCO.
+  # Als letzter Eintrag ANGEHAENGT, wie der Vertrag es verlangt: die
+  # Indizes 0 bis 90 bleiben, JOBTITLE bekommt 91 und 92.
+  - tag: JOBTITLE
+    stage: 3
+    action: mask
+    placeholder: JOBTITLE
+    budget: A
+    bspd: false
+    note: Funktion zusammen mit der Organisation kann eine Person bestimmen
+
+  # Familienbeziehungen («die Mutter der Patientin», «Kindsvater», «Grosi»,
+  # «Beiständin»). Seit 25.11.2026. In Akten der Justiz, der KESB und der
+  # Psychiatrie fuehrt die Beziehung zusammen mit dem Umfeld auf die Person.
+  # Dazu gehoeren nach Entscheid auch Beistand, Vormund und Beistaendin.
+  # Maskiert, in den Einstellungen auf Klartext umschaltbar. Budget R:
+  # recall-first, weil ein uebersehenes «Vater» im Psychiatriebericht teurer
+  # ist als ein maskiertes zu viel. Als letzter Eintrag ANGEHAENGT
+  # (Labels 93 und 94).
+  - tag: FAMILYROLE
+    stage: 3
+    action: mask
+    placeholder: FAMILYROLE
+    budget: R
+    bspd: false
+    note: Verwandtschaft, Partnerschaft, Beistand und Vormund

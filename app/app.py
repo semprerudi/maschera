@@ -2,7 +2,7 @@
 """Die Oberflaeche von MASCHERA.
 
     python3 app/app.py --ohne-modell
-    python3 app/app.py --model runs/ch-v63b
+    python3 app/app.py --model runs/ch-v71f
 
 **Kein zweiter Server.** `app.py` baut dieselbe Anwendung wie `serve.py`
 und haengt die Auslieferung der Oberflaeche daran. Ein Codepfad, eine

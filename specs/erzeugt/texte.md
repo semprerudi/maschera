@@ -4,7 +4,7 @@
 
 Quelle: `I18N` in `app/static/maschera.js`. Hilfe und Impressum stehen in `app/static/seiten.js`.
 
-347 Schlüssel in 4 Sprachen.
+367 Schlüssel in 4 Sprachen.
 
 | Schlüssel | de | fr | it | en |
 |---|---|---|---|---|
@@ -13,6 +13,21 @@ Quelle: `I18N` in `app/static/maschera.js`. Hilfe und Impressum stehen in `app/s
 | `kopiertK` | Kopiert | Copié | Copiato | Copied |
 | `maskeWeg` | Maske entfernen | Retirer le masque | Togli la maschera | Remove mask |
 | `haeufig` | Häufig | Fréquents | Frequenti | Frequent |
+| `zuletzt` | Zuletzt verwendet | Utilisés récemment | Usati di recente | Recently used |
+| `typHinweis` | Anderes Tag wählen = Typ ändern | Choisir un autre tag = changer le type | Scegliere un altro tag = cambiare il tipo | Choose another tag = change the type |
+| `mAnleitung` | Bedienung | Utilisation | Utilizzo | How it works |
+| `anlFertig` | Verstanden | Compris | Capito | Got it |
+| `anlSatz1a` | Termin mit | Réunion avec | Appuntamento con | Meeting with |
+| `anlSatz1b` | am Montag. | lundi. | lunedì. | on Monday. |
+| `anlSatz2a` | Die | La | La | The |
+| `anlSatz2b` | hat geantwortet. | a répondu. | ha risposto. | replied. |
+| `anlWert2` | Projektleiterin | cheffe de projet | capoprogetto | project manager |
+| `anlSeiten[0][0]` | Maske setzen | Masquer | Mascherare | Mask a word |
+| `anlSeiten[0][1]` | Rechtsklick auf ein Wort im maskierten Text und ein Tag wählen. Das Wort wird im ganzen Dokument maskiert. | Clic droit sur un mot du texte masqué, puis choisir un tag. Le mot est masqué dans tout le document. | Clic destro su una parola del testo mascherato e scegliere un tag. La parola viene mascherata in tutto il documento. | Right-click a word in the masked text and choose a tag. The word is masked throughout the document. |
+| `anlSeiten[1][0]` | Typ ändern oder Maske entfernen | Changer le type ou retirer le masque | Cambiare il tipo o togliere la maschera | Change the type or remove a mask |
+| `anlSeiten[1][1]` | Rechtsklick auf einen Platzhalter: ein anderes Tag wählen ändert den Typ, «Maske entfernen» stellt den Wert wieder her. | Clic droit sur un espace réservé : choisir un autre tag change le type, « Retirer le masque » rétablit la valeur. | Clic destro su un segnaposto: scegliere un altro tag cambia il tipo, «Togli la maschera» ripristina il valore. | Right-click a placeholder: choosing another tag changes the type, “Remove mask” restores the value. |
+| `anlSeiten[2][0]` | Im Vokabular | Dans le vocabulaire | Nel vocabolario | In the vocabulary |
+| `anlSeiten[2][1]` | Dasselbe Menü öffnet ein Rechtsklick auf die ID oder den Typ. Das Kreuz am Zeilenende entfernt die Maske. | Un clic droit sur l’ID ou le type ouvre le même menu. La croix en fin de ligne retire le masque. | Un clic destro sull’ID o sul tipo apre lo stesso menu. La croce a fine riga toglie la maschera. | Right-clicking the ID or the type opens the same menu. The cross at the end of the row removes the mask. |
 | `maskiertDurch.model` | durch das KI-Modell maskiert | masqué par le modèle d’IA | mascherato dal modello di IA | masked by the AI model |
 | `maskiertDurch.propagation` | maskiert, weil derselbe Wert schon erkannt war | masqué, car la même valeur avait déjà été détectée | mascherato perché lo stesso valore era già stato rilevato | masked because the same value was already detected |
 | `maskiertDurch.manuell` | von Hand maskiert | masqué à la main | mascherato a mano | masked by hand |
@@ -107,6 +122,9 @@ Quelle: `I18N` in `app/static/maschera.js`. Hilfe und Impressum stehen in `app/s
 | `gutText` | {} Platzhalter zurückgesetzt. | {} substituts rétablis. | {} segnaposto ripristinati. | {} placeholders restored. |
 | `hinausT` | Prompt & maskierter Text | Prompt & texte masqué | Prompt & testo mascherato | Prompt & masked text |
 | `trenner` | den oberen Prompt auf folgenden Text anwenden | appliquer le prompt ci-dessus au texte suivant | applica il prompt qui sopra al testo seguente | apply the prompt above to the following text |
+| `hinausFolgt` | übernommen · folgt deinen Änderungen in 02 | repris · suit tes modifications dans 02 | ripreso · segue le tue modifiche in 02 | taken over · follows your edits in 02 |
+| `hinausFolgtKurz` | übernommen · folgt 02 | repris · suit 02 | ripreso · segue 02 | taken over · follows 02 |
+| `hinausFolgtKnapp` | folgt 02 | suit 02 | segue 02 | follows 02 |
 | `sendenZu` | Alles kopieren und {} öffnen | Tout copier et ouvrir {} | Copia tutto e apri {} | Copy all and open {} |
 | `onlineWarnung` | In {} arbeitest du online, sei vorsichtig! | Dans {}, tu travailles en ligne, sois prudent ! | In {} lavori online, fai attenzione! | In {} you are working online, be careful! |
 | `origPlatz` | Originaltext hier einfügen … | Coller ici le texte original … | Incolla qui il testo originale … | Paste the original text here … |
@@ -145,6 +163,8 @@ Quelle: `I18N` in `app/static/maschera.js`. Hilfe und Impressum stehen in `app/s
 | `einfuegen` | Einfügen | Coller | Incolla | Paste |
 | `einfuegenHinweis` | Zwischenablage gesperrt. Bitte Ctrl+V drücken. | Presse-papiers bloqué. Utilise Ctrl+V. | Appunti bloccati. Usa Ctrl+V. | Clipboard blocked. Press Ctrl+V. |
 | `drop_ohne_datei` | Aus diesem Programm kommt keine Datei an. Ziehe die Nachricht zuerst auf den Schreibtisch und dann hierher. | Ce programme ne fournit aucun fichier. Glisse d’abord le message sur le bureau, puis ici. | Da questo programma non arriva alcun file. Trascina prima il messaggio sulla scrivania, poi qui. | This program does not hand over a file. Drag the message to the desktop first, then here. |
+| `mVersionen` | Versionshinweise | Notes de version | Note di rilascio | Release notes |
+| `versionenLeer` | Die Versionshinweise fehlen in diesem Paket. | Les notes de version manquent dans ce paquet. | Le note di rilascio mancano in questo pacchetto. | The release notes are missing from this package. |
 | `mUpdate` | Nach Updates suchen | Rechercher des mises à jour | Cerca aggiornamenti | Check for updates |
 | `neuesteSucht` | Frage GitHub nach der neuesten Fassung … | Je demande à GitHub la version la plus récente … | Chiedo a GitHub la versione più recente … | Asking GitHub for the newest version … |
 | `neuesteAktuell` | Du hast {aktuell}. Das ist die neueste Fassung. | Tu as la {aktuell}. C’est la version la plus récente. | Hai la {aktuell}. È la versione più recente. | You have {aktuell}. That is the newest version. |

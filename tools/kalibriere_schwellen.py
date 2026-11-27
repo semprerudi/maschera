@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Schwellen am Dokument-Testset kalibrieren.
 
-    python3 tools/kalibriere_schwellen.py --model runs/ch-v63b
-    python3 tools/kalibriere_schwellen.py --model runs/ch-v63b --tag GIVENNAME
+    python3 tools/kalibriere_schwellen.py --model runs/ch-v71f
+    python3 tools/kalibriere_schwellen.py --model runs/ch-v71f --tag GIVENNAME
 
 WAS DIESES WERKZEUG TUT — UND WAS NICHT
 =======================================

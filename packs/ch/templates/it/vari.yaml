@@ -30,7 +30,7 @@ templates:
       Cittadinanza: {NATIONALITY}
       Paese di nascita: {COUNTRY}
 
-      Genitori: {@person} e {@person}
+      {FAMILYROLE=Genitori}: {@person} e {@person}
       Iscrizione {CASE_ID}
 
       Rilasciato il {DATE}. È riscossa {~amount}.

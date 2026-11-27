@@ -1095,13 +1095,13 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     const block = roh.slice(0, roh.indexOf("\n};"));
     const zugeordnet = [...block.matchAll(/"([A-Z][A-Z0-9_]*)"/g)]
       .map((m) => m[1]);
-    pruefe(zugeordnet.length === 45,
-           `${zugeordnet.length} Tags zugeordnet, 45 erwartet`);
+    pruefe(zugeordnet.length === 47,
+           `${zugeordnet.length} Tags zugeordnet, 47 erwartet`);
     const doppelt = [...new Set(zugeordnet.filter(
       (k) => zugeordnet.indexOf(k) !== zugeordnet.lastIndexOf(k)))];
     pruefe(doppelt.length === 0, `Tag in zwei Gruppen: ${doppelt.join(", ")}`);
   }
-  if (!fehler) console.log("   OK   45 Tags, acht Gruppen, keiner doppelt");
+  if (!fehler) console.log("   OK   47 Tags, acht Gruppen, keiner doppelt");
 
   console.log("27. Der gewaehlte Dienst wird sofort gemerkt");
   // ⚠️ Nicht erst beim Schliessen der Einstellungen: wer den Dienst
@@ -1830,7 +1830,9 @@ console.log("1. Alle Knoepfe sind verdrahtet");
            "«Prompt & maskierter Text» blieb aufgeklappt");
     pruefe(M.zustand.hinweiseAuf === false, "die Hinweistafel in 02 blieb offen");
     // Seit 2.2: auch Rubriken, Suchwoerter, Filter und die grosse Kachel.
-    pruefe(M.zustand.kontextOffen.size === 1 && M.zustand.kontextOffen.has("haeufig"),
+    // Seit 25.11.2026 steht «Zuletzt verwendet» ebenfalls von Anfang an offen.
+    pruefe(M.zustand.kontextOffen.size === 2 && M.zustand.kontextOffen.has("haeufig")
+           && M.zustand.kontextOffen.has("zuletzt"),
            "offene Rubriken im Rechtsklickmenue ueberleben «Neu»");
     pruefe(M.zustand.vokSuche === "" && document.getElementById("vok-suche").value === ""
            && M.zustand.vorlagenFilter === "" && M.zustand.vokFilter === "alle",
@@ -2076,8 +2078,10 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     // `class="richtung"`: ein Pfeil darf eine zweite Klasse tragen. Eine
     // Wache prueft die Eigenschaft, nicht die Schreibweise.
     const ausgezeichnet = (HTML6.match(/class="[^"]*\brichtung\b[^"]*"/g) || []).length;
-    pruefe(ausgezeichnet === 3,
-           `${ausgezeichnet} Zeichen als Richtung ausgezeichnet, 3 erwartet`);
+    // Vier seit 25.11.2026: der zweite «Übernahme in Prompt» unter dem
+    // Vokabular zeigt denselben Weg wie der erste.
+    pruefe(ausgezeichnet === 4,
+           `${ausgezeichnet} Zeichen als Richtung ausgezeichnet, 4 erwartet`);
 
     // ⚠️ Und der Menuepfeil ist KEINER davon.
     const i = HTML6.indexOf('id="knopf-dienstmenu"');
@@ -2085,7 +2089,7 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     pruefe(i > 0 && !/class="richtung"/.test(HTML6.slice(i, bis)),
            "der Pfeil des Ausklappmenues gilt wieder als Richtungspfeil");
   }
-  if (!fehler) console.log("   OK   drei Richtungspfeile, Menuepfeil "
+  if (!fehler) console.log("   OK   vier Richtungspfeile, Menuepfeil "
                            + "bleibt");
 
   console.log("47. Hinweise des Servers folgen der Sprache der Oberflaeche");
@@ -2567,7 +2571,10 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     // Seit 2.1 EINE Ausnahme, ebenfalls auf Entscheid (21.10.2026): beim
     // Ueberfahren wird das Zeichen von Kopieren in der roten Spalte rot
     // statt gruen. Die Ruhefarbe bleibt grau; erlaubt ist nur `:hover`.
-    const feldRegeln = block.match(/\.spalte\.hinaus[^{}]*\.imfeld[^{}]*\{/g) || [];
+    // Die Leerknoepfe nennt die schwarze Schicht nur, um sie AUSZUNEHMEN
+    // (Punkt 97): diese Nennung faerbt nichts und zaehlt hier nicht.
+    const feldRegeln = (block.match(/\.spalte\.hinaus[^{}]*\.imfeld[^{}]*\{/g) || [])
+      .filter((r) => /\.imfeld(?!\.loeschen)/.test(r));
     pruefe(feldRegeln.every((r) => /:hover/.test(r)),
            "die Feldknoepfe werden mitgefaerbt — sie sollen grau bleiben");
 
@@ -5032,6 +5039,7 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     }
     $("maskiert-feld").hidden = true;     // nicht im Bearbeiten
     $("knopf-neu-unten").hidden = true;   // nur gestapelt sichtbar
+    $("knopf-uebernahme-vok").hidden = true;   // ebenso
     const tab = (von, shift) => {
       fokus = null;
       let verhindert = false;
@@ -5075,6 +5083,141 @@ console.log("1. Alle Knoepfe sind verdrahtet");
     pruefe(/addEventListener\("keydown", pfeilWeg\)/.test(q), "pfeilWeg haengt an keinem keydown");
     pruefe(/id="ablage" tabindex="0"/.test(HTML), "die Ablage hat keinen Tab-Halt fuer die Pfeilgruppe");
     if (fehler === vorher) console.log("   OK   Arbeitsweg vor und zurueck, Deaktiviertes uebersprungen, Pfeile verdrahtet");
+  }
+
+  console.log("95. Seit 25.11.2026: Vokabular natuerlich sortiert, «Neu» vor den Schritten (schmal nur unten)");
+  {
+    const vorher = fehler;
+    const liste = ["DATE_10", "DATE_2", "DATE_1", "CITY_1", "DATE_11"].sort(M.phVergleich);
+    pruefe(liste.join(" ") === "CITY_1 DATE_1 DATE_2 DATE_10 DATE_11",
+           "Vokabular nicht natuerlich sortiert: " + liste.join(" "));
+    // «Neu» steht in der Schrittleiste und ueberlebt deren Neuzeichnen.
+    pruefe(/<nav class="schritte" id="schritte"[^>]*><button[^>]*id="knopf-neu"/.test(HTML),
+           "«Neu» steht nicht vorne in der Schrittleiste");
+    const q = fs.readFileSync(path.join(__dirname, "..", "app", "static", "maschera.js"), "utf8");
+    pruefe(/nav\.replaceChildren\(\.\.\.\(neu \? \[neu\] : \[\]\)\)/.test(q),
+           "zeichneSchritte wirft «Neu» beim Neuzeichnen weg");
+    // Untereinander nur der untere «Neu», und der ist gruen (Feedback 25.11.2026).
+    const css = fs.readFileSync(path.join(__dirname, "..", "app", "static", "maschera.css"), "utf8");
+    const gestapelt = css.split("@media (max-width: 81.24em), (max-height: 44em)").slice(1).join("");
+    pruefe(/\.schritte \.schritt-neu \{ display: none; \}/.test(gestapelt),
+           "untereinander steht «Neu» oben UND unten");
+    pruefe(/class="tat haupt neu-unten" id="knopf-neu-unten"/.test(HTML),
+           "der untere «Neu» ist kein Hauptknopf (nicht gruen)");
+    // Die Keyframes der Bedienung: das Wort hat die Deckkraft in jedem Abschnitt.
+    const mark = (css.match(/@keyframes anl-markiert \{[^@]*/) || [""])[0];
+    pruefe(/0%, 26% \{[^}]*opacity: 1/.test(mark) && /28%, 58% \{[^}]*opacity: 1/.test(mark),
+           "anl-markiert blendet das Wort aus, solange das Menue offen ist");
+    // Untereinander ein zweiter «Übernahme in Prompt» unter dem Vokabular,
+    // derselbe Weg wie der erste (Feedback 25.11.2026).
+    pruefe(/class="vokabular-fuss"[\s\S]*id="knopf-uebernahme-vok"[\s\S]*?<\/div>/.test(HTML),
+           "kein zweiter «Übernahme in Prompt» im Fuss des Vokabulars");
+    pruefe(/body \.vokabular-fuss button\.tat\.uebernahme-vok \{ display: inline-flex/.test(gestapelt),
+           "der zweite «Übernahme in Prompt» erscheint untereinander nicht");
+    pruefe(/\$\("knopf-uebernahme-vok"\)\.addEventListener\("click", uebernehmen\)/.test(q)
+           && /\$\("knopf-uebernahme"\)\.addEventListener\("click", uebernehmen\)/.test(q),
+           "die zwei «Übernahme»-Knoepfe gehen nicht denselben Weg");
+    if (fehler === vorher) console.log("   OK   DATE_2 vor DATE_10, «Neu» oben breit, unten schmal und gruen, Wort bleibt sichtbar, Übernahme auch im Vokabular");
+  }
+
+  console.log("96. Seit 27.11.2026: Versionshinweise, Knopftipp oben, Vokabularfuss einzeilig, Kachelhoehe");
+  {
+    const vorher = fehler;
+    const q = fs.readFileSync(path.join(__dirname, "..", "app", "static", "maschera.js"), "utf8");
+    const css = fs.readFileSync(path.join(__dirname, "..", "app", "static", "maschera.css"), "utf8");
+    // Versionshinweise: im Menue zwischen Herunterladen und Updates, als
+    // Dialog aus dem eigenen Paket, in allen vier Sprachen.
+    const adr = JSON.parse(fs.readFileSync(path.join(WURZEL, "app/static/adressen.json"), "utf8")).eintraege;
+    const reihe = adr.map((e) => e.schluessel);
+    const iv = reihe.indexOf("mVersionen");
+    pruefe(iv > 0 && reihe[iv - 1] === "mDownload" && reihe[iv + 1] === "mUpdate",
+           "«Versionshinweise» steht nicht zwischen Herunterladen und Updates: " + reihe.join(" "));
+    pruefe(adr[iv] && adr[iv].dialog === "versionen" && adr[iv].url === undefined,
+           "«Versionshinweise» fuehrt nicht auf den eigenen Dialog");
+    pruefe(/else if \(e\.dialog === "versionen"\) versionenZeigen\(\);/.test(q),
+           "der Menuepunkt oeffnet versionenZeigen nicht");
+    const vh = JSON.parse(fs.readFileSync(path.join(WURZEL, "app/static/versionshinweise.json"), "utf8")).fassungen;
+    pruefe(vh.length >= 20, "versionshinweise.json hat weniger als 20 Fassungen");
+    for (const e of vh) {
+      for (const s of ["de", "fr", "it", "en"]) {
+        pruefe(typeof e[s] === "string" && e[s].trim().length > 20,
+               `versionshinweise.json: ${e.fassung} ohne ${s}`);
+      }
+      pruefe(/^\d+\.\d+\.\d+$/.test(e.fassung) && !/test/.test(e.fassung),
+             "versionshinweise.json traegt eine Teststufe oder eine krumme Nummer: " + e.fassung);
+    }
+    const zahl = (f) => f.split(".").map(Number);
+    const sortiert = vh.every((e, i) => i === 0 || zahl(vh[i - 1].fassung)
+      .reduce((d, x, j) => d || x - zahl(e.fassung)[j], 0) > 0);
+    pruefe(sortiert, "versionshinweise.json steht nicht neueste zuerst");
+    pruefe(!vh.some((e) => /SHA256SUMS|LIZENZ\.md|\/issues/.test(e.en + e.de)),
+           "versionshinweise.json traegt Release-Beiwerk (Pruefsummen, Lizenz, Issues)");
+    const leser = (q.match(/function mdZeile[\s\S]*?\nasync function versionenZeigen[\s\S]*?\n}\n/) || [""])[0];
+    pruefe(leser.length > 200 && !/innerHTML/.test(leser),
+           "der Leser der Versionshinweise fehlt oder nutzt innerHTML");
+    pruefe(/fetch\("versionshinweise\.json"\)/.test(q),
+           "die Versionshinweise kommen nicht aus dem eigenen Paket");
+    // Gelesen wird im Test wie in der App: Aufzaehlung mit Folgezeile, fett.
+    if (typeof M.mdBloecke === "function") {
+      const ziel = { kinder: [], append(...k) { this.kinder.push(...k); } };
+      pruefe(true, "");
+    }
+
+    // Knopftipp: ueber dem Element, und der Browser-Tooltip wird abgezogen.
+    const kt = (q.match(/function knopftippEinrichten[\s\S]*?\n}\n/) || [""])[0];
+    pruefe(/k\.removeAttribute\("title"\)/.test(kt) && /setAttribute\("data-titel"/.test(kt),
+           "der Knopftipp zieht den Browser-Tooltip nicht ab");
+    pruefe(/const oben = r\.top - 8 - b\.height;/.test(kt),
+           "der Knopftipp steht nicht ueber dem Element");
+    pruefe(/id="knopftipp" role="tooltip" hidden/.test(HTML), "kein Element #knopftipp");
+    pruefe(/knopftippEinrichten\(\);/.test(q), "knopftippEinrichten wird nie aufgerufen");
+
+    // Vokabularfuss: eine Zeile, Rangfolge wie in den anderen Fuessen.
+    pruefe(/id="knopf-vok-herunter" data-rang="3"/.test(HTML)
+           && /id="knopf-vok-hoch" data-rang="4"/.test(HTML),
+           "Herunter- und Hochladen im Vokabular tragen keinen Rang");
+    pruefe(/querySelectorAll\("\.fuss, \.vokabular-fuss"\)\) \{\n    f\.classList\.remove\("eng"\)/.test(q),
+           "fussEinpassen misst den Fuss des Vokabulars nicht");
+    pruefe(/\.vokabular-fuss \{ flex-wrap: nowrap; \}/.test(css)
+           && /\.vokabular-fuss \.kurz > span \{ display: none; \}/.test(css),
+           "der Fuss des Vokabulars bricht um oder kuerzt nicht aufs Zeichen");
+
+    // Kachelhoehe gestapelt: zwei Haelften, im niedrigen Fenster die aktuelle ganz.
+    pruefe(/--kachel-frei: calc\(100dvh - var\(--kopfhoehe/.test(css)
+           && /min-height: calc\(var\(--kachel-frei\) \/ 2/.test(css),
+           "gestapelt teilen sich zwei Kacheln die Hoehe nicht");
+    pruefe(/\.bereich\.dran,[\s\S]{0,80}\{ min-height: var\(--kachel-frei\); \}/.test(css),
+           "im niedrigen Fenster fuellt die aktuelle Kachel den Platz nicht");
+    pruefe(/classList\.toggle\("dran", i === jetzt\)/.test(q),
+           "die Kachel des aktuellen Schritts bekommt kein .dran");
+    pruefe(/setProperty\("--schritthoehe"/.test(q), "die Schrittleiste wird nicht gemessen");
+
+    // Bedienung auf dem Handy: das Menue passt hinein, die Spalte nie breiter.
+    pruefe(/\.willkommen-bild\.anl-flaeche \{ min-height: 18rem; max-height: none; \}/.test(css),
+           "die Flaeche der Bedienung ist zu niedrig fuer das Menue");
+    pruefe(/\.willkommen-buehne \{[^}]*grid-template-columns: minmax\(0, 1fr\);/.test(css),
+           "ein breites Blatt zieht die anderen Blaetter mit");
+    if (fehler === vorher) console.log("   OK   Versionshinweise viersprachig, Tooltip oben, Vokabular einzeilig, zwei Kacheln, Menue passt");
+  }
+
+  console.log("97. Seit 27.11.2026: Leerknoepfe wie in 01, gestapelt ohne Typspalte");
+  {
+    const vorher = fehler;
+    const q = fs.readFileSync(path.join(__dirname, "..", "app", "static", "maschera.js"), "utf8");
+    const css = fs.readFileSync(path.join(__dirname, "..", "app", "static", "maschera.css"), "utf8");
+    // Die schwarze Schicht der roten Spalte laesst die Leerknoepfe aus,
+    // sonst bleibt ihr Wort beim Ueberfahren dunkel auf Rot.
+    const schicht = (css.match(/\.spalte\.hinaus \*:not\(([^{]*)\) \{/) || [])[1] || "";
+    pruefe(/\.imfeld\.loeschen, \.imfeld\.loeschen \*/.test(schicht),
+           "die schwarze Schrift in 03/04 trifft auch die Leerknoepfe");
+    pruefe(/\.spalte\.hinaus :is\(button, input, select\):disabled:not\(\.imfeld\.loeschen\),/.test(css),
+           "deaktivierte Leerknoepfe in 03/04 sehen anders aus als in 01");
+    // Gestapelt: Typspalte weg, nur in der echten Tabelle.
+    pruefe(/el\("th", "vok-typ", s\.spalteTyp\)/.test(q) && /const td3 = el\("td", "vok-typ"\);/.test(q),
+           "die Typspalte des Vokabulars traegt keine Klasse vok-typ");
+    pruefe(/@media \(max-width: 81\.24em\), \(max-height: 44em\) \{\s*#vokabular-inhalt table\.vokabular \.vok-typ \{ display: none; \}/.test(css),
+           "gestapelt steht die Typspalte noch im Vokabular");
+    if (fehler === vorher) console.log("   OK   Leerknoepfe in 03/04 wie in 01, schmal mehr Platz fuer den Originalwert");
   }
 
   console.log("");

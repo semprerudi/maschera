@@ -256,6 +256,89 @@ check(not _daneben,
 print(f"   {'OK  ' if not _daneben else 'FEHL'} Fensterzahl: Ansage == "
       f"Schleife in 4 Zuschnitten")
 
+# --- Zwei Koepfe (seit 25.11.2026) --------------------------------------------
+# Ein Modell mit angehaengten Labels (`train.py --nur-kopf`) traegt `kopf_alt`.
+# Die alten Labels entscheiden dann nur untereinander: ihr Ergebnis muss genau
+# das eines Modells sein, das nur die alten Zeilen hat. Die neuen kommen in
+# einem zweiten Pass dazu und duerfen nur O oder ein neues Label sein.
+print("\nZ. Zwei Koepfe: alte Labels wie das Ausgangsmodell, neue nur dazu")
+import numpy as _np  # noqa: E402
+from core.inference import kopf_paesse  # noqa: E402
+_rng = _np.random.default_rng(7)
+_logits = _rng.normal(size=(50, 95)) * 4
+_alt_allein = kopf_paesse(_logits[:, :91], None)[0]
+_zwei = kopf_paesse(_logits, 91)
+check(len(_zwei) == 2, "mit kopf_alt muessen es zwei Paesse sein")
+check(bool((_zwei[0][0] == _alt_allein[0]).all())
+      and _np.allclose(_zwei[0][1], _alt_allein[1]),
+      "Pass alt weicht vom Modell mit nur den alten Zeilen ab")
+check(set(_zwei[1][0].tolist()) <= {0, 91, 92, 93, 94},
+      "Pass neu liefert ein altes Label")
+check(len(kopf_paesse(_logits, None)) == 1, "ohne kopf_alt ein Pass")
+print("   OK   Pass alt == Ausgangsmodell, Pass neu nur O und neue Labels"
+      if not failures else "   FEHL siehe oben")
+
+print("\nZ2. Zerstueckelte Titel werden eine Spanne, Namen und Orte nicht")
+from core.inference import Scored as _Sc, _zusammenfuegen  # noqa: E402
+_t = "il consigliere federale Rossi, Bern Zürich\nMutter\nVater"
+_r = _zusammenfuegen([_Sc("JOBTITLE", 3, 14, .9), _Sc("JOBTITLE", 15, 23, .7),
+                      _Sc("CITY", 31, 35, .9), _Sc("CITY", 36, 42, .9),
+                      _Sc("FAMILYROLE", 43, 49, .9),
+                      _Sc("FAMILYROLE", 50, 55, .9)], _t)
+_w = [(x.tag, _t[x.start:x.end]) for x in _r]
+check(("JOBTITLE", "consigliere federale") in _w,
+      f"Titelteile nicht zusammengefuegt: {_w}")
+check(("CITY", "Bern") in _w and ("CITY", "Zürich") in _w,
+      f"Orte zusammengefuegt: {_w}")
+check(("FAMILYROLE", "Mutter") in _w and ("FAMILYROLE", "Vater") in _w,
+      f"ueber einen Zeilenumbruch zusammengefuegt: {_w}")
+print("   OK   ein Titel, zwei Orte, keine Verbindung ueber die Zeile"
+      if not failures else "   FEHL siehe oben")
+
+print("\nZ3. Satzzeichen am Rand von JOBTITLE/FAMILYROLE fallen weg, alte Tags bleiben")
+from core.inference import _rand_saeubern  # noqa: E402
+_vorher = len(failures)
+_t = "Stand (EGBA) -/UID, avv. Rossi, Leiter (a. i.); Mutter: (Bern) -/"
+def _st(teil, tag="JOBTITLE"):
+    i = _t.index(teil)
+    return _Sc(tag, i, i + len(teil), .9)
+_r = _rand_saeubern([_st("(EGBA)"), _st("-/UID,"), _st("avv."),
+                     _st("Leiter (a. i.);"), _st("Mutter:", "FAMILYROLE"),
+                     _st("(Bern)", "CITY"), _st("-/")], _t)
+_w = [(x.tag, _t[x.start:x.end]) for x in _r]
+check(("JOBTITLE", "EGBA") in _w, f"Klammern nicht abgeschnitten: {_w}")
+check(("JOBTITLE", "UID") in _w, f"«-/» und Komma nicht abgeschnitten: {_w}")
+check(("JOBTITLE", "avv.") in _w, f"Abkuerzungspunkt abgeschnitten: {_w}")
+check(("JOBTITLE", "Leiter (a. i.)") in _w, f"eigene Klammer abgeschnitten: {_w}")
+check(("FAMILYROLE", "Mutter") in _w, f"Doppelpunkt nicht abgeschnitten: {_w}")
+check(("CITY", "(Bern)") in _w, f"altes Tag veraendert: {_w}")
+check(not any(v == "-/" or v == "" for _, v in _w), f"Spanne ohne Buchstaben blieb: {_w}")
+import inspect as _insp  # noqa: E402
+from core.inference import spannen_aus_paessen as _sap  # noqa: E402
+check("_rand_saeubern(" in _insp.getsource(_sap),
+      "spannen_aus_paessen saeubert die Raender nicht (beide Laeufer gehen dort durch)")
+print("   OK   EGBA, UID, avv., Leiter (a. i.), Mutter; CITY unveraendert, «-/» weg"
+      if len(failures) == _vorher else "   FEHL siehe oben")
+
+print("\nZ4. Alte Tags gewinnen gegen JOBTITLE/FAMILYROLE, auch gegen laengere Spannen")
+# Die Zusage aus CHANGELOG und specs/06: die angehaengten Tags maskieren nur
+# zusaetzlich. Ohne den Nachrang verdraengte eine lange FAMILYROLE-Spanne
+# eine richtige Strasse (Befund 25.11.2026).
+_vorher = len(failures)
+_t = "Die Mutter wohnt an der Lindenstrasse in Bern."
+_i, _j = _t.index("Lindenstrasse"), _t.index("Lindenstrasse") + len("Lindenstrasse")
+_m = _t.index("Mutter")
+spans, _ = merge(_t, [Scored("STREET", _i, _j, 0.95),
+                      Scored("FAMILYROLE", _m, _j, 0.99),
+                      Scored("JOBTITLE", _i - 4, _j + 3, 0.99)], PACK)
+_w = [(x.tag, _t[x.start:x.end]) for x in spans]
+check(("STREET", "Lindenstrasse") in _w,
+      f"die laengere neue Spanne verdraengt die Strasse: {_w}")
+check(not any(tg in ("FAMILYROLE", "JOBTITLE") for tg, _ in _w),
+      f"eine ueberlappende neue Spanne blieb neben der alten stehen: {_w}")
+print("   OK   STREET bleibt, die laengeren FAMILYROLE/JOBTITLE fallen weg"
+      if len(failures) == _vorher else "   FEHL siehe oben")
+
 print()
 if failures:
     print(f"FEHLGESCHLAGEN — {len(failures)}:")

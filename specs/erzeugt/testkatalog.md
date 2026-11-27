@@ -8,24 +8,25 @@ Jede Prüfung mit ihren Punkten. Die Kennung `T-<DATEI>-<PUNKT>` ist stabil, sol
 |---|---:|---:|
 | `tests/test_alignment.py` | 9 | 21 |
 | `tests/test_api.py` | 36 | 216 |
-| `tests/test_app.py` | 24 | 112 |
+| `tests/test_app.py` | 24 | 113 |
 | `tests/test_befunde.py` | 7 | 8 |
 | `tests/test_ch_checksums.py` | 4 | 10 |
 | `tests/test_dist_frisch.py` | 4 | 4 |
 | `tests/test_dokumente_docx.py` | 13 | 40 |
 | `tests/test_evaluate.py` | 8 | 21 |
-| `tests/test_fenster.py` | 34 | 219 |
+| `tests/test_fenster.py` | 34 | 222 |
+| `tests/test_gold_berufe.py` | 3 | 14 |
 | `tests/test_gold_ersetzen.py` | 7 | 17 |
 | `tests/test_gold_markup.py` | 7 | 15 |
 | `tests/test_goldpfad.py` | 7 | 10 |
-| `tests/test_inference.py` | 6 | 16 |
-| `tests/test_injector.py` | 9 | 15 |
-| `tests/test_labelvertrag_eingefroren.py` | 4 | 7 |
+| `tests/test_inference.py` | 6 | 33 |
+| `tests/test_injector.py` | 10 | 18 |
+| `tests/test_labelvertrag_eingefroren.py` | 5 | 8 |
 | `tests/test_langes_dokument.py` | 4 | 8 |
 | `tests/test_mail.py` | 8 | 45 |
 | `tests/test_masking.py` | 11 | 17 |
 | `tests/test_modell.py` | 14 | 50 |
-| `tests/test_oberflaeche.js` | 95 | 564 |
+| `tests/test_oberflaeche.js` | 98 | 591 |
 | `tests/test_patterns.py` | 9 | 11 |
 | `tests/test_rauschen.py` | 7 | 15 |
 | `tests/test_regressionen.py` | 1 | 14 |
@@ -36,7 +37,7 @@ Jede Prüfung mit ihren Punkten. Die Kennung `T-<DATEI>-<PUNKT>` ist stabil, sol
 | `tests/test_user_rules.py` | 7 | 17 |
 | `tests/test_vertrauen.py` | 8 | 14 |
 | `tests/test_vorlieben.py` | 6 | 16 |
-| **Summe** | **379** | **1593** |
+| **Summe** | **387** | **1659** |
 
 ## `tests/test_alignment.py`
 
@@ -98,7 +99,7 @@ Die Endpunkte aus `specs/07_api.md`.
 
 - zustand …
 - Dienstname fehlt
-- 45 Tags erwartet, …
+- 47 Tags erwartet, …
 - Labelvertrag-Fingerabdruck fehlt
 - ohne_modell nicht gemeldet
 - ohne Modell ohne Hinweis, das ist eine Leckquelle
@@ -107,14 +108,14 @@ Die Endpunkte aus `specs/07_api.md`.
 
 ### T-API-2: Tags
 
-- 45 Tags erwartet, …
+- 47 Tags erwartet, …
 - Tag ohne Bezeichnung, leerer Menueeintrag in der Oberflaeche
 - Endpunkt und Pack uneins ueber die Schwelle: …
 - CANTON nicht tag_only
 - AHVN13 ohne Pruefsumme
 - NATIONALITY nicht bspd
 - Sprache fehlt in der Antwort
-- …: 45 Tags erwartet
+- …: 47 Tags erwartet
 - …: Tag ohne Bezeichnung
 - …: … ist …, erwartet …
 - unbekannte Sprache nicht abgewiesen, sie faellt sonst still auf Deutsch
@@ -569,6 +570,7 @@ Auslieferung der Oberflaeche, C1.
 - das ICO steht vor dem SVG, dann nimmt es auch ein Browser, der das SVG koennte
 - /favicon.ico kommt nicht
 - /adressen.json kommt nicht
+- /versionshinweise.json kommt nicht (Burgermenue, seit 2.5)
 
 ### T-APP-21: Jede Antwort traegt die Sicherheitskopfzeilen
 
@@ -1050,6 +1052,9 @@ Das eigene Fenster: Adresse, Port und dass die Wahl bleibt.
 ### T-FENSTER-25: Kein Paket nimmt Pickle-Dateien aus dem Modellordner mit
 
 - windows_bauen.MODELL_DRAUSSEN fuehrt nicht alle Endungen: …
+- Dockerfile setzt MASCHERA_MODELL nicht
+- Dockerfile kopiert nicht runs/…, setzt es aber als Modell
+- .dockerignore laesst runs/…/ nicht in den Bau-Kontext
 - .dockerignore laesst … im Modellordner nicht weg
 - appimage_bauen.fish loescht … im Modellordner nicht
 - der Windows-Modellordner enthaelt …
@@ -1141,6 +1146,33 @@ Das eigene Fenster: Adresse, Port und dass die Wahl bleibt.
 - macho_pruefen uebersieht die falsche Architektur
 - macho_pruefen uebersieht die Info.plist
 - macho_pruefen liest fette Dateien oder Java-Klassen falsch: …
+
+## `tests/test_gold_berufe.py`
+
+Nachmarkieren von Berufen im Testset (`tools/gold_berufe.py`).
+
+### T-GOLD-BERUFE-1: Finden: laengste Form, ganze Woerter, Koeder, eigene Suche
+
+- Projektleiterin fehlt: …
+- Weber nicht als Koeder: …
+- «Amtschefin» darf nicht als «Amtschef» treffen: …
+- --suche greift nicht: …
+
+### T-GOLD-BERUFE-2: Eintragen: neu, umtaggen, teilen, teilweise
+
+- Teilen falsch: … …
+- Umtaggen falsch
+- Neu falsch
+- Teilweise Ueberlappung wurde veraendert
+
+### T-GOLD-BERUFE-3: Ganzer Durchgang: Sicherung, Schreiben, q, Koeder bleibt
+
+- a.json falsch: …
+- `geprueft` veraendert
+- keine Sicherung von a.json
+- Sicherung ist nicht der alte Stand
+- nach q wurde b.json trotzdem veraendert
+- Zaehlung falsch: …
 
 ## `tests/test_gold_ersetzen.py`
 
@@ -1296,6 +1328,23 @@ Test der Stufenzusammenfuehrung (SPEC §3, §4).
 - Zusammenfuehrung verliert Spannen, der Wert steht unmaskiert da: …
 - Zusammenfuehrung weitet Spannen aus, kein Leck, der Wert bleibt maskiert, aber die Grenzen wandern und der Platzhalter frisst Nachbartext: …
 - … Faelle, in denen die Ansage nicht der Schleife entspricht, z. B. …
+- mit kopf_alt muessen es zwei Paesse sein
+- Pass alt weicht vom Modell mit nur den alten Zeilen ab
+- Pass neu liefert ein altes Label
+- ohne kopf_alt ein Pass
+- Titelteile nicht zusammengefuegt: …
+- Orte zusammengefuegt: …
+- ueber einen Zeilenumbruch zusammengefuegt: …
+- Klammern nicht abgeschnitten: …
+- «-/» und Komma nicht abgeschnitten: …
+- Abkuerzungspunkt abgeschnitten: …
+- eigene Klammer abgeschnitten: …
+- Doppelpunkt nicht abgeschnitten: …
+- altes Tag veraendert: …
+- Spanne ohne Buchstaben blieb: …
+- spannen_aus_paessen saeubert die Raender nicht (beide Laeufer gehen dort durch)
+- die laengere neue Spanne verdraengt die Strasse: …
+- eine ueberlappende neue Spanne blieb neben der alten stehen: …
 
 ## `tests/test_injector.py`
 
@@ -1343,6 +1392,12 @@ Test des Injektors (SPEC §8, §11).
 - keine einzige Vorlage schreibt natuerliche Reihenfolge
 - Reihenfolge zu einseitig: … % Register-Reihenfolge
 
+### T-INJECTOR-10: Berufe: {KOEDER} ist FULLNAME, jeder Koeder auch ein Beruf
+
+- Probevorlage mit {KOEDER} liess sich nicht fuellen
+- {KOEDER} muss FULLNAME taggen, ist …
+- … Koeder fehlen in der Berufsliste: sie wuerden nur als Name gelernt
+
 ## `tests/test_labelvertrag_eingefroren.py`
 
 Der Labelvertrag ist EINGEFROREN.
@@ -1365,6 +1420,10 @@ Der Labelvertrag ist EINGEFROREN.
 ### T-LABELVERTRAG-EINGEFROREN-4: Benutzerspezifische Tags stehen AUSSERHALB
 
 - X_-Tags im Labelvertrag: …
+
+### T-LABELVERTRAG-EINGEFROREN-5: Neue Tags sind ANGEHAENGT, nicht eingefuegt
+
+- die ersten … Labels sind nicht mehr der Vertrag …: ein Tag wurde eingefuegt, umsortiert oder umbenannt
 
 ## `tests/test_langes_dokument.py`
 
@@ -1780,7 +1839,7 @@ Die Oberflaechenlogik gegen eine strenge DOM-Attrappe.
 
 ### T-OBERFLAECHE-26: Jeder Tag hat eine Gruppe
 
-- … Tags zugeordnet, 45 erwartet
+- … Tags zugeordnet, 47 erwartet
 - Tag in zwei Gruppen: …
 
 ### T-OBERFLAECHE-27: Der gewaehlte Dienst wird sofort gemerkt
@@ -1963,7 +2022,7 @@ Die Oberflaechenlogik gegen eine strenge DOM-Attrappe.
 
 - es wird wieder JEDES Zeichen in einem `.tat`-Knopf gedreht
 - die Drehung haengt nicht an `.richtung`
-- … Zeichen als Richtung ausgezeichnet, 3 erwartet
+- … Zeichen als Richtung ausgezeichnet, 4 erwartet
 - der Pfeil des Ausklappmenues gilt wieder als Richtungspfeil
 
 ### T-OBERFLAECHE-47: Hinweise des Servers folgen der Sprache der Oberflaeche
@@ -2465,6 +2524,42 @@ Die Oberflaechenlogik gegen eine strenge DOM-Attrappe.
 - tabWeg haengt an keinem keydown
 - pfeilWeg haengt an keinem keydown
 - die Ablage hat keinen Tab-Halt fuer die Pfeilgruppe
+
+### T-OBERFLAECHE-95: Seit 25.11.2026: Vokabular natuerlich sortiert, «Neu» vor den Schritten (schmal nur unten)
+
+- «Neu» steht nicht vorne in der Schrittleiste
+- zeichneSchritte wirft «Neu» beim Neuzeichnen weg
+- untereinander steht «Neu» oben UND unten
+- der untere «Neu» ist kein Hauptknopf (nicht gruen)
+- anl-markiert blendet das Wort aus, solange das Menue offen ist
+- kein zweiter «Übernahme in Prompt» im Fuss des Vokabulars
+- die zwei «Übernahme»-Knoepfe gehen nicht denselben Weg
+
+### T-OBERFLAECHE-96: Seit 27.11.2026: Versionshinweise, Knopftipp oben, Vokabularfuss einzeilig, Kachelhoehe
+
+- «Versionshinweise» fuehrt nicht auf den eigenen Dialog
+- der Menuepunkt oeffnet versionenZeigen nicht
+- versionshinweise.json hat weniger als 20 Fassungen
+- versionshinweise.json: … ohne …
+- versionshinweise.json steht nicht neueste zuerst
+- versionshinweise.json traegt Release-Beiwerk (Pruefsummen, Lizenz, Issues)
+- der Leser der Versionshinweise fehlt oder nutzt innerHTML
+- die Versionshinweise kommen nicht aus dem eigenen Paket
+- der Knopftipp steht nicht ueber dem Element
+- kein Element #knopftipp
+- knopftippEinrichten wird nie aufgerufen
+- Herunter- und Hochladen im Vokabular tragen keinen Rang
+- der Fuss des Vokabulars bricht um oder kuerzt nicht aufs Zeichen
+- im niedrigen Fenster fuellt die aktuelle Kachel den Platz nicht
+- die Kachel des aktuellen Schritts bekommt kein .dran
+- die Flaeche der Bedienung ist zu niedrig fuer das Menue
+- ein breites Blatt zieht die anderen Blaetter mit
+
+### T-OBERFLAECHE-97: Seit 27.11.2026: Leerknoepfe wie in 01, gestapelt ohne Typspalte
+
+- die schwarze Schrift in 03/04 trifft auch die Leerknoepfe
+- deaktivierte Leerknoepfe in 03/04 sehen anders aus als in 01
+- die Typspalte des Vokabulars traegt keine Klasse vok-typ
 
 ## `tests/test_patterns.py`
 

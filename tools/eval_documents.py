@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Auswertung gegen das Dokument-Testset — echte Unterlagen statt Vorlagen.
 
-    python3 tools/eval_documents.py --anlegen /pfad/brief.txt --model runs/ch-v63b
-    python3 tools/eval_documents.py --model runs/ch-v63b
-    python3 tools/eval_documents.py --model runs/ch-v63b --zeige 3
+    python3 tools/eval_documents.py --anlegen /pfad/brief.txt --model runs/ch-v71f
+    python3 tools/eval_documents.py --model runs/ch-v71f
+    python3 tools/eval_documents.py --model runs/ch-v71f --zeige 3
 
 Der Unterschied zu `evaluate_model.py`: dort stammt der Auswertungssatz aus
 denselben Vorlagen wie das Training. Er misst Verallgemeinerung ueber WERTE.
@@ -80,7 +80,8 @@ from packs import load_pack  # noqa: E402
 # unterscheiden. Deshalb steht die alte Zeile hier NICHT woertlich.
 
 
-def lade_gold(pack_name: str, auch_ungeprueft: bool = False):
+def lade_gold(pack_name: str, auch_ungeprueft: bool = False,
+              art: str = "real"):
     """Die geprueften Golddokumente lesen — die EINE Stelle dafuer.
 
     Gibt `(dokumente, hinweis, uebersprungen)` zurueck. Ein Dokument ist
@@ -90,7 +91,7 @@ def lade_gold(pack_name: str, auch_ungeprueft: bool = False):
     entscheidet, WELCHE Dokumente zaehlen. Zwei Kopien einer Ladelogik hiessen
     zwei verschiedene Testsets unter demselben Namen.
     """
-    eval_dir, hinweis = pfade.gold_lesen(pack_name, "real")
+    eval_dir, hinweis = pfade.gold_lesen(pack_name, art)
     dateien = sorted(eval_dir.glob("*.json"))
     if not dateien:
         # Ein leerer Befund ist keine Entwarnung. Ein falsch aufgeloester Pfad ist
@@ -255,6 +256,90 @@ def je_dokument(cases, meta, pack, ohne=None) -> str:
     return "\n".join(z)
 
 
+def berufsstellen(dokumente, pack_dir: Path, tag: str = "JOBTITLE") -> int:
+    """Wo im Testset steht eine Berufsbezeichnung, und wie ist sie markiert?
+
+    Fuer die Nachmarkierung mit JOBTITLE (seit 24.11.2026). Gibt NUR Kennung,
+    Position und die heutige Goldmarkierung aus, nie den
+    Wert: die Liste darf in einem Bericht stehen, das Dokument nicht.
+
+    Gesucht wird wie in `tools/gold_berufe.py` (eine Stelle fuer beide),
+    mit den Formen aus `berufe.json`. Zusammensetzungen und Funktionen mit Zusatz verfehlt die
+    Suche; die Liste ist eine Untergrenze und ersetzt das Durchlesen nicht.
+    `koeder` heisst: dieselbe Zeichenfolge ist auch ein Nachname.
+    """
+    from gold_berufe import finde, lade_formen
+    formen, koeder = lade_formen(pack_dir, tag)
+    gesamt = 0
+    zaehler: dict[str, int] = {}
+    print(f"{'Dokument':<24} {'Start':>6} {'Ende':>6}  Gold heute")
+    for text, gold, (kennung, *_rest) in dokumente:
+        for a, e, ist_koeder in finde(text, formen, koeder):
+            tag = next((g.tag for g in gold if g.start < e and a < g.end), "O")
+            vermerk = " (koeder)" if ist_koeder else ""
+            print(f"{kennung:<24} {a:>6} {e:>6}  {tag}{vermerk}")
+            zaehler[tag] = zaehler.get(tag, 0) + 1
+            gesamt += 1
+    print(f"\n{gesamt} Stellen in {len(dokumente)} Dokumenten. Gold heute: "
+          + ", ".join(f"{k} {v}" for k, v in sorted(zaehler.items())))
+    return 0
+
+
+def lecks_ohne_wert(cases, meta, pack, ohne=None) -> int:
+    """Wo leckt es, OHNE den Wert zu zeigen (seit 25.11.2026).
+
+    Je Leck: Dokument, Gold-Tag, Position, offene Zeichen von allen, und
+    welche Vorhersagen dort liegen (Tag, Anfang und Ende relativ zur
+    Goldspanne). Damit laesst sich eine Ursache finden (Grenze verschoben,
+    falsches Tag ohne Maske, gar nichts erkannt), ohne dass ein Personendatum
+    im Bericht steht. Dieselbe Leckdefinition wie `core/evaluate.py`:
+    zeichengenau, nur maskierende Vorhersagen decken.
+    """
+    actions = dict(pack.get_actions())
+    for tag in (ohne or ()):
+        actions[tag] = "tag_only"
+    zahl = 0
+    print(f"{'Dokument':<18} {'Tag':<12} {'Start':>6} {'Ende':>6} "
+          f"{'offen':>7}  Vorhersagen dort (Tag, rel. Anfang..Ende)")
+    for (text, gold, pred), m in zip(cases, meta):
+        for g in gold:
+            if actions.get(g.tag) != "mask":
+                continue
+            offen = [i for i in range(g.start, g.end)
+                     if not text[i].isspace() and not any(
+                         p.start <= i < p.end and actions.get(p.tag) == "mask"
+                         for p in pred)]
+            if not offen:
+                continue
+            zahl += 1
+            dort = [f"{p.tag}({p.start - g.start}..{p.end - g.start})"
+                    for p in pred if p.start < g.end and g.start < p.end]
+            print(f"{m[0]:<18} {g.tag:<12} {g.start:>6} {g.end:>6} "
+                  f"{len(offen):>3}/{g.end - g.start:<3}  "
+                  f"{', '.join(dort) or 'nichts'}")
+            # Umgebung: Gold und Vorhersage in 80 Zeichen davor und danach,
+            # nur Tag und Abstand. Zeigt, ob ein Nachbar die Stelle verschluckt
+            # oder die Grenze verschoben hat.
+            um_g = [f"{x.tag}{x.start - g.start:+d}" for x in gold
+                    if x is not g and abs(x.start - g.start) <= 80]
+            um_p = [f"{x.tag}{x.start - g.start:+d}" for x in pred
+                    if abs(x.start - g.start) <= 80]
+            print(f"{'':<18}   Gold daneben: {', '.join(um_g) or '-'}")
+            print(f"{'':<18}   Vorhersage:   {', '.join(um_p) or '-'}")
+    print(f"\n{zahl} Goldspannen mit offenen Zeichen.")
+    # Uebermaskierung je vorhergesagtem Tag: maskierende Spannen ohne jede
+    # Goldspanne darunter. Nur Zahlen, kein Wert.
+    ueber: dict[str, int] = {}
+    for (text, gold, pred), m in zip(cases, meta):
+        for p in pred:
+            if actions.get(p.tag) == "mask" and not any(
+                    g.start < p.end and p.start < g.end for g in gold):
+                ueber[p.tag] = ueber.get(p.tag, 0) + 1
+    print("Uebermaskiert je Tag: " + ", ".join(
+        f"{t} {n}" for t, n in sorted(ueber.items(), key=lambda x: -x[1])))
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", default=None)
@@ -278,6 +363,15 @@ def main() -> int:
     # Die Auswertung muss mit derselben Einstellung laufen wie die Kette.
     # Vorgabe sind die gespeicherten Vorlieben — sonst misst man eine
     # Verarbeitung, die es so nicht gab.
+    ap.add_argument("--art", default="real", choices=("real", "berufe", "familie", "protokoll"),
+                    help="Testset: real (Vorgabe), berufe, familie oder protokoll (Pruefsets)")
+    ap.add_argument("--lecks-ohne-wert", action="store_true",
+                    help="je Leck Ort und Vorhersagen dort, ohne den Wert")
+    ap.add_argument("--familie", action="store_true",
+                    help="wie --berufe, fuer Familienbeziehungen (FAMILYROLE)")
+    ap.add_argument("--berufe", action="store_true",
+                    help="nur Stellen mit Berufsbezeichnungen auflisten "
+                         "(Position, ohne Wert), fuer die JOBTITLE-Markierung")
     ap.add_argument("--ohne", action="append", default=None, metavar="TAG",
                     help="Tag bewusst im Klartext lassen. Vorgabe: die "
                          "gespeicherten Vorlieben. --ohne '' schaltet sie ab.")
@@ -289,9 +383,14 @@ def main() -> int:
         return anlegen(args, pack)
 
     dokumente, hinweis, uebersprungen = lade_gold(args.pack,
-                                                  args.auch_ungeprueft)
+                                                  args.auch_ungeprueft,
+                                                  args.art)
     if hinweis:
         print(f"⚠️  {hinweis}\n")
+
+    if args.berufe or args.familie:
+        return berufsstellen(dokumente, HIER.parent / "packs" / args.pack,
+                             "FAMILYROLE" if args.familie else "JOBTITLE")
 
     scorer = _scorer(args, pack)
     regeln = user_rules.lade(args.regeln, pack)
@@ -333,6 +432,9 @@ def main() -> int:
         except vorlieben.Abgelehnt as e:
             print(f"ABBRUCH: {e}", file=sys.stderr)
             return 2
+
+    if args.lecks_ohne_wert:
+        return lecks_ohne_wert(cases, meta, pack, ohne)
 
     report = evaluate(cases, pack, excluded=ohne)
     print(format_report(report, top=20))

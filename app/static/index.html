@@ -87,7 +87,17 @@
 
 <!-- Steps (since 2.0, UX design): filled by maschera.js, follow the work
      and jump to the tile on click. -->
-<nav class="schritte" id="schritte" aria-label="Ablauf"></nav>
+<!-- «Neu» stands in front of the steps (since 25.11.2026, feedback): at
+     the bottom of tile 01 it got lost. zeichneSchritte() keeps it as the
+     first child when it redraws the steps. -->
+<nav class="schritte" id="schritte" aria-label="Ablauf"><button
+    class="tat haupt schritt-neu" id="knopf-neu" type="button">
+  <svg class="rand-r-schmal" width="15" height="15" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+    stroke-linejoin="round"><path
+    d="M12 5v14"/><path d="M5 12h14"/></svg><span
+    id="neu-text">Neu</span>
+</button></nav>
 
 
 <main class="raster" id="raster">
@@ -135,13 +145,6 @@
           placeholder="Originaltext hier einfügen …"></textarea>
       </div>
       <div class="fuss" id="fuss-01">
-        <button class="tat haupt" id="knopf-neu">
-          <svg class="rand-r-schmal" width="15" height="15" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-            stroke-linejoin="round"><path
-            d="M12 5v14"/><path d="M5 12h14"/></svg><span
-            id="neu-text">Neu</span>
-        </button>
         <div class="feldknoepfe">
         <button class="imfeld loeschen" id="knopf-leeren-orig" data-rang="3" disabled>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
@@ -219,7 +222,7 @@
     </div>
     <!-- Stacked view only: the way back to the top from the end of the flow.
          Outside tile 05: starting over is not part of the final text. -->
-    <button class="tat neu-unten" id="knopf-neu-unten">
+    <button class="tat haupt neu-unten" id="knopf-neu-unten">
       <svg class="rand-r-schmal" width="15" height="15" viewBox="0 0 24 24" fill="none"
         stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
         stroke-linejoin="round"><path
@@ -328,14 +331,14 @@
         </div>
       </div>
       <div class="vokabular-fuss">
-        <button class="ghostknopf bleibt-hier" id="knopf-vok-herunter" disabled>
+        <button class="ghostknopf bleibt-hier" id="knopf-vok-herunter" data-rang="3" disabled>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round"><path d="M12 3v13"/><path d="m7 11 5 5 5-5"/>
             <path d="M4 21h16"/></svg>
           <span id="vok-herunter-text">Vokabular herunterladen</span>
         </button>
-        <button class="ghostknopf bleibt-hier" id="knopf-vok-hoch">
+        <button class="ghostknopf bleibt-hier" id="knopf-vok-hoch" data-rang="4">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round"><path d="M12 21V8"/><path d="m7 13 5-5 5 5"/>
@@ -344,6 +347,16 @@
         </button>
         <input type="file" id="vok-datei" hidden
                accept=".json,application/json">
+        <!-- Second «Take into prompt», stacked view only (feedback 25.11.2026):
+             whoever corrects in the vocabulary goes on from here, without
+             scrolling back up to 02. Same handler as #knopf-uebernahme. -->
+        <button class="tat haupt weit uebernahme-vok" id="knopf-uebernahme-vok" disabled>
+          <span id="uebernahme-vok-text">Übernahme in Prompt</span>
+          <svg class="richtung rand-l" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round"
+            ><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
       </div>
     </div>
   </div>
@@ -428,6 +441,7 @@
               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
               d="M5 12.5 10 17.5 19 7"/></svg></span>
             <span class="teil-titel" id="titel-hinaus">Prompt &amp; maskierter Text</span>
+            <span class="teil-unter" id="hinaus-unter" aria-live="polite"></span>
             <svg class="pfeil" width="15" height="15" viewBox="0 0 24 24"
               fill="none" stroke="currentColor" stroke-width="2.2"
               stroke-linecap="round" stroke-linejoin="round"
@@ -573,6 +587,33 @@
       </button>
       <button type="button" class="tat haupt" id="knopf-willkommen-weiter">
         <span id="willkommen-weiter-text">Weiter</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- How-to (since 2.5): masking, changing the type and removing masks in
+     the masked text and in the vocabulary. Same frame as the welcome
+     screen; the small scenes are built by maschera.js without innerHTML. -->
+<div class="einst-hintergrund" id="anleitung" hidden>
+  <div class="einst willkommen anleitung" role="dialog" aria-modal="true"
+       aria-labelledby="anleitung-titel">
+    <div class="willkommen-oben">
+      <button type="button" class="kreuz willkommen-zu"
+              id="knopf-anleitung-zu"></button>
+    </div>
+    <div class="willkommen-buehne" id="anleitung-buehne"></div>
+    <div class="willkommen-punkte" id="anleitung-punkte"></div>
+    <div class="willkommen-fuss">
+      <label class="willkommen-nie">
+        <input type="checkbox" id="anleitung-nie">
+        <span id="anleitung-nie-text">Nicht mehr anzeigen</span>
+      </label>
+      <button type="button" class="tat neben" id="knopf-anleitung-zurueck">
+        <span id="anleitung-zurueck-text">Zurück</span>
+      </button>
+      <button type="button" class="tat haupt" id="knopf-anleitung-weiter">
+        <span id="anleitung-weiter-text">Weiter</span>
       </button>
     </div>
   </div>
@@ -808,6 +849,7 @@
 <!-- Tooltip of a placeholder: original value and source. Filled by
      tippZeigen() in maschera.js, text only. -->
 <div class="tipp" id="tipp" role="tooltip" hidden></div>
+<div class="tipp knopftipp" id="knopftipp" role="tooltip" hidden></div>
 
 <!-- Help and imprint: one source, four languages. -->
 <script src="seiten.js"></script>

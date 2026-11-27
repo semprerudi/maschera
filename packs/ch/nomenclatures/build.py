@@ -146,6 +146,29 @@ SOURCES = [
         licence="OFFEN — Klärung ausstehend (offener Punkt 4)",
         note="SPARQL. Bis zur Klärung baut --build synthetische Firmennamen.",
     ),
+    Source(
+        key="chisco",
+        tag="JOBTITLE",
+        title="CH-ISCO-19 mit Berufsverzeichnis (BFS), v1.2.4",
+        url="https://www.i14y.admin.ch (Konzept CH-ISCO-19_with_PROF, "
+            "JSON-Export)",
+        filename="berufe_chisco.json",
+        licence="opendata.swiss, kommerziell erlaubt; Quelle wird genannt",
+        note=("Concept_CH-ISCO-19_with_PROF-1_2_4.json unter diesem Namen "
+              "ablegen. Nur 8-stellige Codes, ACTIVE=1, Formen aus "
+              "GENDER_M/GENDER_F."),
+    ),
+    Source(
+        key="esco",
+        tag="JOBTITLE",
+        title="ESCO-Berufe, nur Englisch (Europaeische Kommission)",
+        url="https://ec.europa.eu/esco/api (search, type=occupation)",
+        filename="berufe_esco_en.json",
+        licence=("Beschluss 2011/833/EU; Quellensatz Pflicht, angepasste "
+                 "Fassung als geaendert kennzeichnen"),
+        note=("Das Download-Portal lieferte am 24.11.2026 keine Inhalte; "
+              "abgerufen ueber die API. DE/FR/IT aus ESCO NICHT verwenden."),
+    ),
 ]
 
 
@@ -681,6 +704,386 @@ def build_behoerden() -> tuple[str, list[str], dict]:
 
 
 # ---------------------------------------------------------------------------
+# Berufs- und Funktionsbezeichnungen (JOBTITLE), seit dem 24.11.2026
+# ---------------------------------------------------------------------------
+# Format JOBTITLE|lang|wert wie bei den Behoerden: eine deutsche Form in
+# einer franzoesischen Vorlage lehrte eine Sprachmischung.
+#
+# **Doppelwoerter sind der wichtigste Teil.** Unter den Berufen stehen
+# haeufige Nachnamen (Schreiner, Maler, Polier, Berger, Tanner). Entscheid vom
+# 24.11.2026: BEIDE Rollen lernen. Jede Form, die ein Nachname mit mindestens
+# `_BERUF_NACHNAME_AB` Traegern ist, bleibt in der Berufsliste UND steht als
+# KOEDER|lang|name daneben: die Vorlagen setzen sie dort als FULLNAME ein, wo
+# ein Name steht («Herr {KOEDER}», Signatur). Das Modell muss am Kontext
+# entscheiden. Abnahme hart: im Pruefset `berufe` darf kein Koeder-Name als
+# JOBTITLE durchgehen, sonst zurueck auf den Filter (bis 24.11.2026 fielen
+# diese Formen aus der Berufsliste; dann lernte das Modell «Schreiner» nur
+# als Namen).
+#
+# Gewichte: der Injektor zieht mit der WURZEL des Gewichts. Gespeichert wird
+# deshalb das Quadrat der gewuenschten relativen Haeufigkeit:
+#   normale Form 10 -> 100, Umfrageliste (haeufige Berufe) 30 -> 900,
+#   Form mit mehr als 4 Woertern 1 -> 1.
+# Bei einer Form mit Zusatz (EFZ, HF, Klammer, Text nach Komma) geht 70 %
+# an die Variante ohne Zusatz und 30 % an das Original.
+
+_BERUF_NACHNAME_AB = 10
+_BERUF_SPRACHEN = ("de", "fr", "it", "en")
+_BERUF_ZUSATZ = re.compile(
+    r"\s*(\(.*?\)|,.*$|\b(EFZ|EBA|BP|HFP|HF|FH|CFC|AFP|AFC|BF|DF|ES|SSS|"
+    r"LL\.M\.?|MAS|CAS|DAS)\b|eidg\.|dipl\.|diplômée?|diplomat[oa]|"
+    r"fédérale?|federale)\s*", re.IGNORECASE)
+
+# Verwaltungs- und Firmenfunktionen, die im Berufsverzeichnis fehlen oder nur
+# teilweise stehen. Kombinatorisch wie die Behoerden: Funktion x Einheit.
+# Die Einheit ist bewusst KEIN Organisationsname (der waere ORG).
+_FUNKTION_EINHEIT = {
+    "de": (["Leiter {}", "Leiterin {}", "stv. Leiter {}", "stv. Leiterin {}",
+            "Chef {}", "Chefin {}"],
+           ["Rechtsdienst", "Personaldienst", "Finanzdienst", "Informatik",
+            "Kommunikation", "Einkauf", "Kundendienst", "Sektion Recht",
+            "Abteilung Finanzen", "Fachstelle Datenschutz", "Logistik",
+            "Marketing", "Zentrale Dienste", "Steuern"]),
+    "fr": (["Chef {}", "Cheffe {}", "Responsable {}", "Chef suppléant {}",
+            "Cheffe suppléante {}"],
+           ["du service juridique", "du service du personnel",
+            "des finances", "de l'informatique", "de la communication",
+            "du service clients", "de la section droit",
+            "de la logistique", "des achats"]),
+    "it": (["Capo {}", "Responsabile {}", "Capo supplente {}"],
+           ["del servizio giuridico", "del servizio del personale",
+            "delle finanze", "dell'informatica", "della comunicazione",
+            "del servizio clienti", "della sezione diritto",
+            "della logistica", "degli acquisti"]),
+    "en": (["Head of {}", "Deputy Head of {}"],
+           ["Legal", "HR", "Finance", "IT", "Communications",
+            "Customer Service", "Procurement", "Logistics", "Compliance"]),
+}
+_FUNKTION_FEST = {
+    "de": ["Amtschef", "Amtschefin", "stv. Amtschef", "stv. Amtschefin",
+           "Sektionschef", "Sektionschefin", "stv. Sektionschef",
+           "stv. Sektionschefin", "Abteilungsleiter", "Abteilungsleiterin",
+           "Bereichsleiter", "Bereichsleiterin", "Teamleiter", "Teamleiterin",
+           "Projektleiter", "Projektleiterin", "Gemeindeschreiber",
+           "Gemeindeschreiberin", "Datenschutzberater", "Datenschutzberaterin",
+           "Datenschutzbeauftragter", "Datenschutzbeauftragte",
+           "Applikationsverantwortlicher", "Applikationsverantwortliche",
+           "Sachbearbeiter", "Sachbearbeiterin", "Fachspezialist",
+           "Fachspezialistin", "wissenschaftlicher Mitarbeiter",
+           "wissenschaftliche Mitarbeiterin", "Geschäftsführer",
+           "Geschäftsführerin", "Direktor", "Direktorin", "Vizedirektor",
+           "Vizedirektorin", "Product Owner", "Scrum Master"],
+    "fr": ["Chef d'office", "Cheffe d'office", "Chef de section",
+           "Cheffe de section", "Chef de projet", "Cheffe de projet",
+           "Collaborateur administratif", "Collaboratrice administrative",
+           "Collaborateur scientifique", "Collaboratrice scientifique",
+           "Directeur", "Directrice", "Vice-directeur", "Vice-directrice",
+           "Préposé à la protection des données",
+           "Préposée à la protection des données", "Secrétaire communal",
+           "Secrétaire communale", "Gestionnaire de dossiers", "Juriste",
+           "Product Owner"],
+    "it": ["Capoufficio", "Caposezione", "Capoprogetto", "Capo progetto",
+           "Collaboratore amministrativo", "Collaboratrice amministrativa",
+           "Collaboratore scientifico", "Collaboratrice scientifica",
+           "Direttore", "Direttrice", "Vicedirettore", "Vicedirettrice",
+           "Consulente per la protezione dei dati", "Segretario comunale",
+           "Segretaria comunale", "Giurista", "Product Owner"],
+    "en": ["Project Manager", "Product Owner", "Data Protection Officer",
+           "Team Lead", "Administrative Assistant", "Case Officer",
+           "Director", "Managing Director", "Deputy Director",
+           "Scrum Master", "Application Manager"],
+}
+
+
+def _beruf_nachnamen() -> dict[str, tuple[str, int]]:
+    """Nachname klein geschrieben -> (Schreibweise im Register, Traeger)."""
+    path = RAW / "nachnamen.csv"
+    if not path.exists():
+        return {}
+    recs = _read_name_weight(path, ["LASTNAME", "Nachname", "Name"])
+    return {norm(r["name"]).casefold(): (norm(r["name"]), r["weight"])
+            for r in recs}
+
+
+def build_berufe() -> tuple[str, list[dict], dict] | None:
+    """Berufe aus CH-ISCO-19 (de/fr/it/en) und ESCO (nur en).
+
+    Ohne `raw/berufe_chisco.json` gibt es nichts zu bauen. Ohne
+    `raw/nachnamen.csv` auch nicht: ein Bau ohne Nachnamen-Filter waere der
+    Fehler, gegen den diese Liste gebaut ist.
+    """
+    pfad = RAW / "berufe_chisco.json"
+    nach = _beruf_nachnamen()
+    if not pfad.exists() or not nach:
+        return None
+    gewicht: dict[tuple[str, str], float] = {}
+    koeder: dict[tuple[str, str], int] = {}
+
+    def neu(sprache: str, form: str, w: float) -> None:
+        form = norm(form).strip(" ,")
+        if not form:
+            return
+        schreibweise, traeger = nach.get(form.casefold(), (form, 0))
+        if traeger >= _BERUF_NACHNAME_AB:
+            # Als Name geschrieben wie im Register («Tanner»), nicht wie in
+            # der Berufsliste («tanner»): der Koeder steht als FULLNAME.
+            # Kein `return`: die Form bleibt auch ein Beruf (beide Rollen).
+            koeder[(sprache, schreibweise)] = traeger
+        if len(form.split()) > 4:
+            w = w / 10
+        gewicht[(sprache, form)] = gewicht.get((sprache, form), 0) + w
+
+    def mit_zusatz(sprache: str, form: str, w: float) -> None:
+        kurz = " ".join(_BERUF_ZUSATZ.sub(" ", form).split()).strip(" ,")
+        if kurz and kurz != norm(form):
+            neu(sprache, form, 0.3 * w)
+            neu(sprache, kurz, 0.7 * w)
+        else:
+            neu(sprache, form, w)
+
+    daten = json.loads(pfad.read_text(encoding="utf-8"))["data"]
+    for e in daten["codeListEntries"]:
+        if len(e["code"]) != 8:
+            continue
+        an = {a["type"]: a for a in e.get("annotations", [])}
+        if an.get("ACTIVE", {}).get("title") != "1":
+            continue
+        for sprache in _BERUF_SPRACHEN:
+            umfrage = any(
+                (an.get(t, {}).get("text") or {}).get(sprache) == "1"
+                for t in ("REDUCED_LIST_M", "REDUCED_LIST_F"))
+            for t in ("GENDER_M", "GENDER_F"):
+                form = ((an.get(t, {}).get("text") or {}).get(sprache) or "")
+                if form.strip():
+                    mit_zusatz(sprache, form, 30 if umfrage else 10)
+
+    esco = RAW / "berufe_esco_en.json"
+    if esco.exists():
+        for o in json.loads(esco.read_text(encoding="utf-8"))["occupations"]:
+            formen = [o.get("preferred_en")] + list(o.get("alternative_en") or [])
+            for form in formen:
+                if form:
+                    # ESCO schreibt klein («3D animator»), wie im Fliesstext.
+                    mit_zusatz("en", form, 10)
+
+    for sprache, (muster, einheiten) in _FUNKTION_EINHEIT.items():
+        for m in muster:
+            for einheit in einheiten:
+                neu(sprache, m.format(einheit), 10)
+    for sprache, formen in _FUNKTION_FEST.items():
+        for form in formen:
+            neu(sprache, form, 30)
+
+    # Im franzoesischen, italienischen und englischen Fliesstext steht die
+    # Funktion klein («en tant que cheffe de projet»), in der Signatur gross.
+    # Beide Schreibweisen, je zur Haelfte. Deutsch schreibt Nomen gross.
+    # Ein Wert, der in beiden Quellen in verschiedener Schreibweise steht,
+    # bekommt so sein Gewicht zweimal; das ist gewollt, er ist haeufig.
+    eintraege: list[dict] = []
+    for (sprache, form), w in gewicht.items():
+        varianten = [form]
+        if sprache != "de" and not form[:2].isupper():
+            # ESCO schreibt klein, CH-ISCO gross: beide Richtungen ergaenzen.
+            for v in (form[0].lower() + form[1:], form[0].upper() + form[1:]):
+                if v not in varianten:
+                    varianten.append(v)
+        for v in varianten:
+            q = max(1, round((w / len(varianten)) ** 2))
+            eintraege.append({"name": f"JOBTITLE|{sprache}|{v}", "weight": q})
+    for (sprache, form), traeger in koeder.items():
+        eintraege.append({"name": f"KOEDER|{sprache}|{form}",
+                          "weight": traeger})
+    quelle = ("BFS, CH-ISCO-19 mit Berufsverzeichnis v1.2.4"
+              + ("; ESCO (Europaeische Kommission), nur en" if esco.exists()
+                 else ""))
+    return "berufe", eintraege, {
+        "source": quelle,
+        "tag": "JOBTITLE",
+        "attribution": ("This service uses the ESCO classification of the "
+                        "European Commission."),
+        "geaendert": ("Angepasst: nur aktive Eintraege, Zusaetze entfernt, "
+                      "Funktionen ergaenzt, Nachnamen ab "
+                      f"{_BERUF_NACHNAME_AB} Traegern zusaetzlich als Koeder"),
+        "hinweis": "KOEDER|lang|name sind Nachnamen: als FULLNAME einsetzen",
+    }
+
+
+# ---------------------------------------------------------------------------
+# Familienbeziehungen (FAMILYROLE), seit dem 25.11.2026
+# ---------------------------------------------------------------------------
+# Eine GESCHLOSSENE Wortklasse: ein paar hundert Formen je Sprache. Deshalb
+# erzeugt, nicht heruntergeladen: Grundwort x Vorsilbe x Zahl x Fall. Gegen
+# Wikidata, Wiktionary, ZGB und eCH-0021 zu pruefen; die Mundart (Goetti,
+# Grosi, Nani) liest der Anwender gegen.
+#
+# Dazu gehoeren nach Entscheid vom 25.11.2026 auch Beistand, Vormund und
+# Beistaendin: in Akten stehen sie an der Stelle der Eltern und fuehren
+# genauso auf die Person zurueck.
+#
+# Format FAMILYROLE|lang|wert, Gewicht wie bei den Berufen als Quadrat der
+# gewuenschten Haeufigkeit (der Injektor zieht mit der Wurzel).
+#
+# Deutsch: Grundwort -> (Formen des Grundworts, ob Vorsilben passen).
+# Die Formen tragen Mehrzahl und die gebeugten Faelle, die in Akten stehen
+# («des Vaters», «den Kindern»). Vorsilben haengen vor JEDE Form.
+_FAM_DE = {
+    "Vater": (["Vater", "Vaters", "Väter", "Vätern"], True),
+    "Mutter": (["Mutter", "Mütter", "Müttern"], True),
+    "Eltern": (["Eltern", "Elternteil", "Elternteils", "Elternteile"], True),
+    "Sohn": (["Sohn", "Sohnes", "Sohns", "Söhne", "Söhnen"], True),
+    "Tochter": (["Tochter", "Töchter", "Töchtern"], True),
+    "Kind": (["Kind", "Kindes", "Kinds", "Kinder", "Kindern"], True),
+    "Bruder": (["Bruder", "Bruders", "Brüder", "Brüdern"], True),
+    "Schwester": (["Schwester", "Schwestern"], True),
+    "Geschwister": (["Geschwister", "Geschwistern"], True),
+    "Onkel": (["Onkel", "Onkels", "Onkeln"], True),
+    "Tante": (["Tante", "Tanten"], True),
+    "Neffe": (["Neffe", "Neffen"], True),
+    "Nichte": (["Nichte", "Nichten"], True),
+    "Enkel": (["Enkel", "Enkels", "Enkeln", "Enkelin", "Enkelinnen",
+               "Enkelkind", "Enkelkinder", "Enkelkindern"], False),
+    "Cousin": (["Cousin", "Cousins", "Cousine", "Cousinen", "Vetter",
+                "Vettern", "Base", "Basen"], False),
+    "Schwager": (["Schwager", "Schwagers", "Schwäger", "Schwägerin",
+                  "Schwägerinnen"], False),
+    "Ehe": (["Ehemann", "Ehemannes", "Ehemanns", "Ehemänner", "Ehefrau",
+             "Ehefrauen", "Ehegatte", "Ehegatten", "Ehegattin", "Gatte",
+             "Gatten", "Gattin", "Ehepartner", "Ehepartnerin", "Ehepaar",
+             "Ehepartnern"], False),
+    "Partner": (["Lebenspartner", "Lebenspartnerin", "Lebensgefährte",
+                 "Lebensgefährtin", "Konkubinatspartner",
+                 "Konkubinatspartnerin", "eingetragene Partnerin",
+                 "eingetragener Partner", "eingetragenen Partner",
+                 "Verlobte", "Verlobter", "Verlobten", "Witwe", "Witwer",
+                 "Ex-Mann", "Ex-Frau", "Exmann", "Exfrau", "Ex-Partner",
+                 "Ex-Partnerin", "geschiedene Ehefrau",
+                 "geschiedener Ehemann"], False),
+    "Recht": (["Kindsvater", "Kindsvaters", "Kindsmutter", "Kindseltern",
+               "Beistand", "Beistands", "Beiständin", "Beiständinnen",
+               "Vormund", "Vormunds", "Vormundin", "Erziehungsberechtigte",
+               "Erziehungsberechtigten", "Sorgeberechtigte",
+               "obhutsberechtigte Elternteil"], False),
+    "Mundart": (["Götti", "Gotte", "Göttikind", "Patenonkel", "Patentante",
+                 "Pate", "Patin", "Patenkind", "Grosi", "Nani", "Neni",
+                 "Ätti", "Grossätti", "Mami", "Papi", "Mama", "Papa", "Oma",
+                 "Opa", "Omi", "Opi", "Grossmami", "Grosspapi"], False),
+}
+# Vorsilben und welche Grundwoerter sie nehmen.
+_FAM_DE_VOR = {
+    "Gross": ["Vater", "Mutter", "Eltern", "Onkel", "Tante", "Neffe",
+              "Nichte", "Kind", "Sohn", "Tochter"],
+    "Urgross": ["Vater", "Mutter", "Eltern"],
+    "Ururgross": ["Vater", "Mutter", "Eltern"],
+    "Stief": ["Vater", "Mutter", "Eltern", "Sohn", "Tochter", "Kind",
+              "Bruder", "Schwester", "Geschwister"],
+    "Halb": ["Bruder", "Schwester", "Geschwister"],
+    "Schwieger": ["Vater", "Mutter", "Eltern", "Sohn", "Tochter"],
+    "Pflege": ["Vater", "Mutter", "Eltern", "Sohn", "Tochter", "Kind"],
+    "Adoptiv": ["Vater", "Mutter", "Eltern", "Sohn", "Tochter", "Kind"],
+    "Zwillings": ["Bruder", "Schwester"],
+}
+# Haeufige Grundwoerter oefter ziehen.
+_FAM_HAEUFIG = {"Vater", "Mutter", "Eltern", "Kind", "Sohn", "Tochter",
+                "Ehe", "Bruder", "Schwester"}
+
+# Franzoesisch, Italienisch, Englisch: als Listen. Die Zusammensetzungen
+# (grand-mère, bisnonna, stepfather) sind dort eigene Woerter, keine Vorsilben.
+_FAM_ANDERE = {
+    "fr": [
+        "père", "mère", "parents", "parent", "fils", "fille", "filles",
+        "enfant", "enfants", "frère", "frères", "sœur", "sœurs",
+        "demi-frère", "demi-sœur", "oncle", "oncles", "tante", "tantes",
+        "neveu", "neveux", "nièce", "nièces", "cousin", "cousine", "cousins",
+        "cousines", "grand-père", "grand-mère", "grands-parents",
+        "arrière-grand-père", "arrière-grand-mère", "arrière-grands-parents",
+        "petit-fils", "petite-fille", "petits-enfants", "arrière-petit-fils",
+        "arrière-petite-fille", "beau-père", "belle-mère", "beaux-parents",
+        "beau-fils", "belle-fille", "beau-frère", "belle-sœur", "gendre",
+        "bru", "époux", "épouse", "mari", "conjoint", "conjointe",
+        "partenaire enregistré", "partenaire enregistrée", "concubin",
+        "concubine", "compagnon", "compagne", "fiancé", "fiancée", "veuf",
+        "veuve", "ex-mari", "ex-épouse", "ex-conjoint", "ex-conjointe",
+        "père adoptif", "mère adoptive", "enfant adoptif", "parents adoptifs",
+        "parents nourriciers", "père nourricier", "mère nourricière",
+        "enfant placé", "famille d'accueil", "parrain", "marraine",
+        "filleul", "filleule", "jumeau", "jumelle", "papa", "maman", "papi",
+        "mamie", "pépé", "mémé", "tuteur", "tutrice", "curateur",
+        "curatrice", "détenteurs de l'autorité parentale"],
+    "it": [
+        "padre", "madre", "genitori", "genitore", "figlio", "figli", "figlia",
+        "figlie", "fratello", "fratelli", "sorella", "sorelle",
+        "fratellastro", "sorellastra", "zio", "zii", "zia", "zie", "nipote",
+        "nipoti", "cugino", "cugina", "cugini", "cugine", "nonno", "nonna",
+        "nonni", "bisnonno", "bisnonna", "bisnonni", "pronipote", "suocero",
+        "suocera", "suoceri", "genero", "nuora", "cognato", "cognata",
+        "cognati", "marito", "moglie", "coniuge", "coniugi",
+        "partner registrato", "partner registrata", "convivente",
+        "compagno", "compagna", "fidanzato", "fidanzata", "vedovo", "vedova",
+        "ex marito", "ex moglie", "padre adottivo", "madre adottiva",
+        "figlio adottivo", "genitori affilianti", "padre affiliante",
+        "madre affiliante", "figlio affiliato", "padrino", "madrina",
+        "figlioccio", "figlioccia", "gemello", "gemella", "papà", "mamma",
+        "nonnino", "nonnina", "tutore", "tutrice", "curatore", "curatrice",
+        "patrigno", "matrigna", "figliastro", "figliastra"],
+    "en": [
+        "father", "mother", "parents", "parent", "son", "sons", "daughter",
+        "daughters", "child", "children", "brother", "brothers", "sister",
+        "sisters", "siblings", "half-brother", "half-sister", "stepfather",
+        "stepmother", "stepson", "stepdaughter", "stepchild", "grandfather",
+        "grandmother", "grandparents", "great-grandfather",
+        "great-grandmother", "grandson", "granddaughter", "grandchild",
+        "grandchildren", "uncle", "aunt", "nephew", "niece", "cousin",
+        "cousins", "father-in-law", "mother-in-law", "parents-in-law",
+        "son-in-law", "daughter-in-law", "brother-in-law", "sister-in-law",
+        "husband", "wife", "spouse", "registered partner", "civil partner",
+        "fiancé", "fiancée", "widow", "widower", "ex-husband", "ex-wife",
+        "foster father", "foster mother", "foster parents", "foster child",
+        "adoptive father", "adoptive mother", "adoptive parents",
+        "adopted child", "godfather", "godmother", "godson", "goddaughter",
+        "twin brother", "twin sister", "mum", "mom", "dad", "grandma",
+        "grandpa", "guardian", "legal guardian"],
+}
+_FAM_ANDERE_HAEUFIG = {
+    "fr": {"père", "mère", "parents", "fils", "fille", "enfant", "enfants",
+           "époux", "épouse", "frère", "sœur"},
+    "it": {"padre", "madre", "genitori", "figlio", "figlia", "figli",
+           "marito", "moglie", "fratello", "sorella"},
+    "en": {"father", "mother", "parents", "son", "daughter", "child",
+           "children", "husband", "wife", "brother", "sister"},
+}
+
+
+def build_familie() -> tuple[str, list[dict], dict]:
+    """Familienbeziehungen je Sprache. Kein raw/ noetig: erzeugt."""
+    eintraege: dict[str, int] = {}
+
+    def neu(sprache: str, form: str, w: int) -> None:
+        for v in {form, form[0].upper() + form[1:]} if sprache != "de" else {form}:
+            k = f"FAMILYROLE|{sprache}|{v}"
+            eintraege[k] = max(eintraege.get(k, 0), w * w)
+
+    for grund, (formen, _vor) in _FAM_DE.items():
+        w = 30 if grund in _FAM_HAEUFIG else 10
+        for f in formen:
+            neu("de", f, w)
+    for vorsilbe, gruende in _FAM_DE_VOR.items():
+        for grund in gruende:
+            for f in _FAM_DE[grund][0]:
+                neu("de", vorsilbe + f.lower(), 10)
+                if "ss" in vorsilbe:   # auch die deutsche Schreibweise
+                    neu("de", vorsilbe.replace("ss", "ß") + f.lower(), 1)
+    for sprache, formen in _FAM_ANDERE.items():
+        for f in formen:
+            neu(sprache, f, 30 if f in _FAM_ANDERE_HAEUFIG[sprache] else 10)
+    return "familie", [{"name": k, "weight": v} for k, v in eintraege.items()], {
+        "source": "kombinatorisch (Grundwort x Vorsilbe x Zahl x Fall)",
+        "tag": "FAMILYROLE",
+        "hinweis": ("gegen Wikidata, Wiktionary, ZGB und eCH-0021 pruefen; "
+                    "Mundart gegenlesen"),
+    }
+
+
+# ---------------------------------------------------------------------------
 # Geschlossene Wertlisten aus dem Amtlichen Katalog der Merkmale (BFS)
 # ---------------------------------------------------------------------------
 # Quelle: «Die Harmonisierung amtlicher Personenregister — Amtlicher Katalog
@@ -832,7 +1235,7 @@ def build_merkmale() -> tuple[str, list[str], dict]:
 
 BUILDERS = [build_ortschaften, build_strassen, build_heimatorte,
             build_nachnamen, build_vornamen, build_zefix,
-            build_behoerden, build_merkmale]
+            build_behoerden, build_merkmale, build_berufe, build_familie]
 
 
 # -----------------------------------------------------------------------------

@@ -125,7 +125,7 @@ fertiger Stand wird Release.
 Der ONNX-Läufer int8 ist viel kleiner, leckte im Vergleich am selben Testset aber
 mehr. Übermaskierung ist kein Leck, ein Leck schon. Deshalb fährt torch mit.
 
-### EN-013 `ch-v63b` bleibt das Arbeitsmodell
+### EN-013 `ch-v63b` bleibt das Arbeitsmodell (bis 2.4, abgelöst durch EN-038)
 
 Andere Läufe waren auf einzelnen Grössen besser. Die Schwellen sind aber auf
 `ch-v63b` kalibriert, und richtig eingestellt liess es weniger Lecks als der Herausforderer. Ein
@@ -305,3 +305,15 @@ Download. Die Vorschau ist ein einziges Bild, weil zwei Bilder auf dem Handy nic
 hoch blieben. Die Knöpfe führen zum Abschnitt auf der Webseite, dort stehen die Hinweise zum
 Modell und zu den fehlenden Signaturen. Aussagen wie «GDPR by design» stehen nicht in den
 Badges: Das sind Rechtsaussagen ohne Beleg, und MASCHERA ersetzt die eigene Prüfung nicht.
+
+### EN-038 `ch-v71f` wird das Arbeitsmodell (seit 2.5)
+
+`ch-v71f` setzt `ch-v63b` fort, statt von vorn zu trainieren: der Kopf bekommt
+`JOBTITLE` und `FAMILYROLE`, `ch-v63b` hält als Lehrer das alte Verhalten fest
+(Gewicht 4), nur Namen in Protokollköpfen dürfen von `ORG` zu Personen umlernen.
+Ein Neulauf von vorn leckte bei mehreren Keimen mehr als `ch-v63b`. An den
+Golddokumenten: 6 Lecks wie `ch-v63b`, Micro-F1 0.757 statt 0.736. In einem
+Dokument stehen dafür zwei kleine neue Teilstücke statt einer Kennung. Der
+Anwender hat das als Ausnahme angenommen (25.11.2026), weil Namen in
+Protokollköpfen sonst als Organisation offen blieben (Prüfset `protokoll`: 6
+offene Namen statt 28 beim Vorläufer `ch-v70`). EN-014 gilt für Läufe von vorn; das Weiterlernen braucht 2 Epochen.

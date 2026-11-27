@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Vom trainierten Checkpoint zum auslieferbaren CPU-Modell (SPEC §12).
 
-    python3 tools/build_release.py --checkpoint runs/ch-v63b --out release/ch-v63b --no-trim --verify
+    python3 tools/build_release.py --checkpoint runs/ch-v71f --out release/ch-v71f --no-trim --verify
 
 Drei Schritte:
 
@@ -195,6 +195,12 @@ def main() -> int:
         "trimmed_vocab": kept_ids is not None,
         "vocab_size": len(kept_ids) if kept_ids else model.config.vocab_size,
         "kept_token_ids": kept_ids,
+        # Zwei Koepfe (seit 25.11.2026): ohne diese Zahl entschiede der
+        # ONNX-Laeufer alle Labels in einer Softmax und verhielte sich anders
+        # als der Torch-Laeufer mit demselben Modell.
+        **({"kopf_alt": _kopf_alt} if (_kopf_alt := json.loads(
+            (ckpt / "pack.json").read_text(encoding="utf-8")).get("kopf_alt"))
+           else {}),
     }, ensure_ascii=False), encoding="utf-8")
 
     if a.verify:

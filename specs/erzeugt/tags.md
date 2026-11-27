@@ -4,7 +4,7 @@
 
 Quelle: `packs/ch/taxonomy.yaml`. Die Reihenfolge ist der BIO-Indexvertrag.
 
-45 Tags, 91 BIO-Labels. Vertrag sha256 `b7a96dc99b05c6150302fc11943e0a357c7078b593e7382b4b06390245cceeee`.
+47 Tags, 95 BIO-Labels. Vertrag sha256 `6abcddcc90e672691e0a53c0acc6138c9fb3df5b40daf54aeff19ddb06a463c4`.
 
 | Index | Tag | Stufe | Aktion | Budget | bspd | Override | Notiz |
 |---:|---|---:|---|---|---|---|---|
@@ -53,6 +53,8 @@ Quelle: `packs/ch/taxonomy.yaml`. Die Reihenfolge ist der BIO-Indexvertrag.
 | 42 | `ORG` | 3 | mask | P | nein |  |  |
 | 43 | `HEALTHCARE_ORG` | 3 | mask | R | ja |  | Spezialklinik verrät mehr als die Diagnose |
 | 44 | `USERNAME` | 3 | mask | R | nein |  | Kontoname, Pfadbestandteil, Anmeldename |
+| 45 | `JOBTITLE` | 3 | mask | A | nein |  | Funktion zusammen mit der Organisation kann eine Person bestimmen |
+| 46 | `FAMILYROLE` | 3 | mask | R | nein |  | Verwandtschaft, Partnerschaft, Beistand und Vormund |
 
 ## Schwellen
 

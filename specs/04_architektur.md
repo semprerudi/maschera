@@ -183,7 +183,7 @@ Dokument, das lang genug ist.
 packs/
 └─ ch/
    ├─ pack.yaml            Manifest: Version, Sprachen, Backbone, Labelvertrag
-   ├─ taxonomy.yaml        45 Tags: Stufe, Aktion, Budget, BIO-Index, Schwellen
+   ├─ taxonomy.yaml        47 Tags: Stufe, Aktion, Budget, BIO-Index, Schwellen
    ├─ patterns.yaml        Regex + Kontextanker, viersprachig
    ├─ macros.yaml          Expansionen + Kopplungsregeln
    ├─ bezeichnungen.yaml   Tagnamen in vier Sprachen

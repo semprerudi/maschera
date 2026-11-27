@@ -60,6 +60,128 @@ def fensterzahl(token: int, nutz: int, step: int) -> int:
     return 1 + -(-(token - nutz) // step)
 
 
+def kopf_paesse(logits, kopf_alt: int | None):
+    """Tokenentscheide aus den Logits: (Label-Index, Vertrauen) je Pass.
+
+    Ein Pass: Softmax ueber alle Labels, wie bisher.
+
+    Zwei Paesse, wenn das Modell `kopf_alt` traegt (seit 25.11.2026): die
+    ersten `kopf_alt` Labels sind der Kopf eines aelteren Modells, die
+    uebrigen wurden angehaengt (`train.py --start-von --nur-kopf`).
+      Pass alt: Softmax NUR ueber die alten Labels. Die alten Tags entscheiden
+                damit genau wie das Ausgangsmodell, Wert fuer Wert; die neuen
+                Labels koennen ihnen keine Wahrscheinlichkeit wegnehmen.
+      Pass neu: Softmax ueber «O» und die neuen Labels. Die neuen Tags
+                kommen zusaetzlich dazu, sie ersetzen nichts.
+    Anlass: in EINER Softmax senkten JOBTITLE und FAMILYROLE die
+    Wahrscheinlichkeit alter Labels unter ihre Schwelle, und Lecks
+    verschoben sich (ch-v67k, Schwelle 0.6: drei Lecks mehr).
+
+    `logits` ist ein numpy-Feld (Token x Labels). Rueckgabe: Liste von
+    (beste Indizes im vollen Labelraum, Vertrauen) als numpy-Felder.
+    """
+    import numpy as np
+
+    def softmax(x):
+        e = np.exp(x - x.max(axis=-1, keepdims=True))
+        return e / e.sum(axis=-1, keepdims=True)
+
+    zeilen = np.arange(logits.shape[0])
+    n = logits.shape[-1]
+    if not kopf_alt or kopf_alt >= n:
+        p = softmax(logits)
+        b = p.argmax(axis=-1)
+        return [(b, p[zeilen, b])]
+    alt = softmax(logits[:, :kopf_alt])
+    b_alt = alt.argmax(axis=-1)
+    idx = np.array([0] + list(range(kopf_alt, n)))
+    neu = softmax(logits[:, idx])
+    b_neu = neu.argmax(axis=-1)
+    return [(b_alt, alt[zeilen, b_alt]), (idx[b_neu], neu[zeilen, b_neu])]
+
+
+def spannen_aus_paessen(paesse: list[dict], labels, text: str) -> list["Scored"]:
+    """Je Pass die Tokenlabels zu Spannen machen und alles zusammenlegen.
+
+    `paesse` ist je Pass ein dict (Offset -> (Label, Vertrauen)). Das
+    Vertrauen einer Spanne ist das kleinste der Token, die sie ueberschneiden
+    (Begruendung bei den Laeufern). Beide Laeufer rufen dies auf: zwei
+    Laeufer, ein Verhalten.
+    """
+    from core.alignment import decode
+    spannen: list[Scored] = []
+    for results in paesse:
+        geordnet = sorted(results.items())
+        off = [k for k, _ in geordnet]
+        lab = [v[0] for _, v in geordnet]
+        for span in decode(off, lab, text):
+            ueber = [v[1] for (a, b), v in geordnet
+                     if a < span.end and span.start < b]
+            spannen.append(Scored(span.tag, span.start, span.end,
+                                  min(ueber) if ueber else 0.0))
+    return _rand_saeubern(_zusammenfuegen(spannen, text), text)
+
+
+# Zeichen, die an den Rand einer Berufs- oder Familienspanne nicht gehoeren
+# (Feedback Test 2, 25.11.2026: «(EGBA)», «-/UID» als JOBTITLE). Der Punkt
+# am Ende bleibt: «avv.», «Dr.», «Stv.» sind Abkuerzungen.
+_RAND_VORN = "([{-/–—«‹\"'„“,;:"
+_RAND_HINTEN = ")]}-/–—»›\"'“”,;:"
+
+
+def _rand_saeubern(spannen: list["Scored"], text: str) -> list["Scored"]:
+    """Nur fuer die Tags des zweiten Kopfs: Satzzeichen am Rand abschneiden.
+
+    Eine schliessende Klammer bleibt, wenn die Spanne ihre oeffnende traegt
+    («Leiter (a. i.)»). Bleibt weniger als zwei Zeichen oder kein Buchstabe,
+    faellt die Spanne weg. Die alten Tags bleiben unberuehrt: dort entscheidet
+    weiter allein das Modell, wie vor dem zweiten Kopf.
+    """
+    aus: list[Scored] = []
+    for sp in spannen:
+        if sp.tag not in NACHRANG:
+            aus.append(sp)
+            continue
+        a, b = sp.start, sp.end
+        while a < b and (text[a] in _RAND_VORN or text[a].isspace()):
+            a += 1
+        while a < b and (text[b - 1] in _RAND_HINTEN or text[b - 1].isspace()):
+            if text[b - 1] == ")" and "(" in text[a:b - 1]:
+                break
+            b -= 1
+        wert = text[a:b]
+        if len(wert) < 2 or not any(c.isalpha() for c in wert):
+            continue
+        aus.append(sp if (a, b) == (sp.start, sp.end)
+                   else Scored(sp.tag, a, b, sp.score))
+    return aus
+
+
+# Tags, deren Teile zusammengehoeren, wenn sie nur Leerraum oder ein
+# Bindestrich trennt: «consigliere» + «federale» ist EIN Titel. Das Modell
+# zerlegte mehrteilige Titel (Pruefset berufe, 25.11.2026: 89 Teiltreffer).
+# Nicht fuer Namen oder Orte: «Bern Zuerich» in einer Liste sind zwei.
+ZUSAMMENHAENGEND = frozenset({"JOBTITLE", "FAMILYROLE"})
+
+# Angehaengte Tags des zweiten Kopfs: in `merge` nachrangig (siehe dort).
+NACHRANG = frozenset({"JOBTITLE", "FAMILYROLE"})
+
+
+def _zusammenfuegen(spannen: list["Scored"], text: str) -> list["Scored"]:
+    aus: list[Scored] = []
+    for sp in sorted(spannen, key=lambda x: (x.start, x.end)):
+        vor = aus[-1] if aus else None
+        if (vor is not None and sp.tag == vor.tag
+                and sp.tag in ZUSAMMENHAENGEND and vor.end <= sp.start
+                and text[vor.end:sp.start].strip(" -\t") == ""
+                and "\n" not in text[vor.end:sp.start]):
+            aus[-1] = Scored(vor.tag, vor.start, sp.end,
+                             min(vor.score, sp.score))
+        else:
+            aus.append(sp)
+    return aus
+
+
 class Scorer(Protocol):
     """Alles, was Zeichenspannen mit Wahrscheinlichkeit liefert."""
 
@@ -212,7 +334,14 @@ def merge(
         # Stufe 2 ist ein Vorschlag ohne Vetorecht (SPEC §3) und darf eine
         # laengere, richtige Modellspanne nicht verdraengen.
         vorrang = 1 if stage == 1 else 2
-        return (vorrang, -(s.end - s.start), rank)
+        # Seit 25.11.2026: angehaengte Tags (zweiter Kopf) kommen NACH allen
+        # anderen. Ueberschneiden sie eine Spanne eines alten Tags, gewinnt das
+        # alte, auch wenn die neue Spanne laenger ist. So behalten die alten
+        # Tags ihr Verhalten; die neuen maskieren nur, wo sonst nichts steht.
+        # Ohne das verdraengte eine lange FAMILYROLE-Spanne eine richtige
+        # Strasse (STREET-Recall 0.33 statt wie ch-v63b).
+        nachrang = 1 if s.tag in NACHRANG else 0
+        return (vorrang, nachrang, -(s.end - s.start), rank)
 
     # `Belegung` beantwortet «ist diese Stelle schon belegt?» mit einer Suche
     # statt mit einem Durchlauf ueber alles bisher Behaltene — sonst waechst
@@ -228,6 +357,12 @@ def merge(
         belegt.belegen(s.start, s.end)
         final.append(s)
 
+    # ⚠️ Am 25.11.2026 versucht und verworfen: JOBTITLE durfte eine ORG-Spanne,
+    # die es ganz abdeckt, ersetzen («Bundesrichter» als JOBTITLE statt ORG).
+    # Recall JOBTITLE stieg von 41 auf 56 %, aber ch-v63b liest ganze Zeilen
+    # wie «Bundesrichter X, Praesident» als ORG; mit JOBTITLE im Klartext
+    # leckten dann die Namen darin (Pruefset familie: 9). Der Vorrang der alten
+    # Tags bleibt ohne Ausnahme.
     return sorted(final, key=lambda s: s.start), dropped
 
 
@@ -305,6 +440,7 @@ class OnnxScorer:
         meta = json.loads((path / "pack.json").read_text(encoding="utf-8"))
         self.labels = meta["labels"]
         self.label_hash = meta["label_hash"]
+        self.kopf_alt = meta.get("kopf_alt")
         self.tokenizer = Tokenizer.from_file(str(path / "tokenizer.json"))
 
         # Die wichtigste Zeile in dieser Klasse.
@@ -382,7 +518,7 @@ class OnnxScorer:
 
         # Lange Dokumente in überlappende Fenster schneiden. Die Überlappung
         # verhindert, dass eine Entität genau an der Schnittkante zerfällt.
-        results: dict[tuple[int, int], tuple[str, float]] = {}
+        paesse: list[dict[tuple[int, int], tuple[str, float]]] = []
         nutz = self.max_length - 2          # Platz für [CLS] und [SEP]
         step = max(1, nutz - self.stride)
         # Wie im Torch-Weg: die Zahl der Fenster steht vorher fest. Zwei
@@ -402,29 +538,24 @@ class OnnxScorer:
                 None,
                 {"input_ids": arr, "attention_mask": np.ones_like(arr)},
             )[0][0]
-            exp = np.exp(logits - logits.max(axis=-1, keepdims=True))
-            probs = exp / exp.sum(axis=-1, keepdims=True)
-            best = probs.argmax(axis=-1)
-            for i, (a, b) in enumerate(chunk_off):
-                if b <= a:
-                    continue
-                j = i + 1                   # [CLS] steht davor
-                label = self.labels[best[j]]
-                p = float(probs[j, best[j]])
-                # Bei Überlappung gewinnt die sicherere Vorhersage
-                prev = results.get((a, b))
-                if prev is None or p > prev[1]:
-                    results[(a, b)] = (label, p)
+            for k, (best, conf) in enumerate(kopf_paesse(logits,
+                                                         self.kopf_alt)):
+                if len(paesse) <= k:
+                    paesse.append({})
+                results = paesse[k]
+                for i, (a, b) in enumerate(chunk_off):
+                    if b <= a:
+                        continue
+                    j = i + 1               # [CLS] steht davor
+                    label = self.labels[int(best[j])]
+                    p = float(conf[j])
+                    # Bei Überlappung gewinnt die sicherere Vorhersage
+                    prev = results.get((a, b))
+                    if prev is None or p > prev[1]:
+                        results[(a, b)] = (label, p)
             if begin + nutz >= len(ids):
                 break
 
-        ordered = sorted(results.items())
-        off = [k for k, _ in ordered]
-        labels = [v[0] for _, v in ordered]
-        scores = {k: v[1] for k, v in ordered}
-
-        out: list[Scored] = []
-        for span in decode(off, labels, text):
         # Vertrauen aus allen Token, die sich mit der Spanne UEBERSCHNEIDEN —
         # nicht nur aus den vollstaendig enthaltenen.
         #
@@ -435,8 +566,4 @@ class OnnxScorer:
         # 0.0, und die Schwelle wuerfe die Entitaet weg — obwohl das Modell auf
         # Tokenebene richtig lag. Ziffernbasierte Tags merken davon nichts, weil
         # Zahlen in Einzelziffern zerlegt werden.
-            überlappend = [v for (a, b), v in scores.items()
-                           if a < span.end and span.start < b]
-            out.append(Scored(span.tag, span.start, span.end,
-                              min(überlappend) if überlappend else 0.0))
-        return out
+        return spannen_aus_paessen(paesse, self.labels, text)

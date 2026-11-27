@@ -28,7 +28,7 @@ if [ -n "$WAYLAND_DISPLAY" ]; then
     export QT_QPA_PLATFORM="${QT_QPA_PLATFORM:-wayland;xcb}"
 fi
 
-MODELL="$HERE/usr/lib/maschera/runs/ch-v63b"
+MODELL="$HERE/usr/lib/maschera/runs/ch-v71f"
 # ⚠️ Kein fester Port hier. `fenster.py` liest ihn aus den
 # gespeicherten Einstellungen und fragt bei Konflikt nach. Ein Wert an
 # dieser Stelle waere ein zehnter Verwalter fuer eine Zahl, die genau

@@ -1,0 +1,69 @@
+# Vorlagen DE — Fliesstext mit Berufen, Familie und Gegenbeispielen, seit 25.11.2026.
+#
+# {~personenwort} ist ein allgemeines Personen- oder Leitungswort («die
+# Kundin», «die Projektleitung») und bleibt O. Es steht absichtlich dort, wo
+# sonst ein Beruf stehen koennte: das Modell soll lernen, dass nicht jedes
+# Personenwort eine Funktion ist.
+
+templates:
+  - id: de_personen_arbeitszeugnis
+    doc_type: Arbeitszeugnis
+    text: |
+      Arbeitszeugnis
+
+      {GIVENNAME} {FULLNAME}, geboren am {DATE}, war vom {DATE} bis {DATE}
+      als {JOBTITLE} in unserer Firma {ORG} tätig. Zuvor arbeitete sie als
+      {JOBTITLE} in {CITY}.
+
+      Sie betreute {~personenwort} selbständig und unterstützte
+      {~personenwort} bei allen Fragen. Ihre Arbeit wurde von
+      {~personenwort} stets geschätzt. Sie verlässt uns auf eigenen Wunsch.
+
+      {CITY}, {DATE}
+
+      {GIVENNAME} {FULLNAME}, {JOBTITLE}
+
+  - id: de_personen_protokoll
+    doc_type: Sitzungsprotokoll
+    text: |
+      Protokoll der Sitzung vom {DATE}, {TIME}
+
+      Anwesend: {GIVENNAME} {FULLNAME} ({JOBTITLE}), {GIVENNAME} {FULLNAME}
+      ({JOBTITLE}), {GIVENNAME} {FULLNAME} ({JOBTITLE})
+      Entschuldigt: {GIVENNAME} {FULLNAME}
+
+      1. {~personenwort} informiert über den Stand des Projekts. Der
+         {JOBTITLE} bestätigt den Termin. Die Frist läuft {~deadline}.
+      2. {~personenwort} wünscht eine Rückmeldung bis {DATE}.
+      3. Die {JOBTITLE} übernimmt die Abklärung mit {ORG}.
+
+      Protokoll: {GIVENNAME} {FULLNAME}
+
+  - id: de_personen_sozialbericht
+    doc_type: Sozialbericht
+    text: |
+      Sozialbericht {CASE_ID}
+
+      {GIVENNAME} {FULLNAME} ({AGE}) lebt mit der {FAMILYROLE} und zwei
+      {FAMILYROLE} in {CITY}. Der {FAMILYROLE} arbeitet als {JOBTITLE},
+      die {FAMILYROLE} ist zurzeit ohne Stelle. Kontakt besteht auch zur
+      {FAMILYROLE} in {CITY}.
+
+      Gemäss {~personenwort} ist die Lage stabil. {~personenwort} wurde
+      über die Abklärung informiert.
+
+      {GIVENNAME} {FULLNAME}, {JOBTITLE}, {ORG}
+
+  - id: de_personen_projektbericht
+    doc_type: Projektbericht
+    text: |
+      Projektbericht {CASE_ID}, Stand {DATE}
+
+      Das Projekt wird von {GIVENNAME} {FULLNAME} als {JOBTITLE} geleitet.
+      {~personenwort} hat die Anforderungen bestätigt; {~personenwort}
+      erhält monatlich einen Bericht. Für die Umsetzung sind ein {JOBTITLE}
+      und eine {JOBTITLE} der {ORG} zuständig.
+
+      Risiken: Die Ressourcen von {~personenwort} sind knapp.
+
+      {GIVENNAME} {FULLNAME}

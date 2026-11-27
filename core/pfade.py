@@ -98,7 +98,14 @@ def modell(name: str) -> Path:
 # waere der gefaehrlichste Fall: eine Messung liefe ueber nichts und meldete
 # «0 Lecks».
 
-ARTEN = ("real", "markup")
+# `berufe` (seit 24.11.2026): eigenes Pruefset fuer JOBTITLE aus OEFFENTLICHEN
+# Texten (Fachtexte, Medienmitteilungen, Inserate), Namen ersetzt. Es enthaelt
+# keine unersetzten Werte und ist deshalb NICHT gesperrt, anders als `real`.
+# `familie` (seit 25.11.2026): dasselbe fuer FAMILYROLE, aus veroeffentlichten,
+# anonymisierten Bundesgerichtsentscheiden (Namen durch Listenwerte ersetzt).
+# `protokoll` (seit 25.11.2026): synthetische Sitzungsprotokolle, von Hand im
+# Stil echter Protokollkoepfe geschrieben, Namen aus der Haltezone.
+ARTEN = ("real", "markup", "berufe", "familie", "protokoll")
 
 
 def _gold_basis() -> Path:

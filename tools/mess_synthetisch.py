@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Dokument-Testset aus der Haltezone — ein Messgeraet mit Aufloesung.
 
-    python3 tools/mess_synthetisch.py --model runs/ch-v63b --n 300
+    python3 tools/mess_synthetisch.py --model runs/ch-v71f --n 300
 
 WOZU
 ----

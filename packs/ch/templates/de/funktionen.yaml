@@ -1,0 +1,127 @@
+# Vorlagen DE — Berufs- und Funktionsbezeichnungen (JOBTITLE), seit 24.11.2026
+#
+# Jede Vorlage zeigt JOBTITLE und ORG NEBENEINANDER: «Projektleiterin,
+# Bundesamt für Justiz» sind zwei Spannen. Ohne dieses Nebeneinander lernt das
+# Modell die Grenze nicht und taggt die Funktion weiter als ORG.
+#
+# {KOEDER} ist ein Nachname, der zugleich ein Beruf ist (Müller, Weber,
+# Schneider). Er steht dort, wo sonst ein Name steht, und bleibt FULLNAME.
+
+templates:
+  - id: de_funktion_signatur
+    doc_type: signaturblock
+    text: |
+      Betreff: Ihre Anfrage vom {DATE}
+
+      Guten Tag
+
+      Wir haben Ihre Unterlagen erhalten und melden uns {~deadline}.
+
+      Freundliche Grüsse
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}
+      {ORG}
+      {@address}
+      Tel. {PHONE}
+      {EMAIL}
+
+  - id: de_funktion_signatur_koeder
+    doc_type: signaturblock
+    text: |
+      Sehr geehrte Damen und Herren
+
+      Gestützt auf {~legal} stellen wir Ihnen die gewünschten Unterlagen zu.
+
+      Mit freundlichen Grüssen
+
+      {GIVENNAME} {KOEDER}
+      {JOBTITLE}, {ORG}
+
+      Kopie: {GIVENNAME} {FULLNAME}, {JOBTITLE}
+
+  - id: de_funktion_anrede
+    doc_type: Behördenbrief
+    text: |
+      {ORG}
+      z. H. {GIVENNAME} {FULLNAME}, {JOBTITLE}
+      {@address}
+
+      {CITY}, {DATE}
+
+      Sehr geehrte Frau {FULLNAME}
+
+      In Ihrer Funktion als {JOBTITLE} haben Sie uns am {DATE} um eine
+      Stellungnahme gebeten. Die Frist läuft {~deadline}.
+
+      Freundliche Grüsse
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}
+
+  - id: de_funktion_ticketverteiler
+    doc_type: Support-Ticket
+    text: |
+      Ticket {CASE_ID} – Zugriffsrechte Fachanwendung
+
+      Verteiler:
+      - {GIVENNAME} {FULLNAME} ({JOBTITLE}, {ORG})
+      - {GIVENNAME} {KOEDER} ({JOBTITLE})
+      - {GIVENNAME} {FULLNAME}, {JOBTITLE}
+
+      Der Fehler tritt seit {~number} auf ({~technical}). Bitte bis {DATE}
+      prüfen.
+
+  - id: de_funktion_organigramm
+    doc_type: Firmendokument
+    text: |
+      Organigramm {ORG}, Stand {DATE}
+      Grundlage: {~legal}
+
+      {JOBTITLE}: {GIVENNAME} {FULLNAME}
+      Stellvertretung: {GIVENNAME} {FULLNAME}, {JOBTITLE}
+      {JOBTITLE}: {GIVENNAME} {KOEDER}
+      {JOBTITLE}: {GIVENNAME} {FULLNAME}
+
+  - id: de_funktion_fliesstext
+    doc_type: mailverlauf
+    text: |
+      Von: {GIVENNAME} {FULLNAME} <{EMAIL}>
+      Gesendet: {DATE} {TIME}
+      Betreff: Übergabe Dossier {CASE_ID}
+
+      Hallo zusammen
+
+      Ab {DATE} übernimmt Herr {KOEDER} als {JOBTITLE} bei der {ORG} das
+      Dossier. Frau {FULLNAME} bleibt bis dahin {JOBTITLE} und ist unter
+      {PHONE} erreichbar. Die Unterlagen folgen {~deadline}.
+
+      Gruss
+      {GIVENNAME}
+
+  # Doppelwoerter: dasselbe Wort als Name ({KOEDER}) und als Beruf
+  # ({BERUF_KOEDER}). Das Modell muss am Kontext entscheiden.
+  - id: de_funktion_doppelwort_baustelle
+    doc_type: Firmendokument
+    text: |
+      Baustellenrapport {CASE_ID}, {DATE}
+
+      Anwesend: {GIVENNAME} {KOEDER} ({JOBTITLE}), {GIVENNAME} {FULLNAME}
+      ({BERUF_KOEDER}) und zwei {BERUF_KOEDER} der {ORG}.
+
+      Herr {KOEDER} meldet, dass der {BERUF_KOEDER} {~deadline} fertig sein
+      muss. Der {JOBTITLE} koordiniert {BERUF_KOEDER} und {BERUF_KOEDER}.
+
+  - id: de_funktion_doppelwort_brief
+    doc_type: Behördenbrief
+    text: |
+      Sehr geehrte Frau {KOEDER}
+
+      Sie haben sich als {BERUF_KOEDER} bei der {ORG} beworben. Ihr
+      Lehrabschluss als {BERUF_KOEDER} vom {DATE} liegt uns vor. Wir
+      melden uns {~deadline}.
+
+      Freundliche Grüsse
+
+      {GIVENNAME} {FULLNAME}
+      {JOBTITLE}

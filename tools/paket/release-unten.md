@@ -30,4 +30,4 @@ docker run -d --name maschera -p 127.0.0.1:4141:4141 \
 
 Source code MIT. The shipped packages are AGPL-3.0 because they bundle
 PyMuPDF (AGPL-3) and, on Linux, PyQt6 (GPL-3); see `LIZENZ.md`. Model weights:
-MIT, [semprerudi/maschera-ch-v63b](https://huggingface.co/semprerudi/maschera-ch-v63b).
+MIT, [semprerudi/maschera-ch-v71f](https://huggingface.co/semprerudi/maschera-ch-v71f).

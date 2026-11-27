@@ -2,9 +2,9 @@
 
 Die vollständige, aus dem Code erzeugte Liste steht in [tags.md](erzeugt/tags.md), die Muster in [erkennungsregeln.md](erzeugt/erkennungsregeln.md).
 
-## Taxonomie: 45 Tags
+## Taxonomie: 47 Tags
 
-BIO-Schema: `2 × 45 + 1 = 91` Labels.
+BIO-Schema: `2 × 47 + 1 = 95` Labels.
 
 **Legende Aktion:** `M` = maskieren · `T` = nur taggen (bleibt im Klartext)
 **Legende Budget:** `R` = recall-first · `A` = ausgewogen · `P` = precision-first
@@ -45,7 +45,7 @@ Ungültige → verwerfen, auch wenn das Modell anschlägt.
 | `URL`, `IPADDRESS` | Standardmuster | M | P |
 | `EMAIL` | Standardmuster | M | R |
 
-### Stufe 3: rein neuronal (22)
+### Stufe 3: rein neuronal (24)
 
 | Tag | Aktion | Budget | Bemerkung |
 |---|---|---|---|
@@ -71,6 +71,8 @@ Ungültige → verwerfen, auch wenn das Modell anschlägt.
 | `ORG` | M | P | Schwelle 0.40, gemessen (siehe `taxonomy.yaml`) |
 | `HEALTHCARE_ORG` | M | **R** | Spezialklinik verrät mehr als Diagnose |
 | `USERNAME` | M | R | Kontoname, Pfadbestandteil, Anmeldename |
+| `JOBTITLE` | M | A | Berufs- und Funktionsbezeichnung, seit 24.11.2026, siehe unten |
+| `FAMILYROLE` | M | R | Familienbeziehung, Partnerschaft, Beistand, Vormund, seit 25.11.2026 |
 
 **Warum `PLACE_OF_ORIGIN` maskiert wird:** Der Heimatort verrät zwar nichts über den
 Wohnort, aber Wohnorte mit Kantonskürzel sehen exakt aus wie Heimatorte («Reute AR»).
@@ -81,6 +83,14 @@ Der einzige Tag mit Aktion `T` ist `CANTON`.
 **Stufe ist eine Eigenschaft des Tags, nicht der Quelle.** Stufe-3-Tags dürfen
 zusätzlich Muster haben, zum Beispiel `ORG` und `PLACE_OF_ORIGIN`, und `DATE` einen
 deterministischen Erkenner. Beim Vorrang zählt die Stufe des Tags.
+
+**Die angehängten Tags kommen zuletzt** (seit 2.5). `JOBTITLE` und `FAMILYROLE`
+entscheidet das Modell in einem eigenen Durchgang über dieselben Token: ein Softmax über
+die 91 alten Labels (`kopf_alt` in `pack.json`), ein zweiter über `O` und die neuen. Bei
+einer Überschneidung verliert eine neue Spanne gegen jedes alte Tag, auch wenn sie länger
+ist; die neuen maskieren nur, wo sonst nichts steht (`T-INFERENCE-Z4`). Teile eines Titels,
+die nur Leerraum trennt, werden eine Spanne («consigliere federale»), nie über eine Zeile
+hinweg.
 
 ### Warum keine medizinischen Inhaltstags
 
@@ -161,12 +171,35 @@ Konfidenz erkannt wurde, wird jedes weitere Vorkommen desselben Werts
 maskiert**, auch das nackte «Meier». Grösster einzelner Recall-Gewinn im
 ganzen System.
 
-## Der Labelvertrag: 45 Tags, eingefroren
+## Der Labelvertrag: 47 Tags, eingefroren
 
 ```
-Hash    b7a96dc99b05c6150302fc11943e0a357c7078b593e7382b4b06390245cceeee
-Umfang  45 Tags, 91 BIO-Labels
+Hash    6abcddcc90e672691e0a53c0acc6138c9fb3df5b40daf54aeff19ddb06a463c4
+Umfang  47 Tags, 95 BIO-Labels
+Vorher  b7a96dc9, 45 Tags, 91 BIO-Labels (bis 24.11.2026)
 ```
+
+**Am 25.11.2026 kam `FAMILYROLE` dazu**, im selben Vertragswechsel: Vater, Mutter,
+Grossmutter, Kindsvater, Ehefrau, Götti, und nach Entscheid auch Beistand und
+Vormund. Die Formen sind erzeugt (Grundwort × Vorsilbe × Zahl × Fall), keine
+heruntergeladene Liste.
+
+**Aufgetaut am 24.11.2026 für `JOBTITLE`.** Berufs- und Funktionsbezeichnungen
+hatten kein Tag und wurden teils als `ORG` erkannt, obwohl eine Funktion keine
+Stelle ist, der eine Person zugeordnet werden kann. `JOBTITLE` ist **angehängt**:
+die ersten 91 Labels sind genau der alte Vertrag, und
+`tests/test_labelvertrag_eingefroren.py` Punkt 5 prüft das für jeden
+früheren Vertrag. In «Projektleiterin, Bundesamt für Justiz» sind es zwei
+Spannen, `JOBTITLE` und `ORG`. Die Formen stammen aus CH-ISCO-19 (BFS), für
+Englisch zusätzlich aus ESCO. Formen, die zugleich ein Nachname mit mindestens
+zehn Trägern sind (Schreiner, Maler, Polier), lernt das Modell in beiden
+Rollen: als `JOBTITLE` im Berufszusammenhang, als `FULLNAME` dort, wo ein Name
+steht. Kein solcher Name darf im Prüfset als `JOBTITLE` durchgehen.
+An `JOBTITLE`- und `FAMILYROLE`-Spannen schneidet die Erkennung Klammern,
+Bindestriche, Schrägstriche und Satzzeichen am Rand ab («(EGBA)» wird «EGBA»).
+Der Punkt einer Abkürzung bleibt («avv.», «Stv.»), ebenso eine Klammer, die
+die Spanne selbst öffnet. Bleibt kein Buchstabe, fällt die Spanne weg. Die
+alten Tags bleiben davon unberührt (seit 25.11.2026).
 
 Eingefroren, nachdem Golddokumente in vier Sprachen und vier Dokumenttypen
 kein einziges Personendatum gezeigt hatten, das ein Tag gebraucht hätte,
@@ -176,7 +209,7 @@ das es nicht gibt.
 
 | | |
 |---|---|
-| **Eingefroren** | die Tagliste und ihre **Reihenfolge**. Daraus entstehen die 91 BIO-Labels und der Hash |
+| **Eingefroren** | die Tagliste und ihre **Reihenfolge**. Daraus entstehen die 95 BIO-Labels und der Hash |
 | **Frei** | `action`, Schwellen, Budgets, Platzhalter, Muster, Vorlagen, Nomenklaturen, Benutzerregeln |
 
 Der Unterschied ist mechanisch, nicht formal: eine neue Tagliste macht jedes
@@ -215,7 +248,7 @@ ohne Neutraining greifen.
 
 ## Tags für das Kontextmenü: MASCHERA
 
-45 Tags. Rechtsklick auf markierten Text: Maske setzen oder entfernen.
+47 Tags. Rechtsklick auf markierten Text: Maske setzen oder entfernen.
 
 ⚠️ = besonders schützenswertes Personendatum (revDSG). Braucht eine
 zusätzliche Bestätigung beim Abschalten.
@@ -226,6 +259,8 @@ zusätzliche Bestätigung beim Abschalten.
 
 FULLNAME: Nachname, ganzer Name
 GIVENNAME: Vorname
+JOBTITLE: Berufsbezeichnung
+FAMILYROLE: Familienbeziehung
 AGE: Alter
 SEX: Geschlecht
 MARITALSTATUS: Zivilstand

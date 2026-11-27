@@ -5,6 +5,11 @@ Slot-Grammatik in den Vorlagen:
     {FULLNAME}      echte Entitaet, wird getaggt
     {@address}      Makro, gekoppelte Gruppe aus macros.yaml
     {~amount}       **Decoy**: sieht aus wie eine Entitaet, bleibt aber O
+    {KOEDER}        Nachname, der zugleich eine Berufsbezeichnung ist
+                    (Mueller, Berger, Tanner). Wird als FULLNAME getaggt.
+    {BERUF_KOEDER}  dasselbe Doppelwort als BERUF («als Schreiner»).
+                    Wird als JOBTITLE getaggt. Beide Rollen nebeneinander
+                    lehren das Modell, am Kontext zu entscheiden.
 
 Der Decoy-Mechanismus ist der Kern von SPEC §8. Ein Modell, das nur echte
 Entitaeten sieht, lernt "Zahl mit CHF davor = AMOUNT". Es muss aber lernen
@@ -37,7 +42,11 @@ from packs.ch.generators.identifiers import GENERATORS
 PACK_DIR = Path(__file__).resolve().parent.parent / "packs" / "ch"
 DIST = PACK_DIR / "nomenclatures" / "dist"
 
-SLOT_RE = re.compile(r"\{(~?@?)([A-Za-z0-9_]+)\}")
+SLOT_RE = re.compile(r"\{(~?@?)([A-Za-z0-9_]+)(?:=([^{}]*))?\}")
+# `{TAG=wert}` (seit 25.11.2026): fester Wert, trotzdem getaggt. Fuer Woerter,
+# die im Satz genau so stehen muessen («Das {FAMILYROLE=Kind} wohnt bei …»).
+# Stuende «Kind» als fester Text da, lernte das Modell es als O, und ein
+# Zufallswert aus der Liste («Das Muettern wohnt») zerstoerte den Satz.
 # Ziffern muessen erlaubt sein — sonst wird {AHVN13} nie ersetzt und
 # steht als Literal im Trainingstext. Faellt nur bei Sichtpruefung auf.
 
@@ -84,6 +93,10 @@ SEED = {
     "BUILDINGNUM": ["12", "4a", "27", "108", "3"],
     "PLACE_OF_ORIGIN": ["Hautemorges VD", "Biel/Bienne BE", "Tinizong GR",
                         "Sant'Antonino TI", "Zug ZG", "Rue FR"],
+    "FAMILYROLE": ["Mutter", "Vater", "Grossmutter", "mère", "padre",
+                   "sister"],
+    "JOBTITLE": ["Projektleiterin", "Sachbearbeiter", "cheffe de projet",
+                 "Collaboratore amministrativo", "Head of Legal"],
     "ORG": ["Alpin Treuhand AG", "Limmat Bau GmbH", "Cordier Transport SA",
             "Bundesamt für Statistik", "Steueramt Köniz",
             "Ufficio dello stato civile", "Office de l'état civil"],
@@ -129,6 +142,8 @@ def _nomenclatures() -> dict[str, list[dict]]:
         "organisationen": "ORG",
         "behoerden": "behoerden",
         "merkmale": "merkmale",
+        "berufe": "berufe",
+        "familie": "familie",
     }
     for path in DIST.glob("*.json"):
         tag = mapping.get(path.stem)
@@ -144,7 +159,7 @@ def _nomenclatures() -> dict[str, list[dict]]:
             pairs = [r for r in records if r.get("plz")]
             if pairs:
                 out.setdefault("_LOCALITY", []).extend(pairs)
-        if path.stem in ("merkmale", "behoerden"):
+        if path.stem in ("merkmale", "behoerden", "berufe", "familie"):
             # Format TAG|lang|wert. Die geschlossenen Listen aus dem Amtlichen
             # Katalog der Merkmale werden SPRACHRICHTIG gezogen — eine deutsche
             # Auspraegung in einer franzoesischen Vorlage lehrt eine Sprachmischung,
@@ -155,8 +170,12 @@ def _nomenclatures() -> dict[str, list[dict]]:
                 if len(teile) != 3:
                     continue
                 merkmal, sprache, wert = teile
+                # Gewicht nur bei den Berufen; Merkmale und Behoerden
+                # werden gleichverteilt gezogen wie bisher.
+                w = (r.get("weight", 1) if path.stem in ("berufe", "familie")
+                     else 1)
                 out.setdefault(f"{merkmal}@{sprache}", []).append(
-                    {"name": wert, "weight": 1})
+                    {"name": wert, "weight": w})
             continue
         if path.stem == "strassen":
             full = [r for r in records if r.get("plz") and r.get("city")]
@@ -580,6 +599,87 @@ DECOYS = {
                "NullPointerException at line 88",
                "java.sql.SQLException: ORA-01722: invalid number"],
     },
+    # Seit 25.11.2026: allgemeine Personen- und Leitungswoerter, die KEIN
+    # Beruf und keine Funktion einer bestimmten Person sind. Sie bleiben O.
+    # Ohne sie lernte das Modell «Personenwort neben einem Namen = JOBTITLE»
+    # (Pruefset berufe: Bauherrn, Bauleitung, Vertreter als JOBTITLE).
+    "personenwort": {
+        "de": ["die Mitarbeitenden", "der Kunde", "die Kundin", "die Patientin",
+               "der Bauherr", "die Teilnehmenden", "die betroffene Person",
+               "der Antragsteller", "die Gesuchstellerin", "die Angestellten",
+               "die Geschäftsleitung", "die Projektleitung", "die Bauleitung",
+               "die Abteilung", "der Arbeitgeber", "die Vertreterinnen und Vertreter",
+               "die Fachleute", "das Team"],
+        "fr": ["les collaborateurs", "le client", "la cliente", "la patiente",
+               "le maître d'ouvrage", "les participants", "la personne concernée",
+               "le requérant", "les employés", "la direction",
+               "la direction de projet", "l'employeur", "l'équipe"],
+        "it": ["i collaboratori", "il cliente", "la cliente", "la paziente",
+               "il committente", "i partecipanti", "la persona interessata",
+               "il richiedente", "i dipendenti", "la direzione",
+               "la direzione del progetto", "il datore di lavoro", "il team"],
+        "en": ["the staff", "the customer", "the patient", "the client",
+               "the participants", "the data subject", "the applicant",
+               "the employees", "the management", "the project management team",
+               "the employer", "the team"],
+    },
+    # Seit 25.11.2026: Woerter, die eine Familienbeziehung ENTHALTEN, aber
+    # keine sind. Sie bleiben O, damit FAMILYROLE nicht auf «Mutter» in
+    # «Muttergesellschaft» anschlaegt.
+    "verwandt": {
+        "de": ["die Muttergesellschaft", "die Schwesterfirma", "das Vaterland",
+               "die Kinderkrippe", "die Elternzeitschrift", "der Mutterschutz",
+               "die Vaterschaftsurlaubsregelung", "die Tochtergesellschaft",
+               "der Eheschutz", "das Scheidungsverfahren", "das Besuchsrecht",
+               "die Kinderzulage", "der Unterhaltsbeitrag",
+               "die elterliche Sorge", "das Kindesverhältnis"],
+        "fr": ["la société mère", "la société sœur", "la crèche",
+               "le congé de maternité", "la filiale", "la procédure de divorce",
+               "le droit de visite", "les allocations familiales",
+               "les mesures protectrices de l'union conjugale",
+               "l'autorité parentale", "la contribution d'entretien"],
+        "it": ["la società madre", "la società sorella", "l'asilo nido",
+               "il congedo di maternità", "la società figlia",
+               "la procedura di divorzio", "il diritto di visita",
+               "gli assegni familiari", "l'autorità parentale",
+               "le misure a tutela dell'unione coniugale",
+               "il contributo di mantenimento"],
+        "en": ["the parent company", "the sister company", "the daycare",
+               "the maternity leave policy", "the subsidiary",
+               "the divorce proceedings", "the visitation rights",
+               "the child allowance", "the parental authority",
+               "the maintenance contribution"],
+    },
+    # Seit 25.11.2026 (Feedback Test 2, Sitzungsprotokoll): Fachwoerter aus
+    # Projekt-, IT- und Verwaltungstexten und Gruppen von Behoerden. Das
+    # Modell nahm «Risikoanalyse», «Datenbank», «Kantone» als JOBTITLE. Sie
+    # bleiben O.
+    "fachwort": {
+        "de": ["die Situationsanalyse", "die Risikoanalyse", "die Schutzbedarfsanalyse",
+               "die Datenbank", "der Suchindex", "die Langzeitsicherung",
+               "die Kantone", "die Gemeinden", "der Direktionsbereich",
+               "das Fokusteam", "die Projektauftragsfreigabe", "die Machbarkeitsstudie",
+               "die Schnittstelle", "das Pflichtenheft", "die Anforderungsanalyse",
+               "die Migration", "der Testbetrieb", "die Abnahme", "das Lastenheft",
+               "die Ausschreibung", "der Projektauftrag", "die Initialisierungsphase",
+               "der Statusbericht", "die Ressourcenplanung", "die Business-Analyse"],
+        "fr": ["l'analyse de situation", "l'analyse des risques", "la base de données",
+               "l'index de recherche", "l'archivage à long terme", "les cantons",
+               "les communes", "le cahier des charges", "l'étude de faisabilité",
+               "l'interface", "la migration", "la phase d'initialisation",
+               "le rapport d'état", "l'appel d'offres", "la recette"],
+        "it": ["l'analisi della situazione", "l'analisi dei rischi", "la banca dati",
+               "l'indice di ricerca", "l'archiviazione a lungo termine", "i Cantoni",
+               "i Comuni", "il capitolato d'oneri", "lo studio di fattibilità",
+               "l'interfaccia", "la migrazione", "la fase di inizializzazione",
+               "il rapporto sullo stato", "il bando di concorso", "il collaudo"],
+        "en": ["the situation analysis", "the risk analysis", "the database",
+               "the search index", "the long-term archive", "the cantons",
+               "the municipalities", "the requirements specification",
+               "the feasibility study", "the interface", "the migration",
+               "the initiation phase", "the status report", "the tender",
+               "the acceptance test"],
+    },
     "place": {
         "de": ["im Sinne von Art. 2", "gemaess Ziffer 4.2"],
         "fr": ["au sens de l'art. 2", "selon le chiffre 4.2"],
@@ -589,7 +689,18 @@ DECOYS = {
 }
 
 
+# Kuerzel von Systemen und Vorhaben («GBDBS», «(EGBA)», «LZS-Tage»): sie
+# bleiben O. Erzeugt statt aufgezaehlt, damit das Modell nicht eine Liste
+# lernt, sondern dass ein beliebiges Kuerzel im Fliesstext kein Beruf ist.
+def _systemkuerzel(rng: random.Random) -> str:
+    k = "".join(rng.choice("ABCDEFGHIKLMNOPRSTUVWZ") for _ in range(rng.randint(2, 6)))
+    return rng.choice([k, k, f"({k})", f"{k}-Tage", f"{k}-Projekt", f"-/{k}",
+                       f"{k}-Datenbank", f"System {k}"])
+
+
 def pick_decoy(kind: str, lang: str, rng: random.Random) -> str:
+    if kind == "systemkuerzel":
+        return _systemkuerzel(rng)
     pool = DECOYS.get(kind)
     if pool is None:
         raise KeyError(f"unbekannter Decoy ~{kind}")
@@ -626,6 +737,51 @@ def _expand_macro(name: str, rng: random.Random, lang: str = "de") -> list:
     return rng.choices(passend, weights=gewichte, k=1)[0]["parts"]
 
 
+# Nachnamen, die zugleich Berufsbezeichnungen sind (aus `berufe.json`,
+# KOEDER|lang|name). Sie stehen in den Vorlagen neben einer echten Funktion und
+# muessen FULLNAME bleiben: sonst lernt das Modell, «Berger» als Beruf im
+# Klartext stehen zu lassen. Ohne Nomenklatur ein kleiner Notvorrat.
+SEED_KOEDER = {"de": ["Müller", "Weber", "Schneider", "Fischer", "Koch"],
+               "fr": ["Berger", "Mercier", "Boulanger"],
+               "it": ["Sarto", "Pastore", "Fabbro"],
+               "en": ["Tanner", "Smith", "Baker"]}
+
+
+# Rollen in Sitzungsprotokollen, meist als Kuerzel hinter dem Namen
+# («Vorname Nachname, PL»). Seit 25.11.2026 (Feedback Test 2): ohne sie
+# nahm das Modell «Nachname, PL LE ISC» als eine ORG-Spanne.
+ROLLEN = {
+    "de": ["PL", "TPL", "PA", "BO", "PO", "BL", "Stv. BL", "Stv. PL", "Mitglied PA",
+           "GL", "Leiter", "Leiterin", "BA", "SM", "DSB", "ISBO", "Projektleiter",
+           "Projektleiterin", "Teilprojektleiterin", "Anwendervertreterin",
+           "Anwendervertreter", "Business Analyst", "Fachverantwortliche"],
+    "fr": ["CP", "CdP", "PO", "BA", "SM", "membre du CoPil", "suppl. CP",
+           "cheffe de projet", "chef de projet", "secrétaire", "responsable métier",
+           "représentante des utilisateurs"],
+    "it": ["CP", "PO", "BA", "SM", "membro CP", "sost. CP", "capoprogetto",
+           "segretaria", "responsabile tecnico", "rappresentante degli utenti"],
+    "en": ["PM", "PO", "BA", "SM", "deputy PM", "SC member", "CIO", "CISO",
+           "project manager", "business analyst", "user representative"],
+}
+
+
+def _rolle(rng: random.Random, lang: str) -> str:
+    return rng.choice(ROLLEN.get(lang) or ROLLEN["de"])
+
+
+def _einheit(rng: random.Random) -> str:
+    teil = lambda: "".join(rng.choice("ABCDEFGHIKLMNOPRSTUVZ")
+                           for _ in range(rng.randint(2, 4)))
+    return rng.choice([teil(), teil(), f"{teil()} {teil()}", f"{teil()}-{teil()}"])
+
+
+def _koeder(rng: random.Random, lang: str) -> str:
+    records, cumulative = _weighted(f"KOEDER@{lang}")
+    if records:
+        return rng.choices(records, cum_weights=cumulative, k=1)[0]["name"]
+    return rng.choice(SEED_KOEDER.get(lang) or SEED_KOEDER["de"])
+
+
 def inject(template: dict, rng: random.Random) -> Example | None:
     """Eine Vorlage fuellen. None, wenn der Round-Trip scheitert."""
     out: list[str] = []
@@ -639,7 +795,8 @@ def inject(template: dict, rng: random.Random) -> Example | None:
         out.append(s)
         pos += len(s)
 
-    def emit_tag(tag: str, canonical: str | None) -> None:
+    def emit_tag(tag: str, canonical: str | None,
+                 wert: str | None = None) -> None:
         nonlocal pos
         if tag == "DATE":
             tail = "".join(out)
@@ -662,7 +819,9 @@ def inject(template: dict, rng: random.Random) -> Example | None:
             pos += len(value)
             return
 
-        if tag in ("STREET", "ZIPCODE", "CITY") and canonical:
+        if wert is not None:
+            value = wert
+        elif tag in ("STREET", "ZIPCODE", "CITY") and canonical:
             if not context:
                 # Ganze Adresse aus einem Datensatz. Nur wenn kein
                 # Strassenverzeichnis da ist, faellt es auf getrennte Quellen
@@ -700,7 +859,7 @@ def inject(template: dict, rng: random.Random) -> Example | None:
     last = 0
     for m in SLOT_RE.finditer(text):
         emit_literal(text[last:m.start()])
-        prefix, name = m.group(1), m.group(2)
+        prefix, name, fest = m.group(1), m.group(2), m.group(3)
 
         if prefix == "~":
             value = pick_decoy(name, template.get("lang", "de"), rng)
@@ -718,6 +877,29 @@ def inject(template: dict, rng: random.Random) -> Example | None:
                     emit_tag(part, gid)
                 else:
                     emit_literal(part)
+
+        elif name == "KOEDER":
+            emit_tag("FULLNAME", None, _koeder(rng, template.get("lang", "de")))
+
+        elif name == "BERUF_KOEDER":
+            sprache = template.get("lang", "de")
+            wort = _koeder(rng, sprache)
+            # Deutsch schreibt Nomen gross; sonst steht der Beruf im Satz klein
+            # («en tant que berger»), der Name gross.
+            if sprache != "de":
+                wort = wort[:1].lower() + wort[1:]
+            emit_tag("JOBTITLE", None, wort)
+
+        elif name == "ROLLE":
+            # Rollenkuerzel aus Sitzungsprotokollen («PL», «Stv. BL»), JOBTITLE.
+            emit_tag("JOBTITLE", None, _rolle(rng, template.get("lang", "de")))
+
+        elif name == "EINHEIT":
+            # Kuerzel einer Organisationseinheit («LE ISC», «BJ»), ORG.
+            emit_tag("ORG", None, _einheit(rng))
+
+        elif fest is not None:
+            emit_tag(name, None, fest)
 
         else:
             emit_tag(name, None)

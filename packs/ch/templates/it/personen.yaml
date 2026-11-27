@@ -1,0 +1,65 @@
+# Vorlagen IT — Fliesstext mit Berufen, Familie und Gegenbeispielen, seit 25.11.2026.
+# {~personenwort} («la cliente», «la direzione del progetto») bleibt O.
+
+templates:
+  - id: it_personen_certificato
+    doc_type: Arbeitszeugnis
+    text: |
+      Certificato di lavoro
+
+      {GIVENNAME} {FULLNAME}, nata il {DATE}, ha lavorato dal {DATE} al
+      {DATE} in qualità di {JOBTITLE} presso la nostra azienda {ORG}. In
+      precedenza era {JOBTITLE} a {CITY}.
+
+      Si occupava di {~personenwort} in modo autonomo e sosteneva
+      {~personenwort} in tutte le questioni. Il suo lavoro è sempre stato
+      apprezzato da {~personenwort}. Ci lascia di sua spontanea volontà.
+
+      {CITY}, {DATE}
+
+      {GIVENNAME} {FULLNAME}, {JOBTITLE}
+
+  - id: it_personen_verbale
+    doc_type: Sitzungsprotokoll
+    text: |
+      Verbale della seduta del {DATE}, {TIME}
+
+      Presenti: {GIVENNAME} {FULLNAME} ({JOBTITLE}), {GIVENNAME} {FULLNAME}
+      ({JOBTITLE}), {GIVENNAME} {FULLNAME} ({JOBTITLE})
+      Scusato: {GIVENNAME} {FULLNAME}
+
+      1. {~personenwort} informa sullo stato del progetto. Il {JOBTITLE}
+         conferma la data. Il termine decorre {~deadline}.
+      2. {~personenwort} chiede un riscontro entro il {DATE}.
+      3. La {JOBTITLE} chiarisce la questione con {ORG}.
+
+      Verbale: {GIVENNAME} {FULLNAME}
+
+  - id: it_personen_rapporto_sociale
+    doc_type: Sozialbericht
+    text: |
+      Rapporto sociale {CASE_ID}
+
+      {GIVENNAME} {FULLNAME} ({AGE}) vive con la {FAMILYROLE} e due
+      {FAMILYROLE} a {CITY}. Il {FAMILYROLE} lavora come {JOBTITLE}, la
+      {FAMILYROLE} è attualmente senza impiego. Ci sono contatti anche con
+      la {FAMILYROLE} a {CITY}.
+
+      Secondo {~personenwort} la situazione è stabile. {~personenwort} è
+      stato informato dell'accertamento.
+
+      {GIVENNAME} {FULLNAME}, {JOBTITLE}, {ORG}
+
+  - id: it_personen_rapporto_progetto
+    doc_type: Projektbericht
+    text: |
+      Rapporto di progetto {CASE_ID}, stato al {DATE}
+
+      Il progetto è diretto da {GIVENNAME} {FULLNAME} come {JOBTITLE}.
+      {~personenwort} ha confermato i requisiti; {~personenwort} riceve
+      un rapporto ogni mese. L'attuazione è affidata a un {JOBTITLE} e a
+      una {JOBTITLE} di {ORG}.
+
+      Rischi: le risorse di {~personenwort} sono limitate.
+
+      {GIVENNAME} {FULLNAME}

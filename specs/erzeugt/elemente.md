@@ -23,6 +23,8 @@ Alle Elemente mit Kennung aus `app/static/index.html`, in der Reihenfolge der Da
 | `knopf-burger` | `button` | zahnrad |
 | `burgermenu` | `div` | burgermenu |
 | `schritte` | `nav` | schritte |
+| `knopf-neu` | `button` | tat haupt schritt-neu |
+| `neu-text` | `span` |  |
 | `raster` | `main` | raster |
 | `b01` | `div` | bereich |
 | `titel-01` | `span` | bereich-titel |
@@ -39,8 +41,6 @@ Alle Elemente mit Kennung aus `app/static/index.html`, in der Reihenfolge der Da
 | `fehler` | `div` |  |
 | `orig` | `textarea` |  |
 | `fuss-01` | `div` | fuss |
-| `knopf-neu` | `button` | tat haupt |
-| `neu-text` | `span` |  |
 | `knopf-leeren-orig` | `button` | imfeld loeschen |
 | `leeren-orig-text` | `span` |  |
 | `knopf-kopieren-orig` | `button` | imfeld kopieren |
@@ -60,7 +60,7 @@ Alle Elemente mit Kennung aus `app/static/index.html`, in der Reihenfolge der Da
 | `herunter-final-text` | `span` |  |
 | `knopf-final-kopieren` | `button` | tat haupt breit |
 | `final-kopieren-text` | `span` |  |
-| `knopf-neu-unten` | `button` | tat neu-unten |
+| `knopf-neu-unten` | `button` | tat haupt neu-unten |
 | `neu-unten-text` | `span` |  |
 | `b02` | `div` | bereich |
 | `titel-02` | `span` | bereich-titel |
@@ -94,6 +94,8 @@ Alle Elemente mit Kennung aus `app/static/index.html`, in der Reihenfolge der Da
 | `knopf-vok-hoch` | `button` | ghostknopf bleibt-hier |
 | `vok-hoch-text` | `span` |  |
 | `vok-datei` | `input` |  |
+| `knopf-uebernahme-vok` | `button` | tat haupt weit uebernahme-vok |
+| `uebernahme-vok-text` | `span` |  |
 | `b03` | `div` | bereich hinaus |
 | `titel-03` | `span` | bereich-titel |
 | `meldung-03` | `span` | kopfmeldung |
@@ -113,6 +115,7 @@ Alle Elemente mit Kennung aus `app/static/index.html`, in der Reihenfolge der Da
 | `hinaus-klappe` | `button` | teil-kopf klappkopf |
 | `uebernahme-zeichen` | `span` | uebernahme-zeichen |
 | `titel-hinaus` | `span` | teil-titel |
+| `hinaus-unter` | `span` | teil-unter |
 | `hinaus` | `div` |  |
 | `onlinewarnung` | `p` | onlinewarnung |
 | `onlinewarnung-text` | `span` |  |
@@ -151,6 +154,16 @@ Alle Elemente mit Kennung aus `app/static/index.html`, in der Reihenfolge der Da
 | `willkommen-zurueck-text` | `span` |  |
 | `knopf-willkommen-weiter` | `button` | tat haupt |
 | `willkommen-weiter-text` | `span` |  |
+| `anleitung` | `div` | einst-hintergrund |
+| `knopf-anleitung-zu` | `button` | kreuz willkommen-zu |
+| `anleitung-buehne` | `div` | willkommen-buehne |
+| `anleitung-punkte` | `div` | willkommen-punkte |
+| `anleitung-nie` | `input` |  |
+| `anleitung-nie-text` | `span` |  |
+| `knopf-anleitung-zurueck` | `button` | tat neben |
+| `anleitung-zurueck-text` | `span` |  |
+| `knopf-anleitung-weiter` | `button` | tat haupt |
+| `anleitung-weiter-text` | `span` |  |
 | `frage` | `div` | einst-hintergrund frage-hintergrund |
 | `frage-text` | `p` | frage-text |
 | `frage-feld` | `label` | feld frage-feld |
@@ -234,3 +247,4 @@ Alle Elemente mit Kennung aus `app/static/index.html`, in der Reihenfolge der Da
 | `kachel-grund` | `div` | kachel-grund |
 | `kontext` | `div` | kontext |
 | `tipp` | `div` | tipp |
+| `knopftipp` | `div` | tipp knopftipp |

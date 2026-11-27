@@ -3,7 +3,7 @@
 
     # 1. Vormarkieren — die Kette schlaegt vor, du korrigierst
     python3 tools/gold_from_markup.py --vormarkieren /pfad/brief.txt \\
-        --model runs/ch-v63b --out /pfad/brief.markiert.txt
+        --model runs/ch-v71f --out /pfad/brief.markiert.txt
 
     # 2. Im Editor: Tags korrigieren UND Werte ersetzen, in EINEM Durchgang
 
@@ -248,7 +248,7 @@ def anlegen(args, pack) -> int:
 
     kennung = args.id or quelle.stem.replace(".markiert", "")
     # Immer an den neuen Ort, nie in den Projektbaum — siehe `gold_schreiben()`.
-    ordner = pfade.gold_schreiben(args.pack, "real")
+    ordner = pfade.gold_schreiben(args.pack, args.art)
     ziel = ordner / f"{kennung}.json"
     if ziel.is_file() and not args.ueberschreiben:
         alt = json.loads(ziel.read_text(encoding="utf-8"))
@@ -304,6 +304,8 @@ def main() -> int:
     ap.add_argument("--doctype", default="unbekannt")
     ap.add_argument("--herkunft", default="")
     ap.add_argument("--ueberschreiben", action="store_true")
+    ap.add_argument("--art", default="real", choices=("real", "berufe", "familie", "protokoll"),
+                    help="Testset: real (Vorgabe), berufe, familie oder protokoll (Pruefsets)")
     ap.add_argument("--trotzdem", action="store_true",
                     help="anlegen trotz Verdachtsstellen")
     args = ap.parse_args()

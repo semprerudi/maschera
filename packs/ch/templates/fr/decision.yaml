@@ -10,8 +10,7 @@ templates:
     \ analyse du dossier, nous avons le regret de vous informer que votre requête a été refusée car elle\
     \ ne remplit pas les conditions requises. \n\nIl convient de noter que {~legal} pour justifier un\
     \ tel octroi.\n\nNous restons à votre disposition pour tout complément d'information.\n\nJe vous prie\
-    \ d'agréer, Madame, l'expression de mes salutations distinguées.\n\n{GIVENNAME} {FULLNAME}\nResponsable\
-    \ administratif"
+    \ d'agréer, Madame, l'expression de mes salutations distinguées.\n\n{GIVENNAME} {FULLNAME}\n{JOBTITLE}"
 - id: fr_decision_admin_02
   doc_type: courrier administratif avec décision et bloc de signature
   text: '{ORG}
@@ -43,7 +42,7 @@ templates:
 
     {GIVENNAME} {FULLNAME}
 
-    Chef de section'
+    {JOBTITLE}'
 - id: fr_decision_admin_03
   doc_type: courrier administratif avec décision et bloc de signature
   text: '{ORG}

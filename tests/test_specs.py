@@ -248,7 +248,10 @@ for name, zeile in (("--epochs", "| Epochen | 3 |"),
     soll = zeile.split("|")[2].strip()
     check(float(wert) == float(soll), f"train.py {name}={wert}, Katalog {soll}")
     check(zeile in _08, f"08 fuehrt die Zeile {zeile} nicht")
-for wert in ("warmup_ratio=0.1", "weight_decay=0.01"):
+# `remove_unused_columns=False`: sonst wirft der Trainer `lehrer_frei` still weg
+# (ch-v71c, 25.11.2026, trainierte deshalb mit Lehrer ueberall).
+for wert in ("{\"warmup_ratio\": 0.1}", "{\"warmup_steps\": 0.1}", "weight_decay=0.01",
+             "remove_unused_columns=False", "kommt im Training nicht an"):
     check(wert in _train, f"train.py: {wert} nicht mehr gefunden")
 
 print()

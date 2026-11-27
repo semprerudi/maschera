@@ -125,6 +125,7 @@ Quelle: `app/static/maschera.css`. Die Bedeutung steht in [11_design.md](../11_d
 
 - `@container teilkopf (max-width: 26rem)`
 - `@media (max-width: 81.24em), (max-height: 44em)`
+- `@media (max-width: 81.24em), (max-height: 44em)`
 - `@media (prefers-color-scheme: dark)`
 - `@container einstfuss (max-width: 18rem)`
 - `@container einstfuss (max-width: 30rem)`
@@ -132,12 +133,15 @@ Quelle: `app/static/maschera.css`. Die Bedeutung steht in [11_design.md](../11_d
 - `@media (max-width: 30em)`
 - `@media (max-width: 33em)`
 - `@media (max-width: 39.99em)`
+- `@media (max-width: 81.24em) and (max-height: 56.24em), (max-height: 44em)`
 - `@media (max-width: 81.24em), (max-height: 44em)`
 - `@container feld (max-width: 24rem)`
 - `@container fuss (max-width: 22rem)`
 - `@container fuss (max-width: 9rem)`
 - `@container teilkopf (max-width: 20rem)`
+- `@container teilkopf (max-width: 24rem)`
 - `@container teilkopf (max-width: 25rem)`
+- `@container teilkopf (max-width: 36rem)`
 - `@media (max-width: 20em)`
 - `@media (max-width: 30em)`
 - `@media (max-width: 33em)`

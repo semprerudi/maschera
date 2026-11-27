@@ -203,6 +203,36 @@ check(0.25 <= anteil <= 0.75,
 print(f"   OK   {natuerlich} natuerlich, {register} Register-Reihenfolge "
       f"({100*anteil:.0f} %)")
 
+# --- 10. Berufe: Doppelwoerter in beiden Rollen ----------------------------
+# Seit 24.11.2026. Woerter, die Beruf UND Nachname sind (Schreiner, Polier,
+# Berger), lernt das Modell in beiden Rollen und entscheidet am Kontext. Zwei
+# Haelften: der Slot {KOEDER} taggt FULLNAME, und jeder Koeder steht auch in
+# der Berufsliste. Fehlte er dort, lernte das Modell «Schreiner» nur als Namen.
+print("\n10. Berufe: {KOEDER} ist FULLNAME, jeder Koeder auch ein Beruf")
+import random  # noqa: E402
+from core import injector  # noqa: E402
+vorlage = {"id": "probe_koeder", "lang": "de",
+           "text": "Gruss\n{GIVENNAME} {KOEDER}\n{JOBTITLE}, {ORG}\n"}
+ex = injector.inject(vorlage, random.Random(1))
+check(ex is not None, "Probevorlage mit {KOEDER} liess sich nicht fuellen")
+if ex is not None:
+    tags = [s.tag for s in ex.spans]
+    check(tags == ["GIVENNAME", "FULLNAME", "JOBTITLE", "ORG"],
+          f"{{KOEDER}} muss FULLNAME taggen, ist {tags}")
+noms = injector._nomenclatures()
+koeder = {r["name"].casefold() for k, v in noms.items()
+          if k.startswith("KOEDER@") for r in v}
+berufe = {r["name"].casefold() for k, v in noms.items()
+          if k.startswith("JOBTITLE@") for r in v}
+if berufe:
+    nur_name = sorted(koeder - berufe)
+    check(not nur_name, f"{len(nur_name)} Koeder fehlen in der Berufsliste: "
+                        f"sie wuerden nur als Name gelernt")
+    print(f"   OK   {len(berufe)} Berufsformen, {len(koeder)} Koeder, "
+          f"alle Koeder auch als Beruf")
+else:
+    print("   --   berufe.json fehlt (build.py --build); nur der Slot geprueft")
+
 print()
 if failures:
     print(f"FEHLGESCHLAGEN — {len(failures)} Problem(e):")

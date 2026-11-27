@@ -25,7 +25,7 @@ Jede Prüfung mit ihren Punkten. Die Kennung `T-<DATEI>-<PUNKT>` ist stabil, sol
 | `tests/test_langes_dokument.py` | 4 | 8 |
 | `tests/test_mail.py` | 8 | 45 |
 | `tests/test_masking.py` | 11 | 17 |
-| `tests/test_modell.py` | 14 | 50 |
+| `tests/test_modell.py` | 15 | 51 |
 | `tests/test_oberflaeche.js` | 98 | 591 |
 | `tests/test_patterns.py` | 9 | 11 |
 | `tests/test_rauschen.py` | 7 | 15 |
@@ -37,7 +37,7 @@ Jede Prüfung mit ihren Punkten. Die Kennung `T-<DATEI>-<PUNKT>` ist stabil, sol
 | `tests/test_user_rules.py` | 7 | 17 |
 | `tests/test_vertrauen.py` | 8 | 14 |
 | `tests/test_vorlieben.py` | 6 | 16 |
-| **Summe** | **387** | **1659** |
+| **Summe** | **388** | **1660** |
 
 ## `tests/test_alignment.py`
 
@@ -1671,6 +1671,10 @@ Das Nachladen des Modells, ohne Netz, ohne Fenster, ohne 1,2 GB.
 
 - …: from_pretrained ohne use_safetensors=True
 - nur … Aufrufe gefunden, 2+ erwartet, dann sucht die Wache an der falschen Stelle
+
+### T-MODELL-13: Die Referenz der Mac-Pakete gehoert zum ausgelieferten Modell
+
+- tests/referenz_mac/referenz.json gehoert zu …, ausgeliefert wird …. Neu anlegen: tools/paket/referenz_pruefen.py --anlegen (Server ohne eigene Regeln)
 
 ## `tests/test_oberflaeche.js`
 

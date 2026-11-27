@@ -47,6 +47,12 @@ def main() -> int:
     a = ap.parse_args()
     ergebnis = {s: maskiere(a.adresse, t, s) for s, t in TEXTE.items()}
     if a.anlegen:
+        # Die Referenz gehoert zu EINEM Modell. `tests/test_modell.py` Punkt 13
+        # vergleicht den Namen mit `packs/ch/modell.json`: beim Wechsel auf
+        # ch-v71f fiel die alte Referenz erst im Release-Lauf auf GitHub auf.
+        modell = json.loads((WURZEL / "packs" / "ch" / "modell.json")
+                            .read_text(encoding="utf-8"))["name"]
+        ergebnis = {"_modell": modell, **ergebnis}
         REFERENZ.parent.mkdir(parents=True, exist_ok=True)
         REFERENZ.write_text(json.dumps(ergebnis, ensure_ascii=False, indent=1)
                             + "\n", encoding="utf-8")

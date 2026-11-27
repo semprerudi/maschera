@@ -208,8 +208,10 @@ Minimum in der Info.plist, damit macOS einen zu alten Mac meldet, statt dass die
 wortlos nicht startet. Nach dem Bau prüft der Workflow jede Programmdatei im Bündel auf
 Architektur und Minimum und bricht bei einer Abweichung ab. Das Intel-Paket trägt kein
 torch und rechnet mit onnxruntime 1.23.2; beide Pakete maskieren vier Referenzbriefe wie
-abgelegt ([EN-037](15_entscheide.md)). Seit dem 23.11.2026. Status `verbindlich`.
-Prüfung: T-FENSTER-33.
+abgelegt ([EN-037](15_entscheide.md)). Die Referenz nennt das Modell, mit dem sie
+angelegt wurde; es muss das ausgelieferte aus `packs/ch/modell.json` sein (seit
+27.11.2026). Seit dem 23.11.2026. Status `verbindlich`.
+Prüfung: T-FENSTER-33, T-MODELL-13.
 
 ### NFA-062 Browser
 

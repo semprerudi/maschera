@@ -400,6 +400,22 @@ check(_gefunden12 >= 2,
       f"Wache an der falschen Stelle")
 print(f"   OK   {_gefunden12} Aufrufe, alle mit use_safetensors=True")
 
+print("\n13. Die Referenz der Mac-Pakete gehoert zum ausgelieferten Modell")
+# Der Rauchtest beider Mac-Pakete vergleicht mit `tests/referenz_mac/`. Nach
+# dem Wechsel auf ein neues Modell stimmt sie nicht mehr; ohne diese Wache
+# merkt das erst der Release-Lauf auf GitHub (27.11.2026, Release 2.5.0).
+import json as _js13  # noqa: E402
+_ref13 = _js13.loads((WURZEL / "tests" / "referenz_mac" / "referenz.json")
+                     .read_text(encoding="utf-8"))
+_man13 = _js13.loads((WURZEL / "packs" / "ch" / "modell.json")
+                     .read_text(encoding="utf-8"))["name"]
+check(_ref13.get("_modell") == _man13,
+      f"tests/referenz_mac/referenz.json gehoert zu {_ref13.get('_modell')!r}, "
+      f"ausgeliefert wird {_man13!r}. Neu anlegen: "
+      f"tools/paket/referenz_pruefen.py --anlegen (Server ohne eigene Regeln)")
+print(f"   OK   Referenz und Manifest nennen beide {_man13}"
+      if _ref13.get("_modell") == _man13 else "   FEHL siehe oben")
+
 print()
 if failures:
     print(f"{len(failures)} Pruefung(en) fehlgeschlagen.")
